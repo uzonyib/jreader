@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+	<cron>
+		<url>/cron/refresh</url>
+		<description>Refresh all feeds</description>
+		<schedule>every 30 mins</schedule>
+	</cron>
+</cronentries>

@@ -1,0 +1,71 @@
+package jreader.dto;
+
+import java.util.List;
+
+public class FeedDto {
+	
+	private String id;
+	private String title;
+	private String url;
+	private String description;
+	private String feedType;
+	private List<String> categories;
+	private Long publishedDate;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getFeedType() {
+		return feedType;
+	}
+
+	public void setFeedType(String feedType) {
+		this.feedType = feedType;
+	}
+
+	public List<String> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<String> categories) {
+		this.categories = categories;
+	}
+
+	public Long getPublishedDate() {
+		return publishedDate;
+	}
+
+	public void setPublishedDate(Long publishedDate) {
+		this.publishedDate = publishedDate;
+	}
+
+}

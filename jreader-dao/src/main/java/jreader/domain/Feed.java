@@ -1,0 +1,76 @@
+package jreader.domain;
+
+import java.util.List;
+
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+
+@Entity
+public class Feed {
+	
+	@Id
+	private String id;
+	private String url;
+	private String title;
+	private String description;
+	private String feedType;
+	private List<String> categories;
+	private Long publishedDate;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getFeedType() {
+		return feedType;
+	}
+
+	public void setFeedType(String feedType) {
+		this.feedType = feedType;
+	}
+
+	public List<String> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<String> categories) {
+		this.categories = categories;
+	}
+
+	public Long getPublishedDate() {
+		return publishedDate;
+	}
+
+	public void setPublishedDate(Long publishedDate) {
+		this.publishedDate = publishedDate;
+	}
+	
+}

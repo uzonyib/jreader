@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net http://dozer.sourceforge.net/schema/beanmapping.xsd">
+          
+	<configuration>
+		<custom-converters>
+<!-- 			<converter type="reader.RssEntryConverter"> -->
+<!-- 				<class-a>com.sun.syndication.feed.synd.SyndEntryImpl</class-a> -->
+<!-- 				<class-b>reader.RssEntry</class-b> -->
+<!-- 			</converter> -->
+			<converter type="reader.util.converter.DescriptionConverter">
+				<class-a>com.sun.syndication.feed.synd.SyndContent</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+			<converter type="reader.util.converter.CategoryConverter">
+				<class-a>com.sun.syndication.feed.synd.SyndCategory</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+			<converter type="reader.util.converter.ContentConverter">
+				<class-a>com.sun.syndication.feed.synd.SyndContent</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+		</custom-converters>
+	</configuration>
+
+</mappings>

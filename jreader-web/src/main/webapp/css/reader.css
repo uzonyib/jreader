@@ -1,0 +1,16 @@
+#menu {
+	width: 300px;
+	float: left;
+}
+
+#main-area {
+	padding-left: 305px;
+}
+
+#footer {
+	clear: both;
+}
+
+.subscription-menu-item {
+	cursor: pointer;
+}

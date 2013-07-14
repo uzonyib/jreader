@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util.xsd">
+ 
+ 	<import resource="classpath:/jreader-services.xml" />
+ 	
+ 	<util:properties id="securityProps" location="/WEB-INF/security.properties" />
+ 
+	<context:component-scan base-package="jreader.web.controller" />
+ 
+	<mvc:annotation-driven />
+
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+ 
+	<security:http>
+		<security:session-management invalid-session-url="/login" />
+		<security:intercept-url pattern="/reader/**" access="ROLE_USER" />
+		<security:form-login login-page="/login" login-processing-url="/performlogin" authentication-failure-url="/login"
+			username-parameter="username" password-parameter="password" />
+		<security:logout logout-url="/reader/logout" logout-success-url="/login" delete-cookies="true" />
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:password-encoder hash="sha" />
+			<security:user-service>
+				<security:user name="#{securityProps.username}" password="#{securityProps.password}" authorities="ROLE_USER" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+ 
+</beans>
