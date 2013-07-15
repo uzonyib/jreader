@@ -78,21 +78,17 @@ $(document).ready(function() {
 	
 	reloadSubscriptions();
 	
+	dust.loadSource(dust.compile($("#template-subscription-settings").html(),"subscriptionSettingsTemplate"));
+	
 });
 
-var subscriptionSettingsTemplate = 
-	"<div class=\"subscription-settings-item\" feed-id=\"{feedId}\">" +
-	"	<div class=\"set-subscription-title\">" +
-	"		<input type=\"text\" value=\"{title}\" />" +
-	"		<button>Change</button>" +
-	"	</div>" +
-	"	<div class=\"set-group-title\">" +
-	"		<input class=\"set-group-title\" type=\"text\" style=\"display: none;\" value=\"{groupTitle}\" />" +
-    "		<span>{groupTitle}</span>" +
-    "		<button>Group</button>" +
-    "	</div>" +
-	"	<button class=\"unsubscribe-button\">Unsubscribe</button>" +
-	"</div>";
+function templateSubscriptionSettings(subscriptionSettings) {
+	var result;
+	dust.render("subscriptionSettingsTemplate", subscriptionSettings, function(err, res) {
+		result = res;
+	});
+	return result;
+};
 
 function refreshSubscriptions(data) {
 	$("#subscription-menu").empty();
@@ -100,22 +96,7 @@ function refreshSubscriptions(data) {
     $.each(JSON.parse(data), function (id, subscription) {
     	$("#subscription-menu").append("<div class=\"subscription-menu-item\" feed-id=\"" + subscription.feed.id + "\">" + (typeof subscription.group === "undefined" ? "" : (subscription.group.title + " / ")) + subscription.title + "</div>");
     	
-    	var titleDiv = $("<div class=\"set-subscription-title\"><input type=\"text\" value=\"" + subscription.title + "\" /><button>Change</button></div>");
-    	var groupDiv = $("<div class=\"set-group-title\">" +
-    			"<input class=\"set-group-title\" type=\"text\" style=\"display: none;\" value=\"" + (typeof subscription.group === "undefined" ? "" : subscription.group.title) + "\" />" +
-    			(typeof subscription.group === "undefined" ? "" : ("<span>" + subscription.group.title + "</span>")) +
-    			"<button>Group</button></div>");
-    	var unsubscribeButton = $("<button class=\"unsubscribe-button\">Unsubscribe</button>");
-    	var subscriptionDiv = $("<div class=\"subscription-settings-item\" feed-id=\"" + subscription.feed.id + "\"></div>");
-    	subscriptionDiv.append(titleDiv);
-    	subscriptionDiv.append(groupDiv);
-    	subscriptionDiv.append(unsubscribeButton);
-        
-        $("#subscription-settings").append($(nano(subscriptionSettingsTemplate, {
-        	"feedId" : subscription.feed.id,
-        	"title" : subscription.title,
-        	"groupTitle" : (typeof subscription.group === "undefined" ? "" : subscription.group.title)
-        })));
+    	$("#subscription-settings").append(templateSubscriptionSettings(subscription));
     });
 }
 

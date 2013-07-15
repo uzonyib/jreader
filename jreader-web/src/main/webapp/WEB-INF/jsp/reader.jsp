@@ -6,9 +6,10 @@
 	<title>Reader</title>
 	<link rel="stylesheet" type="text/css" href="/css/reader.css">
 	<script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
-	<script type="text/javascript" src="/js/nano.js"></script>
 	<script type="text/javascript" src="/js/moment.min.js"></script>
+	<script type="text/javascript" src="/js/dust-full-1.2.3.min.js"></script>
 	<script type="text/javascript" src="/js/reader.js"></script>
+	<jsp:include page="templates.jsp"></jsp:include>
 </head>
 <body>
 	<div id="header">
