@@ -64,4 +64,12 @@ public class AjaxController {
 		getSubscriptions(response, principal);
 	}
 
+	@RequestMapping(value = "/entitle", method = RequestMethod.POST)
+	public void entitle(@RequestParam("id") String id, @RequestParam("title") String title, HttpServletResponse response, Principal principal) throws IOException {
+		if (title != null && !"".equals(title)) {
+			subscriptionService.entitle(principal.getName(), id, title);
+		}
+		getSubscriptions(response, principal);
+	}
+
 }

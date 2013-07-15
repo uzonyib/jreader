@@ -31,13 +31,12 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 	
 	@Override
-	public void save(final FeedEntry feedEntry, final Feed parent) {
+	public void save(final FeedEntry feedEntry) {
 		feedEntry.setId(getId(feedEntry.getLink()));
 		final Objectify ofy = objectifyFactory.begin();
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				feedEntry.setFeed(parent);
 				ofy.save().entity(feedEntry).now();
 			}
 		});

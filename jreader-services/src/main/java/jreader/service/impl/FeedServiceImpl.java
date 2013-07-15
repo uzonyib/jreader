@@ -72,7 +72,8 @@ public class FeedServiceImpl implements FeedService {
 			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
 				FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
 				if (feedEntryDao.findByLink(feed, feedEntry.getLink()) == null) {
-					feedEntryDao.save(feedEntry, feed);
+					feedEntry.setFeed(feed);
+					feedEntryDao.save(feedEntry);
 					++counter;
 				}
 			}

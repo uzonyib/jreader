@@ -25,12 +25,11 @@ public class SubscriptionGroupDaoImpl implements SubscriptionGroupDao {
 	}
 
 	@Override
-	public void save(final SubscriptionGroup subscriptionGroup, final User user) {
+	public void save(final SubscriptionGroup subscriptionGroup) {
 		final Objectify ofy = objectifyFactory.begin();
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				subscriptionGroup.setUser(user);
 				ofy.save().entity(subscriptionGroup).now();
 			}
 		});

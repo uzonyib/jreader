@@ -7,7 +7,7 @@ public interface SubscriptionGroupDao {
 	
 	SubscriptionGroup find(User user, String title);
 	
-	void save(SubscriptionGroup subscriptionGroup, User parent);
+	void save(SubscriptionGroup subscriptionGroup);
 	
 	void delete(SubscriptionGroup group);
 	

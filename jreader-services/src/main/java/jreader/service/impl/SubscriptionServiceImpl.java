@@ -65,7 +65,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			feedDao.save(feed);
 			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
 				FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
-				feedEntryDao.save(feedEntry, feed);
+				feedEntry.setFeed(feed);
+				feedEntryDao.save(feedEntry);
 			}
 		}
 		
@@ -73,7 +74,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		if (subscription == null) {
 			subscription = new Subscription();
 			subscription.setTitle(feed.getTitle());
-			subscriptionDao.save(user, feed, subscription);
+			subscription.setUser(user);
+			subscription.setFeed(feed);
+			subscriptionDao.save(subscription);
 		}
 	}
 
@@ -130,13 +133,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			if (group == null) {
 				group = new SubscriptionGroup();
 				group.setTitle(groupTitle);
-				subscriptionGroupDao.save(group, user);
+				group.setUser(user);
+				subscriptionGroupDao.save(group);
 				group = subscriptionGroupDao.find(user, groupTitle);
 			}
 		}
 		
 		SubscriptionGroup prevGroup = subscription.getGroup();
-		subscriptionDao.update(group, subscription);
+		subscription.setGroup(group);
+		subscriptionDao.update(subscription);
 		if (prevGroup != null) {
 			int subscriptionCount = subscriptionGroupDao.countSubscriptions(prevGroup, user);
 			if (subscriptionCount == 0) {
@@ -157,6 +162,27 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			dtos.add(dto);
 		}
 		return dtos;
+	}
+	
+	@Override
+	public void entitle(String username, String feedId, String subscriptionTitle) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		Feed feed = feedDao.find(feedId);
+		if (feed == null) {
+			return;
+		}
+		
+		Subscription subscription = subscriptionDao.find(user, feed);
+		if (subscription == null) {
+			return;
+		}
+		
+		subscription.setTitle(subscriptionTitle);
+		subscriptionDao.update(subscription);
 	}
 
 }

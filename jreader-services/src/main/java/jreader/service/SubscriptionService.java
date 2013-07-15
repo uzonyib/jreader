@@ -13,5 +13,7 @@ public interface SubscriptionService {
 	void assign(String username, String feedId, String groupTitle);
 	
 	List<SubscriptionDto> list(String username);
+	
+	void entitle(String username, String feedId, String subscriptionTitle);
 
 }

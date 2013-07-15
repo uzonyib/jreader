@@ -11,7 +11,7 @@ public interface FeedEntryDao {
 	
 	FeedEntry findByLink(Feed parent, String link);
 	
-	void save(FeedEntry feedEntry, Feed parent);
+	void save(FeedEntry feedEntry);
 	
 	List<FeedEntry> listEntries(Feed feed);
 

@@ -14,5 +14,4 @@
 	
 	<bean id="servicesMapper" class="org.dozer.DozerBeanMapper" />
 	
-	
 </beans>

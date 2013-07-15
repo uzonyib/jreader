@@ -14,7 +14,7 @@ $(document).ready(function() {
 	});
 	
 	$("#main-area").on("click", ".unsubscribe-button", function(event) {
-		var id = $(event.target).attr("feed-id");
+		var id = $(event.target).parent().attr("feed-id");
 		$.post("/reader/unsubscribe", { "id" : id }, function(data) {
 			refreshSubscriptions(data);
 		});
@@ -56,11 +56,24 @@ $(document).ready(function() {
 			div.children("span").first().hide();
 		} else {
 			var group = input.val();
-			var id = div.attr("feed-id");
+			var id = div.parent().attr("feed-id");
 			$.post("/reader/assign", { "id" : id, "group" : group }, function(data) {
 				refreshSubscriptions(data);
 			});
 		}
+	});
+
+	$("#main-area").on("click", ".set-subscription-title button", function(event) {
+		var div = $(event.target).parent();
+		var input = div.children("input").first();
+		var title = input.val();
+		if (title == "") {
+			return;
+		}
+		var id = div.parent().attr("feed-id");
+		$.post("/reader/entitle", { "id" : id, "title" : title }, function(data) {
+			refreshSubscriptions(data);
+		});
 	});
 	
 	reloadSubscriptions();
@@ -73,14 +86,16 @@ function refreshSubscriptions(data) {
     $.each(JSON.parse(data), function (id, subscription) {
     	$("#subscription-menu").append("<div class=\"subscription-menu-item\" feed-id=\"" + subscription.feed.id + "\">" + (typeof subscription.group === "undefined" ? "" : (subscription.group.title + " / ")) + subscription.title + "</div>");
     	
-    	var groupDiv = $("<div class=\"set-group-title\" feed-id=\"" + subscription.feed.id + "\">" +
+    	var titleDiv = $("<div class=\"set-subscription-title\"><input type=\"text\" value=\"" + subscription.title + "\" /><button>Change</button></div>");
+    	var groupDiv = $("<div class=\"set-group-title\">" +
     			"<input class=\"set-group-title\" type=\"text\" style=\"display: none;\" value=\"" + (typeof subscription.group === "undefined" ? "" : subscription.group.title) + "\" />" +
     			(typeof subscription.group === "undefined" ? "" : ("<span>" + subscription.group.title + "</span>")) +
     			"<button>Group</button></div>");
-    	var deleteButton = $("<button class=\"unsubscribe-button\" feed-id=\"" + subscription.feed.id + "\">Unsubscribe</button>");
-    	var subscriptionDiv = $("<div class=\"subscription-settings-item\" feed-id=\"" + subscription.feed.id + "\">" + subscription.title + "</div>");
+    	var unsubscribeButton = $("<button class=\"unsubscribe-button\">Unsubscribe</button>");
+    	var subscriptionDiv = $("<div class=\"subscription-settings-item\" feed-id=\"" + subscription.feed.id + "\"></div>");
+    	subscriptionDiv.append(titleDiv);
     	subscriptionDiv.append(groupDiv);
-    	subscriptionDiv.append(deleteButton);
+    	subscriptionDiv.append(unsubscribeButton);
         $("#subscription-settings").append(subscriptionDiv);
     });
 }

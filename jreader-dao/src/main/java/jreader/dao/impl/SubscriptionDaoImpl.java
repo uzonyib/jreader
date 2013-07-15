@@ -5,7 +5,6 @@ import java.util.List;
 import jreader.dao.SubscriptionDao;
 import jreader.domain.Feed;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,25 +21,22 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	private ObjectifyFactory objectifyFactory;
 
 	@Override
-	public void save(final User user, final Feed feed, final Subscription subscription) {
+	public void save(final Subscription subscription) {
 		final Objectify ofy = objectifyFactory.begin();
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				subscription.setUser(user);
-				subscription.setFeed(feed);
 				ofy.save().entity(subscription).now();
 			}
 		});
 	}
 	
 	@Override
-	public void update(final SubscriptionGroup group, final Subscription subscription) {
+	public void update(final Subscription subscription) {
 		final Objectify ofy = objectifyFactory.begin();
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				subscription.setGroup(group);
 				ofy.save().entity(subscription).now();
 			}
 		});
