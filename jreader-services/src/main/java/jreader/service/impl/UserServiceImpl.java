@@ -2,6 +2,7 @@ package jreader.service.impl;
 
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import jreader.dao.UserDao;
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 	
 	@Autowired
+	@Qualifier("servicesMapper")
 	private Mapper mapper;
 
 	@Override

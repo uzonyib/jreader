@@ -3,7 +3,6 @@ package jreader.dao;
 import java.util.List;
 
 import jreader.domain.Feed;
-import jreader.domain.User;
 
 public interface FeedDao {
 	
@@ -16,7 +15,5 @@ public interface FeedDao {
 	void save(Feed feed);
 	
 	void delete(Feed feed);
-	
-	List<Feed> listFeedsFor(User user);
 	
 }

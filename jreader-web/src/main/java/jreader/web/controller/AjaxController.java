@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import jreader.dto.FeedDto;
 import jreader.dto.FeedEntryDto;
+import jreader.dto.SubscriptionDto;
 import jreader.service.FeedService;
 import jreader.service.SubscriptionService;
 
@@ -44,7 +44,7 @@ public class AjaxController {
 
 	@RequestMapping(value = "/subscriptions", method = RequestMethod.GET)
 	public void getSubscriptions(HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedDto> feeds = feedService.list(principal.getName());
+		List<SubscriptionDto> feeds = subscriptionService.list(principal.getName());
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		gson.toJson(feeds, response.getWriter());
@@ -56,6 +56,12 @@ public class AjaxController {
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		gson.toJson(feeds, response.getWriter());
+	}
+	
+	@RequestMapping(value = "/assign", method = RequestMethod.POST)
+	public void assign(@RequestParam("id") String id, @RequestParam("group") String group, HttpServletResponse response, Principal principal) throws IOException {
+		subscriptionService.assign(principal.getName(), id, "".equals(group) ? null : group);
+		getSubscriptions(response, principal);
 	}
 
 }

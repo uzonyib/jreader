@@ -1,7 +1,5 @@
 package jreader.domain;
 
-import java.util.List;
-
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
@@ -14,7 +12,6 @@ public class Feed {
 	private String title;
 	private String description;
 	private String feedType;
-	private List<String> categories;
 	private Long publishedDate;
 
 	public String getId() {
@@ -55,14 +52,6 @@ public class Feed {
 
 	public void setFeedType(String feedType) {
 		this.feedType = feedType;
-	}
-
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
 	}
 
 	public Long getPublishedDate() {

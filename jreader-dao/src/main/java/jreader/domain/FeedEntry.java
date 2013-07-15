@@ -1,9 +1,10 @@
 package jreader.domain;
 
-import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
 @Entity
@@ -18,7 +19,8 @@ public class FeedEntry {
 	@Index
 	private Long publishedDate;
 	@Parent
-	private Key<Feed> feed;
+	@Load
+	private Ref<Feed> feedRef;
 
 	public String getId() {
 		return id;
@@ -76,12 +78,20 @@ public class FeedEntry {
 		this.publishedDate = publishedDate;
 	}
 
-	public Key<Feed> getFeed() {
-		return feed;
+	public Ref<Feed> getFeedRef() {
+		return feedRef;
 	}
 
-	public void setFeed(Key<Feed> feed) {
-		this.feed = feed;
+	public void setFeedRef(Ref<Feed> feedRef) {
+		this.feedRef = feedRef;
+	}
+
+	public Feed getFeed() {
+		return feedRef == null ? null : feedRef.get();
+	}
+	
+	public void setFeed(Feed feed) {
+		this.feedRef = feed == null ? null : Ref.create(feed);
 	}
 
 }

@@ -9,8 +9,6 @@ public interface FeedService {
 	
 	List<FeedDto> list();
 
-	List<FeedDto> list(String username);
-	
 	List<FeedEntryDto> listEntries(String id);
 	
 	void refreshFeeds();

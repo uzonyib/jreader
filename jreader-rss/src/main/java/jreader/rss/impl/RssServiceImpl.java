@@ -7,6 +7,7 @@ import jreader.rss.domain.Feed;
 
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -17,6 +18,7 @@ import com.sun.syndication.io.XmlReader;
 public class RssServiceImpl implements RssService {
 
 	@Autowired
+	@Qualifier("rssMapper")
 	private DozerBeanMapper mapper;
 
 	@Override

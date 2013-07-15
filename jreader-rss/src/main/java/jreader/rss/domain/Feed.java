@@ -8,7 +8,6 @@ public class Feed {
 	private String title;
 	private String description;
 	private String feedType;
-	private List<String> categories;
 	private Long publishedDate;
 	private List<FeedEntry> entries;
 	
@@ -42,14 +41,6 @@ public class Feed {
 
 	public void setFeedType(String feedType) {
 		this.feedType = feedType;
-	}
-
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
 	}
 
 	public Long getPublishedDate() {

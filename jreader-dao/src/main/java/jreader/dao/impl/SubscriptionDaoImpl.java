@@ -1,17 +1,18 @@
 package jreader.dao.impl;
 
+import java.util.List;
+
 import jreader.dao.SubscriptionDao;
 import jreader.domain.Feed;
 import jreader.domain.Subscription;
+import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.VoidWork;
 
 @Repository
@@ -26,8 +27,20 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				subscription.setUser(Key.create(user));
-				subscription.setFeed(Ref.create(feed));
+				subscription.setUser(user);
+				subscription.setFeed(feed);
+				ofy.save().entity(subscription).now();
+			}
+		});
+	}
+	
+	@Override
+	public void update(final SubscriptionGroup group, final Subscription subscription) {
+		final Objectify ofy = objectifyFactory.begin();
+		ofy.transact(new VoidWork() {
+			@Override
+			public void vrun() {
+				subscription.setGroup(group);
 				ofy.save().entity(subscription).now();
 			}
 		});
@@ -36,7 +49,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	@Override
 	public Subscription find(User user, Feed feed) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).ancestor(user).filter("feed =", feed).first().now();
+		return ofy.load().type(Subscription.class).ancestor(user).filter("feedRef =", feed).first().now();
 	}
 	
 	@Override
@@ -53,7 +66,13 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	@Override
 	public int countSubscribers(Feed feed) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).filter("feed =", feed).count();
+		return ofy.load().type(Subscription.class).filter("feedRef =", feed).count();
+	}
+	
+	@Override
+	public List<Subscription> list(User user) {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(Subscription.class).ancestor(user).list();
 	}
 
 }

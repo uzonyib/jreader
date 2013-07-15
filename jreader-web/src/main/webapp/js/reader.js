@@ -14,7 +14,7 @@ $(document).ready(function() {
 	});
 	
 	$("#main-area").on("click", ".unsubscribe-button", function(event) {
-		var id = $(event.target).attr("subscription-id");
+		var id = $(event.target).attr("feed-id");
 		$.post("/reader/unsubscribe", { "id" : id }, function(data) {
 			refreshSubscriptions(data);
 		});
@@ -29,37 +29,59 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	reloadSubscriptions();
-	
 	$("#subscription-menu").on("click", ".subscription-menu-item", function(event) {
 		$("#settings").hide();
 		$("#home").show();
-		var id = $(event.target).attr("subscription-id");
+		var id = $(event.target).attr("feed-id");
 		$.get("/reader/entries/" + id, {}, function(data) {
 			$("#feed-entries").empty();
 		    $.each(JSON.parse(data), function (id, option) {
 		    	var entry = $("<div class=\"feed-entry\"></div>");
 		    	var link = $("<div><a target=_blank href='" + option.link + "'>" + option.title + "</a></div>");
 		    	entry.append(link);
-		    	var date = $("<div>" + moment(new Date(option.publishedDate)).format("YYYY-MM-DD hh:mm") + "</div>");
+		    	var description = $("<div>" + option.description + "</div>");
+		    	entry.append(description);
+		    	var date = $("<div>" + moment(new Date(option.publishedDate)).format("YYYY-MM-DD HH:mm") + "</div>");
 		    	entry.append(date);
 		        $("#feed-entries").append(entry);
 		    });
 		});
 	});
 	
+	$("#main-area").on("click", ".set-group-title button", function(event) {
+		var div = $(event.target).parent();
+		var input = div.children("input").first();
+		if (!input.is(":visible")) {
+			input.show();
+			div.children("span").first().hide();
+		} else {
+			var group = input.val();
+			var id = div.attr("feed-id");
+			$.post("/reader/assign", { "id" : id, "group" : group }, function(data) {
+				refreshSubscriptions(data);
+			});
+		}
+	});
+	
+	reloadSubscriptions();
+	
 });
 
 function refreshSubscriptions(data) {
 	$("#subscription-menu").empty();
 	$("#subscription-settings").empty();
-    $.each(JSON.parse(data), function (id, option) {
-    	$("#subscription-menu").append("<div class=\"subscription-menu-item\" subscription-id=\"" + option.id + "\">" + option.title + "</div>");
+    $.each(JSON.parse(data), function (id, subscription) {
+    	$("#subscription-menu").append("<div class=\"subscription-menu-item\" feed-id=\"" + subscription.feed.id + "\">" + (typeof subscription.group === "undefined" ? "" : (subscription.group.title + " / ")) + subscription.title + "</div>");
     	
-    	var deleteButton = $("<button class=\"unsubscribe-button\" subscription-id=\"" + option.id + "\">Unsubscribe</button>");
-    	var subscription = $("<div class=\"subscription-settings-item\" subscription-id=\"" + option.id + "\">" + option.title + "</div>");
-    	subscription.append(deleteButton);
-        $("#subscription-settings").append(subscription);
+    	var groupDiv = $("<div class=\"set-group-title\" feed-id=\"" + subscription.feed.id + "\">" +
+    			"<input class=\"set-group-title\" type=\"text\" style=\"display: none;\" value=\"" + (typeof subscription.group === "undefined" ? "" : subscription.group.title) + "\" />" +
+    			(typeof subscription.group === "undefined" ? "" : ("<span>" + subscription.group.title + "</span>")) +
+    			"<button>Group</button></div>");
+    	var deleteButton = $("<button class=\"unsubscribe-button\" feed-id=\"" + subscription.feed.id + "\">Unsubscribe</button>");
+    	var subscriptionDiv = $("<div class=\"subscription-settings-item\" feed-id=\"" + subscription.feed.id + "\">" + subscription.title + "</div>");
+    	subscriptionDiv.append(groupDiv);
+    	subscriptionDiv.append(deleteButton);
+        $("#subscription-settings").append(subscriptionDiv);
     });
 }
 

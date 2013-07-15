@@ -1,6 +1,5 @@
 package jreader.domain;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -14,10 +13,14 @@ public class Subscription {
 	@Id
 	private Long id;
 	@Parent
-	private Key<User> user;
+	@Load
+	private Ref<User> userRef;
 	@Index
 	@Load
-	private Ref<Feed> feed;
+	private Ref<Feed> feedRef;
+	@Index
+	@Load
+	private Ref<SubscriptionGroup> groupRef;
 	private String title;
 
 	public Long getId() {
@@ -28,20 +31,28 @@ public class Subscription {
 		this.id = id;
 	}
 
-	public Key<User> getUser() {
-		return user;
+	public Ref<User> getUserRef() {
+		return userRef;
 	}
 
-	public void setUser(Key<User> user) {
-		this.user = user;
+	public void setUserRef(Ref<User> userRef) {
+		this.userRef = userRef;
 	}
 
-	public Ref<Feed> getFeed() {
-		return feed;
+	public Ref<Feed> getFeedRef() {
+		return feedRef;
 	}
 
-	public void setFeed(Ref<Feed> feed) {
-		this.feed = feed;
+	public void setFeedRef(Ref<Feed> feedRef) {
+		this.feedRef = feedRef;
+	}
+
+	public Ref<SubscriptionGroup> getGroupRef() {
+		return groupRef;
+	}
+
+	public void setGroupRef(Ref<SubscriptionGroup> groupRef) {
+		this.groupRef = groupRef;
 	}
 
 	public String getTitle() {
@@ -50,6 +61,30 @@ public class Subscription {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public User getUser() {
+		return userRef == null ? null : userRef.get();
+	}
+
+	public void setUser(User user) {
+		this.userRef = user == null ? null : Ref.create(user);
+	}
+	
+	public Feed getFeed() {
+		return feedRef == null ? null : feedRef.get();
+	}
+
+	public void setFeed(Feed feed) {
+		this.feedRef = feed == null ? null : Ref.create(feed);
+	}
+
+	public SubscriptionGroup getGroup() {
+		return groupRef == null ? null : groupRef.get();
+	}
+
+	public void setGroup(SubscriptionGroup group) {
+		this.groupRef = group == null ? null : Ref.create(group);
 	}
 
 }

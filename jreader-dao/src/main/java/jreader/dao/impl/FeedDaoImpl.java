@@ -1,13 +1,10 @@
 package jreader.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jreader.dao.FeedDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
-import jreader.domain.Subscription;
-import jreader.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -63,21 +60,6 @@ public class FeedDaoImpl implements FeedDao {
 				ofy.delete().entity(feed).now();
 			}
 		});
-	}
-	
-	@Override
-	public List<Feed> listFeedsFor(User user) {
-		List<Subscription> subscriptions = listSubscriptionsFor(user);
-		List<Feed> feeds = new ArrayList<Feed>();
-		for (Subscription subscription : subscriptions) {
-			feeds.add(subscription.getFeed().get());
-		}
-		return feeds;
-	}
-	
-	private List<Subscription> listSubscriptionsFor(User user) {
-		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).ancestor(user).list();
 	}
 	
 	private static String getId(String url) {

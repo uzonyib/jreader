@@ -7,10 +7,8 @@ import java.util.logging.Logger;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
-import jreader.dao.UserDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
-import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.FeedEntryDto;
 import jreader.rss.RssService;
@@ -18,15 +16,13 @@ import jreader.service.FeedService;
 
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FeedServiceImpl implements FeedService {
 	
 	private static final Logger LOG = Logger.getLogger(FeedServiceImpl.class.getName());
-	
-	@Autowired
-	private UserDao userDao;
 	
 	@Autowired
 	private FeedDao feedDao;
@@ -38,6 +34,7 @@ public class FeedServiceImpl implements FeedService {
 	private RssService rssService;
 	
 	@Autowired
+	@Qualifier("servicesMapper")
 	private Mapper mapper;
 
 	@Override
@@ -59,19 +56,6 @@ public class FeedServiceImpl implements FeedService {
 		List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
 		for (FeedEntry entry : entries) {
 			dtos.add(mapper.map(entry, FeedEntryDto.class));
-		}
-		return dtos;
-	}
-
-	@Override
-	public List<FeedDto> list(String username) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return Collections.emptyList();
-		}
-		List<FeedDto> dtos = new ArrayList<FeedDto>();
-		for (Feed feed : feedDao.listFeedsFor(user)) {
-			dtos.add(mapper.map(feed, FeedDto.class));
 		}
 		return dtos;
 	}

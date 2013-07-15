@@ -11,12 +11,12 @@
 	
 	<context:component-scan base-package="jreader.rss.impl" />
 
-	<bean id="org.dozer.Mapper" class="org.dozer.DozerBeanMapper">
-<!-- 		<property name="mappingFiles"> -->
-<!-- 			<list> -->
-<!-- 				<value>dozer.xml</value> -->
-<!-- 			</list> -->
-<!-- 		</property> -->
+	<bean id="rssMapper" class="org.dozer.DozerBeanMapper">
+		<property name="mappingFiles">
+			<list>
+				<value>rss-dozer.xml</value>
+			</list>
+		</property>
 	</bean>
 	
 </beans>

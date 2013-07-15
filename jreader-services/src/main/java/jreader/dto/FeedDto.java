@@ -1,6 +1,5 @@
 package jreader.dto;
 
-import java.util.List;
 
 public class FeedDto {
 	
@@ -9,7 +8,6 @@ public class FeedDto {
 	private String url;
 	private String description;
 	private String feedType;
-	private List<String> categories;
 	private Long publishedDate;
 
 	public String getId() {
@@ -50,14 +48,6 @@ public class FeedDto {
 
 	public void setFeedType(String feedType) {
 		this.feedType = feedType;
-	}
-
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
 	}
 
 	public Long getPublishedDate() {

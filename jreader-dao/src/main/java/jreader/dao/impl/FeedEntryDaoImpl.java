@@ -2,17 +2,16 @@ package jreader.dao.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import com.googlecode.objectify.Key;
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.VoidWork;
-
 import jreader.dao.FeedEntryDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
+import com.googlecode.objectify.VoidWork;
 
 @Repository
 public class FeedEntryDaoImpl implements FeedEntryDao {
@@ -38,7 +37,7 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				feedEntry.setFeed(Key.create(parent));
+				feedEntry.setFeed(parent);
 				ofy.save().entity(feedEntry).now();
 			}
 		});
