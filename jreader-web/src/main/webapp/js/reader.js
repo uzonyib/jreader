@@ -80,6 +80,20 @@ $(document).ready(function() {
 	
 });
 
+var subscriptionSettingsTemplate = 
+	"<div class=\"subscription-settings-item\" feed-id=\"{feedId}\">" +
+	"	<div class=\"set-subscription-title\">" +
+	"		<input type=\"text\" value=\"{title}\" />" +
+	"		<button>Change</button>" +
+	"	</div>" +
+	"	<div class=\"set-group-title\">" +
+	"		<input class=\"set-group-title\" type=\"text\" style=\"display: none;\" value=\"{groupTitle}\" />" +
+    "		<span>{groupTitle}</span>" +
+    "		<button>Group</button>" +
+    "	</div>" +
+	"	<button class=\"unsubscribe-button\">Unsubscribe</button>" +
+	"</div>";
+
 function refreshSubscriptions(data) {
 	$("#subscription-menu").empty();
 	$("#subscription-settings").empty();
@@ -96,7 +110,12 @@ function refreshSubscriptions(data) {
     	subscriptionDiv.append(titleDiv);
     	subscriptionDiv.append(groupDiv);
     	subscriptionDiv.append(unsubscribeButton);
-        $("#subscription-settings").append(subscriptionDiv);
+        
+        $("#subscription-settings").append($(nano(subscriptionSettingsTemplate, {
+        	"feedId" : subscription.feed.id,
+        	"title" : subscription.title,
+        	"groupTitle" : (typeof subscription.group === "undefined" ? "" : subscription.group.title)
+        })));
     });
 }
 
