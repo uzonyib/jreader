@@ -92,7 +92,7 @@ public class FeedServiceImpl implements FeedService {
 					++counter;
 				}
 			}
-			LOG.warning(feed.getTitle() + " new items: " + counter);
+			LOG.info(feed.getTitle() + " new items: " + counter);
 		}
 	}
 
