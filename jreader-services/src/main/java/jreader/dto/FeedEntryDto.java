@@ -9,6 +9,7 @@ public class FeedEntryDto {
 	private String description;
 	private String author;
 	private Long publishedDate;
+	private boolean read;
 
 	public Long getId() {
 		return id;
@@ -56,6 +57,14 @@ public class FeedEntryDto {
 
 	public void setPublishedDate(Long publishedDate) {
 		this.publishedDate = publishedDate;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
 	}
 
 }

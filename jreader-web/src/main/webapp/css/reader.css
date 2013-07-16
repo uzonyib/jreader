@@ -14,3 +14,7 @@
 .subscription-menu-item {
 	cursor: pointer;
 }
+
+.feed-entry.unread .breadcrumb .title {
+	font-weight: bold;
+}

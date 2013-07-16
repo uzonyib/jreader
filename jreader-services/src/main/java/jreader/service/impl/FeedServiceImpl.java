@@ -5,10 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import jreader.dao.ActionDao;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
+import jreader.dao.UserDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.FeedEntryDto;
 import jreader.rss.RssService;
@@ -25,10 +28,16 @@ public class FeedServiceImpl implements FeedService {
 	private static final Logger LOG = Logger.getLogger(FeedServiceImpl.class.getName());
 	
 	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
 	private FeedDao feedDao;
 
 	@Autowired
 	private FeedEntryDao feedEntryDao;
+	
+	@Autowired
+	private ActionDao actionDao;
 	
 	@Autowired
 	private RssService rssService;
@@ -47,15 +56,22 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public List<FeedEntryDto> listEntries(String id) {
-		Feed feed = feedDao.find(id);
+	public List<FeedEntryDto> listEntries(String username, String feedId) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return Collections.emptyList();
+		}
+		
+		Feed feed = feedDao.find(feedId);
 		if (feed == null) {
 			return Collections.emptyList();
 		}
 		List<FeedEntry> entries = feedEntryDao.listEntries(feed);
 		List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
-		for (FeedEntry entry : entries) {
-			dtos.add(mapper.map(entry, FeedEntryDto.class));
+		for (FeedEntry feedEntry : entries) {
+			FeedEntryDto dto = mapper.map(feedEntry, FeedEntryDto.class);
+			dto.setRead(actionDao.isRead(user, feedEntry));
+			dtos.add(dto);
 		}
 		return dtos;
 	}

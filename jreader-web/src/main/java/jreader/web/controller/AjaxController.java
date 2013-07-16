@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import jreader.dto.FeedEntryDto;
 import jreader.dto.SubscriptionDto;
+import jreader.service.ActionService;
 import jreader.service.FeedService;
 import jreader.service.SubscriptionService;
+import jreader.web.dto.StatusDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,9 @@ public class AjaxController {
 	
 	@Autowired
 	private FeedService feedService;
+	
+	@Autowired
+	private ActionService actionService;
 
 	@RequestMapping(value = "/subscribe", method = RequestMethod.POST)
 	public void subscribe(@RequestParam("url") String url, HttpServletResponse response, Principal principal) throws IOException {
@@ -51,8 +56,8 @@ public class AjaxController {
 	}
 
 	@RequestMapping(value = "/entries/{id}", method = RequestMethod.GET)
-	public void getEntries(@PathVariable("id") String id, HttpServletResponse response) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listEntries(id);
+	public void getEntries(@PathVariable("id") String id, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(principal.getName(), id);
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		gson.toJson(feeds, response.getWriter());
@@ -70,6 +75,16 @@ public class AjaxController {
 			subscriptionService.entitle(principal.getName(), id, title);
 		}
 		getSubscriptions(response, principal);
+	}
+	
+	@RequestMapping(value = "/read", method = RequestMethod.POST)
+	public void read(@RequestParam("feedId") String feedId, @RequestParam("feedEntryId") String feedEntryId, HttpServletResponse response, Principal principal) throws IOException {
+		actionService.markRead(principal.getName(), feedId, feedEntryId);
+		StatusDto result = new StatusDto();
+		result.setErrorCode(0);
+		response.setCharacterEncoding("UTF-8");
+		Gson gson = new Gson();
+		gson.toJson(result, response.getWriter());
 	}
 
 }

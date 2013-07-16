@@ -32,12 +32,15 @@ $(document).ready(function() {
 	$("#subscription-menu").on("click", ".subscription-menu-item", function(event) {
 		$("#settings").hide();
 		$("#home").show();
-		var id = $(event.target).attr("feed-id");
-		$.get("/reader/entries/" + id, {}, function(data) {
+		var feedId = $(event.target).attr("feed-id");
+		$.get("/reader/entries/" + feedId, {}, function(data) {
 			$("#feed-entries").empty();
 		    $.each(JSON.parse(data), function (id, feedEntry) {
 		    	feedEntry.publishedDate = moment(new Date(feedEntry.publishedDate)).format("YYYY-MM-DD HH:mm");
-		        $("#feed-entries").append(template("feedEntryTemplate", feedEntry));
+		        $("#feed-entries").append(template("feedEntryTemplate", {
+		        	"feedId" : feedId,
+		        	"entry" : feedEntry
+		        }));
 		    });
 		});
 	});
@@ -71,8 +74,16 @@ $(document).ready(function() {
 	});
 	
 	$("#main-area").on("click", ".feed-entry", function(event) {
-		$(event.target).closest(".feed-entry").children(".breadcrumb").first().toggle();
-		$(event.target).closest(".feed-entry").children(".detail").first().toggle();
+		var feedEntry = $(event.target).closest(".feed-entry");
+		feedEntry.children(".breadcrumb").first().toggle();
+		feedEntry.children(".detail").first().toggle();
+		
+		var feedId = feedEntry.attr("feed-id");
+		var feedEntryId = feedEntry.attr("feed-entry-id");
+		$.post("/reader/read", { "feedId" : feedId, "feedEntryId" : feedEntryId }, function(data) {
+			
+		});
+		feedEntry.removeClass("unread");
 	});
 	
 	reloadSubscriptions();

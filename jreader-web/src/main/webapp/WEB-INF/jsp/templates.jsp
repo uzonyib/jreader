@@ -23,24 +23,24 @@
 </script>
 
 <script type="text/x-template" id="template-feed-entry">
-	<div class="feed-entry">
+	<div class="feed-entry{^entry.read} unread{/entry.read}" feed-id="{feedId}" feed-entry-id="{entry.id}">
 		<div class="breadcrumb">
 			<div class="title">
-				{title}
+				{entry.title}
 			</div>
 			<div class="date">
-				{publishedDate}
+				{entry.publishedDate}
 			</div>
 		</div>
 		<div class="detail" style="display: none;">
 			<div class="title">
-				{title}<a target=_blank href="{link}">Open</a>
+				{entry.title}<a target=_blank href="{entry.link}">Open</a>
 			</div>
 			<div class="date">
-				{publishedDate}
+				{entry.publishedDate}
 			</div>
 			<div class="description">
-				{description}
+				{entry.description}
 			</div>
 		</div>
 	</div>
