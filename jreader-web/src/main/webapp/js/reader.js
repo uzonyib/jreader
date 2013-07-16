@@ -35,15 +35,9 @@ $(document).ready(function() {
 		var id = $(event.target).attr("feed-id");
 		$.get("/reader/entries/" + id, {}, function(data) {
 			$("#feed-entries").empty();
-		    $.each(JSON.parse(data), function (id, option) {
-		    	var entry = $("<div class=\"feed-entry\"></div>");
-		    	var link = $("<div><a target=_blank href='" + option.link + "'>" + option.title + "</a></div>");
-		    	entry.append(link);
-		    	var description = $("<div>" + option.description + "</div>");
-		    	entry.append(description);
-		    	var date = $("<div>" + moment(new Date(option.publishedDate)).format("YYYY-MM-DD HH:mm") + "</div>");
-		    	entry.append(date);
-		        $("#feed-entries").append(entry);
+		    $.each(JSON.parse(data), function (id, feedEntry) {
+		    	feedEntry.publishedDate = moment(new Date(feedEntry.publishedDate)).format("YYYY-MM-DD HH:mm");
+		        $("#feed-entries").append(template("feedEntryTemplate", feedEntry));
 		    });
 		});
 	});
@@ -79,12 +73,14 @@ $(document).ready(function() {
 	reloadSubscriptions();
 	
 	dust.loadSource(dust.compile($("#template-subscription-settings").html(),"subscriptionSettingsTemplate"));
+	dust.loadSource(dust.compile($("#template-subscription-menu-item").html(),"subscriptionMenuItemTemplate"));
+	dust.loadSource(dust.compile($("#template-feed-entry").html(),"feedEntryTemplate"));
 	
 });
 
-function templateSubscriptionSettings(subscriptionSettings) {
-	var result;
-	dust.render("subscriptionSettingsTemplate", subscriptionSettings, function(err, res) {
+function template(templateName, data) {
+	var result = "";
+	dust.render(templateName, data, function(err, res) {
 		result = res;
 	});
 	return result;
@@ -94,9 +90,8 @@ function refreshSubscriptions(data) {
 	$("#subscription-menu").empty();
 	$("#subscription-settings").empty();
     $.each(JSON.parse(data), function (id, subscription) {
-    	$("#subscription-menu").append("<div class=\"subscription-menu-item\" feed-id=\"" + subscription.feed.id + "\">" + (typeof subscription.group === "undefined" ? "" : (subscription.group.title + " / ")) + subscription.title + "</div>");
-    	
-    	$("#subscription-settings").append(templateSubscriptionSettings(subscription));
+    	$("#subscription-menu").append(template("subscriptionMenuItemTemplate", subscription));
+    	$("#subscription-settings").append(template("subscriptionSettingsTemplate", subscription));
     });
 }
 

@@ -12,3 +12,26 @@
 		<button class="unsubscribe-button">Unsubscribe</button>
 	</div>
 </script>
+
+<script type="text/x-template" id="template-subscription-menu-item">
+	<div class="subscription-menu-item" feed-id="{feed.id}">
+		{?group}
+			{group.title}&nbsp;/&nbsp;
+		{/group}
+		{title}
+	</div>
+</script>
+
+<script type="text/x-template" id="template-feed-entry">
+	<div class="feed-entry">
+		<div class="title">
+			<a target=_blank href="{link}">{title}</a>
+		</div>
+		<div class="date">
+			{publishedDate}
+		</div>
+		<div class="description">
+			{description}
+		</div>
+	</div>
+</script>
