@@ -4,7 +4,6 @@ public class SubscriptionDto {
 	
 	private String title;
 	private FeedDto feed;
-	private SubscriptionGroupDto group;
 
 	public String getTitle() {
 		return title;
@@ -20,14 +19,6 @@ public class SubscriptionDto {
 
 	public void setFeed(FeedDto feed) {
 		this.feed = feed;
-	}
-
-	public SubscriptionGroupDto getGroup() {
-		return group;
-	}
-
-	public void setGroup(SubscriptionGroupDto group) {
-		this.group = group;
 	}
 
 }

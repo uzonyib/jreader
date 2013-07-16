@@ -15,6 +15,7 @@ import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 import jreader.dto.SubscriptionDto;
+import jreader.dto.SubscriptionGroupDto;
 import jreader.rss.RssService;
 import jreader.service.SubscriptionService;
 
@@ -72,10 +73,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		
 		Subscription subscription = subscriptionDao.find(user, feed);
 		if (subscription == null) {
+			SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, null);
+			if (subscriptionGroup == null) {
+				subscriptionGroup = new SubscriptionGroup();
+				subscriptionGroup.setUser(user);
+				subscriptionGroup.setTitle(null);
+				subscriptionGroup.setOrder(subscriptionGroupDao.getMaxOrder(user) + 1);
+				subscriptionGroupDao.save(subscriptionGroup);
+				subscriptionGroup = subscriptionGroupDao.find(user, null);
+			}
 			subscription = new Subscription();
 			subscription.setTitle(feed.getTitle());
 			subscription.setUser(user);
 			subscription.setFeed(feed);
+			subscription.setGroup(subscriptionGroup);
+			subscription.setOrder(subscriptionDao.getMaxOrder(user, subscriptionGroup) + 1);
 			subscriptionDao.save(subscription);
 		}
 	}
@@ -95,8 +107,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		Subscription subscription = subscriptionDao.find(user, feed);
 		if (subscription != null) {
 			subscriptionDao.delete(subscription);
-			if (subscription.getGroup() != null) {
-				SubscriptionGroup group = subscription.getGroup();
+			SubscriptionGroup group = subscription.getGroup();
+			if (group != null) {
 				int subscriptionCount = subscriptionGroupDao.countSubscriptions(group, user);
 				if (subscriptionCount == 0) {
 					subscriptionGroupDao.delete(group);
@@ -127,20 +139,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return;
 		}
 		
-		SubscriptionGroup group = null;
-		if (groupTitle != null) {
+		SubscriptionGroup group = subscriptionGroupDao.find(user, groupTitle);
+		if (group == null) {
+			group = new SubscriptionGroup();
+			group.setTitle(groupTitle);
+			group.setUser(user);
+			group.setOrder(subscriptionGroupDao.getMaxOrder(user) + 1);
+			subscriptionGroupDao.save(group);
 			group = subscriptionGroupDao.find(user, groupTitle);
-			if (group == null) {
-				group = new SubscriptionGroup();
-				group.setTitle(groupTitle);
-				group.setUser(user);
-				subscriptionGroupDao.save(group);
-				group = subscriptionGroupDao.find(user, groupTitle);
-			}
 		}
 		
 		SubscriptionGroup prevGroup = subscription.getGroup();
 		subscription.setGroup(group);
+		subscription.setOrder(subscriptionDao.getMaxOrder(user, group));
 		subscriptionDao.update(subscription);
 		if (prevGroup != null) {
 			int subscriptionCount = subscriptionGroupDao.countSubscriptions(prevGroup, user);
@@ -151,15 +162,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
-	public List<SubscriptionDto> list(String username) {
+	public List<SubscriptionGroupDto> list(String username) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
 		}
-		List<SubscriptionDto> dtos = new ArrayList<SubscriptionDto>();
-		for (Subscription subscription : subscriptionDao.list(user)) {
-			SubscriptionDto dto = mapper.map(subscription, SubscriptionDto.class);
+		List<SubscriptionGroupDto> dtos = new ArrayList<SubscriptionGroupDto>();
+		for (SubscriptionGroup group : subscriptionGroupDao.list(user)) {
+			SubscriptionGroupDto dto = mapper.map(group, SubscriptionGroupDto.class);
+			dto.setSubscriptions(new ArrayList<SubscriptionDto>());
 			dtos.add(dto);
+			List<Subscription> subscriptions = subscriptionDao.list(user, group);
+			for (Subscription subscription : subscriptions) {
+				dto.getSubscriptions().add(mapper.map(subscription, SubscriptionDto.class));
+			}
 		}
 		return dtos;
 	}

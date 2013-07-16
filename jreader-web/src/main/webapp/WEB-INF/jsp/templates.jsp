@@ -1,3 +1,16 @@
+<script type="text/x-template" id="template-subscription-menu-item">
+	{#.}
+		<div class="subscription-menu-group">
+			<div class="group-title">{title}</div>
+				{#subscriptions}
+					<div class="subscription-menu-item" feed-id="{feed.id}">
+						{title}
+					</div>
+				{/subscriptions}
+		</div>
+	{/.}
+</script>
+
 <script type="text/x-template" id="template-subscription-settings">
 	<div class="subscription-settings-item" feed-id="{feed.id}">
 		<div class="set-subscription-title">
@@ -10,15 +23,6 @@
 			<button>Group</button>
 		</div>
 		<button class="unsubscribe-button">Unsubscribe</button>
-	</div>
-</script>
-
-<script type="text/x-template" id="template-subscription-menu-item">
-	<div class="subscription-menu-item" feed-id="{feed.id}">
-		{?group}
-			{group.title}&nbsp;/&nbsp;
-		{/group}
-		{title}
 	</div>
 </script>
 

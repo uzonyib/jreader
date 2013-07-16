@@ -1,5 +1,7 @@
 package jreader.dao.impl;
 
+import java.util.List;
+
 import jreader.dao.SubscriptionGroupDao;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
@@ -50,6 +52,19 @@ public class SubscriptionGroupDaoImpl implements SubscriptionGroupDao {
 	public int countSubscriptions(SubscriptionGroup group, User user) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(Subscription.class).ancestor(user).filter("groupRef =", group).count();
+	}
+	
+	@Override
+	public int getMaxOrder(User user) {
+		Objectify ofy = objectifyFactory.begin();
+		SubscriptionGroup group = ofy.load().type(SubscriptionGroup.class).ancestor(user).order("-order").first().now();
+		return group == null ? -1 : group.getOrder();
+	}
+	
+	@Override
+	public List<SubscriptionGroup> list(User user) {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(SubscriptionGroup.class).ancestor(user).order("order").list();
 	}
 
 }

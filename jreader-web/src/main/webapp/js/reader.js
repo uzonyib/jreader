@@ -140,13 +140,11 @@ function loadFeedEntriesFrom(url) {
 	});
 }
 
-function refreshSubscriptions(data) {
+function refreshSubscriptions(subscriptionGroups) {
 	$("#subscription-menu").empty();
+	$("#subscription-menu").append(template("subscriptionMenuItemTemplate", subscriptionGroups));
 	$("#subscription-settings").empty();
-    $.each(JSON.parse(data), function (id, subscription) {
-    	$("#subscription-menu").append(template("subscriptionMenuItemTemplate", subscription));
-    	$("#subscription-settings").append(template("subscriptionSettingsTemplate", subscription));
-    });
+	$("#subscription-settings").append(template("subscriptionSettingsTemplate", subscriptionGroups));
 }
 
 function reloadSubscriptions() {

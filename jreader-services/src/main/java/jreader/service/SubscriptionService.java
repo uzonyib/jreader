@@ -2,7 +2,7 @@ package jreader.service;
 
 import java.util.List;
 
-import jreader.dto.SubscriptionDto;
+import jreader.dto.SubscriptionGroupDto;
 
 public interface SubscriptionService {
 	
@@ -12,7 +12,7 @@ public interface SubscriptionService {
 	
 	void assign(String username, String feedId, String groupTitle);
 	
-	List<SubscriptionDto> list(String username);
+	List<SubscriptionGroupDto> list(String username);
 	
 	void entitle(String username, String feedId, String subscriptionTitle);
 

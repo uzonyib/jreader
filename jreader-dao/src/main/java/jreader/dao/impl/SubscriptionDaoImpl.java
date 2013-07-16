@@ -5,6 +5,7 @@ import java.util.List;
 import jreader.dao.SubscriptionDao;
 import jreader.domain.Feed;
 import jreader.domain.Subscription;
+import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +67,16 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	}
 	
 	@Override
-	public List<Subscription> list(User user) {
+	public List<Subscription> list(User user, SubscriptionGroup group) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).ancestor(user).list();
+		return ofy.load().type(Subscription.class).ancestor(user).filter("groupRef =", group).order("order").list();
+	}
+	
+	@Override
+	public int getMaxOrder(User user, SubscriptionGroup group) {
+		Objectify ofy = objectifyFactory.begin();
+		Subscription subscription = ofy.load().type(Subscription.class).ancestor(user).filter("groupRef =", group).order("-order").first().now();
+		return subscription == null ? -1 : subscription.getOrder();
 	}
 
 }
