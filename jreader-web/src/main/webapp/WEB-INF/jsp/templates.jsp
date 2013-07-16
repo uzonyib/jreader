@@ -1,24 +1,30 @@
-<script type="text/x-template" id="template-subscription-settings">
-	<div class="subscription-settings-item" feed-id="{feed.id}">
-		<div class="set-subscription-title">
-			<input type="text" value="{title}" />
-			<button>Change</button>
-		</div>
-		<div class="set-group-title">
-			<input class="set-group-title" type="text" style="display: none;" value="{group.title}" />
-			<span>{group.title}</span>
-			<button>Group</button>
-		</div>
-		<button class="unsubscribe-button">Unsubscribe</button>
+<script type="text/x-template" id="template-subscription-menu-group">
+	<div class="menu-group">
+		<div class="group-title">{title}</div>
+		{#subscriptions}
+			<div class="menu-item" feed-id="{feed.id}">
+				<div class="item-title">{title}</div>
+			</div>
+		{/subscriptions}
 	</div>
 </script>
 
-<script type="text/x-template" id="template-subscription-menu-item">
-	<div class="subscription-menu-item" feed-id="{feed.id}">
-		{?group}
-			{group.title}&nbsp;/&nbsp;
-		{/group}
-		{title}
+<script type="text/x-template" id="template-subscription-group-settings">
+	<div class="settings-group">
+		<div class="group-title">{title}</div>
+		{#subscriptions groupTitle=title}
+			<div class="settings-item" feed-id="{feed.id}">
+				<div class="set-item-title">
+					<input type="text" value="{title}" />
+					<button>Change</button>
+				</div>
+				<div class="set-group-title">
+					<input class="set-group-title" type="text" value="{groupTitle}" />
+					<button>Group</button>
+				</div>
+				<button class="unsubscribe-button">Unsubscribe</button>
+			</div>
+		{/subscriptions}
 	</div>
 </script>
 

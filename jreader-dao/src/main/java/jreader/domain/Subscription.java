@@ -22,6 +22,8 @@ public class Subscription {
 	@Load
 	private Ref<SubscriptionGroup> groupRef;
 	private String title;
+	@Index
+	private int order;
 
 	public Long getId() {
 		return id;
@@ -85,6 +87,14 @@ public class Subscription {
 
 	public void setGroup(SubscriptionGroup group) {
 		this.groupRef = group == null ? null : Ref.create(group);
+	}
+
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 }

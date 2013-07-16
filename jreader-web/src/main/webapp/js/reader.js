@@ -37,7 +37,7 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$("#subscription-menu").on("click", ".subscription-menu-item", function(event) {
+	$("#subscription-menu").on("click", ".menu-item", function(event) {
 		$("#settings").hide();
 		$("#home").show();
 		var feedId = $(event.target).attr("feed-id");
@@ -46,20 +46,14 @@ $(document).ready(function() {
 	
 	$("#main-area").on("click", ".set-group-title button", function(event) {
 		var div = $(event.target).parent();
-		var input = div.children("input").first();
-		if (!input.is(":visible")) {
-			input.show();
-			div.children("span").first().hide();
-		} else {
-			var group = input.val();
-			var id = div.parent().attr("feed-id");
-			$.post("/reader/assign", { "id" : id, "group" : group }, function(data) {
-				refreshSubscriptions(data);
-			});
-		}
+		var group = div.children("input").first().val();
+		var id = div.parent().attr("feed-id");
+		$.post("/reader/assign", { "id" : id, "group" : group }, function(data) {
+			refreshSubscriptions(data);
+		});
 	});
 
-	$("#main-area").on("click", ".set-subscription-title button", function(event) {
+	$("#main-area").on("click", ".set-item-title button", function(event) {
 		var div = $(event.target).parent();
 		var input = div.children("input").first();
 		var title = input.val();
@@ -116,8 +110,8 @@ $(document).ready(function() {
 	
 	reloadSubscriptions();
 	
-	dust.loadSource(dust.compile($("#template-subscription-settings").html(),"subscriptionSettingsTemplate"));
-	dust.loadSource(dust.compile($("#template-subscription-menu-item").html(),"subscriptionMenuItemTemplate"));
+	dust.loadSource(dust.compile($("#template-subscription-group-settings").html(),"subscriptionGroupSettingsTemplate"));
+	dust.loadSource(dust.compile($("#template-subscription-menu-group").html(),"subscriptionMenuGroupTemplate"));
 	dust.loadSource(dust.compile($("#template-feed-entry").html(),"feedEntryTemplate"));
 	
 });
@@ -140,13 +134,13 @@ function loadFeedEntriesFrom(url) {
 	});
 }
 
-function refreshSubscriptions(data) {
+function refreshSubscriptions(subscriptionGroups) {
 	$("#subscription-menu").empty();
 	$("#subscription-settings").empty();
-    $.each(JSON.parse(data), function (id, subscription) {
-    	$("#subscription-menu").append(template("subscriptionMenuItemTemplate", subscription));
-    	$("#subscription-settings").append(template("subscriptionSettingsTemplate", subscription));
-    });
+	$.each(JSON.parse(subscriptionGroups), function(id, group) {
+		$("#subscription-menu").append(template("subscriptionMenuGroupTemplate", group));
+		$("#subscription-settings").append(template("subscriptionGroupSettingsTemplate", group));
+	});
 }
 
 function reloadSubscriptions() {

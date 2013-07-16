@@ -1,5 +1,7 @@
 package jreader.dao;
 
+import java.util.List;
+
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
@@ -12,5 +14,9 @@ public interface SubscriptionGroupDao {
 	void delete(SubscriptionGroup group);
 	
 	int countSubscriptions(SubscriptionGroup group, User user);
+	
+	int getMaxOrder(User user);
+	
+	List<SubscriptionGroup> list(User user);
 
 }
