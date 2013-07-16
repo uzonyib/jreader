@@ -12,6 +12,12 @@
 	
 	<context:component-scan base-package="jreader.service.impl" />
 	
-	<bean id="servicesMapper" class="org.dozer.DozerBeanMapper" />
+	<bean id="servicesMapper" class="org.dozer.DozerBeanMapper">
+		<property name="mappingFiles">
+			<list>
+				<value>services-dozer.xml</value>
+			</list>
+		</property>
+	</bean>
 	
 </beans>

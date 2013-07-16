@@ -106,5 +106,13 @@ public class AjaxController {
 		Gson gson = new Gson();
 		gson.toJson(result, response.getWriter());
 	}
+	
+	@RequestMapping(value = "/starred", method = RequestMethod.GET)
+	public void getStarredEntries(HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listStarredEntries(principal.getName());
+		response.setCharacterEncoding("UTF-8");
+		Gson gson = new Gson();
+		gson.toJson(feeds, response.getWriter());
+	}
 
 }

@@ -9,6 +9,7 @@ import jreader.dao.ActionDao;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.UserDao;
+import jreader.domain.Action;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.User;
@@ -72,6 +73,25 @@ public class FeedServiceImpl implements FeedService {
 			FeedEntryDto dto = mapper.map(feedEntry, FeedEntryDto.class);
 			dto.setRead(actionDao.isRead(user, feedEntry));
 			dto.setStarred(actionDao.isStarred(user, feedEntry));
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+	
+	@Override
+	public List<FeedEntryDto> listStarredEntries(String username) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return Collections.emptyList();
+		}
+		
+		List<Action> starActions = actionDao.list(user, ActionDao.STAR_ACTION_TYPE);
+		List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
+		for (Action starAction : starActions) {
+			FeedEntry feedEntry = starAction.getFeedEntry();
+			FeedEntryDto dto = mapper.map(feedEntry, FeedEntryDto.class);
+			dto.setRead(actionDao.isRead(user, feedEntry));
+			dto.setStarred(true);
 			dtos.add(dto);
 		}
 		return dtos;

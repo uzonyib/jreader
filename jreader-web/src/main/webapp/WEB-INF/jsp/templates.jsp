@@ -23,25 +23,25 @@
 </script>
 
 <script type="text/x-template" id="template-feed-entry">
-	<div class="feed-entry{^entry.read} unread{/entry.read}" feed-id="{feedId}" feed-entry-id="{entry.id}">
+	<div class="feed-entry{^read} unread{/read}" feed-id="{feedId}" feed-entry-id="{id}">
 		<div class="breadcrumb">
 			<div class="star-buttons">
-				<button class="star"{?entry.starred} style="display: none;"{/entry.starred}>Star</button>
-				<button class="unstar"{^entry.starred} style="display: none;"{/entry.starred}>Unstar</button>
+				<button class="star"{?starred} style="display: none;"{/starred}>Star</button>
+				<button class="unstar"{^starred} style="display: none;"{/starred}>Unstar</button>
 			</div>
 			<div class="title">
-				{entry.title}
+				{title}
 			</div>
 			<div class="date">
-				{entry.publishedDate}
+				{publishedDate}
 			</div>
 		</div>
 		<div class="detail" style="display: none;">
 			<div class="link">
-				<a target=_blank href="{entry.link}">Open</a>
+				<a target=_blank href="{link}">Open</a>
 			</div>
 			<div class="description">
-				{entry.description}
+				{description}
 			</div>
 		</div>
 	</div>

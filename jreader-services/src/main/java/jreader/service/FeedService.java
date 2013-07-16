@@ -11,6 +11,8 @@ public interface FeedService {
 
 	List<FeedEntryDto> listEntries(String username, String feedId);
 	
+	List<FeedEntryDto> listStarredEntries(String username);
+	
 	void refreshFeeds();
 
 }

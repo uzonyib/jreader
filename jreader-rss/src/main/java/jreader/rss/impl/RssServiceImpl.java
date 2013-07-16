@@ -34,7 +34,7 @@ public class RssServiceImpl implements RssService {
 //			List<SyndEntry> syndEntries = syndFeed.getEntries();
 //			for (SyndEntry syndEntry : syndEntries) {
 //				FeedEntry feedEntry = new FeedEntry();
-//				System.out.println(syndEntry.getPublishedDate());
+//				System.out.println(syndEntry.getDescription().getValue());
 //			}
 			return feed;
 		} catch (Exception e) {
