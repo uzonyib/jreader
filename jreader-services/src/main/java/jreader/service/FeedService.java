@@ -14,5 +14,7 @@ public interface FeedService {
 	List<FeedEntryDto> listStarredEntries(String username);
 	
 	void refreshFeeds();
+	
+	void cleanup(int olderThanDays, int keptCount);
 
 }

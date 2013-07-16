@@ -21,6 +21,8 @@ public interface ActionDao {
 	
 	boolean isStarred(User user, FeedEntry feedEntry);
 	
+	boolean isStarred(FeedEntry feedEntry);
+	
 	List<Action> list(User user, String type);
 
 }

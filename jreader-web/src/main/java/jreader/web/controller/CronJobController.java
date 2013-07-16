@@ -11,6 +11,7 @@ import jreader.service.FeedService;
 import jreader.web.dto.StatusDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +24,12 @@ import com.google.gson.JsonIOException;
 public class CronJobController {
 	
 	private static final Logger LOG = Logger.getLogger(CronJobController.class.getName());
+	
+	@Value("#{cronProps.minAgeToDelete}")
+	private int minAgeToDelete;
+	
+	@Value("#{cronProps.minCountToKeep}")
+	private int minCountToKeep;
 	
 	@Autowired
 	private FeedService feedService;
@@ -37,6 +44,21 @@ public class CronJobController {
 		} else {
 			result.setErrorCode(1);
 			LOG.warning("Feed refresh prevented.");
+		}
+		Gson gson = new Gson();
+		gson.toJson(result, response.getWriter());
+	}
+
+	@RequestMapping(value = "/cleanup", method = RequestMethod.GET)
+	public void cleanup(HttpServletRequest request, HttpServletResponse response, Principal principal) throws JsonIOException, IOException {
+		StatusDto result = new StatusDto();
+		if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
+			feedService.cleanup(minAgeToDelete, minCountToKeep);
+			result.setErrorCode(0);
+			LOG.info("Cleanup completed.");
+		} else {
+			result.setErrorCode(1);
+			LOG.warning("Cleanup prevented.");
 		}
 		Gson gson = new Gson();
 		gson.toJson(result, response.getWriter());

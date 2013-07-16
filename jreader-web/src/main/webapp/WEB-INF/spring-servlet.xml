@@ -19,6 +19,7 @@
  	<import resource="classpath:/jreader-services.xml" />
  	
  	<util:properties id="securityProps" location="/WEB-INF/security.properties" />
+ 	<util:properties id="cronProps" location="/WEB-INF/cron.properties" />
  
 	<context:component-scan base-package="jreader.web.controller" />
  

@@ -26,6 +26,12 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 	
 	@Override
+	public FeedEntry find(Feed parent, int ordinal) {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(FeedEntry.class).ancestor(parent).order("-publishedDate").offset(ordinal - 1).limit(1).first().now();
+	}
+	
+	@Override
 	public FeedEntry findByLink(Feed parent, String link) {
 		return find(parent, getId(link));
 	}
@@ -41,11 +47,28 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 			}
 		});
 	}
+	
+	@Override
+	public void delete(final FeedEntry feedEntry) {
+		final Objectify ofy = objectifyFactory.begin();
+		ofy.transact(new VoidWork() {
+			@Override
+			public void vrun() {
+				ofy.delete().entity(feedEntry).now();
+			}
+		});
+	}
 
 	@Override
 	public List<FeedEntry> listEntries(Feed feed) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(FeedEntry.class).ancestor(feed).order("-publishedDate").limit(10).list();
+	}
+	
+	@Override
+	public List<FeedEntry> listEntriesOlderThan(Feed feed, long date) {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(FeedEntry.class).ancestor(feed).filter("publishedDate <", date).list();
 	}
 	
 	private static String getId(String link) {

@@ -2,6 +2,7 @@ package jreader.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -115,6 +116,29 @@ public class FeedServiceImpl implements FeedService {
 				}
 			}
 			LOG.info(feed.getTitle() + " new items: " + counter);
+		}
+	}
+	
+	@Override
+	public void cleanup(int olderThanDays, int keptCount) {
+		List<Feed> feeds = feedDao.listAll();
+		long date = new Date().getTime() - 1000 * 60 * 60 * 24 * olderThanDays;
+		for (Feed feed : feeds) {
+			FeedEntry e = feedEntryDao.find(feed, keptCount);
+			if (e == null) {
+				continue;
+			}
+			
+			int count = 0;
+			long threshold = Math.min(date, e.getPublishedDate());
+			List<FeedEntry> feedEntries = feedEntryDao.listEntriesOlderThan(feed, threshold);
+			for (FeedEntry feedEntry : feedEntries) {
+				if (!actionDao.isStarred(feedEntry)) {
+					feedEntryDao.delete(feedEntry);
+					++count;
+				}
+			}
+			LOG.info(feed.getTitle() + " deleted items older than " + threshold + ": " + count);
 		}
 	}
 

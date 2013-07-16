@@ -1,5 +1,7 @@
 package jreader.dao.impl;
 
+import java.util.List;
+
 import jreader.dao.UserDao;
 import jreader.domain.User;
 
@@ -20,6 +22,12 @@ public class UserDaoImpl implements UserDao {
 	public User find(String username) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(User.class).id(username).now();
+	}
+	
+	@Override
+	public List<User> listAll() {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(User.class).list();
 	}
 
 	@Override

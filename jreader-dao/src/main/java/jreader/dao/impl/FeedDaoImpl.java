@@ -56,7 +56,7 @@ public class FeedDaoImpl implements FeedDao {
 			@Override
 			public void vrun() {
 				QueryKeys<FeedEntry> feedEntryKeys = ofy.load().type(FeedEntry.class).ancestor(feed).keys();
-				ofy.delete().keys(feedEntryKeys);
+				ofy.delete().keys(feedEntryKeys).now();
 				ofy.delete().entity(feed).now();
 			}
 		});

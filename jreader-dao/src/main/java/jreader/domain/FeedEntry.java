@@ -62,14 +62,6 @@ public class FeedEntry {
 		this.author = author;
 	}
 
-	public Long getPublishDate() {
-		return publishedDate;
-	}
-
-	public void setPublishDate(Long publishDate) {
-		this.publishedDate = publishDate;
-	}
-
 	public Long getPublishedDate() {
 		return publishedDate;
 	}

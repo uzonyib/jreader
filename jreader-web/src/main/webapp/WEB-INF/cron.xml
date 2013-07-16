@@ -5,4 +5,10 @@
 		<description>Refresh all feeds</description>
 		<schedule>every 30 mins</schedule>
 	</cron>
+	<cron>
+		<url>/cron/cleanup</url>
+		<description>Delete old non-starred entries</description>
+		<schedule>every day 00:00 synchronized</schedule>
+		<timezone>Europe/Budapest</timezone>
+	</cron>
 </cronentries>

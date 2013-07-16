@@ -45,7 +45,7 @@ public class ActionDaoImpl implements ActionDao {
 	@Override
 	public Action find(User user, FeedEntry feedEntry, String type) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Action.class).ancestor(user).filter("feedEntryRef =", feedEntry).filter("type =", type).first().now();
+		return ofy.load().type(Action.class).filter("userRef =", user).filter("feedEntryRef =", feedEntry).filter("type =", type).first().now();
 	}
 	
 	@Override
@@ -57,11 +57,17 @@ public class ActionDaoImpl implements ActionDao {
 	public boolean isStarred(User user, FeedEntry feedEntry) {
 		return find(user, feedEntry, STAR_ACTION_TYPE) != null;
 	}
+	
+	@Override
+	public boolean isStarred(FeedEntry feedEntry) {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(Action.class).filter("feedEntryRef =", feedEntry).filter("type =", STAR_ACTION_TYPE).count() > 0;
+	}
 
 	@Override
 	public List<Action> list(User user, String type) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Action.class).ancestor(user).filter("type =", type).list();
+		return ofy.load().type(Action.class).filter("userRef =", user).filter("type =", type).list();
 	}
 
 }
