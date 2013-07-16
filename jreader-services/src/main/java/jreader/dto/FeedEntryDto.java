@@ -1,6 +1,5 @@
 package jreader.dto;
 
-
 public class FeedEntryDto {
 	
 	private Long id;
@@ -10,6 +9,7 @@ public class FeedEntryDto {
 	private String author;
 	private Long publishedDate;
 	private boolean read;
+	private boolean starred;
 
 	public Long getId() {
 		return id;
@@ -65,6 +65,14 @@ public class FeedEntryDto {
 
 	public void setRead(boolean read) {
 		this.read = read;
+	}
+
+	public boolean isStarred() {
+		return starred;
+	}
+
+	public void setStarred(boolean starred) {
+		this.starred = starred;
 	}
 
 }

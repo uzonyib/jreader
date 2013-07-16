@@ -15,6 +15,10 @@
 	cursor: pointer;
 }
 
+.feed-entry .breadcrumb .title {
+	cursor: pointer;
+}
+
 .feed-entry.unread .breadcrumb .title {
 	font-weight: bold;
 }

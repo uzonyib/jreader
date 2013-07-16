@@ -71,6 +71,7 @@ public class FeedServiceImpl implements FeedService {
 		for (FeedEntry feedEntry : entries) {
 			FeedEntryDto dto = mapper.map(feedEntry, FeedEntryDto.class);
 			dto.setRead(actionDao.isRead(user, feedEntry));
+			dto.setStarred(actionDao.isStarred(user, feedEntry));
 			dtos.add(dto);
 		}
 		return dtos;

@@ -87,4 +87,24 @@ public class AjaxController {
 		gson.toJson(result, response.getWriter());
 	}
 
+	@RequestMapping(value = "/star", method = RequestMethod.POST)
+	public void star(@RequestParam("feedId") String feedId, @RequestParam("feedEntryId") String feedEntryId, HttpServletResponse response, Principal principal) throws IOException {
+		actionService.markStarred(principal.getName(), feedId, feedEntryId);
+		StatusDto result = new StatusDto();
+		result.setErrorCode(0);
+		response.setCharacterEncoding("UTF-8");
+		Gson gson = new Gson();
+		gson.toJson(result, response.getWriter());
+	}
+	
+	@RequestMapping(value = "/unstar", method = RequestMethod.POST)
+	public void unstar(@RequestParam("feedId") String feedId, @RequestParam("feedEntryId") String feedEntryId, HttpServletResponse response, Principal principal) throws IOException {
+		actionService.unmarkStarred(principal.getName(), feedId, feedEntryId);
+		StatusDto result = new StatusDto();
+		result.setErrorCode(0);
+		response.setCharacterEncoding("UTF-8");
+		Gson gson = new Gson();
+		gson.toJson(result, response.getWriter());
+	}
+
 }

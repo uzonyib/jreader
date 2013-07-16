@@ -32,6 +32,17 @@ public class ActionDaoImpl implements ActionDao {
 	}
 	
 	@Override
+	public void delete(final Action action) {
+		final Objectify ofy = objectifyFactory.begin();
+		ofy.transact(new VoidWork() {
+			@Override
+			public void vrun() {
+				ofy.delete().entity(action).now();
+			}
+		});
+	}
+	
+	@Override
 	public Action find(User user, FeedEntry feedEntry, String type) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(Action.class).ancestor(user).filter("feedEntryRef =", feedEntry).filter("type =", type).first().now();
@@ -40,6 +51,11 @@ public class ActionDaoImpl implements ActionDao {
 	@Override
 	public boolean isRead(User user, FeedEntry feedEntry) {
 		return find(user, feedEntry, READ_ACTION_TYPE) != null;
+	}
+	
+	@Override
+	public boolean isStarred(User user, FeedEntry feedEntry) {
+		return find(user, feedEntry, STAR_ACTION_TYPE) != null;
 	}
 
 	@Override

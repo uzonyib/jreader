@@ -25,6 +25,10 @@
 <script type="text/x-template" id="template-feed-entry">
 	<div class="feed-entry{^entry.read} unread{/entry.read}" feed-id="{feedId}" feed-entry-id="{entry.id}">
 		<div class="breadcrumb">
+			<div class="star-buttons">
+				<button class="star"{?entry.starred} style="display: none;"{/entry.starred}>Star</button>
+				<button class="unstar"{^entry.starred} style="display: none;"{/entry.starred}>Unstar</button>
+			</div>
 			<div class="title">
 				{entry.title}
 			</div>
@@ -33,11 +37,8 @@
 			</div>
 		</div>
 		<div class="detail" style="display: none;">
-			<div class="title">
-				{entry.title}<a target=_blank href="{entry.link}">Open</a>
-			</div>
-			<div class="date">
-				{entry.publishedDate}
+			<div class="link">
+				<a target=_blank href="{entry.link}">Open</a>
 			</div>
 			<div class="description">
 				{entry.description}

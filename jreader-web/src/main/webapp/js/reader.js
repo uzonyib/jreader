@@ -73,17 +73,46 @@ $(document).ready(function() {
 		});
 	});
 	
-	$("#main-area").on("click", ".feed-entry", function(event) {
+	$("#main-area").on("click", ".feed-entry .breadcrumb .title", function(event) {
 		var feedEntry = $(event.target).closest(".feed-entry");
-		feedEntry.children(".breadcrumb").first().toggle();
 		feedEntry.children(".detail").first().toggle();
 		
+		if (feedEntry.hasClass("unread")) {
+			feedEntry.removeClass("unread");
+			var feedId = feedEntry.attr("feed-id");
+			var feedEntryId = feedEntry.attr("feed-entry-id");
+			$.post("/reader/read", { "feedId" : feedId, "feedEntryId" : feedEntryId }, function(data) {
+				
+			});
+		}
+	});
+	
+	$("#main-area").on("click", ".feed-entry .breadcrumb .star-buttons .star", function(event) {
+		var starButton = $(event.target);
+		starButton.attr("disabled, disabled");
+		var feedEntry = starButton.closest(".feed-entry");
 		var feedId = feedEntry.attr("feed-id");
 		var feedEntryId = feedEntry.attr("feed-entry-id");
-		$.post("/reader/read", { "feedId" : feedId, "feedEntryId" : feedEntryId }, function(data) {
-			
+		$.post("/reader/star", { "feedId" : feedId, "feedEntryId" : feedEntryId }, function(data) {
+			starButton.hide();
+			var unstarButton = starButton.parent().children(".unstar").first();
+			unstarButton.removeAttr("disabled");
+			unstarButton.show();
 		});
-		feedEntry.removeClass("unread");
+	});
+
+	$("#main-area").on("click", ".feed-entry .breadcrumb .star-buttons .unstar", function(event) {
+		var unstarButton = $(event.target);
+		unstarButton.attr("disabled, disabled");
+		var feedEntry = unstarButton.closest(".feed-entry");
+		var feedId = feedEntry.attr("feed-id");
+		var feedEntryId = feedEntry.attr("feed-entry-id");
+		$.post("/reader/unstar", { "feedId" : feedId, "feedEntryId" : feedEntryId }, function(data) {
+			unstarButton.hide();
+			var starButton = unstarButton.parent().children(".star").first();
+			starButton.removeAttr("disabled");
+			starButton.show();
+		});
 	});
 	
 	reloadSubscriptions();

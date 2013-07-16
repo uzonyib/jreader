@@ -53,5 +53,54 @@ public class ActionServiceImpl implements ActionService {
 			actionDao.save(action);
 		}
 	}
+	
+	@Override
+	public void markStarred(String username, String feedId, String feedEntryId) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		Feed feed = feedDao.find(feedId);
+		if (feed == null) {
+			return;
+		}
+		
+		FeedEntry feedEntry = feedEntryDao.find(feed, feedEntryId);
+		if (feedEntry == null) {
+			return;
+		}
+		
+		if (!actionDao.isStarred(user, feedEntry)) {
+			Action action = new Action();
+			action.setUser(user);
+			action.setFeedEntry(feedEntry);
+			action.setType(ActionDao.STAR_ACTION_TYPE);
+			actionDao.save(action);
+		}
+	}
+	
+	@Override
+	public void unmarkStarred(String username, String feedId, String feedEntryId) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		Feed feed = feedDao.find(feedId);
+		if (feed == null) {
+			return;
+		}
+		
+		FeedEntry feedEntry = feedEntryDao.find(feed, feedEntryId);
+		if (feedEntry == null) {
+			return;
+		}
+		
+		Action action = actionDao.find(user, feedEntry, ActionDao.STAR_ACTION_TYPE);
+		if (action != null) {
+			actionDao.delete(action);
+		}
+	}
 
 }
