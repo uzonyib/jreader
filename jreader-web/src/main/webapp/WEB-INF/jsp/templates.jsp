@@ -24,14 +24,24 @@
 
 <script type="text/x-template" id="template-feed-entry">
 	<div class="feed-entry">
-		<div class="title">
-			<a target=_blank href="{link}">{title}</a>
+		<div class="breadcrumb">
+			<div class="title">
+				{title}
+			</div>
+			<div class="date">
+				{publishedDate}
+			</div>
 		</div>
-		<div class="date">
-			{publishedDate}
-		</div>
-		<div class="description">
-			{description}
+		<div class="detail" style="display: none;">
+			<div class="title">
+				{title}<a target=_blank href="{link}">Open</a>
+			</div>
+			<div class="date">
+				{publishedDate}
+			</div>
+			<div class="description">
+				{description}
+			</div>
 		</div>
 	</div>
 </script>

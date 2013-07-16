@@ -70,6 +70,11 @@ $(document).ready(function() {
 		});
 	});
 	
+	$("#main-area").on("click", ".feed-entry", function(event) {
+		$(event.target).closest(".feed-entry").children(".breadcrumb").first().toggle();
+		$(event.target).closest(".feed-entry").children(".detail").first().toggle();
+	});
+	
 	reloadSubscriptions();
 	
 	dust.loadSource(dust.compile($("#template-subscription-settings").html(),"subscriptionSettingsTemplate"));
