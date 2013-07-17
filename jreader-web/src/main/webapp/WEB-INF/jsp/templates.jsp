@@ -1,9 +1,11 @@
 <script type="text/x-template" id="template-subscription-menu-group">
 	<div class="menu-group">
-		<div class="group-title">{title}</div>
+		<div class="group-title">
+			{?title}{title}{:else}Ungrouped{/title}
+		</div>
 		{#subscriptions}
 			<div class="menu-item" feed-id="{feed.id}">
-				<div class="item-title">{title}</div>
+				{title}
 			</div>
 		{/subscriptions}
 	</div>
@@ -11,7 +13,9 @@
 
 <script type="text/x-template" id="template-subscription-group-settings">
 	<div class="settings-group">
-		<div class="group-title">{title}</div>
+		<div class="group-title">
+			{?title}{title}{:else}Ungrouped{/title}
+		</div>
 		{#subscriptions groupTitle=title}
 			<div class="settings-item" feed-id="{feed.id}">
 				<div class="set-item-title">
@@ -29,12 +33,13 @@
 </script>
 
 <script type="text/x-template" id="template-feed-entry">
-	<div class="feed-entry{^read} unread{/read}" feed-id="{feedId}" feed-entry-id="{id}">
+	<div class="feed-entry{^read} unread{/read}" feed-entry-id="{id}">
 		<div class="breadcrumb">
 			<div class="star-buttons">
 				<button class="star"{?starred} style="display: none;"{/starred}>Star</button>
 				<button class="unstar"{^starred} style="display: none;"{/starred}>Unstar</button>
 			</div>
+			<div class="feed-title" feed-id="{feedId}">{subscriptionTitle}</div>
 			<div class="title">
 				{title}
 			</div>

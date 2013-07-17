@@ -43,6 +43,18 @@ public class ActionDaoImpl implements ActionDao {
 	}
 	
 	@Override
+	public void deleteAllFor(FeedEntry feedEntry) {
+		final Objectify ofy = objectifyFactory.begin();
+		final List<Action> actions = ofy.load().type(Action.class).filter("feedEntryRef", feedEntry).list();
+		ofy.transact(new VoidWork() {
+			@Override
+			public void vrun() {
+				ofy.delete().entity(actions).now();
+			}
+		});
+	}
+	
+	@Override
 	public Action find(User user, FeedEntry feedEntry, String type) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(Action.class).filter("userRef =", user).filter("feedEntryRef =", feedEntry).filter("type =", type).first().now();

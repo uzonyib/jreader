@@ -23,7 +23,7 @@ public class SubscriptionGroupDaoImpl implements SubscriptionGroupDao {
 	@Override
 	public SubscriptionGroup find(User user, String title) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(SubscriptionGroup.class).ancestor(user).filter("title =", title).first().now();
+		return ofy.load().type(SubscriptionGroup.class).filter("userRef", user).filter("title =", title).first().now();
 	}
 
 	@Override
@@ -51,20 +51,20 @@ public class SubscriptionGroupDaoImpl implements SubscriptionGroupDao {
 	@Override
 	public int countSubscriptions(SubscriptionGroup group, User user) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).ancestor(user).filter("groupRef =", group).count();
+		return ofy.load().type(Subscription.class).filter("userRef", user).filter("groupRef =", group).count();
 	}
 	
 	@Override
 	public int getMaxOrder(User user) {
 		Objectify ofy = objectifyFactory.begin();
-		SubscriptionGroup group = ofy.load().type(SubscriptionGroup.class).ancestor(user).order("-order").first().now();
+		SubscriptionGroup group = ofy.load().type(SubscriptionGroup.class).filter("userRef", user).order("-order").first().now();
 		return group == null ? -1 : group.getOrder();
 	}
 	
 	@Override
 	public List<SubscriptionGroup> list(User user) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(SubscriptionGroup.class).ancestor(user).order("order").list();
+		return ofy.load().type(SubscriptionGroup.class).filter("userRef", user).order("order").list();
 	}
 
 }

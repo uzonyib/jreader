@@ -1,5 +1,6 @@
 package jreader.dao.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import jreader.dao.FeedEntryDao;
@@ -20,20 +21,20 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	private ObjectifyFactory objectifyFactory;
 	
 	@Override
-	public FeedEntry find(Feed parent, String id) {
+	public FeedEntry find(String id) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).parent(parent).id(id).now();
+		return ofy.load().type(FeedEntry.class).id(id).now();
 	}
 	
 	@Override
-	public FeedEntry find(Feed parent, int ordinal) {
+	public FeedEntry find(Feed feed, int ordinal) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).ancestor(parent).order("-publishedDate").offset(ordinal - 1).limit(1).first().now();
+		return ofy.load().type(FeedEntry.class).filter("feedRef =", feed).order("-publishedDate").offset(ordinal - 1).limit(1).first().now();
 	}
 	
 	@Override
-	public FeedEntry findByLink(Feed parent, String link) {
-		return find(parent, getId(link));
+	public FeedEntry findByLink(String link) {
+		return find(getId(link));
 	}
 	
 	@Override
@@ -60,15 +61,16 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 
 	@Override
-	public List<FeedEntry> listEntries(Feed feed) {
+	public List<FeedEntry> listEntries(List<String> feedIds) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).ancestor(feed).order("-publishedDate").limit(10).list();
+		Collection<Feed> values = ofy.load().type(Feed.class).ids(feedIds).values();
+		return ofy.load().type(FeedEntry.class).filter("feedRef in", values).order("-publishedDate").limit(10).list();
 	}
 	
 	@Override
 	public List<FeedEntry> listEntriesOlderThan(Feed feed, long date) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).ancestor(feed).filter("publishedDate <", date).list();
+		return ofy.load().type(FeedEntry.class).filter("feedRef =", feed).filter("publishedDate <", date).list();
 	}
 	
 	private static String getId(String link) {

@@ -15,6 +15,8 @@ public interface ActionDao {
 	
 	void delete(Action action);
 	
+	void deleteAllFor(FeedEntry feedEntry);
+	
 	Action find(User user, FeedEntry feedEntry, String type);
 	
 	boolean isRead(User user, FeedEntry feedEntry);

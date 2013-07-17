@@ -46,7 +46,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	@Override
 	public Subscription find(User user, Feed feed) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).ancestor(user).filter("feedRef =", feed).first().now();
+		return ofy.load().type(Subscription.class).filter("userRef =", user).filter("feedRef =", feed).first().now();
 	}
 	
 	@Override
@@ -69,13 +69,13 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	@Override
 	public List<Subscription> list(User user, SubscriptionGroup group) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).ancestor(user).filter("groupRef =", group).order("order").list();
+		return ofy.load().type(Subscription.class).filter("userRef =", user).filter("groupRef =", group).order("order").list();
 	}
 	
 	@Override
 	public int getMaxOrder(User user, SubscriptionGroup group) {
 		Objectify ofy = objectifyFactory.begin();
-		Subscription subscription = ofy.load().type(Subscription.class).ancestor(user).filter("groupRef =", group).order("-order").first().now();
+		Subscription subscription = ofy.load().type(Subscription.class).filter("userRef", user).filter("groupRef =", group).order("-order").first().now();
 		return subscription == null ? -1 : subscription.getOrder();
 	}
 

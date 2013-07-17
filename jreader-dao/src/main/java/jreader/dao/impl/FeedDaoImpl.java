@@ -55,11 +55,18 @@ public class FeedDaoImpl implements FeedDao {
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				QueryKeys<FeedEntry> feedEntryKeys = ofy.load().type(FeedEntry.class).ancestor(feed).keys();
+				QueryKeys<FeedEntry> feedEntryKeys = ofy.load().type(FeedEntry.class).filter("feedRef =", feed).keys();
 				ofy.delete().keys(feedEntryKeys).now();
 				ofy.delete().entity(feed).now();
 			}
 		});
+	}
+	
+	@Override
+	public Long getLastUpdatedDate(Feed feed) {
+		Objectify ofy = objectifyFactory.begin();
+		FeedEntry last = ofy.load().type(FeedEntry.class).filter("feedRef =", feed).order("-publishedDate").first().now();
+		return last == null ? null : last.getPublishedDate();
 	}
 	
 	private static String getId(String url) {

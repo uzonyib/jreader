@@ -1,11 +1,11 @@
 package jreader.service.impl;
 
+import java.util.List;
+
 import jreader.dao.ActionDao;
-import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.UserDao;
 import jreader.domain.Action;
-import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.User;
 import jreader.service.ActionService;
@@ -20,53 +20,42 @@ public class ActionServiceImpl implements ActionService {
 	private UserDao userDao;
 	
 	@Autowired
-	private FeedDao feedDao;
-	
-	@Autowired
 	private FeedEntryDao feedEntryDao;
 	
 	@Autowired
 	private ActionDao actionDao;
 
 	@Override
-	public void markRead(String username, String feedId, String feedEntryId) {
+	public void markRead(String username, List<String> feedEntryIds) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
 		}
 		
-		Feed feed = feedDao.find(feedId);
-		if (feed == null) {
-			return;
-		}
-		
-		FeedEntry feedEntry = feedEntryDao.find(feed, feedEntryId);
-		if (feedEntry == null) {
-			return;
-		}
-		
-		if (!actionDao.isRead(user, feedEntry)) {
-			Action action = new Action();
-			action.setUser(user);
-			action.setFeedEntry(feedEntry);
-			action.setType(ActionDao.READ_ACTION_TYPE);
-			actionDao.save(action);
+		for (String feedEntryId : feedEntryIds) {
+			FeedEntry feedEntry = feedEntryDao.find(feedEntryId);
+			if (feedEntry == null) {
+				continue;
+			}
+			
+			if (!actionDao.isRead(user, feedEntry)) {
+				Action action = new Action();
+				action.setUser(user);
+				action.setFeedEntry(feedEntry);
+				action.setType(ActionDao.READ_ACTION_TYPE);
+				actionDao.save(action);
+			}
 		}
 	}
 	
 	@Override
-	public void markStarred(String username, String feedId, String feedEntryId) {
+	public void star(String username, String feedEntryId) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
 		}
 		
-		Feed feed = feedDao.find(feedId);
-		if (feed == null) {
-			return;
-		}
-		
-		FeedEntry feedEntry = feedEntryDao.find(feed, feedEntryId);
+		FeedEntry feedEntry = feedEntryDao.find(feedEntryId);
 		if (feedEntry == null) {
 			return;
 		}
@@ -81,18 +70,13 @@ public class ActionServiceImpl implements ActionService {
 	}
 	
 	@Override
-	public void unmarkStarred(String username, String feedId, String feedEntryId) {
+	public void unstar(String username, String feedEntryId) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
 		}
 		
-		Feed feed = feedDao.find(feedId);
-		if (feed == null) {
-			return;
-		}
-		
-		FeedEntry feedEntry = feedEntryDao.find(feed, feedEntryId);
+		FeedEntry feedEntry = feedEntryDao.find(feedEntryId);
 		if (feedEntry == null) {
 			return;
 		}

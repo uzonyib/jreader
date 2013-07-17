@@ -5,7 +5,6 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
-import com.googlecode.objectify.annotation.Parent;
 
 @Entity
 public class FeedEntry {
@@ -18,7 +17,7 @@ public class FeedEntry {
 	private String author;
 	@Index
 	private Long publishedDate;
-	@Parent
+	@Index
 	@Load
 	private Ref<Feed> feedRef;
 

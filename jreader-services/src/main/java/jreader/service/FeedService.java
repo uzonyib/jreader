@@ -9,7 +9,7 @@ public interface FeedService {
 	
 	List<FeedDto> list();
 
-	List<FeedEntryDto> listEntries(String username, String feedId);
+	List<FeedEntryDto> listEntries(String username, List<String> feedIds);
 	
 	List<FeedEntryDto> listStarredEntries(String username);
 	

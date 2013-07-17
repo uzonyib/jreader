@@ -1,11 +1,13 @@
 package jreader.service;
 
+import java.util.List;
+
 public interface ActionService {
 	
-	void markRead(String username, String feedId, String feedEntryId);
+	void markRead(String username, List<String> feedEntryIds);
 	
-	void markStarred(String username, String feedId, String feedEntryId);
+	void star(String username, String feedEntryId);
 	
-	void unmarkStarred(String username, String feedId, String feedEntryId);
+	void unstar(String username, String feedEntryId);
 	
 }

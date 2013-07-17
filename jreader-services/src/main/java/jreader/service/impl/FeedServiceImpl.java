@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import jreader.dao.ActionDao;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
+import jreader.dao.SubscriptionDao;
 import jreader.dao.UserDao;
 import jreader.domain.Action;
 import jreader.domain.Feed;
@@ -31,6 +32,9 @@ public class FeedServiceImpl implements FeedService {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private SubscriptionDao subscriptionDao;
 	
 	@Autowired
 	private FeedDao feedDao;
@@ -58,22 +62,19 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public List<FeedEntryDto> listEntries(String username, String feedId) {
+	public List<FeedEntryDto> listEntries(String username, List<String> feedIds) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
 		}
 		
-		Feed feed = feedDao.find(feedId);
-		if (feed == null) {
-			return Collections.emptyList();
-		}
-		List<FeedEntry> entries = feedEntryDao.listEntries(feed);
+		List<FeedEntry> entries = feedEntryDao.listEntries(feedIds);
 		List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
 		for (FeedEntry feedEntry : entries) {
 			FeedEntryDto dto = mapper.map(feedEntry, FeedEntryDto.class);
 			dto.setRead(actionDao.isRead(user, feedEntry));
 			dto.setStarred(actionDao.isStarred(user, feedEntry));
+			dto.setSubscriptionTitle(subscriptionDao.find(user, feedEntry.getFeed()).getTitle());
 			dtos.add(dto);
 		}
 		return dtos;
@@ -106,10 +107,11 @@ public class FeedServiceImpl implements FeedService {
 			if (rssFeed == null) {
 				continue;
 			}
+			Long lastUpdate = feedDao.getLastUpdatedDate(feed);
 			int counter = 0;
 			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
-				FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
-				if (feedEntryDao.findByLink(feed, feedEntry.getLink()) == null) {
+				if (lastUpdate != null && lastUpdate < rssFeedEntry.getPublishedDate()) {
+					FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
 					feedEntry.setFeed(feed);
 					feedEntryDao.save(feedEntry);
 					++counter;
@@ -134,6 +136,7 @@ public class FeedServiceImpl implements FeedService {
 			List<FeedEntry> feedEntries = feedEntryDao.listEntriesOlderThan(feed, threshold);
 			for (FeedEntry feedEntry : feedEntries) {
 				if (!actionDao.isStarred(feedEntry)) {
+					actionDao.deleteAllFor(feedEntry);
 					feedEntryDao.delete(feedEntry);
 					++count;
 				}

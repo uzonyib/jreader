@@ -2,8 +2,9 @@ package jreader.dto;
 
 public class FeedEntryDto {
 	
-	private Long id;
+	private String id;
 	private String feedId;
+	private String subscriptionTitle;
 	private String link;
 	private String title;
 	private String description;
@@ -12,11 +13,11 @@ public class FeedEntryDto {
 	private boolean read;
 	private boolean starred;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -26,6 +27,14 @@ public class FeedEntryDto {
 
 	public void setFeedId(String feedId) {
 		this.feedId = feedId;
+	}
+
+	public String getSubscriptionTitle() {
+		return subscriptionTitle;
+	}
+
+	public void setSubscriptionTitle(String subscriptionTitle) {
+		this.subscriptionTitle = subscriptionTitle;
 	}
 
 	public String getLink() {

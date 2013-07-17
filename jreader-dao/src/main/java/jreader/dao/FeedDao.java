@@ -7,7 +7,7 @@ import jreader.domain.Feed;
 public interface FeedDao {
 	
 	Feed find(String id);
-	
+
 	Feed findByUrl(String url);
 	
 	List<Feed> listAll();
@@ -15,5 +15,7 @@ public interface FeedDao {
 	void save(Feed feed);
 	
 	void delete(Feed feed);
+	
+	Long getLastUpdatedDate(Feed feed);
 	
 }

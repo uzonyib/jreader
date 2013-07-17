@@ -7,17 +7,17 @@ import jreader.domain.FeedEntry;
 
 public interface FeedEntryDao {
 	
-	FeedEntry find(Feed parent, String id);
+	FeedEntry find(String id);
 	
 	FeedEntry find(Feed parent, int ordinal);
 	
-	FeedEntry findByLink(Feed parent, String link);
+	FeedEntry findByLink(String link);
 	
 	void save(FeedEntry feedEntry);
 	
 	void delete(FeedEntry feedEntry);
 	
-	List<FeedEntry> listEntries(Feed feed);
+	List<FeedEntry> listEntries(List<String> feedIds);
 	
 	List<FeedEntry> listEntriesOlderThan(Feed feed, long date);
 

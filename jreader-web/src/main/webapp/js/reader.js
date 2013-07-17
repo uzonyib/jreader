@@ -41,7 +41,18 @@ $(document).ready(function() {
 		$("#settings").hide();
 		$("#home").show();
 		var feedId = $(event.target).attr("feed-id");
-		loadFeedEntriesFrom("/reader/entries/" + feedId);
+		loadFeedEntriesFrom("/reader/entries?ids=" + feedId);
+	});
+
+	$("#subscription-menu").on("click", ".menu-group .group-title", function(event) {
+		$("#settings").hide();
+		$("#home").show();
+		var feedIds = "";
+		$(event.target).parent().children(".menu-item").each(function(id, item) {
+			feedIds += "," + $(item).attr("feed-id");
+		});
+		feedIds = feedIds.substring(1);
+		loadFeedEntriesFrom("/reader/entries?ids=" + feedIds);
 	});
 	
 	$("#main-area").on("click", ".set-group-title button", function(event) {
@@ -72,9 +83,8 @@ $(document).ready(function() {
 		
 		if (feedEntry.hasClass("unread")) {
 			feedEntry.removeClass("unread");
-			var feedId = feedEntry.attr("feed-id");
 			var feedEntryId = feedEntry.attr("feed-entry-id");
-			$.post("/reader/read", { "feedId" : feedId, "feedEntryId" : feedEntryId }, function(data) {
+			$.post("/reader/read", { "id" : feedEntryId }, function(data) {
 				
 			});
 		}
@@ -84,9 +94,8 @@ $(document).ready(function() {
 		var starButton = $(event.target);
 		starButton.attr("disabled, disabled");
 		var feedEntry = starButton.closest(".feed-entry");
-		var feedId = feedEntry.attr("feed-id");
 		var feedEntryId = feedEntry.attr("feed-entry-id");
-		$.post("/reader/star", { "feedId" : feedId, "feedEntryId" : feedEntryId }, function(data) {
+		$.post("/reader/star", { "id" : feedEntryId }, function(data) {
 			starButton.hide();
 			var unstarButton = starButton.parent().children(".unstar").first();
 			unstarButton.removeAttr("disabled");
@@ -98,13 +107,24 @@ $(document).ready(function() {
 		var unstarButton = $(event.target);
 		unstarButton.attr("disabled, disabled");
 		var feedEntry = unstarButton.closest(".feed-entry");
-		var feedId = feedEntry.attr("feed-id");
 		var feedEntryId = feedEntry.attr("feed-entry-id");
-		$.post("/reader/unstar", { "feedId" : feedId, "feedEntryId" : feedEntryId }, function(data) {
+		$.post("/reader/unstar", { "id" : feedEntryId }, function(data) {
 			unstarButton.hide();
 			var starButton = unstarButton.parent().children(".star").first();
 			starButton.removeAttr("disabled");
 			starButton.show();
+		});
+	});
+	
+	$("#main-area").on("click", "#mark-all-read", function() {
+		var ids = "";
+		$("#feed-entries .feed-entry.unread").each(function(id, item) {
+			$(item).removeClass("unread");
+			ids += "," + $(item).attr("feed-entry-id");
+		});
+		ids = ids.substring(1);
+		$.post("/reader/read", { "ids" : ids }, function(data) {
+			
 		});
 	});
 	

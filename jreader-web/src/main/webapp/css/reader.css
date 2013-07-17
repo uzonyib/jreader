@@ -11,7 +11,12 @@
 	clear: both;
 }
 
-.subscription-menu-item {
+.menu-group .group-title {
+	cursor: pointer;
+}
+
+.menu-group .menu-item {
+	padding-left: 10px;
 	cursor: pointer;
 }
 

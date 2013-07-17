@@ -2,6 +2,7 @@ package jreader.web.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,6 @@ import jreader.web.dto.StatusDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,9 +55,9 @@ public class AjaxController {
 		gson.toJson(feeds, response.getWriter());
 	}
 
-	@RequestMapping(value = "/entries/{id}", method = RequestMethod.GET)
-	public void getEntries(@PathVariable("id") String id, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listEntries(principal.getName(), id);
+	@RequestMapping(value = "/entries", method = RequestMethod.GET)
+	public void getEntries(@RequestParam("ids") String ids, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(principal.getName(), Arrays.asList(ids.split(",")));
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		gson.toJson(feeds, response.getWriter());
@@ -78,8 +78,8 @@ public class AjaxController {
 	}
 	
 	@RequestMapping(value = "/read", method = RequestMethod.POST)
-	public void read(@RequestParam("feedId") String feedId, @RequestParam("feedEntryId") String feedEntryId, HttpServletResponse response, Principal principal) throws IOException {
-		actionService.markRead(principal.getName(), feedId, feedEntryId);
+	public void read(@RequestParam("ids") String ids, HttpServletResponse response, Principal principal) throws IOException {
+		actionService.markRead(principal.getName(), Arrays.asList(ids.split(",")));
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
 		response.setCharacterEncoding("UTF-8");
@@ -88,8 +88,8 @@ public class AjaxController {
 	}
 
 	@RequestMapping(value = "/star", method = RequestMethod.POST)
-	public void star(@RequestParam("feedId") String feedId, @RequestParam("feedEntryId") String feedEntryId, HttpServletResponse response, Principal principal) throws IOException {
-		actionService.markStarred(principal.getName(), feedId, feedEntryId);
+	public void star(@RequestParam("id") String id, HttpServletResponse response, Principal principal) throws IOException {
+		actionService.star(principal.getName(), id);
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
 		response.setCharacterEncoding("UTF-8");
@@ -98,8 +98,8 @@ public class AjaxController {
 	}
 	
 	@RequestMapping(value = "/unstar", method = RequestMethod.POST)
-	public void unstar(@RequestParam("feedId") String feedId, @RequestParam("feedEntryId") String feedEntryId, HttpServletResponse response, Principal principal) throws IOException {
-		actionService.unmarkStarred(principal.getName(), feedId, feedEntryId);
+	public void unstar(@RequestParam("id") String id, HttpServletResponse response, Principal principal) throws IOException {
+		actionService.unstar(principal.getName(), id);
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
 		response.setCharacterEncoding("UTF-8");

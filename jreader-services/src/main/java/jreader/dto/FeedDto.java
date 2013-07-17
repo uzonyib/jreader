@@ -1,6 +1,5 @@
 package jreader.dto;
 
-
 public class FeedDto {
 	
 	private String id;
