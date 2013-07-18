@@ -56,8 +56,8 @@ public class AjaxController {
 	}
 
 	@RequestMapping(value = "/entries", method = RequestMethod.GET)
-	public void getEntries(@RequestParam("ids") String rawIds, @RequestParam("only-unread") boolean onlyUnread, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listEntries(principal.getName(), parseIds(rawIds), onlyUnread);
+	public void getEntries(@RequestParam("ids") String rawIds, @RequestParam("only-unread") boolean onlyUnread, @RequestParam("reverse-order") boolean reverseOrder, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(principal.getName(), parseIds(rawIds), onlyUnread, reverseOrder);
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		gson.toJson(feeds, response.getWriter());
@@ -80,11 +80,7 @@ public class AjaxController {
 	@RequestMapping(value = "/read", method = RequestMethod.POST)
 	public void read(@RequestParam("ids") String rawIds, HttpServletResponse response, Principal principal) throws IOException {
 		actionService.markRead(principal.getName(), parseIds(rawIds));
-		StatusDto result = new StatusDto();
-		result.setErrorCode(0);
-		response.setCharacterEncoding("UTF-8");
-		Gson gson = new Gson();
-		gson.toJson(result, response.getWriter());
+		getSubscriptions(response, principal);
 	}
 
 	private List<Long> parseIds(String rawIds) {
@@ -117,8 +113,8 @@ public class AjaxController {
 	}
 	
 	@RequestMapping(value = "/starred", method = RequestMethod.GET)
-	public void getStarredEntries(@RequestParam("only-unread") boolean onlyUnread, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listStarredEntries(principal.getName(), onlyUnread);
+	public void getStarredEntries(@RequestParam("only-unread") boolean onlyUnread, @RequestParam("reverse-order") boolean reverseOrder, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listStarredEntries(principal.getName(), onlyUnread, reverseOrder);
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		gson.toJson(feeds, response.getWriter());

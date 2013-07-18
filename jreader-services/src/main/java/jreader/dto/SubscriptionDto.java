@@ -4,6 +4,7 @@ public class SubscriptionDto {
 	
 	private String title;
 	private FeedDto feed;
+	private int unreadCount;
 
 	public String getTitle() {
 		return title;
@@ -19,6 +20,14 @@ public class SubscriptionDto {
 
 	public void setFeed(FeedDto feed) {
 		this.feed = feed;
+	}
+
+	public int getUnreadCount() {
+		return unreadCount;
+	}
+
+	public void setUnreadCount(int unreadCount) {
+		this.unreadCount = unreadCount;
 	}
 
 }

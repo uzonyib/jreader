@@ -2,10 +2,16 @@
 	<div class="menu-group">
 		<div class="group-title">
 			{?title}{title}{:else}Ungrouped{/title}
+			{@if cond="{unreadCount} > 0"}
+				<span class="unread-count">({unreadCount})</span>
+			{/if}
 		</div>
 		{#subscriptions}
 			<div class="menu-item" feed-id="{feed.id}">
 				{title}
+				{@if cond="{unreadCount} > 0"}
+					<span class="unread-count">({unreadCount})</span>
+				{/if}
 			</div>
 		{/subscriptions}
 	</div>

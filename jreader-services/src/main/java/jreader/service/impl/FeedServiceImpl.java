@@ -57,23 +57,23 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public List<FeedEntryDto> listEntries(String username, List<Long> feedIds, boolean onlyUnread) {
+	public List<FeedEntryDto> listEntries(String username, List<Long> feedIds, boolean onlyUnread, boolean ascending) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.listEntries(user, feedIds, onlyUnread));
+		return convert(user, feedEntryDao.listEntries(user, feedIds, onlyUnread, ascending));
 	}
 	
 	@Override
-	public List<FeedEntryDto> listStarredEntries(String username, boolean onlyUnread) {
+	public List<FeedEntryDto> listStarredEntries(String username, boolean onlyUnread, boolean ascending) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.listStarredEntries(user, onlyUnread));
+		return convert(user, feedEntryDao.listStarredEntries(user, onlyUnread, ascending));
 	}
 
 	private List<FeedEntryDto> convert(User user, List<FeedEntry> starredEntries) {

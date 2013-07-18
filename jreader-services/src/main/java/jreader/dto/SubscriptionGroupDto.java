@@ -6,6 +6,7 @@ public class SubscriptionGroupDto {
 	
 	private String title;
 	private List<SubscriptionDto> subscriptions;
+	private int unreadCount;
 
 	public String getTitle() {
 		return title;
@@ -21,6 +22,14 @@ public class SubscriptionGroupDto {
 
 	public void setSubscriptions(List<SubscriptionDto> subscriptions) {
 		this.subscriptions = subscriptions;
+	}
+
+	public int getUnreadCount() {
+		return unreadCount;
+	}
+
+	public void setUnreadCount(int unreadCount) {
+		this.unreadCount = unreadCount;
 	}
 
 }

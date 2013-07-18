@@ -18,10 +18,12 @@ public interface FeedEntryDao {
 	
 	List<FeedEntry> listEntriesByIds(List<Long> feedEntryIds);
 	
-	List<FeedEntry> listEntries(User user, List<Long> feedIds, boolean onlyUnread);
+	List<FeedEntry> listEntries(User user, List<Long> feedIds, boolean onlyUnread, boolean ascending);
 	
-	List<FeedEntry> listStarredEntries(User user, boolean onlyUnread);
+	List<FeedEntry> listStarredEntries(User user, boolean onlyUnread, boolean ascending);
 	
 	List<FeedEntry> listUnstarredEntriesOlderThan(User user, Feed feed, long date);
+	
+	int countUnread(User user, Feed feed);
 
 }

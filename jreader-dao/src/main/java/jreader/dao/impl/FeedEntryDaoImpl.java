@@ -67,30 +67,36 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 
 	@Override
-	public List<FeedEntry> listEntries(User user, List<Long> feedIds, boolean onlyUnread) {
+	public List<FeedEntry> listEntries(User user, List<Long> feedIds, boolean onlyUnread, boolean ascending) {
 		Objectify ofy = objectifyFactory.begin();
 		Collection<Feed> values = ofy.load().type(Feed.class).ids(feedIds).values();
 		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef in", values);
 		if (onlyUnread) {
 			query = query.filter("read", false);
 		}
-		return query.order("-publishedDate").limit(10).list();
+		return query.order(ascending ? "publishedDate" : "-publishedDate").limit(10).list();
 	}
 	
 	@Override
-	public List<FeedEntry> listStarredEntries(User user, boolean onlyUnread) {
+	public List<FeedEntry> listStarredEntries(User user, boolean onlyUnread, boolean ascending) {
 		Objectify ofy = objectifyFactory.begin();
-		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).filter("starred =", true);
+		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("starred =", true);
 		if (onlyUnread) {
 			query = query.filter("read", false);
 		}
-		return query.order("-publishedDate").list();
+		return query.order(ascending ? "publishedDate" : "-publishedDate").list();
 	}
 	
 	@Override
 	public List<FeedEntry> listUnstarredEntriesOlderThan(User user, Feed feed, long date) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef =", feed).filter("starred =", false).filter("publishedDate <", date).list();
+	}
+	
+	@Override
+	public int countUnread(User user, Feed feed) {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef =", feed).filter("read =", false).count();
 	}
 
 }

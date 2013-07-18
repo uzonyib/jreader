@@ -174,9 +174,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			dto.setSubscriptions(new ArrayList<SubscriptionDto>());
 			dtos.add(dto);
 			List<Subscription> subscriptions = subscriptionDao.list(user, group);
+			int groupUnreadCount = 0;
 			for (Subscription subscription : subscriptions) {
-				dto.getSubscriptions().add(mapper.map(subscription, SubscriptionDto.class));
+				SubscriptionDto subscriptionDto = mapper.map(subscription, SubscriptionDto.class);
+				int unreadCount = feedEntryDao.countUnread(user, subscription.getFeed());
+				subscriptionDto.setUnreadCount(unreadCount);
+				dto.getSubscriptions().add(subscriptionDto);
+				groupUnreadCount += unreadCount;
 			}
+			dto.setUnreadCount(groupUnreadCount);
 		}
 		return dtos;
 	}

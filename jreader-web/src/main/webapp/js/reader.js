@@ -15,8 +15,10 @@ $(document).ready(function() {
 		$("#menu #subscription-menu .menu-item").each(function(id, item) {
 			feedIds += "," + $(item).attr("feed-id");
 		});
-		feedIds = feedIds.substring(1);
-		loadFeedEntriesFrom("/reader/entries?ids=" + feedIds);
+		if (feedIds.length > 0) {
+			feedIds = feedIds.substring(1);
+			loadFeedEntriesFrom("/reader/entries?ids=" + feedIds);
+		}
 		
 		$("#items-contents").show();
 		return false;
@@ -54,15 +56,17 @@ $(document).ready(function() {
 	});
 	
 	$("#subscription-menu").on("click", ".menu-item", function(event) {
-		$("#settings").hide();
-		$("#home").show();
+		$("#home-contents").hide();
+		$("#settings-contents").hide();
+		$("#items-contents").show();
 		var feedId = $(event.target).attr("feed-id");
 		loadFeedEntriesFrom("/reader/entries?ids=" + feedId);
 	});
 
 	$("#subscription-menu").on("click", ".menu-group .group-title", function(event) {
-		$("#settings").hide();
-		$("#home").show();
+		$("#home-contents").hide();
+		$("#settings-contents").hide();
+		$("#items-contents").show();
 		var feedIds = "";
 		$(event.target).parent().children(".menu-item").each(function(id, item) {
 			feedIds += "," + $(item).attr("feed-id");
@@ -101,7 +105,7 @@ $(document).ready(function() {
 			feedEntry.removeClass("unread");
 			var feedEntryId = feedEntry.attr("feed-entry-id");
 			$.post("/reader/read", { "ids" : feedEntryId }, function(data) {
-				
+				refreshSubscriptions(data);
 			});
 		}
 	});
@@ -141,6 +145,7 @@ $(document).ready(function() {
 		if (ids.length > 0) {
 			ids = ids.substring(1);
 			$.post("/reader/read", { "ids" : ids }, function(data) {
+				refreshSubscriptions(data);
 				if ($("#only-unread").is(":checked")) {
 					reloadFeedEntries();
 				}
@@ -151,6 +156,10 @@ $(document).ready(function() {
 	$("#main-area").on("click", "#only-unread", function(event) {
 		reloadFeedEntries();
 		$("#reverse-order-container").toggle();
+	});
+	
+	$("#main-area").on("click", "#reverse-order", function(event) {
+		reloadFeedEntries();
 	});
 	
 	reloadSubscriptions();
@@ -177,7 +186,9 @@ function reloadFeedEntries() {
 }
 
 function loadFeedEntriesFrom(urlParam) {
-	var url = urlParam + (urlParam.indexOf("?") > -1 ? "&" : "?") + "only-unread=" + $("#only-unread").is(":checked");
+	var onlyUnread = $("#only-unread").is(":checked");
+	var url = urlParam + (urlParam.indexOf("?") > -1 ? "&" : "?") + "only-unread=" + onlyUnread
+		+ "&reverse-order=" + (onlyUnread ? $("#reverse-order").is(":checked") : false);
 	$.get(url, {}, function(data) {
 		var feedEntriesDiv = $("#feed-entries");
 		feedEntriesDiv.empty();

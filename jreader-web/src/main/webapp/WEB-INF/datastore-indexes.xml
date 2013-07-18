@@ -12,17 +12,58 @@
     </datastore-index>
 
     <datastore-index kind="Subscription" ancestor="false" source="manual">
-        <property name="groupRef" direction="asc"/>
         <property name="userRef" direction="asc"/>
+        <property name="groupRef" direction="asc"/>
         <property name="order" direction="asc"/>
     </datastore-index>
     
     <datastore-index kind="Subscription" ancestor="false" source="manual">
-        <property name="groupRef" direction="asc"/>
         <property name="userRef" direction="asc"/>
+        <property name="groupRef" direction="asc"/>
         <property name="order" direction="desc"/>
     </datastore-index>
-
+    
+    <datastore-index kind="FeedEntry" ancestor="false" source="auto">
+        <property name="userRef" direction="asc"/>
+        <property name="feedRef" direction="asc"/>
+        <property name="publishedDate" direction="desc"/>
+    </datastore-index>
+    
+    <datastore-index kind="FeedEntry" ancestor="false" source="auto">
+        <property name="userRef" direction="asc"/>
+        <property name="feedRef" direction="asc"/>
+        <property name="read" direction="asc"/>
+        <property name="publishedDate" direction="asc"/>
+    </datastore-index>
+    
+    <datastore-index kind="FeedEntry" ancestor="false" source="auto">
+        <property name="userRef" direction="asc"/>
+        <property name="feedRef" direction="asc"/>
+        <property name="read" direction="asc"/>
+        <property name="publishedDate" direction="desc"/>
+    </datastore-index>
+    
+    <datastore-index kind="FeedEntry" ancestor="false" source="auto">
+    	<property name="userRef" direction="asc"/>
+        <property name="starred" direction="asc"/>
+        <property name="read" direction="asc"/>
+        <property name="publishedDate" direction="asc"/>
+    </datastore-index>
+    
+    <datastore-index kind="FeedEntry" ancestor="false" source="auto">
+    	<property name="userRef" direction="asc"/>
+        <property name="starred" direction="asc"/>
+        <property name="read" direction="asc"/>
+        <property name="publishedDate" direction="desc"/>
+    </datastore-index>
+    
+    <datastore-index kind="FeedEntry" ancestor="false" source="auto">
+    	<property name="userRef" direction="asc"/>
+        <property name="feedRef" direction="asc"/>
+        <property name="starred" direction="asc"/>
+        <property name="publishedDate" direction="asc"/>
+    </datastore-index>
+    
     <datastore-index kind="FeedEntry" ancestor="false" source="manual">
         <property name="feedRef" direction="asc"/>
         <property name="publishedDate" direction="desc"/>
