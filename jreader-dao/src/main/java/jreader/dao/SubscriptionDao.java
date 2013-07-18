@@ -11,11 +11,11 @@ public interface SubscriptionDao {
 	
 	void save(Subscription subscription);
 	
-	void update(Subscription subscription);
-	
 	Subscription find(User user, Feed feed);
 	
 	void delete(Subscription subscription);
+	
+	List<User> listSubscribers(Feed feed);
 	
 	int countSubscribers(Feed feed);
 	

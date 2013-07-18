@@ -1,11 +1,13 @@
 package jreader.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import jreader.dao.FeedEntryDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.VoidWork;
+import com.googlecode.objectify.cmd.Query;
 
 @Repository
 public class FeedEntryDaoImpl implements FeedEntryDao {
@@ -21,25 +24,19 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	private ObjectifyFactory objectifyFactory;
 	
 	@Override
-	public FeedEntry find(String id) {
+	public FeedEntry find(Long id) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(FeedEntry.class).id(id).now();
 	}
 	
 	@Override
-	public FeedEntry find(Feed feed, int ordinal) {
+	public FeedEntry find(User user, Feed feed, int ordinal) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).filter("feedRef =", feed).order("-publishedDate").offset(ordinal - 1).limit(1).first().now();
-	}
-	
-	@Override
-	public FeedEntry findByLink(String link) {
-		return find(getId(link));
+		return ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef =", feed).order("-publishedDate").offset(ordinal - 1).limit(1).first().now();
 	}
 	
 	@Override
 	public void save(final FeedEntry feedEntry) {
-		feedEntry.setId(getId(feedEntry.getLink()));
 		final Objectify ofy = objectifyFactory.begin();
 		ofy.transact(new VoidWork() {
 			@Override
@@ -59,22 +56,41 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 			}
 		});
 	}
+	
+	@Override
+	public List<FeedEntry> listEntriesByIds(List<Long> feedEntryIds) {
+		List<FeedEntry> entries = new ArrayList<FeedEntry>();
+		for (Long feedEntryId : feedEntryIds) {
+			entries.add(find(feedEntryId));
+		}
+		return entries;
+	}
 
 	@Override
-	public List<FeedEntry> listEntries(List<String> feedIds) {
+	public List<FeedEntry> listEntries(User user, List<Long> feedIds, boolean onlyUnread) {
 		Objectify ofy = objectifyFactory.begin();
 		Collection<Feed> values = ofy.load().type(Feed.class).ids(feedIds).values();
-		return ofy.load().type(FeedEntry.class).filter("feedRef in", values).order("-publishedDate").limit(10).list();
+		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef in", values);
+		if (onlyUnread) {
+			query = query.filter("read", false);
+		}
+		return query.order("-publishedDate").limit(10).list();
 	}
 	
 	@Override
-	public List<FeedEntry> listEntriesOlderThan(Feed feed, long date) {
+	public List<FeedEntry> listStarredEntries(User user, boolean onlyUnread) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).filter("feedRef =", feed).filter("publishedDate <", date).list();
+		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).filter("starred =", true);
+		if (onlyUnread) {
+			query = query.filter("read", false);
+		}
+		return query.order("-publishedDate").list();
 	}
 	
-	private static String getId(String link) {
-		return "" + link.hashCode();
+	@Override
+	public List<FeedEntry> listUnstarredEntriesOlderThan(User user, Feed feed, long date) {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef =", feed).filter("starred =", false).filter("publishedDate <", date).list();
 	}
 
 }

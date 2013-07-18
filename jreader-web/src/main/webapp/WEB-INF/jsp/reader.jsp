@@ -19,12 +19,7 @@
 		<jsp:include page="menu.jsp" />
 	</div>
 	<div id="main-area">
-		<div id="settings" style="display: none;">
-			<jsp:include page="settings.jsp" />
-		</div>
-		<div id="home">
-			<jsp:include page="main.jsp" />
-		</div>
+		<jsp:include page="main.jsp" />
 	</div>
 	<div id="footer"></div>
 </body>

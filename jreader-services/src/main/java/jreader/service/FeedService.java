@@ -9,9 +9,9 @@ public interface FeedService {
 	
 	List<FeedDto> list();
 
-	List<FeedEntryDto> listEntries(String username, List<String> feedIds);
+	List<FeedEntryDto> listEntries(String username, List<Long> feedIds, boolean onlyUnread);
 	
-	List<FeedEntryDto> listStarredEntries(String username);
+	List<FeedEntryDto> listStarredEntries(String username, boolean onlyUnread);
 	
 	void refreshFeeds();
 	

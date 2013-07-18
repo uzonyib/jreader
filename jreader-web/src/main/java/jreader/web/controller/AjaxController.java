@@ -2,14 +2,14 @@ package jreader.web.controller;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
 import jreader.dto.FeedEntryDto;
 import jreader.dto.SubscriptionGroupDto;
-import jreader.service.ActionService;
+import jreader.service.FeedEntryService;
 import jreader.service.FeedService;
 import jreader.service.SubscriptionService;
 import jreader.web.dto.StatusDto;
@@ -33,7 +33,7 @@ public class AjaxController {
 	private FeedService feedService;
 	
 	@Autowired
-	private ActionService actionService;
+	private FeedEntryService actionService;
 
 	@RequestMapping(value = "/subscribe", method = RequestMethod.POST)
 	public void subscribe(@RequestParam("url") String url, HttpServletResponse response, Principal principal) throws IOException {
@@ -42,7 +42,7 @@ public class AjaxController {
 	}
 
 	@RequestMapping(value = "/unsubscribe", method = RequestMethod.POST)
-	public void unsubscribe(@RequestParam("id") String id, HttpServletResponse response, Principal principal) throws IOException {
+	public void unsubscribe(@RequestParam("id") Long id, HttpServletResponse response, Principal principal) throws IOException {
 		subscriptionService.unsubscribe(principal.getName(), id);
 		getSubscriptions(response, principal);
 	}
@@ -56,21 +56,21 @@ public class AjaxController {
 	}
 
 	@RequestMapping(value = "/entries", method = RequestMethod.GET)
-	public void getEntries(@RequestParam("ids") String ids, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listEntries(principal.getName(), Arrays.asList(ids.split(",")));
+	public void getEntries(@RequestParam("ids") String rawIds, @RequestParam("only-unread") boolean onlyUnread, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(principal.getName(), parseIds(rawIds), onlyUnread);
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		gson.toJson(feeds, response.getWriter());
 	}
 	
 	@RequestMapping(value = "/assign", method = RequestMethod.POST)
-	public void assign(@RequestParam("id") String id, @RequestParam("group") String group, HttpServletResponse response, Principal principal) throws IOException {
+	public void assign(@RequestParam("id") Long id, @RequestParam("group") String group, HttpServletResponse response, Principal principal) throws IOException {
 		subscriptionService.assign(principal.getName(), id, "".equals(group) ? null : group);
 		getSubscriptions(response, principal);
 	}
 
 	@RequestMapping(value = "/entitle", method = RequestMethod.POST)
-	public void entitle(@RequestParam("id") String id, @RequestParam("title") String title, HttpServletResponse response, Principal principal) throws IOException {
+	public void entitle(@RequestParam("id") Long id, @RequestParam("title") String title, HttpServletResponse response, Principal principal) throws IOException {
 		if (title != null && !"".equals(title)) {
 			subscriptionService.entitle(principal.getName(), id, title);
 		}
@@ -78,8 +78,8 @@ public class AjaxController {
 	}
 	
 	@RequestMapping(value = "/read", method = RequestMethod.POST)
-	public void read(@RequestParam("ids") String ids, HttpServletResponse response, Principal principal) throws IOException {
-		actionService.markRead(principal.getName(), Arrays.asList(ids.split(",")));
+	public void read(@RequestParam("ids") String rawIds, HttpServletResponse response, Principal principal) throws IOException {
+		actionService.markRead(principal.getName(), parseIds(rawIds));
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
 		response.setCharacterEncoding("UTF-8");
@@ -87,8 +87,17 @@ public class AjaxController {
 		gson.toJson(result, response.getWriter());
 	}
 
+	private List<Long> parseIds(String rawIds) {
+		String[] splittedIds = rawIds.split(",");
+		List<Long> ids = new ArrayList<Long>();
+		for (String rawId : splittedIds) {
+			ids.add(Long.valueOf(rawId));
+		}
+		return ids;
+	}
+
 	@RequestMapping(value = "/star", method = RequestMethod.POST)
-	public void star(@RequestParam("id") String id, HttpServletResponse response, Principal principal) throws IOException {
+	public void star(@RequestParam("id") Long id, HttpServletResponse response, Principal principal) throws IOException {
 		actionService.star(principal.getName(), id);
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
@@ -98,7 +107,7 @@ public class AjaxController {
 	}
 	
 	@RequestMapping(value = "/unstar", method = RequestMethod.POST)
-	public void unstar(@RequestParam("id") String id, HttpServletResponse response, Principal principal) throws IOException {
+	public void unstar(@RequestParam("id") Long id, HttpServletResponse response, Principal principal) throws IOException {
 		actionService.unstar(principal.getName(), id);
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
@@ -108,8 +117,8 @@ public class AjaxController {
 	}
 	
 	@RequestMapping(value = "/starred", method = RequestMethod.GET)
-	public void getStarredEntries(HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listStarredEntries(principal.getName());
+	public void getStarredEntries(@RequestParam("only-unread") boolean onlyUnread, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listStarredEntries(principal.getName(), onlyUnread);
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
 		gson.toJson(feeds, response.getWriter());

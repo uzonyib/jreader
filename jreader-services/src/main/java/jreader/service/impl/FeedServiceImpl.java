@@ -6,12 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import jreader.dao.ActionDao;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.UserDao;
-import jreader.domain.Action;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.User;
@@ -43,9 +41,6 @@ public class FeedServiceImpl implements FeedService {
 	private FeedEntryDao feedEntryDao;
 	
 	@Autowired
-	private ActionDao actionDao;
-	
-	@Autowired
 	private RssService rssService;
 	
 	@Autowired
@@ -62,38 +57,30 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public List<FeedEntryDto> listEntries(String username, List<String> feedIds) {
+	public List<FeedEntryDto> listEntries(String username, List<Long> feedIds, boolean onlyUnread) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
 		}
 		
-		List<FeedEntry> entries = feedEntryDao.listEntries(feedIds);
-		List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
-		for (FeedEntry feedEntry : entries) {
-			FeedEntryDto dto = mapper.map(feedEntry, FeedEntryDto.class);
-			dto.setRead(actionDao.isRead(user, feedEntry));
-			dto.setStarred(actionDao.isStarred(user, feedEntry));
-			dto.setSubscriptionTitle(subscriptionDao.find(user, feedEntry.getFeed()).getTitle());
-			dtos.add(dto);
-		}
-		return dtos;
+		return convert(user, feedEntryDao.listEntries(user, feedIds, onlyUnread));
 	}
 	
 	@Override
-	public List<FeedEntryDto> listStarredEntries(String username) {
+	public List<FeedEntryDto> listStarredEntries(String username, boolean onlyUnread) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
 		}
 		
-		List<Action> starActions = actionDao.list(user, ActionDao.STAR_ACTION_TYPE);
+		return convert(user, feedEntryDao.listStarredEntries(user, onlyUnread));
+	}
+
+	private List<FeedEntryDto> convert(User user, List<FeedEntry> starredEntries) {
 		List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
-		for (Action starAction : starActions) {
-			FeedEntry feedEntry = starAction.getFeedEntry();
-			FeedEntryDto dto = mapper.map(feedEntry, FeedEntryDto.class);
-			dto.setRead(actionDao.isRead(user, feedEntry));
-			dto.setStarred(true);
+		for (FeedEntry starredEntry : starredEntries) {
+			FeedEntryDto dto = mapper.map(starredEntry, FeedEntryDto.class);
+			dto.setSubscriptionTitle(subscriptionDao.find(user, starredEntry.getFeed()).getTitle());
 			dtos.add(dto);
 		}
 		return dtos;
@@ -107,13 +94,19 @@ public class FeedServiceImpl implements FeedService {
 			if (rssFeed == null) {
 				continue;
 			}
+			
+			List<User> subscribers = subscriptionDao.listSubscribers(feed);
+			
 			Long lastUpdate = feedDao.getLastUpdatedDate(feed);
 			int counter = 0;
 			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
 				if (lastUpdate != null && lastUpdate < rssFeedEntry.getPublishedDate()) {
-					FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
-					feedEntry.setFeed(feed);
-					feedEntryDao.save(feedEntry);
+					for (User subscriber : subscribers) {
+						FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
+						feedEntry.setFeed(feed);
+						feedEntry.setUser(subscriber);
+						feedEntryDao.save(feedEntry);
+					}
 					++counter;
 				}
 			}
@@ -126,22 +119,19 @@ public class FeedServiceImpl implements FeedService {
 		List<Feed> feeds = feedDao.listAll();
 		long date = new Date().getTime() - 1000 * 60 * 60 * 24 * olderThanDays;
 		for (Feed feed : feeds) {
-			FeedEntry e = feedEntryDao.find(feed, keptCount);
-			if (e == null) {
-				continue;
-			}
-			
-			int count = 0;
-			long threshold = Math.min(date, e.getPublishedDate());
-			List<FeedEntry> feedEntries = feedEntryDao.listEntriesOlderThan(feed, threshold);
-			for (FeedEntry feedEntry : feedEntries) {
-				if (!actionDao.isStarred(feedEntry)) {
-					actionDao.deleteAllFor(feedEntry);
-					feedEntryDao.delete(feedEntry);
-					++count;
+			for (User user : subscriptionDao.listSubscribers(feed)) {
+				int count = 0;
+				FeedEntry e = feedEntryDao.find(user, feed, keptCount);
+				long threshold = Math.min(date, e.getPublishedDate());
+				if (e != null) {
+					List<FeedEntry> feedEntries = feedEntryDao.listUnstarredEntriesOlderThan(user, feed, threshold);
+					for (FeedEntry feedEntry : feedEntries) {
+						feedEntryDao.delete(feedEntry);
+						++count;
+					}
 				}
+				LOG.info(feed.getTitle() + "(" + user.getUsername() + ") deleted items older than " + threshold + ": " + count);
 			}
-			LOG.info(feed.getTitle() + " deleted items older than " + threshold + ": " + count);
 		}
 	}
 

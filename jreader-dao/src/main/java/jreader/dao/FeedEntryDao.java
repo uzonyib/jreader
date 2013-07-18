@@ -4,21 +4,24 @@ import java.util.List;
 
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.User;
 
 public interface FeedEntryDao {
 	
-	FeedEntry find(String id);
+	FeedEntry find(Long id);
 	
-	FeedEntry find(Feed parent, int ordinal);
-	
-	FeedEntry findByLink(String link);
+	FeedEntry find(User user, Feed feed, int ordinal);
 	
 	void save(FeedEntry feedEntry);
 	
 	void delete(FeedEntry feedEntry);
 	
-	List<FeedEntry> listEntries(List<String> feedIds);
+	List<FeedEntry> listEntriesByIds(List<Long> feedEntryIds);
 	
-	List<FeedEntry> listEntriesOlderThan(Feed feed, long date);
+	List<FeedEntry> listEntries(User user, List<Long> feedIds, boolean onlyUnread);
+	
+	List<FeedEntry> listStarredEntries(User user, boolean onlyUnread);
+	
+	List<FeedEntry> listUnstarredEntriesOlderThan(User user, Feed feed, long date);
 
 }

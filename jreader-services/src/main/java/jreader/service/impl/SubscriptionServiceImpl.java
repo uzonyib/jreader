@@ -67,6 +67,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
 				FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
 				feedEntry.setFeed(feed);
+				feedEntry.setUser(user);
 				feedEntryDao.save(feedEntry);
 			}
 		}
@@ -93,7 +94,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
-	public void unsubscribe(String username, String id) {
+	public void unsubscribe(String username, Long id) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
@@ -123,7 +124,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
-	public void assign(String username, String feedId, String groupTitle) {
+	public void assign(String username, Long feedId, String groupTitle) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
@@ -152,7 +153,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		SubscriptionGroup prevGroup = subscription.getGroup();
 		subscription.setGroup(group);
 		subscription.setOrder(subscriptionDao.getMaxOrder(user, group) + 1);
-		subscriptionDao.update(subscription);
+		subscriptionDao.save(subscription);
 		if (prevGroup != null) {
 			int subscriptionCount = subscriptionGroupDao.countSubscriptions(prevGroup, user);
 			if (subscriptionCount == 0) {
@@ -181,7 +182,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
-	public void entitle(String username, String feedId, String subscriptionTitle) {
+	public void entitle(String username, Long feedId, String subscriptionTitle) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
@@ -198,7 +199,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 		
 		subscription.setTitle(subscriptionTitle);
-		subscriptionDao.update(subscription);
+		subscriptionDao.save(subscription);
 	}
 
 }

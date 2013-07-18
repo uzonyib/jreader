@@ -1,22 +1,38 @@
 $(document).ready(function() {
 	
 	$("#home-menu-item").on("click", "a", function(event) {
-		$("#feed-entries").empty();
-		$("#settings").hide();
-		$("#home").show();
+		$("#items-contents").hide();
+		$("#settings-contents").hide();
+		$("#home-contents").show();
+		return false;
+	});
+
+	$("#all-items-menu-item").on("click", "a", function(event) {
+		$("#settings-contents").hide();
+		$("#home-contents").hide();
+		
+		var feedIds = "";
+		$("#menu #subscription-menu .menu-item").each(function(id, item) {
+			feedIds += "," + $(item).attr("feed-id");
+		});
+		feedIds = feedIds.substring(1);
+		loadFeedEntriesFrom("/reader/entries?ids=" + feedIds);
+		
+		$("#items-contents").show();
 		return false;
 	});
 
 	$("#settings-menu-item").on("click", "a", function(event) {
-		$("#home").hide();
-		$("#settings").show();
+		$("#items-contents").hide();
+		$("#home-contents").hide();
+		$("#settings-contents").show();
 		return false;
 	});
 	
 	$("#starred-menu-item").on("click", "a", function(event) {
-		$("#feed-entries").empty();
-		$("#settings").hide();
-		$("#home").show();
+		$("#settings-contents").hide();
+		$("#home-contents").hide();
+		$("#items-contents").show();
 		loadFeedEntriesFrom("/reader/starred");
 		return false;
 	});
@@ -84,7 +100,7 @@ $(document).ready(function() {
 		if (feedEntry.hasClass("unread")) {
 			feedEntry.removeClass("unread");
 			var feedEntryId = feedEntry.attr("feed-entry-id");
-			$.post("/reader/read", { "id" : feedEntryId }, function(data) {
+			$.post("/reader/read", { "ids" : feedEntryId }, function(data) {
 				
 			});
 		}
@@ -122,10 +138,19 @@ $(document).ready(function() {
 			$(item).removeClass("unread");
 			ids += "," + $(item).attr("feed-entry-id");
 		});
-		ids = ids.substring(1);
-		$.post("/reader/read", { "ids" : ids }, function(data) {
-			
-		});
+		if (ids.length > 0) {
+			ids = ids.substring(1);
+			$.post("/reader/read", { "ids" : ids }, function(data) {
+				if ($("#only-unread").is(":checked")) {
+					reloadFeedEntries();
+				}
+			});
+		}
+	});
+	
+	$("#main-area").on("click", "#only-unread", function(event) {
+		reloadFeedEntries();
+		$("#reverse-order-container").toggle();
 	});
 	
 	reloadSubscriptions();
@@ -144,12 +169,22 @@ function template(templateName, data) {
 	return result;
 };
 
-function loadFeedEntriesFrom(url) {
+function reloadFeedEntries() {
+	var url = $("#feed-entries").attr("loaded-from");
+	if (typeof url !== "undefined" && url.length > 0) {
+		loadFeedEntriesFrom(url);
+	}
+}
+
+function loadFeedEntriesFrom(urlParam) {
+	var url = urlParam + (urlParam.indexOf("?") > -1 ? "&" : "?") + "only-unread=" + $("#only-unread").is(":checked");
 	$.get(url, {}, function(data) {
-		$("#feed-entries").empty();
+		var feedEntriesDiv = $("#feed-entries");
+		feedEntriesDiv.empty();
+		feedEntriesDiv.attr("loaded-from", urlParam);
 	    $.each(JSON.parse(data), function (id, feedEntry) {
 	    	feedEntry.publishedDate = moment(new Date(feedEntry.publishedDate)).format("YYYY-MM-DD HH:mm");
-	        $("#feed-entries").append(template("feedEntryTemplate", feedEntry));
+	    	feedEntriesDiv.append(template("feedEntryTemplate", feedEntry));
 	    });
 	});
 }

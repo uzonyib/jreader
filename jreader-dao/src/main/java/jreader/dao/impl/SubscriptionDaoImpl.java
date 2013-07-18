@@ -1,5 +1,6 @@
 package jreader.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jreader.dao.SubscriptionDao;
@@ -33,17 +34,6 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	}
 	
 	@Override
-	public void update(final Subscription subscription) {
-		final Objectify ofy = objectifyFactory.begin();
-		ofy.transact(new VoidWork() {
-			@Override
-			public void vrun() {
-				ofy.save().entity(subscription).now();
-			}
-		});
-	}
-	
-	@Override
 	public Subscription find(User user, Feed feed) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(Subscription.class).filter("userRef =", user).filter("feedRef =", feed).first().now();
@@ -58,6 +48,17 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 				ofy.delete().entity(subscription).now();
 			}
 		});
+	}
+	
+	@Override
+	public List<User> listSubscribers(Feed feed) {
+		Objectify ofy = objectifyFactory.begin();
+		List<Subscription> subscriptions = ofy.load().type(Subscription.class).filter("feedRef =", feed).list();
+		List<User> subscribers = new ArrayList<User>();
+		for (Subscription subscription : subscriptions) {
+			subscribers.add(subscription.getUser());
+		}
+		return subscribers;
 	}
 	
 	@Override

@@ -10,7 +10,7 @@ import com.googlecode.objectify.annotation.Load;
 public class FeedEntry {
 	
 	@Id
-	private String id;
+	private Long id;
 	private String link;
 	private String title;
 	private String description;
@@ -18,14 +18,21 @@ public class FeedEntry {
 	@Index
 	private Long publishedDate;
 	@Index
+	private boolean read;
+	@Index
+	private boolean starred;
+	@Index
+	@Load
+	private Ref<User> userRef;
+	@Index
 	@Load
 	private Ref<Feed> feedRef;
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -69,12 +76,44 @@ public class FeedEntry {
 		this.publishedDate = publishedDate;
 	}
 
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	public boolean isStarred() {
+		return starred;
+	}
+
+	public void setStarred(boolean starred) {
+		this.starred = starred;
+	}
+
+	public Ref<User> getUserRef() {
+		return userRef;
+	}
+
+	public void setUserRef(Ref<User> userRef) {
+		this.userRef = userRef;
+	}
+
 	public Ref<Feed> getFeedRef() {
 		return feedRef;
 	}
 
 	public void setFeedRef(Ref<Feed> feedRef) {
 		this.feedRef = feedRef;
+	}
+	
+	public User getUser() {
+		return userRef == null ? null : userRef.get();
+	}
+
+	public void setUser(User user) {
+		this.userRef = user == null ? null : Ref.create(user);
 	}
 
 	public Feed getFeed() {

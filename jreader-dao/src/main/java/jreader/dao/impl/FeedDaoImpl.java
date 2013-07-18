@@ -21,14 +21,15 @@ public class FeedDaoImpl implements FeedDao {
 	private ObjectifyFactory objectifyFactory;
 	
 	@Override
-	public Feed find(String id) {
+	public Feed find(Long id) {
 		Objectify ofy = objectifyFactory.begin();
 		return ofy.load().type(Feed.class).id(id).now();
 	}
 	
 	@Override
 	public Feed findByUrl(String url) {
-		return find(getId(url));
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(Feed.class).filter("url =", url).first().now();
 	}
 
 	@Override
@@ -39,7 +40,6 @@ public class FeedDaoImpl implements FeedDao {
 
 	@Override
 	public void save(final Feed feed) {
-		feed.setId(getId(feed.getUrl()));
 		final Objectify ofy = objectifyFactory.begin();
 		ofy.transact(new VoidWork() {
 			@Override
@@ -67,10 +67,6 @@ public class FeedDaoImpl implements FeedDao {
 		Objectify ofy = objectifyFactory.begin();
 		FeedEntry last = ofy.load().type(FeedEntry.class).filter("feedRef =", feed).order("-publishedDate").first().now();
 		return last == null ? null : last.getPublishedDate();
-	}
-	
-	private static String getId(String url) {
-		return "" + url.hashCode();
 	}
 
 }
