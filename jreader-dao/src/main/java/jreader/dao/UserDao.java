@@ -10,6 +10,6 @@ public interface UserDao {
 	
 	List<User> listAll();
 	
-	void save(User user);
+	User save(User user);
 
 }

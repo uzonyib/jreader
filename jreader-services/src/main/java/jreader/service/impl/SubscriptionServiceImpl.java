@@ -63,7 +63,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				return;
 			}
 			feed = mapper.map(rssFeed, Feed.class);
-			feedDao.save(feed);
+			feed = feedDao.save(feed);
 			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
 				FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
 				feedEntry.setFeed(feed);
@@ -80,8 +80,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				subscriptionGroup.setUser(user);
 				subscriptionGroup.setTitle(null);
 				subscriptionGroup.setOrder(subscriptionGroupDao.getMaxOrder(user) + 1);
-				subscriptionGroupDao.save(subscriptionGroup);
-				subscriptionGroup = subscriptionGroupDao.find(user, null);
+				subscriptionGroup = subscriptionGroupDao.save(subscriptionGroup);
 			}
 			subscription = new Subscription();
 			subscription.setTitle(feed.getTitle());
@@ -146,8 +145,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			group.setTitle(groupTitle);
 			group.setUser(user);
 			group.setOrder(subscriptionGroupDao.getMaxOrder(user) + 1);
-			subscriptionGroupDao.save(group);
-			group = subscriptionGroupDao.find(user, groupTitle);
+			group = subscriptionGroupDao.save(group);
 		}
 		
 		SubscriptionGroup prevGroup = subscription.getGroup();

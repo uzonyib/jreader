@@ -122,15 +122,15 @@ public class FeedServiceImpl implements FeedService {
 			for (User user : subscriptionDao.listSubscribers(feed)) {
 				int count = 0;
 				FeedEntry e = feedEntryDao.find(user, feed, keptCount);
-				long threshold = Math.min(date, e.getPublishedDate());
 				if (e != null) {
+					long threshold = Math.min(date, e.getPublishedDate());
 					List<FeedEntry> feedEntries = feedEntryDao.listUnstarredEntriesOlderThan(user, feed, threshold);
 					for (FeedEntry feedEntry : feedEntries) {
 						feedEntryDao.delete(feedEntry);
 						++count;
 					}
+					LOG.info(feed.getTitle() + "(" + user.getUsername() + ") deleted items older than " + threshold + ": " + count);
 				}
-				LOG.info(feed.getTitle() + "(" + user.getUsername() + ") deleted items older than " + threshold + ": " + count);
 			}
 		}
 	}

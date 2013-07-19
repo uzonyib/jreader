@@ -8,9 +8,10 @@ import jreader.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.VoidWork;
+import com.googlecode.objectify.Work;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -31,12 +32,13 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void save(final User user) {
+	public User save(final User user) {
 		final Objectify ofy = objectifyFactory.begin();
-		ofy.transact(new VoidWork() {
+		return ofy.transact(new Work<User>() {
 			@Override
-			public void vrun() {
-				ofy.save().entity(user).now();
+			public User run() {
+				Key<User> key = ofy.save().entity(user).now();
+				return ofy.load().key(key).now();
 			}
 		});
 	}

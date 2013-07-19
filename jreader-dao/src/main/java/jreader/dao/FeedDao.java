@@ -12,7 +12,7 @@ public interface FeedDao {
 	
 	List<Feed> listAll();
 	
-	void save(Feed feed);
+	Feed save(Feed feed);
 	
 	void delete(Feed feed);
 	

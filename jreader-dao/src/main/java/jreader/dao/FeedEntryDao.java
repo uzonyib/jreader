@@ -12,7 +12,7 @@ public interface FeedEntryDao {
 	
 	FeedEntry find(User user, Feed feed, int ordinal);
 	
-	void save(FeedEntry feedEntry);
+	FeedEntry save(FeedEntry feedEntry);
 	
 	void delete(FeedEntry feedEntry);
 	

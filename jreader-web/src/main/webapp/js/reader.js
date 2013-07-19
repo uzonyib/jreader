@@ -59,7 +59,11 @@ $(document).ready(function() {
 		$("#home-contents").hide();
 		$("#settings-contents").hide();
 		$("#items-contents").show();
-		var feedId = $(event.target).attr("feed-id");
+		var menuItem = $(event.target);
+		if (!menuItem.hasClass("menu-item")) {
+			menuItem = menuItem.parent();
+		}
+		var feedId = menuItem.attr("feed-id");
 		loadFeedEntriesFrom("/reader/entries?ids=" + feedId);
 	});
 
@@ -67,8 +71,12 @@ $(document).ready(function() {
 		$("#home-contents").hide();
 		$("#settings-contents").hide();
 		$("#items-contents").show();
+		var menuGroup = $(event.target);
+		if (!menuGroup.hasClass("group-title")) {
+			menuGroup = menuGroup.parent();
+		}
 		var feedIds = "";
-		$(event.target).parent().children(".menu-item").each(function(id, item) {
+		menuGroup.parent().children(".menu-item").each(function(id, item) {
 			feedIds += "," + $(item).attr("feed-id");
 		});
 		feedIds = feedIds.substring(1);

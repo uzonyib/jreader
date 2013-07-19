@@ -12,9 +12,11 @@ import jreader.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.VoidWork;
+import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
 
 @Repository
@@ -36,12 +38,13 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 	
 	@Override
-	public void save(final FeedEntry feedEntry) {
+	public FeedEntry save(final FeedEntry feedEntry) {
 		final Objectify ofy = objectifyFactory.begin();
-		ofy.transact(new VoidWork() {
+		return ofy.transact(new Work<FeedEntry>() {
 			@Override
-			public void vrun() {
-				ofy.save().entity(feedEntry).now();
+			public FeedEntry run() {
+				Key<FeedEntry> key = ofy.save().entity(feedEntry).now();
+				return ofy.load().key(key).now();
 			}
 		});
 	}

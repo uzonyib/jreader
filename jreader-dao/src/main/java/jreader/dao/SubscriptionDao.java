@@ -9,7 +9,7 @@ import jreader.domain.User;
 
 public interface SubscriptionDao {
 	
-	void save(Subscription subscription);
+	Subscription save(Subscription subscription);
 	
 	Subscription find(User user, Feed feed);
 	

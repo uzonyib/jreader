@@ -69,4 +69,15 @@
         <property name="publishedDate" direction="desc"/>
     </datastore-index>
     
+    <datastore-index kind="FeedEntry" ancestor="false" source="manual">
+        <property name="starred" direction="asc"/>
+        <property name="publishedDate" direction="desc"/>
+    </datastore-index>
+    
+    <datastore-index kind="FeedEntry" ancestor="false" source="manual">
+        <property name="userRef" direction="asc"/>
+        <property name="starred" direction="asc"/>
+        <property name="publishedDate" direction="desc"/>
+    </datastore-index>
+    
 </datastore-indexes>

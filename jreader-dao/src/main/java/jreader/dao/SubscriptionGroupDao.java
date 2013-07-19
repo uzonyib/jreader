@@ -9,7 +9,7 @@ public interface SubscriptionGroupDao {
 	
 	SubscriptionGroup find(User user, String title);
 	
-	void save(SubscriptionGroup subscriptionGroup);
+	SubscriptionGroup save(SubscriptionGroup subscriptionGroup);
 	
 	void delete(SubscriptionGroup group);
 	

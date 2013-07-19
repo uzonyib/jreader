@@ -10,9 +10,11 @@ import jreader.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.VoidWork;
+import com.googlecode.objectify.Work;
 
 @Repository
 public class SubscriptionGroupDaoImpl implements SubscriptionGroupDao {
@@ -27,12 +29,13 @@ public class SubscriptionGroupDaoImpl implements SubscriptionGroupDao {
 	}
 
 	@Override
-	public void save(final SubscriptionGroup subscriptionGroup) {
+	public SubscriptionGroup save(final SubscriptionGroup subscriptionGroup) {
 		final Objectify ofy = objectifyFactory.begin();
-		ofy.transact(new VoidWork() {
+		return ofy.transact(new Work<SubscriptionGroup>() {
 			@Override
-			public void vrun() {
-				ofy.save().entity(subscriptionGroup).now();
+			public SubscriptionGroup run() {
+				Key<SubscriptionGroup> key = ofy.save().entity(subscriptionGroup).now();
+				return ofy.load().key(key).now();
 			}
 		});
 	}
