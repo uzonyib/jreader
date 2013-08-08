@@ -3,7 +3,8 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Reader</title>
+	<title>jReader</title>
+	<link rel="stylesheet" type="text/css" href="/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/css/reader.css">
 	<script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="/js/moment.min.js"></script>

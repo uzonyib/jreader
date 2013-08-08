@@ -1,10 +1,16 @@
 <script type="text/x-template" id="template-subscription-menu-group">
-	<div class="menu-group">
-		<div class="group-title">
-			{?title}{title}{:else}Ungrouped{/title}
-			{@if cond="{unreadCount} > 0"}
-				<span class="unread-count">({unreadCount})</span>
-			{/if}
+	<div class="menu-group collapsed">
+		<div>
+			<span class="group-collapse">
+				<img src="/images/arrow_right.png" height="12" width="12" class="collapsed">
+				<img src="/images/arrow_down.png" height="12" width="12" class="uncollapsed">
+			</span>
+			<span class="group-title">
+				{?title}{title}{:else}Ungrouped{/title}
+				{@if cond="{unreadCount} > 0"}
+					<span class="unread-count">({unreadCount})</span>
+				{/if}
+			</span>
 		</div>
 		{#subscriptions}
 			<div class="menu-item" feed-id="{feed.id}">
@@ -58,7 +64,7 @@
 				<a target=_blank href="{link}">Open</a>
 			</div>
 			<div class="description">
-				{description}
+				{description|s}
 			</div>
 		</div>
 	</div>

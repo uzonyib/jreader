@@ -11,6 +11,7 @@
 			<input id="reverse-order" type="checkbox" />
 			<label for="reverse-order">Reverse order</label>
 		</span>
+		<div class="status">Loading...</div>
 	</div>
 	<div id="feed-entries"></div>
 </div>

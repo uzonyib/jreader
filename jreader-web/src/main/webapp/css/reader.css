@@ -3,6 +3,11 @@
 	float: left;
 }
 
+#menu .menu-item {
+	font-size: 110%;
+	padding: 3px 10px;
+}
+
 #main-area {
 	padding-left: 305px;
 }
@@ -11,19 +16,95 @@
 	clear: both;
 }
 
-.menu-group .group-title {
+#menu .menu-group {
+	padding: 3px 10px;
+}
+
+#menu .menu-group .group-title {
+	font-size: 110%;
 	cursor: pointer;
 }
 
-.menu-group .menu-item {
-	padding-left: 10px;
+#menu .menu-group .menu-item {
+	font-size: 100%;
+	padding: 0px 20px;
 	cursor: pointer;
+	display: block;
+}
+
+#menu .menu-group.collapsed .menu-item {
+    display: none;
+}
+
+#menu .menu-group.collapsed .group-collapse img.collapsed {
+    display: inline;
+}
+
+#menu .menu-group .group-collapse img.uncollapsed {
+    display: inline;
+}
+
+#menu .menu-group.collapsed .group-collapse img.uncollapsed {
+    display: none;
+}
+
+#menu .menu-group .group-collapse img.collapsed {
+    display: none;
+}
+
+#nav-bar .status {
+	display: none;
+}
+
+#nav-bar .status.loading-subscriptions,
+#nav-bar .status.loading-feed-entries {
+	display: block;
 }
 
 .feed-entry .breadcrumb .title {
 	cursor: pointer;
 }
 
-.feed-entry.unread .breadcrumb .title {
-	font-weight: bold;
+.feed-entry.unread .breadcrumb {
+    background-color: #aaaaaa;
+}
+
+.breadcrumb {
+	height: 30px;
+	background-color: #cccccc;
+	margin: 1px 0px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.breadcrumb div {
+	position: relative;
+	height: 16px;
+	padding: 7px 0px;
+}
+
+.breadcrumb .star-buttons {
+	width: 60px;
+	height: 26px;
+	padding: 2px 5px;
+}
+
+.breadcrumb .feed-title {
+	top: -30px;
+	left: 70px;
+	width: 100px;
+}
+
+.breadcrumb .title {
+	top: -60px;
+	left: 170px;
+	width: 650px;
+}
+
+.breadcrumb .date {
+	top: -90px;
+	left: 830px;
+	width: 120px;
 }

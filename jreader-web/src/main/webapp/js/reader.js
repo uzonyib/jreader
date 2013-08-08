@@ -76,11 +76,20 @@ $(document).ready(function() {
 			menuGroup = menuGroup.parent();
 		}
 		var feedIds = "";
-		menuGroup.parent().children(".menu-item").each(function(id, item) {
+		menuGroup.closest(".menu-group").children(".menu-item").each(function(id, item) {
 			feedIds += "," + $(item).attr("feed-id");
 		});
 		feedIds = feedIds.substring(1);
 		loadFeedEntriesFrom("/reader/entries?ids=" + feedIds);
+	});
+
+	$("#subscription-menu").on("click", ".menu-group .group-collapse", function(event) {
+		var menuGroup = $(event.target).closest(".menu-group");
+		if (menuGroup.hasClass("collapsed")) {
+			menuGroup.removeClass("collapsed");
+		} else {
+			menuGroup.addClass("collapsed");
+		}
 	});
 	
 	$("#main-area").on("click", ".set-group-title button", function(event) {
@@ -171,6 +180,7 @@ $(document).ready(function() {
 	});
 	
 	reloadSubscriptions();
+	setInterval(reloadSubscriptions, 1000 * 60 * 5);
 	
 	dust.loadSource(dust.compile($("#template-subscription-group-settings").html(),"subscriptionGroupSettingsTemplate"));
 	dust.loadSource(dust.compile($("#template-subscription-menu-group").html(),"subscriptionMenuGroupTemplate"));
@@ -197,11 +207,14 @@ function loadFeedEntriesFrom(urlParam) {
 	var onlyUnread = $("#only-unread").is(":checked");
 	var url = urlParam + (urlParam.indexOf("?") > -1 ? "&" : "?") + "only-unread=" + onlyUnread
 		+ "&reverse-order=" + (onlyUnread ? $("#reverse-order").is(":checked") : false);
+	var feedEntriesDiv = $("#feed-entries");
+	feedEntriesDiv.empty();
+	var statusDiv = $("#nav-bar .status");
+	statusDiv.addClass("loading-feed-entries");
 	$.get(url, {}, function(data) {
-		var feedEntriesDiv = $("#feed-entries");
-		feedEntriesDiv.empty();
 		feedEntriesDiv.attr("loaded-from", urlParam);
-	    $.each(JSON.parse(data), function (id, feedEntry) {
+		statusDiv.removeClass("loading-feed-entries");
+		$.each(JSON.parse(data), function (id, feedEntry) {
 	    	feedEntry.publishedDate = moment(new Date(feedEntry.publishedDate)).format("YYYY-MM-DD HH:mm");
 	    	feedEntriesDiv.append(template("feedEntryTemplate", feedEntry));
 	    });
@@ -211,14 +224,21 @@ function loadFeedEntriesFrom(urlParam) {
 function refreshSubscriptions(subscriptionGroups) {
 	$("#subscription-menu").empty();
 	$("#subscription-settings").empty();
+	var totalUnreadCount = 0;
 	$.each(JSON.parse(subscriptionGroups), function(id, group) {
+		totalUnreadCount += group.unreadCount;
 		$("#subscription-menu").append(template("subscriptionMenuGroupTemplate", group));
 		$("#subscription-settings").append(template("subscriptionGroupSettingsTemplate", group));
 	});
+	document.title = (totalUnreadCount > 0 ? "(" + totalUnreadCount + ") " : "") + "jReader";
+	$("#all-items-menu-item a").html("All items" + (totalUnreadCount > 0 ? " (" + totalUnreadCount + ")" : ""));
 }
 
 function reloadSubscriptions() {
+	var statusDiv = $("#nav-bar .status");
+	statusDiv.addClass("loading-subscriptions");
 	$.get("/reader/subscriptions", {}, function(data) {
 		refreshSubscriptions(data);
+		statusDiv.removeClass("loading-subscriptions");
 	});
 }

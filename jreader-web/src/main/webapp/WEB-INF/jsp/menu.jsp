@@ -1,3 +1,7 @@
+<div class="menu-item" id="logout-menu-item">
+	<a href="/reader/logout">Logout</a>
+</div>
+
 <div class="menu-item" id="home-menu-item">
 	<a href="#">Home</a>
 </div>
