@@ -2,20 +2,24 @@
 	<a href="/reader/logout">Logout</a>
 </div>
 
-<div class="menu-item" id="home-menu-item">
-	<a href="#">Home</a>
+<div class="menu-item selected" id="home-menu-item">
+	<span class="icon"></span>
+	<span class="title">Home</span>
 </div>
 
 <div class="menu-item" id="all-items-menu-item">
-	<a href="#">All items</a>
+	<span class="icon"></span>
+	<span class="title">All items<span class="unread-count"></span></span>
 </div>
 
 <div class="menu-item" id="starred-menu-item">
-	<a href="#">Starred items</a>
+	<span class="icon"></span>
+	<span class="title">Starred items</span>
 </div>
 
 <div class="menu-item" id="settings-menu-item">
-	<a href="#">Settings</a>
+	<span class="icon"></span>
+	<span class="title">Settings</span>
 </div>
 
 <div id="subscription-menu"></div>

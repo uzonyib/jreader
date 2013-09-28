@@ -6,6 +6,7 @@
 	<title>jReader</title>
 	<link rel="stylesheet" type="text/css" href="/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/css/reader.css">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
 	<script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="/js/moment.min.js"></script>
 	<script type="text/javascript" src="/js/dust-full-1.2.3.min.js"></script>

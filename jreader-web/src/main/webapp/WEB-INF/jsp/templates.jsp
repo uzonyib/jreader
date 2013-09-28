@@ -1,23 +1,27 @@
 <script type="text/x-template" id="template-subscription-menu-group">
-	<div class="menu-group collapsed">
+	<div class="menu-group menu-item{cssClass}" feed-group="{?title}{title}{:else}Ungrouped{/title}">
 		<div>
 			<span class="group-collapse">
-				<img src="/images/arrow_right.png" height="12" width="12" class="collapsed">
-				<img src="/images/arrow_down.png" height="12" width="12" class="uncollapsed">
+				<span class="collapsed"></span>
+				<span class="uncollapsed"></span>
 			</span>
 			<span class="group-title">
 				{?title}{title}{:else}Ungrouped{/title}
+			</span>
+			<span class="unread-count">
 				{@if cond="{unreadCount} > 0"}
-					<span class="unread-count">({unreadCount})</span>
+					({unreadCount})
 				{/if}
 			</span>
 		</div>
 		{#subscriptions}
-			<div class="menu-item" feed-id="{feed.id}">
-				{title}
-				{@if cond="{unreadCount} > 0"}
-					<span class="unread-count">({unreadCount})</span>
-				{/if}
+			<div class="menu-item feed-item{cssClass}" feed-id="{feed.id}">
+				<span class="title">{title}</span>
+				<span class="unread-count">
+					{@if cond="{unreadCount} > 0"}
+						({unreadCount})
+					{/if}
+				</span>
 			</div>
 		{/subscriptions}
 	</div>
@@ -45,27 +49,23 @@
 </script>
 
 <script type="text/x-template" id="template-feed-entry">
-	<div class="feed-entry{^read} unread{/read}" feed-entry-id="{id}">
-		<div class="breadcrumb">
-			<div class="star-buttons">
-				<button class="star"{?starred} style="display: none;"{/starred}>Star</button>
-				<button class="unstar"{^starred} style="display: none;"{/starred}>Unstar</button>
-			</div>
-			<div class="feed-title" feed-id="{feedId}">{subscriptionTitle}</div>
-			<div class="title">
-				{title}
-			</div>
-			<div class="date">
-				{publishedDate}
-			</div>
-		</div>
-		<div class="detail" style="display: none;">
-			<div class="link">
-				<a target=_blank href="{link}">Open</a>
-			</div>
-			<div class="description">
-				{description|s}
-			</div>
-		</div>
-	</div>
+	<tbody class="feed-entry{^read} unread{/read}" feed-entry-id="{id}">
+		<tr class="breadcrumb">
+			<td class="star-buttons">
+				<button class="star"{?starred} style="display: none;"{/starred}></button>
+				<button class="unstar"{^starred} style="display: none;"{/starred}></button>
+			</td>
+			<td class="feed-title" feed-id="{feedId}">{subscriptionTitle}</td>
+			<td class="title">{title}</td>
+			<td class="date">{publishedDate}</td>
+		</tr>
+		<tr class="detail" style="display: none;">
+			<td colspan="4">
+				<div class="link">
+					<a target=_blank href="{link}">Open</a>
+				</div>
+				<div class="description">{description|s}</div>
+			</td>
+		</tr>
+	</tbody>
 </script>

@@ -7,6 +7,7 @@
 	<title>Login</title>
 	<link rel="stylesheet" type="text/css" href="/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/css/reader.css">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
 </head>
 <body>
 	<form:form method="post" action="/performlogin">

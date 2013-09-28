@@ -1,19 +1,22 @@
 $(document).ready(function() {
 	
-	$("#home-menu-item").on("click", "a", function(event) {
+	$("#home-menu-item").on("click", function(event) {
 		$("#items-contents").hide();
 		$("#settings-contents").hide();
 		$("#home-contents").show();
-		return false;
+		refreshSelectedMenuItem(event);
 	});
 
-	$("#all-items-menu-item").on("click", "a", function(event) {
+	$("#all-items-menu-item").on("click", function(event) {
 		$("#settings-contents").hide();
 		$("#home-contents").hide();
 		
 		var feedIds = "";
 		$("#menu #subscription-menu .menu-item").each(function(id, item) {
-			feedIds += "," + $(item).attr("feed-id");
+			var feedId = $(item).attr("feed-id");
+			if (typeof feedId !== 'undefined') {
+				feedIds += "," + feedId;
+			}
 		});
 		if (feedIds.length > 0) {
 			feedIds = feedIds.substring(1);
@@ -21,22 +24,22 @@ $(document).ready(function() {
 		}
 		
 		$("#items-contents").show();
-		return false;
+		refreshSelectedMenuItem(event);
 	});
 
-	$("#settings-menu-item").on("click", "a", function(event) {
+	$("#settings-menu-item").on("click", function(event) {
 		$("#items-contents").hide();
 		$("#home-contents").hide();
 		$("#settings-contents").show();
-		return false;
+		refreshSelectedMenuItem(event);
 	});
 	
-	$("#starred-menu-item").on("click", "a", function(event) {
+	$("#starred-menu-item").on("click", function(event) {
 		$("#settings-contents").hide();
 		$("#home-contents").hide();
 		$("#items-contents").show();
 		loadFeedEntriesFrom("/reader/starred");
-		return false;
+		refreshSelectedMenuItem(event);
 	});
 	
 	$("#main-area").on("click", ".unsubscribe-button", function(event) {
@@ -55,19 +58,29 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$("#subscription-menu").on("click", ".menu-item", function(event) {
+	$("#subscription-menu").on("click", ".menu-item.feed-item", function(event) {
 		$("#home-contents").hide();
 		$("#settings-contents").hide();
 		$("#items-contents").show();
-		var menuItem = $(event.target);
-		if (!menuItem.hasClass("menu-item")) {
-			menuItem = menuItem.parent();
-		}
+		var menuItem = $(event.target).closest(".menu-item");
 		var feedId = menuItem.attr("feed-id");
 		loadFeedEntriesFrom("/reader/entries?ids=" + feedId);
 	});
 
-	$("#subscription-menu").on("click", ".menu-group .group-title", function(event) {
+	$("#subscription-menu").on("click", ".menu-group .group-collapse", function(event) {
+		var menuGroup = $(event.target).closest(".menu-group");
+		if (menuGroup.hasClass("collapsed")) {
+			menuGroup.removeClass("collapsed");
+		} else {
+			menuGroup.addClass("collapsed");
+		}
+		return false;
+	});
+
+	$("#subscription-menu").on("click", ".menu-group", function(event) {
+		if (!$(event.target).parent().hasClass("group-collapse")) {
+			refreshSelectedMenuItem(event);
+		}
 		$("#home-contents").hide();
 		$("#settings-contents").hide();
 		$("#items-contents").show();
@@ -81,15 +94,6 @@ $(document).ready(function() {
 		});
 		feedIds = feedIds.substring(1);
 		loadFeedEntriesFrom("/reader/entries?ids=" + feedIds);
-	});
-
-	$("#subscription-menu").on("click", ".menu-group .group-collapse", function(event) {
-		var menuGroup = $(event.target).closest(".menu-group");
-		if (menuGroup.hasClass("collapsed")) {
-			menuGroup.removeClass("collapsed");
-		} else {
-			menuGroup.addClass("collapsed");
-		}
 	});
 	
 	$("#main-area").on("click", ".set-group-title button", function(event) {
@@ -114,7 +118,7 @@ $(document).ready(function() {
 		});
 	});
 	
-	$("#main-area").on("click", ".feed-entry .breadcrumb .title", function(event) {
+	$("#main-area").on("click", ".feed-entry .breadcrumb .feed-title, .feed-entry .breadcrumb .title, .feed-entry .breadcrumb .date", function(event) {
 		var feedEntry = $(event.target).closest(".feed-entry");
 		feedEntry.children(".detail").first().toggle();
 		
@@ -129,26 +133,22 @@ $(document).ready(function() {
 	
 	$("#main-area").on("click", ".feed-entry .breadcrumb .star-buttons .star", function(event) {
 		var starButton = $(event.target);
-		starButton.attr("disabled, disabled");
 		var feedEntry = starButton.closest(".feed-entry");
 		var feedEntryId = feedEntry.attr("feed-entry-id");
 		$.post("/reader/star", { "id" : feedEntryId }, function(data) {
 			starButton.hide();
 			var unstarButton = starButton.parent().children(".unstar").first();
-			unstarButton.removeAttr("disabled");
 			unstarButton.show();
 		});
 	});
 
 	$("#main-area").on("click", ".feed-entry .breadcrumb .star-buttons .unstar", function(event) {
 		var unstarButton = $(event.target);
-		unstarButton.attr("disabled, disabled");
 		var feedEntry = unstarButton.closest(".feed-entry");
 		var feedEntryId = feedEntry.attr("feed-entry-id");
 		$.post("/reader/unstar", { "id" : feedEntryId }, function(data) {
 			unstarButton.hide();
 			var starButton = unstarButton.parent().children(".star").first();
-			starButton.removeAttr("disabled");
 			starButton.show();
 		});
 	});
@@ -207,31 +207,47 @@ function loadFeedEntriesFrom(urlParam) {
 	var onlyUnread = $("#only-unread").is(":checked");
 	var url = urlParam + (urlParam.indexOf("?") > -1 ? "&" : "?") + "only-unread=" + onlyUnread
 		+ "&reverse-order=" + (onlyUnread ? $("#reverse-order").is(":checked") : false);
-	var feedEntriesDiv = $("#feed-entries");
-	feedEntriesDiv.empty();
+	var feedEntriesTable = $("#feed-entries");
+	feedEntriesTable.empty();
 	var statusDiv = $("#nav-bar .status");
 	statusDiv.addClass("loading-feed-entries");
 	$.get(url, {}, function(data) {
-		feedEntriesDiv.attr("loaded-from", urlParam);
+		feedEntriesTable.attr("loaded-from", urlParam);
 		statusDiv.removeClass("loading-feed-entries");
 		$.each(JSON.parse(data), function (id, feedEntry) {
 	    	feedEntry.publishedDate = moment(new Date(feedEntry.publishedDate)).format("YYYY-MM-DD HH:mm");
-	    	feedEntriesDiv.append(template("feedEntryTemplate", feedEntry));
+	    	feedEntriesTable.append(template("feedEntryTemplate", feedEntry));
 	    });
 	});
 }
 
 function refreshSubscriptions(subscriptionGroups) {
+	var totalUnreadCount = 0;
+	var parsedGroups = JSON.parse(subscriptionGroups);
+	$.each(parsedGroups, function(groupIndex, group) {
+		totalUnreadCount += group.unreadCount;
+		var groupTitle = group.title == undefined ? "Ungrouped" : group.title;
+		var loadedGroup = $(".menu-group.menu-item[feed-group='" + groupTitle + "']").get(0);
+		if (loadedGroup != undefined) {
+			group.cssClass = ($(loadedGroup).hasClass("selected") ? " selected" : "") + ($(loadedGroup).hasClass("collapsed") ? " collapsed" : "");
+		} else {
+			group.cssClass = " collapsed";
+		}
+		$.each(group.subscriptions, function(index, subscription) {
+			var loadedSubscription = $(".menu-item.feed-item[feed-id='" + subscription.feed.id + "']").get(0);
+			subscription.cssClass = (loadedSubscription != undefined && $(loadedSubscription).hasClass("selected")) ? " selected" : "";
+		});
+	});
+
 	$("#subscription-menu").empty();
 	$("#subscription-settings").empty();
-	var totalUnreadCount = 0;
-	$.each(JSON.parse(subscriptionGroups), function(id, group) {
-		totalUnreadCount += group.unreadCount;
+
+	$.each(parsedGroups, function(id, group) {
 		$("#subscription-menu").append(template("subscriptionMenuGroupTemplate", group));
 		$("#subscription-settings").append(template("subscriptionGroupSettingsTemplate", group));
 	});
 	document.title = (totalUnreadCount > 0 ? "(" + totalUnreadCount + ") " : "") + "jReader";
-	$("#all-items-menu-item a").html("All items" + (totalUnreadCount > 0 ? " (" + totalUnreadCount + ")" : ""));
+	$("#all-items-menu-item .title .unread-count").html(totalUnreadCount > 0 ? " (" + totalUnreadCount + ")" : "");
 }
 
 function reloadSubscriptions() {
@@ -241,4 +257,9 @@ function reloadSubscriptions() {
 		refreshSubscriptions(data);
 		statusDiv.removeClass("loading-subscriptions");
 	});
+}
+
+function refreshSelectedMenuItem(event) {
+	$("#menu .menu-item.selected").removeClass("selected");
+	$(event.target).closest(".menu-item").addClass("selected");
 }
