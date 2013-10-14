@@ -63,6 +63,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				return;
 			}
 			feed = mapper.map(rssFeed, Feed.class);
+			feed.setUpdatedDate(System.currentTimeMillis());
 			feed = feedDao.save(feed);
 			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
 				FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);

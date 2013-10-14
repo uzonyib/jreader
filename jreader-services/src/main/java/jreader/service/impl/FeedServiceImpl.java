@@ -94,6 +94,8 @@ public class FeedServiceImpl implements FeedService {
 			if (rssFeed == null) {
 				continue;
 			}
+			feed.setUpdatedDate(System.currentTimeMillis());
+			feedDao.save(feed);
 			
 			List<User> subscribers = subscriptionDao.listSubscribers(feed);
 			

@@ -3,7 +3,8 @@
 	<cron>
 		<url>/cron/refresh</url>
 		<description>Refresh all feeds</description>
-		<schedule>every 30 mins</schedule>
+		<schedule>every 30 mins from 06:30 to 00:00</schedule>
+		<timezone>Europe/Budapest</timezone>
 	</cron>
 	<cron>
 		<url>/cron/cleanup</url>

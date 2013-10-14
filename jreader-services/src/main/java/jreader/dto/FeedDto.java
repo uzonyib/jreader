@@ -8,6 +8,7 @@ public class FeedDto {
 	private String description;
 	private String feedType;
 	private Long publishedDate;
+	private Long updatedDate;
 
 	public String getId() {
 		return id;
@@ -55,6 +56,14 @@ public class FeedDto {
 
 	public void setPublishedDate(Long publishedDate) {
 		this.publishedDate = publishedDate;
+	}
+
+	public Long getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Long updatedDate) {
+		this.updatedDate = updatedDate;
 	}
 
 }

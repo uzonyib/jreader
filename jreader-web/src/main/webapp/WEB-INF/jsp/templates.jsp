@@ -69,3 +69,21 @@
 		</tr>
 	</tbody>
 </script>
+
+<script type="text/x-template" id="template-subscription-group-stat">
+	<div class="subscription-group-stat">
+		<div class="group-title">
+			{?title}{title}{:else}Ungrouped{/title}
+		</div>
+		{#subscriptions}
+			<div class="subscription-stat" feed-id="{feed.id}">
+				<div class="title">
+					<span class="feed-title">{title}</span>
+					({feed.title} - {feed.url})
+				</div>
+				{?feed.description}<div class="description">{feed.description}</div>{/feed.description}
+				<div class="updated-date">Updated: {feed.updatedDate}</div>
+			</div>
+		{/subscriptions}
+	</div>
+</script>

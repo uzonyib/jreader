@@ -1,5 +1,6 @@
 <div id="home-contents">
 	Welcome!
+	<div id="subscription-group-stats"></div>
 </div>
 
 <div id="items-contents" style="display: none;">
