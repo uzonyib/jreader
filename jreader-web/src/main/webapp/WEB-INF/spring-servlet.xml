@@ -34,6 +34,7 @@
 	<security:http>
 		<security:session-management invalid-session-url="/login" />
 		<security:intercept-url pattern="/reader/**" access="ROLE_USER" />
+		<security:intercept-url pattern="/appstats/**" access="ROLE_USER" />
 		<security:form-login login-page="/login" login-processing-url="/performlogin" authentication-failure-url="/login"
 			username-parameter="username" password-parameter="password" />
 		<security:logout logout-url="/reader/logout" logout-success-url="/login" delete-cookies="true" />
