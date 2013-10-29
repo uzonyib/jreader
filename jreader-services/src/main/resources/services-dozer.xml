@@ -7,8 +7,16 @@
 		<class-a>jreader.domain.FeedEntry</class-a>
 		<class-b>jreader.dto.FeedEntryDto</class-b>
 		<field>
-			<a>feed.id</a>
-			<b>feedId</b>
+			<a>subscription.id</a>
+			<b>subscriptionId</b>
+		</field>
+		<field>
+			<a>subscription.title</a>
+			<b>subscriptionTitle</b>
+		</field>
+		<field>
+			<a>subscription.group.id</a>
+			<b>subscriptionGroupId</b>
 		</field>
 	</mapping>
 

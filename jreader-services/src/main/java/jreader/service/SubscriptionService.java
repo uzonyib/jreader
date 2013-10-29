@@ -6,14 +6,14 @@ import jreader.dto.SubscriptionGroupDto;
 
 public interface SubscriptionService {
 	
-	void subscribe(String username, String url);
+	void createGroup(String username, String title);
 	
-	void unsubscribe(String username, Long id);
+	void subscribe(String username, Long subscriptionGroupId, String url);
 	
-	void assign(String username, Long feedId, String groupTitle);
+	void unsubscribe(String username, Long subscriptionGroupId, Long subscriptionId);
 	
 	List<SubscriptionGroupDto> list(String username);
 	
-	void entitle(String username, Long feedId, String subscriptionTitle);
+	void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String subscriptionTitle);
 
 }

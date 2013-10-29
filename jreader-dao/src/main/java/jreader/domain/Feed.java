@@ -2,28 +2,16 @@ package jreader.domain;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Feed {
 	
 	@Id
-	private Long id;
-	@Index
 	private String url;
 	private String title;
 	private String description;
 	private String feedType;
 	private Long publishedDate;
-	private Long updatedDate;
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getUrl() {
 		return url;
@@ -63,14 +51,6 @@ public class Feed {
 
 	public void setPublishedDate(Long publishedDate) {
 		this.publishedDate = publishedDate;
-	}
-
-	public Long getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(Long updatedDate) {
-		this.updatedDate = updatedDate;
 	}
 	
 }

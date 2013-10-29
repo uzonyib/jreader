@@ -7,13 +7,15 @@ import jreader.domain.User;
 
 public interface SubscriptionGroupDao {
 	
+	SubscriptionGroup find(User user, Long id);
+	
 	SubscriptionGroup find(User user, String title);
 	
 	SubscriptionGroup save(SubscriptionGroup subscriptionGroup);
 	
 	void delete(SubscriptionGroup group);
 	
-	int countSubscriptions(SubscriptionGroup group, User user);
+	int countSubscriptions(SubscriptionGroup group);
 	
 	int getMaxOrder(User user);
 	

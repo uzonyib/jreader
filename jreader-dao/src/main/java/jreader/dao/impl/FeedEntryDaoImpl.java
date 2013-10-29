@@ -1,12 +1,11 @@
 package jreader.dao.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import jreader.dao.FeedEntryDao;
-import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.Subscription;
+import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +25,15 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	private ObjectifyFactory objectifyFactory;
 	
 	@Override
-	public FeedEntry find(Long id) {
+	public FeedEntry find(Subscription subscription, Long id) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).id(id).now();
+		return ofy.load().type(FeedEntry.class).parent(subscription).id(id).now();
 	}
 	
 	@Override
-	public FeedEntry find(User user, Feed feed, int ordinal) {
+	public FeedEntry find(Subscription subscription, int ordinal) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef =", feed).order("-publishedDate").offset(ordinal - 1).limit(1).first().now();
+		return ofy.load().type(FeedEntry.class).ancestor(subscription).order("-publishedDate").offset(ordinal - 1).limit(1).first().now();
 	}
 	
 	@Override
@@ -45,6 +44,17 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 			public FeedEntry run() {
 				Key<FeedEntry> key = ofy.save().entity(feedEntry).now();
 				return ofy.load().key(key).now();
+			}
+		});
+	}
+	
+	@Override
+	public void saveAll(final List<FeedEntry> feedEntries) {
+		final Objectify ofy = objectifyFactory.begin();
+		ofy.transact(new VoidWork() {
+			@Override
+			public void vrun() {
+				ofy.save().entities(feedEntries).now();
 			}
 		});
 	}
@@ -61,19 +71,23 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 	
 	@Override
-	public List<FeedEntry> listEntriesByIds(List<Long> feedEntryIds) {
-		List<FeedEntry> entries = new ArrayList<FeedEntry>();
-		for (Long feedEntryId : feedEntryIds) {
-			entries.add(find(feedEntryId));
-		}
-		return entries;
+	public List<FeedEntry> list(User user, boolean onlyUnread, boolean ascending) {
+		return listForAncestor(user, onlyUnread, ascending);
 	}
-
+	
 	@Override
-	public List<FeedEntry> listEntries(User user, List<Long> feedIds, boolean onlyUnread, boolean ascending) {
+	public List<FeedEntry> list(SubscriptionGroup subscriptionGroup, boolean onlyUnread, boolean ascending) {
+		return listForAncestor(subscriptionGroup, onlyUnread, ascending);
+	}
+	
+	@Override
+	public List<FeedEntry> list(Subscription subscription, boolean onlyUnread, boolean ascending) {
+		return listForAncestor(subscription, onlyUnread, ascending);
+	}
+	
+	private List<FeedEntry> listForAncestor(Object ancestor, boolean onlyUnread, boolean ascending) {
 		Objectify ofy = objectifyFactory.begin();
-		Collection<Feed> values = ofy.load().type(Feed.class).ids(feedIds).values();
-		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef in", values);
+		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).ancestor(ancestor);
 		if (onlyUnread) {
 			query = query.filter("read", false);
 		}
@@ -81,9 +95,9 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 	
 	@Override
-	public List<FeedEntry> listStarredEntries(User user, boolean onlyUnread, boolean ascending) {
+	public List<FeedEntry> listStarred(User user, boolean onlyUnread, boolean ascending) {
 		Objectify ofy = objectifyFactory.begin();
-		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("starred =", true);
+		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).ancestor(user).filter("starred =", true);
 		if (onlyUnread) {
 			query = query.filter("read", false);
 		}
@@ -91,15 +105,15 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 	
 	@Override
-	public List<FeedEntry> listUnstarredEntriesOlderThan(User user, Feed feed, long date) {
+	public List<FeedEntry> listUnstarredOlderThan(Subscription subscription, long date) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef =", feed).filter("starred =", false).filter("publishedDate <", date).list();
+		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("starred =", false).filter("publishedDate <", date).list();
 	}
 	
 	@Override
-	public int countUnread(User user, Feed feed) {
+	public int countUnread(Subscription subscription) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).filter("userRef =", user).filter("feedRef =", feed).filter("read =", false).count();
+		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("read =", false).count();
 	}
 
 }

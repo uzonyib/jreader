@@ -12,14 +12,11 @@
     <artifactId>jreader-web</artifactId>
 
     <properties>
-        <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.8.1.1</appengine.target.version>
-        <tiles.target.version>2.2.2</tiles.target.version>
+        <appengine.target.version>1.8.6</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!-- Compile/runtime dependencies -->
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-1.0-sdk</artifactId>
@@ -35,32 +32,6 @@
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
-        </dependency>
-
-        <!-- Test Dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-testing</artifactId>
-            <version>${appengine.target.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-stubs</artifactId>
-            <version>${appengine.target.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
         	<groupId>org.springframework</groupId>
@@ -118,7 +89,6 @@
                 <configuration>
                     <archiveClasses>true</archiveClasses>
                     <webResources>
-                        <!-- in order to interpolate version from pom into appengine-web.xml -->
                         <resource>
                             <directory>${basedir}/src/main/webapp/WEB-INF</directory>
                             <filtering>true</filtering>
@@ -134,7 +104,8 @@
                 <version>${appengine.target.version}</version>
                 <configuration>
                 	<jvmFlags>
-                		<jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/jreader/appengine</jvmFlag>
+                		<jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/eclipse_workspace/jreader/appengine</jvmFlag>
+					    <jvmFlag>-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=10</jvmFlag>
                 	</jvmFlags>
                 </configuration>
             </plugin>

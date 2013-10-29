@@ -9,11 +9,13 @@ import java.util.logging.Logger;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
+import jreader.dao.SubscriptionGroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.Subscription;
+import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
-import jreader.dto.FeedDto;
 import jreader.dto.FeedEntryDto;
 import jreader.rss.RssService;
 import jreader.service.FeedService;
@@ -30,6 +32,9 @@ public class FeedServiceImpl implements FeedService {
 	
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private SubscriptionGroupDao subscriptionGroupDao;
 	
 	@Autowired
 	private SubscriptionDao subscriptionDao;
@@ -48,22 +53,48 @@ public class FeedServiceImpl implements FeedService {
 	private Mapper mapper;
 
 	@Override
-	public List<FeedDto> list() {
-		List<FeedDto> dtos = new ArrayList<FeedDto>();
-		for (Feed feed : feedDao.listAll()) {
-			dtos.add(mapper.map(feed, FeedDto.class));
-		}
-		return dtos;
-	}
-
-	@Override
-	public List<FeedEntryDto> listEntries(String username, List<Long> feedIds, boolean onlyUnread, boolean ascending) {
+	public List<FeedEntryDto> listAllEntries(String username, boolean onlyUnread, boolean ascending) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.listEntries(user, feedIds, onlyUnread, ascending));
+		return convert(user, feedEntryDao.list(user, onlyUnread, ascending));
+	}
+	
+	@Override
+	public List<FeedEntryDto> listSubscriptionGroupEntries(String username, Long subscriptionGroupId, boolean onlyUnread, boolean ascending) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return Collections.emptyList();
+		}
+		
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroup == null) {
+			return Collections.emptyList();
+		}
+		
+		return convert(user, feedEntryDao.list(subscriptionGroup, onlyUnread, ascending));
+	}
+	
+	@Override
+	public List<FeedEntryDto> listSubscriptionEntries(String username, Long subscriptionGroupId, Long subscriptionId, boolean onlyUnread, boolean ascending) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return Collections.emptyList();
+		}
+		
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroup == null) {
+			return Collections.emptyList();
+		}
+		
+		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
+		if (subscription == null) {
+			return Collections.emptyList();
+		}
+		
+		return convert(user, feedEntryDao.list(subscription, onlyUnread, ascending));
 	}
 	
 	@Override
@@ -73,15 +104,13 @@ public class FeedServiceImpl implements FeedService {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.listStarredEntries(user, onlyUnread, ascending));
+		return convert(user, feedEntryDao.listStarred(user, onlyUnread, ascending));
 	}
 
 	private List<FeedEntryDto> convert(User user, List<FeedEntry> starredEntries) {
 		List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
 		for (FeedEntry starredEntry : starredEntries) {
-			FeedEntryDto dto = mapper.map(starredEntry, FeedEntryDto.class);
-			dto.setSubscriptionTitle(subscriptionDao.find(user, starredEntry.getFeed()).getTitle());
-			dtos.add(dto);
+			dtos.add(mapper.map(starredEntry, FeedEntryDto.class));
 		}
 		return dtos;
 	}
@@ -94,25 +123,25 @@ public class FeedServiceImpl implements FeedService {
 			if (rssFeed == null) {
 				continue;
 			}
-			feed.setUpdatedDate(System.currentTimeMillis());
+			long updatedDate = System.currentTimeMillis();
 			feedDao.save(feed);
 			
-			List<User> subscribers = subscriptionDao.listSubscribers(feed);
+			List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
 			
-			Long lastUpdate = feedDao.getLastUpdatedDate(feed);
-			int counter = 0;
-			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
-				if (lastUpdate != null && lastUpdate < rssFeedEntry.getPublishedDate()) {
-					for (User subscriber : subscribers) {
+			for (Subscription subscription : subscriptions) {
+				int counter = 0;
+				for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
+					if (rssFeedEntry.getPublishedDate() > subscription.getUpdatedDate()) {
 						FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
-						feedEntry.setFeed(feed);
-						feedEntry.setUser(subscriber);
+						feedEntry.setSubscription(subscription);
 						feedEntryDao.save(feedEntry);
+						++counter;
 					}
-					++counter;
 				}
+				subscription.setUpdatedDate(updatedDate);
+				subscriptionDao.save(subscription);
+				LOG.info(feed.getTitle() + " new items for user " +subscription.getGroup().getUser().getUsername() + ": " + counter);
 			}
-			LOG.info(feed.getTitle() + " new items: " + counter);
 		}
 	}
 	
@@ -121,17 +150,17 @@ public class FeedServiceImpl implements FeedService {
 		List<Feed> feeds = feedDao.listAll();
 		long date = new Date().getTime() - 1000 * 60 * 60 * 24 * olderThanDays;
 		for (Feed feed : feeds) {
-			for (User user : subscriptionDao.listSubscribers(feed)) {
+			for (Subscription subscription : subscriptionDao.listSubscriptions(feed)) {
 				int count = 0;
-				FeedEntry e = feedEntryDao.find(user, feed, keptCount);
+				FeedEntry e = feedEntryDao.find(subscription, keptCount);
 				if (e != null) {
 					long threshold = Math.min(date, e.getPublishedDate());
-					List<FeedEntry> feedEntries = feedEntryDao.listUnstarredEntriesOlderThan(user, feed, threshold);
+					List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
 					for (FeedEntry feedEntry : feedEntries) {
 						feedEntryDao.delete(feedEntry);
 						++count;
 					}
-					LOG.info(feed.getTitle() + "(" + user.getUsername() + ") deleted items older than " + threshold + ": " + count);
+					LOG.info(feed.getTitle() + "(" + subscription.getGroup().getUser().getUsername() + ") deleted items older than " + new Date(threshold) + ": " + count);
 				}
 			}
 		}

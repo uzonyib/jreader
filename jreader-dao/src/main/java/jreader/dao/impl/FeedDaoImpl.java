@@ -14,7 +14,6 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
-import com.googlecode.objectify.cmd.QueryKeys;
 
 @Repository
 public class FeedDaoImpl implements FeedDao {
@@ -23,15 +22,9 @@ public class FeedDaoImpl implements FeedDao {
 	private ObjectifyFactory objectifyFactory;
 	
 	@Override
-	public Feed find(Long id) {
+	public Feed find(String url) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Feed.class).id(id).now();
-	}
-	
-	@Override
-	public Feed findByUrl(String url) {
-		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Feed.class).filter("url =", url).first().now();
+		return ofy.load().type(Feed.class).id(url).now();
 	}
 
 	@Override
@@ -58,8 +51,6 @@ public class FeedDaoImpl implements FeedDao {
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
-				QueryKeys<FeedEntry> feedEntryKeys = ofy.load().type(FeedEntry.class).filter("feedRef =", feed).keys();
-				ofy.delete().keys(feedEntryKeys).now();
 				ofy.delete().entity(feed).now();
 			}
 		});

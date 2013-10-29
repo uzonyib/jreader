@@ -6,9 +6,7 @@ import jreader.domain.Feed;
 
 public interface FeedDao {
 	
-	Feed find(Long id);
-
-	Feed findByUrl(String url);
+	Feed find(String url);
 	
 	List<Feed> listAll();
 	

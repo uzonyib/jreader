@@ -50,114 +50,80 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private Mapper mapper;
 	
 	@Override
-	public void subscribe(String username, String url) {
+	public void createGroup(String username, String title) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
 		}
-		
-		Feed feed = feedDao.findByUrl(url);
-		if (feed == null) {
-			jreader.rss.domain.Feed rssFeed = rssService.fetch(url);
-			if (rssFeed == null) {
-				return;
-			}
-			feed = mapper.map(rssFeed, Feed.class);
-			feed.setUpdatedDate(System.currentTimeMillis());
-			feed = feedDao.save(feed);
-			for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
-				FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
-				feedEntry.setFeed(feed);
-				feedEntry.setUser(user);
-				feedEntryDao.save(feedEntry);
-			}
-		}
-		
-		Subscription subscription = subscriptionDao.find(user, feed);
-		if (subscription == null) {
-			SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, null);
-			if (subscriptionGroup == null) {
-				subscriptionGroup = new SubscriptionGroup();
-				subscriptionGroup.setUser(user);
-				subscriptionGroup.setTitle(null);
-				subscriptionGroup.setOrder(subscriptionGroupDao.getMaxOrder(user) + 1);
-				subscriptionGroup = subscriptionGroupDao.save(subscriptionGroup);
-			}
-			subscription = new Subscription();
-			subscription.setTitle(feed.getTitle());
-			subscription.setUser(user);
-			subscription.setFeed(feed);
-			subscription.setGroup(subscriptionGroup);
-			subscription.setOrder(subscriptionDao.getMaxOrder(user, subscriptionGroup) + 1);
-			subscriptionDao.save(subscription);
-		}
-	}
-
-	@Override
-	public void unsubscribe(String username, Long id) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		Feed feed = feedDao.find(id);
-		if (feed == null) {
-			return;
-		}
-		
-		Subscription subscription = subscriptionDao.find(user, feed);
-		if (subscription != null) {
-			subscriptionDao.delete(subscription);
-			SubscriptionGroup group = subscription.getGroup();
-			if (group != null) {
-				int subscriptionCount = subscriptionGroupDao.countSubscriptions(group, user);
-				if (subscriptionCount == 0) {
-					subscriptionGroupDao.delete(group);
-				}
-			}
-		}
-
-		int subscriberCount = subscriptionDao.countSubscribers(feed);
-		if (subscriberCount == 0) {
-			feedDao.delete(feed);
+		if (subscriptionGroupDao.find(user, title) == null) {
+			SubscriptionGroup subscriptionGroup = new SubscriptionGroup();
+			subscriptionGroup.setUser(user);
+			subscriptionGroup.setTitle(title);
+			subscriptionGroup.setOrder(subscriptionGroupDao.getMaxOrder(user) + 1);
+			subscriptionGroupDao.save(subscriptionGroup);
 		}
 	}
 	
 	@Override
-	public void assign(String username, Long feedId, String groupTitle) {
+	public void subscribe(String username, Long subscriptionGroupId, String url) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
 		}
 		
-		Feed feed = feedDao.find(feedId);
-		if (feed == null) {
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroupId == null) {
 			return;
 		}
+		
+		jreader.rss.domain.Feed rssFeed = rssService.fetch(url);
+		if (rssFeed == null) {
+			return;
+		}
+		long updatedDate = System.currentTimeMillis();
+		Feed feed = feedDao.find(url);
+		if (feed == null) {
+			feed = mapper.map(rssFeed, Feed.class);
+		}
+		feed = feedDao.save(feed);
 		
 		Subscription subscription = subscriptionDao.find(user, feed);
-		if (subscription == null) {
+		if (subscription != null) {
+			return;
+		}
+
+		subscription = new Subscription();
+		subscription.setTitle(feed.getTitle());
+		subscription.setFeed(feed);
+		subscription.setGroup(subscriptionGroup);
+		subscription.setOrder(subscriptionDao.getMaxOrder(subscriptionGroup) + 1);
+		subscription.setUpdatedDate(updatedDate);
+		subscription = subscriptionDao.save(subscription);
+		
+		for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
+			FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
+			feedEntry.setSubscription(subscription);
+			feedEntryDao.save(feedEntry);
+		}
+		
+		// TODO create assignments for all subscribers
+	}
+
+	@Override
+	public void unsubscribe(String username, Long subscriptionGroupId, Long subscriptionId) {
+		User user = userDao.find(username);
+		if (user == null) {
 			return;
 		}
 		
-		SubscriptionGroup group = subscriptionGroupDao.find(user, groupTitle);
-		if (group == null) {
-			group = new SubscriptionGroup();
-			group.setTitle(groupTitle);
-			group.setUser(user);
-			group.setOrder(subscriptionGroupDao.getMaxOrder(user) + 1);
-			group = subscriptionGroupDao.save(group);
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroup == null) {
+			return;
 		}
 		
-		SubscriptionGroup prevGroup = subscription.getGroup();
-		subscription.setGroup(group);
-		subscription.setOrder(subscriptionDao.getMaxOrder(user, group) + 1);
-		subscriptionDao.save(subscription);
-		if (prevGroup != null) {
-			int subscriptionCount = subscriptionGroupDao.countSubscriptions(prevGroup, user);
-			if (subscriptionCount == 0) {
-				subscriptionGroupDao.delete(prevGroup);
-			}
+		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
+		if (subscription != null) {
+			subscriptionDao.delete(subscription);
 		}
 	}
 	
@@ -168,15 +134,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return Collections.emptyList();
 		}
 		List<SubscriptionGroupDto> dtos = new ArrayList<SubscriptionGroupDto>();
-		for (SubscriptionGroup group : subscriptionGroupDao.list(user)) {
-			SubscriptionGroupDto dto = mapper.map(group, SubscriptionGroupDto.class);
+		for (SubscriptionGroup subscriptiongroup : subscriptionGroupDao.list(user)) {
+			SubscriptionGroupDto dto = mapper.map(subscriptiongroup, SubscriptionGroupDto.class);
 			dto.setSubscriptions(new ArrayList<SubscriptionDto>());
 			dtos.add(dto);
-			List<Subscription> subscriptions = subscriptionDao.list(user, group);
+			List<Subscription> subscriptions = subscriptionDao.list(subscriptiongroup);
 			int groupUnreadCount = 0;
 			for (Subscription subscription : subscriptions) {
 				SubscriptionDto subscriptionDto = mapper.map(subscription, SubscriptionDto.class);
-				int unreadCount = feedEntryDao.countUnread(user, subscription.getFeed());
+				int unreadCount = feedEntryDao.countUnread(subscription);
 				subscriptionDto.setUnreadCount(unreadCount);
 				dto.getSubscriptions().add(subscriptionDto);
 				groupUnreadCount += unreadCount;
@@ -187,18 +153,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
-	public void entitle(String username, Long feedId, String subscriptionTitle) {
+	public void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String subscriptionTitle) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
 		}
 		
-		Feed feed = feedDao.find(feedId);
-		if (feed == null) {
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroup == null) {
 			return;
 		}
 		
-		Subscription subscription = subscriptionDao.find(user, feed);
+		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
 		if (subscription == null) {
 			return;
 		}

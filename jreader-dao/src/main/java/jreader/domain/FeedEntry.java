@@ -5,12 +5,16 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
+import com.googlecode.objectify.annotation.Parent;
 
 @Entity
 public class FeedEntry {
 	
 	@Id
 	private Long id;
+	@Load
+	@Parent
+	private Ref<Subscription> subscriptionRef;
 	private String link;
 	private String title;
 	private String description;
@@ -21,12 +25,6 @@ public class FeedEntry {
 	private boolean read;
 	@Index
 	private boolean starred;
-	@Index
-	@Load
-	private Ref<User> userRef;
-	@Index
-	@Load
-	private Ref<Feed> feedRef;
 
 	public Long getId() {
 		return id;
@@ -34,6 +32,14 @@ public class FeedEntry {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Ref<Subscription> getSubscriptionRef() {
+		return subscriptionRef;
+	}
+
+	public void setSubscriptionRef(Ref<Subscription> subscriptionRef) {
+		this.subscriptionRef = subscriptionRef;
 	}
 
 	public String getLink() {
@@ -75,7 +81,7 @@ public class FeedEntry {
 	public void setPublishedDate(Long publishedDate) {
 		this.publishedDate = publishedDate;
 	}
-
+	
 	public boolean isRead() {
 		return read;
 	}
@@ -91,37 +97,13 @@ public class FeedEntry {
 	public void setStarred(boolean starred) {
 		this.starred = starred;
 	}
-
-	public Ref<User> getUserRef() {
-		return userRef;
-	}
-
-	public void setUserRef(Ref<User> userRef) {
-		this.userRef = userRef;
-	}
-
-	public Ref<Feed> getFeedRef() {
-		return feedRef;
-	}
-
-	public void setFeedRef(Ref<Feed> feedRef) {
-		this.feedRef = feedRef;
+	
+	public Subscription getSubscription() {
+		return subscriptionRef == null ? null : subscriptionRef.get();
 	}
 	
-	public User getUser() {
-		return userRef == null ? null : userRef.get();
-	}
-
-	public void setUser(User user) {
-		this.userRef = user == null ? null : Ref.create(user);
-	}
-
-	public Feed getFeed() {
-		return feedRef == null ? null : feedRef.get();
-	}
-	
-	public void setFeed(Feed feed) {
-		this.feedRef = feed == null ? null : Ref.create(feed);
+	public void setSubscription(Subscription subscription) {
+		this.subscriptionRef = subscription == null ? null : Ref.create(subscription);
 	}
 
 }

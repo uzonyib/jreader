@@ -11,17 +11,7 @@ $(document).ready(function() {
 		$("#settings-contents").hide();
 		$("#home-contents").hide();
 		
-		var feedIds = "";
-		$("#menu #subscription-menu .menu-item").each(function(id, item) {
-			var feedId = $(item).attr("feed-id");
-			if (typeof feedId !== 'undefined') {
-				feedIds += "," + feedId;
-			}
-		});
-		if (feedIds.length > 0) {
-			feedIds = feedIds.substring(1);
-			loadFeedEntriesFrom("/reader/entries?ids=" + feedIds);
-		}
+		loadFeedEntriesFrom("/reader/entries/all");
 		
 		$("#items-contents").show();
 		refreshSelectedMenuItem(event);
@@ -38,21 +28,32 @@ $(document).ready(function() {
 		$("#settings-contents").hide();
 		$("#home-contents").hide();
 		$("#items-contents").show();
-		loadFeedEntriesFrom("/reader/starred");
+		loadFeedEntriesFrom("/reader/entries/starred");
 		refreshSelectedMenuItem(event);
 	});
 	
 	$("#main-area").on("click", ".unsubscribe-button", function(event) {
-		var id = $(event.target).parent().attr("feed-id");
-		$.post("/reader/unsubscribe", { "id" : id }, function(data) {
+		var div = $(event.target);
+		var id = div.parent().attr("subscription-id");
+		var groupId = div.closest(".settings-group").attr("subscription-group-id");
+		$.post("/reader/unsubscribe", { "subscriptionId" : id, "subscriptionGroupId" : groupId }, function(data) {
 			refreshSubscriptions(data);
 		});
 	});
 	
+	$("#main-area").on("submit", "#subscription-group-form", function() {
+		var title = $("#subscription-group-form #group-name").val();
+		$.post($(this).attr("action"), { "title" : title }, function(data) {
+			refreshSubscriptions(data);
+		});
+		return false;
+	});
+	
 
 	$("#main-area").on("submit", "#subscription-form", function() {
-		var url = $("#subscription-url").val();
-		$.post($(this).attr("action"), { "url" : url }, function(data) {
+		var subscriptionGroupId = $("#subscription-form #subscription-group").val();
+		var url = $("#subscription-form #subscription-url").val();
+		$.post($(this).attr("action"), { "subscriptionGroupId" : subscriptionGroupId, "url" : url }, function(data) {
 			refreshSubscriptions(data);
 		});
 		return false;
@@ -63,8 +64,9 @@ $(document).ready(function() {
 		$("#settings-contents").hide();
 		$("#items-contents").show();
 		var menuItem = $(event.target).closest(".menu-item");
-		var feedId = menuItem.attr("feed-id");
-		loadFeedEntriesFrom("/reader/entries?ids=" + feedId);
+		var subscriptionGroupId = menuItem.closest(".menu-group").attr("subscription-group-id");
+		var subscriptionId = menuItem.attr("subscription-id");
+		loadFeedEntriesFrom("/reader/entries/subscription?subscriptionGroupId=" + subscriptionGroupId + "&subscriptionId=" + subscriptionId);
 	});
 
 	$("#subscription-menu").on("click", ".menu-group .group-collapse", function(event) {
@@ -81,28 +83,15 @@ $(document).ready(function() {
 		if (!$(event.target).parent().hasClass("group-collapse")) {
 			refreshSelectedMenuItem(event);
 		}
+		if ($(event.target).closest(".menu-item").hasClass("feed-item")) {
+		    return;
+		}
 		$("#home-contents").hide();
 		$("#settings-contents").hide();
 		$("#items-contents").show();
 		var menuGroup = $(event.target);
-		if (!menuGroup.hasClass("group-title")) {
-			menuGroup = menuGroup.parent();
-		}
-		var feedIds = "";
-		menuGroup.closest(".menu-group").children(".menu-item").each(function(id, item) {
-			feedIds += "," + $(item).attr("feed-id");
-		});
-		feedIds = feedIds.substring(1);
-		loadFeedEntriesFrom("/reader/entries?ids=" + feedIds);
-	});
-	
-	$("#main-area").on("click", ".set-group-title button", function(event) {
-		var div = $(event.target).parent();
-		var group = div.children("input").first().val();
-		var id = div.parent().attr("feed-id");
-		$.post("/reader/assign", { "id" : id, "group" : group }, function(data) {
-			refreshSubscriptions(data);
-		});
+		var subscriptionGroupId = menuGroup.closest(".menu-group").attr("subscription-group-id");
+		loadFeedEntriesFrom("/reader/entries/group?subscriptionGroupId=" + subscriptionGroupId);
 	});
 
 	$("#main-area").on("click", ".set-item-title button", function(event) {
@@ -112,8 +101,9 @@ $(document).ready(function() {
 		if (title == "") {
 			return;
 		}
-		var id = div.parent().attr("feed-id");
-		$.post("/reader/entitle", { "id" : id, "title" : title }, function(data) {
+		var id = div.parent().attr("subscription-id");
+		var groupId = div.closest(".settings-group").attr("subscription-group-id");
+		$.post("/reader/entitle", { "subscriptionId" : id, "subscriptionGroupId" : groupId, "title" : title }, function(data) {
 			refreshSubscriptions(data);
 		});
 	});
@@ -125,7 +115,9 @@ $(document).ready(function() {
 		if (feedEntry.hasClass("unread")) {
 			feedEntry.removeClass("unread");
 			var feedEntryId = feedEntry.attr("feed-entry-id");
-			$.post("/reader/read", { "ids" : feedEntryId }, function(data) {
+			var subscriptionId = feedEntry.attr("subscription-id");
+			var subscriptionGroupId = feedEntry.attr("subscription-group-id");
+			$.post("/reader/read", { "ids" : feedEntryId, "subscriptionIds" : subscriptionId, "subscriptionGroupIds" : subscriptionGroupId }, function(data) {
 				refreshSubscriptions(data);
 			});
 		}
@@ -135,7 +127,9 @@ $(document).ready(function() {
 		var starButton = $(event.target);
 		var feedEntry = starButton.closest(".feed-entry");
 		var feedEntryId = feedEntry.attr("feed-entry-id");
-		$.post("/reader/star", { "id" : feedEntryId }, function(data) {
+		var subscriptionId = feedEntry.attr("subscription-id");
+		var subscriptionGroupId = feedEntry.attr("subscription-group-id");
+		$.post("/reader/star", { "id" : feedEntryId, "subscriptionId" : subscriptionId, "subscriptionGroupId" : subscriptionGroupId }, function(data) {
 			starButton.hide();
 			var unstarButton = starButton.parent().children(".unstar").first();
 			unstarButton.show();
@@ -146,7 +140,9 @@ $(document).ready(function() {
 		var unstarButton = $(event.target);
 		var feedEntry = unstarButton.closest(".feed-entry");
 		var feedEntryId = feedEntry.attr("feed-entry-id");
-		$.post("/reader/unstar", { "id" : feedEntryId }, function(data) {
+		var subscriptionId = feedEntry.attr("subscription-id");
+		var subscriptionGroupId = feedEntry.attr("subscription-group-id");
+		$.post("/reader/unstar", { "id" : feedEntryId, "subscriptionId" : subscriptionId, "subscriptionGroupId" : subscriptionGroupId }, function(data) {
 			unstarButton.hide();
 			var starButton = unstarButton.parent().children(".star").first();
 			starButton.show();
@@ -155,13 +151,19 @@ $(document).ready(function() {
 	
 	$("#main-area").on("click", "#mark-all-read", function() {
 		var ids = "";
+		var subscriptionIds = "";
+		var subscriptionGroupIds = "";
 		$("#feed-entries .feed-entry.unread").each(function(id, item) {
 			$(item).removeClass("unread");
 			ids += "," + $(item).attr("feed-entry-id");
+			subscriptionIds += "," + $(item).attr("subscription-id");
+			subscriptionGroupIds += "," + $(item).attr("subscription-group-id");
 		});
 		if (ids.length > 0) {
 			ids = ids.substring(1);
-			$.post("/reader/read", { "ids" : ids }, function(data) {
+			subscriptionIds = subscriptionIds.substring(1);
+			subscriptionGroupIds = subscriptionGroupIds.substring(1);
+			$.post("/reader/read", { "ids" : ids, "subscriptionIds" : subscriptionIds, "subscriptionGroupIds" : subscriptionGroupIds }, function(data) {
 				refreshSubscriptions(data);
 				if ($("#only-unread").is(":checked")) {
 					reloadFeedEntries();
@@ -207,7 +209,7 @@ function reloadFeedEntries() {
 function loadFeedEntriesFrom(urlParam) {
 	var onlyUnread = $("#only-unread").is(":checked");
 	var url = urlParam + (urlParam.indexOf("?") > -1 ? "&" : "?") + "only-unread=" + onlyUnread
-		+ "&reverse-order=" + (onlyUnread ? $("#reverse-order").is(":checked") : false);
+		+ "&reverse-order=" + (!onlyUnread ? $("#reverse-order").is(":checked") : false);
 	var feedEntriesTable = $("#feed-entries");
 	feedEntriesTable.empty();
 	var statusDiv = $("#nav-bar .status");
@@ -238,19 +240,22 @@ function refreshSubscriptions(subscriptionGroups) {
 			var loadedSubscription = $(".menu-item.feed-item[feed-id='" + subscription.feed.id + "']").get(0);
 			subscription.cssClass = (loadedSubscription != undefined && $(loadedSubscription).hasClass("selected")) ? " selected" : "";
 			subscription.feed.publishedDate = moment(new Date(subscription.feed.publishedDate)).format("YYYY-MM-DD HH:mm");
-			subscription.feed.updatedDate = moment(new Date(subscription.feed.updatedDate)).format("YYYY-MM-DD HH:mm");
+			subscription.updatedDate = moment(new Date(subscription.updatedDate)).format("YYYY-MM-DD HH:mm");
 		});
 	});
 
 	$("#subscription-menu").empty();
 	$("#subscription-settings").empty();
 	$("#subscription-group-stats").empty();
+	$("#subscription-form #subscription-group option").remove();
 
 	$.each(parsedGroups, function(id, group) {
 		$("#subscription-menu").append(template("subscriptionMenuGroupTemplate", group));
 		$("#subscription-settings").append(template("subscriptionGroupSettingsTemplate", group));
 		$("#subscription-group-stats").append(template("subscriptionGroupStatTemplate", group));
+		$("#subscription-form #subscription-group").append("<option value='" + group.id + "'>" + group.title + "</option>");
 	});
+	
 	document.title = (totalUnreadCount > 0 ? "(" + totalUnreadCount + ") " : "") + "jReader";
 	$("#all-items-menu-item .title .unread-count").html(totalUnreadCount > 0 ? " (" + totalUnreadCount + ")" : "");
 }

@@ -13,14 +13,16 @@ public interface SubscriptionDao {
 	
 	Subscription find(User user, Feed feed);
 	
+	Subscription find(SubscriptionGroup subscriptionGroup, Long id);
+	
 	void delete(Subscription subscription);
 	
-	List<User> listSubscribers(Feed feed);
+	List<Subscription> listSubscriptions(Feed feed);
 	
 	int countSubscribers(Feed feed);
 	
-	List<Subscription> list(User user, SubscriptionGroup group);
+	List<Subscription> list(SubscriptionGroup group);
 	
-	int getMaxOrder(User user, SubscriptionGroup group);
+	int getMaxOrder(SubscriptionGroup group);
 	
 }

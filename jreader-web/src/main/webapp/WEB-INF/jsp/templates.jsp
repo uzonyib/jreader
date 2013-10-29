@@ -1,5 +1,5 @@
 <script type="text/x-template" id="template-subscription-menu-group">
-	<div class="menu-group menu-item{cssClass}" feed-group="{?title}{title}{:else}Ungrouped{/title}">
+	<div class="menu-group menu-item{cssClass}" feed-group="{?title}{title}{:else}Ungrouped{/title}" subscription-group-id="{id}">
 		<div>
 			<span class="group-collapse">
 				<span class="collapsed"></span>
@@ -15,7 +15,7 @@
 			</span>
 		</div>
 		{#subscriptions}
-			<div class="menu-item feed-item{cssClass}" feed-id="{feed.id}">
+			<div class="menu-item feed-item{cssClass}" subscription-id="{id}">
 				<span class="title">{title}</span>
 				<span class="unread-count">
 					{@if cond="{unreadCount} > 0"}
@@ -28,19 +28,15 @@
 </script>
 
 <script type="text/x-template" id="template-subscription-group-settings">
-	<div class="settings-group">
+	<div class="settings-group" subscription-group-id="{id}">
 		<div class="group-title">
 			{?title}{title}{:else}Ungrouped{/title}
 		</div>
 		{#subscriptions groupTitle=title}
-			<div class="settings-item" feed-id="{feed.id}">
+			<div class="settings-item" subscription-id="{id}">
 				<div class="set-item-title">
 					<input type="text" value="{title}" />
 					<button>Change</button>
-				</div>
-				<div class="set-group-title">
-					<input class="set-group-title" type="text" value="{groupTitle}" />
-					<button>Group</button>
 				</div>
 				<button class="unsubscribe-button">Unsubscribe</button>
 			</div>
@@ -49,13 +45,13 @@
 </script>
 
 <script type="text/x-template" id="template-feed-entry">
-	<tbody class="feed-entry{^read} unread{/read}" feed-entry-id="{id}">
+	<tbody class="feed-entry{^read} unread{/read}" feed-entry-id="{id}" subscription-id="{subscriptionId}" subscription-group-id="{subscriptionGroupId}">
 		<tr class="breadcrumb">
 			<td class="star-buttons">
 				<button class="star"{?starred} style="display: none;"{/starred}></button>
 				<button class="unstar"{^starred} style="display: none;"{/starred}></button>
 			</td>
-			<td class="feed-title" feed-id="{feedId}">{subscriptionTitle}</td>
+			<td class="feed-title">{subscriptionTitle}</td>
 			<td class="title">{title}</td>
 			<td class="date">{publishedDate}</td>
 		</tr>
@@ -76,13 +72,13 @@
 			{?title}{title}{:else}Ungrouped{/title}
 		</div>
 		{#subscriptions}
-			<div class="subscription-stat" feed-id="{feed.id}">
+			<div class="subscription-stat" subscription-id="{id}">
 				<div class="title">
 					<span class="feed-title">{title}</span>
-					({feed.title} - {feed.url})
+					&nbsp;({feed.title} - {feed.url})
 				</div>
 				{?feed.description}<div class="description">{feed.description}</div>{/feed.description}
-				<div class="updated-date">Updated: {feed.updatedDate}</div>
+				<div class="updated-date">Updated: {updatedDate}</div>
 			</div>
 		{/subscriptions}
 	</div>

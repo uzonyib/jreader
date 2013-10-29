@@ -2,21 +2,12 @@ package jreader.dto;
 
 public class FeedDto {
 	
-	private String id;
 	private String title;
 	private String url;
 	private String description;
 	private String feedType;
 	private Long publishedDate;
 	private Long updatedDate;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getTitle() {
 		return title;

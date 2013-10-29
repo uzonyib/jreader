@@ -11,8 +11,6 @@
 	
 	<context:component-scan base-package="jreader.dao.impl" />
 	
-	<bean id="objectifyFactoryBean" class="com.googlecode.objectify.spring.ObjectifyFactoryBean">
-		<property name="basePackage" value="jreader.domain" />
-	</bean>
+	<bean id="objectifyFactory" class="jreader.dao.impl.OfyService" factory-method="factory" />
 	
 </beans>

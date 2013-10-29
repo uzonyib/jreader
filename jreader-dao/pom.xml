@@ -21,19 +21,9 @@
 			<version>4.0rc1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.objectify-appengine-spring</groupId>
-			<artifactId>objectify-appengine-spring</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.5</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0.2</version>
 		</dependency>
 	</dependencies>
 </project>

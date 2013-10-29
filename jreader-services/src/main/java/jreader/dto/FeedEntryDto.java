@@ -4,6 +4,8 @@ public class FeedEntryDto {
 	
 	private String id;
 	private String feedId;
+	private String subscriptionId;
+	private String subscriptionGroupId;
 	private String subscriptionTitle;
 	private String link;
 	private String title;
@@ -23,6 +25,22 @@ public class FeedEntryDto {
 
 	public String getFeedId() {
 		return feedId;
+	}
+
+	public String getSubscriptionId() {
+		return subscriptionId;
+	}
+
+	public void setSubscriptionId(String subscriptionId) {
+		this.subscriptionId = subscriptionId;
+	}
+
+	public String getSubscriptionGroupId() {
+		return subscriptionGroupId;
+	}
+
+	public void setSubscriptionGroupId(String subscriptionGroupId) {
+		this.subscriptionGroupId = subscriptionGroupId;
 	}
 
 	public void setFeedId(String feedId) {

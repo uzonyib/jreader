@@ -2,28 +2,33 @@ package jreader.dao;
 
 import java.util.List;
 
-import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.Subscription;
+import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
 public interface FeedEntryDao {
 	
-	FeedEntry find(Long id);
+	FeedEntry find(Subscription subscription, Long id);
 	
-	FeedEntry find(User user, Feed feed, int ordinal);
+	FeedEntry find(Subscription subscription, int ordinal);
 	
 	FeedEntry save(FeedEntry feedEntry);
 	
+	void saveAll(List<FeedEntry> feedEntries);
+	
 	void delete(FeedEntry feedEntry);
 	
-	List<FeedEntry> listEntriesByIds(List<Long> feedEntryIds);
+	List<FeedEntry> list(User user, boolean onlyUnread, boolean ascending);
 	
-	List<FeedEntry> listEntries(User user, List<Long> feedIds, boolean onlyUnread, boolean ascending);
+	List<FeedEntry> list(SubscriptionGroup subscriptionGroup, boolean onlyUnread, boolean ascending);
 	
-	List<FeedEntry> listStarredEntries(User user, boolean onlyUnread, boolean ascending);
+	List<FeedEntry> list(Subscription subscription, boolean onlyUnread, boolean ascending);
 	
-	List<FeedEntry> listUnstarredEntriesOlderThan(User user, Feed feed, long date);
+	List<FeedEntry> listStarred(User user, boolean onlyUnread, boolean ascending);
 	
-	int countUnread(User user, Feed feed);
+	List<FeedEntry> listUnstarredOlderThan(Subscription subscription, long date);
+	
+	int countUnread(Subscription subscription);
 
 }

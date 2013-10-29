@@ -4,9 +4,18 @@ import java.util.List;
 
 public class SubscriptionGroupDto {
 	
+	private String id;
 	private String title;
 	private List<SubscriptionDto> subscriptions;
 	private int unreadCount;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;

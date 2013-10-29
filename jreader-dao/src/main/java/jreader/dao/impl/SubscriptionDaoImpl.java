@@ -1,10 +1,10 @@
 package jreader.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jreader.dao.SubscriptionDao;
 import jreader.domain.Feed;
+import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
@@ -17,6 +17,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
+import com.googlecode.objectify.cmd.QueryKeys;
 
 @Repository
 public class SubscriptionDaoImpl implements SubscriptionDao {
@@ -39,7 +40,13 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	@Override
 	public Subscription find(User user, Feed feed) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).filter("userRef =", user).filter("feedRef =", feed).first().now();
+		return ofy.load().type(Subscription.class).ancestor(user).filter("feedRef =", feed).first().now();
+	}
+	
+	@Override
+	public Subscription find(SubscriptionGroup subscriptionGroup, Long id) {
+		Objectify ofy = objectifyFactory.begin();
+		return ofy.load().type(Subscription.class).parent(subscriptionGroup).id(id).now();
 	}
 	
 	@Override
@@ -48,20 +55,17 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 		ofy.transact(new VoidWork() {
 			@Override
 			public void vrun() {
+				QueryKeys<FeedEntry> feedEntryKeys = ofy.load().type(FeedEntry.class).ancestor(subscription).keys();
+				ofy.delete().keys(feedEntryKeys).now();
 				ofy.delete().entity(subscription).now();
 			}
 		});
 	}
 	
 	@Override
-	public List<User> listSubscribers(Feed feed) {
+	public List<Subscription> listSubscriptions(Feed feed) {
 		Objectify ofy = objectifyFactory.begin();
-		List<Subscription> subscriptions = ofy.load().type(Subscription.class).filter("feedRef =", feed).list();
-		List<User> subscribers = new ArrayList<User>();
-		for (Subscription subscription : subscriptions) {
-			subscribers.add(subscription.getUser());
-		}
-		return subscribers;
+		return ofy.load().type(Subscription.class).filter("feedRef =", feed).list();
 	}
 	
 	@Override
@@ -71,15 +75,15 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 	}
 	
 	@Override
-	public List<Subscription> list(User user, SubscriptionGroup group) {
+	public List<Subscription> list(SubscriptionGroup group) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(Subscription.class).filter("userRef =", user).filter("groupRef =", group).order("order").list();
+		return ofy.load().type(Subscription.class).ancestor(group).order("order").list();
 	}
 	
 	@Override
-	public int getMaxOrder(User user, SubscriptionGroup group) {
+	public int getMaxOrder(SubscriptionGroup group) {
 		Objectify ofy = objectifyFactory.begin();
-		Subscription subscription = ofy.load().type(Subscription.class).filter("userRef", user).filter("groupRef =", group).order("-order").first().now();
+		Subscription subscription = ofy.load().type(Subscription.class).ancestor(group).order("-order").first().now();
 		return subscription == null ? -1 : subscription.getOrder();
 	}
 
