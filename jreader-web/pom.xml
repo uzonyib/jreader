@@ -4,17 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>jreader</artifactId>
         <groupId>jreader</groupId>
+        <artifactId>jreader</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <packaging>war</packaging>
     <artifactId>jreader-web</artifactId>
-
-    <properties>
-    	<appengine.target.version>1.8.7</appengine.target.version>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <dependency>
