@@ -1,6 +1,8 @@
 package jreader.rss.impl;
 
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jreader.rss.RssService;
 import jreader.rss.domain.Feed;
@@ -16,6 +18,8 @@ import com.sun.syndication.io.XmlReader;
 
 @Service
 public class RssServiceImpl implements RssService {
+	
+	private static final Logger LOG = Logger.getLogger(RssServiceImpl.class.getName());
 
 	@Autowired
 	@Qualifier("rssMapper")
@@ -38,6 +42,7 @@ public class RssServiceImpl implements RssService {
 //			}
 			return feed;
 		} catch (Exception e) {
+			LOG.log(Level.WARNING, "Error while fetching feed.", e);
 			return null;
 		}
 	}

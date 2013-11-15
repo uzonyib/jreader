@@ -22,6 +22,7 @@ public class Subscription {
 	@Index
 	private int order;
 	private Long updatedDate;
+	private Long refreshDate;
 
 	public Long getId() {
 		return id;
@@ -85,6 +86,14 @@ public class Subscription {
 
 	public void setUpdatedDate(Long updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	public Long getRefreshDate() {
+		return refreshDate;
+	}
+
+	public void setRefreshDate(Long refreshDate) {
+		this.refreshDate = refreshDate;
 	}
 
 }

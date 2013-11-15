@@ -7,6 +7,7 @@ public class SubscriptionDto {
 	private FeedDto feed;
 	private int unreadCount;
 	private Long updatedDate;
+	private Long refreshDate;
 
 	public String getId() {
 		return id;
@@ -46,6 +47,14 @@ public class SubscriptionDto {
 
 	public void setUpdatedDate(Long updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	public Long getRefreshDate() {
+		return refreshDate;
+	}
+
+	public void setRefreshDate(Long refreshDate) {
+		this.refreshDate = refreshDate;
 	}
 
 }

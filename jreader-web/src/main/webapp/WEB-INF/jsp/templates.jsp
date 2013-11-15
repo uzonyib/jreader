@@ -78,6 +78,7 @@
 					&nbsp;({feed.title} - {feed.url})
 				</div>
 				{?feed.description}<div class="description">{feed.description}</div>{/feed.description}
+				<div class="updated-date">Refreshed: {refreshDate}</div>
 				<div class="updated-date">Updated: {updatedDate}</div>
 			</div>
 		{/subscriptions}

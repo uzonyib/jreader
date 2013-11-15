@@ -123,24 +123,28 @@ public class FeedServiceImpl implements FeedService {
 			if (rssFeed == null) {
 				continue;
 			}
-			long updatedDate = System.currentTimeMillis();
-			feedDao.save(feed);
+			long refreshDate = System.currentTimeMillis();
 			
 			List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
 			
 			for (Subscription subscription : subscriptions) {
 				int counter = 0;
+				Long updatedDate = subscription.getUpdatedDate();
 				for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
 					if (rssFeedEntry.getPublishedDate() > subscription.getUpdatedDate()) {
 						FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
 						feedEntry.setSubscription(subscription);
 						feedEntryDao.save(feedEntry);
 						++counter;
+						if (rssFeedEntry.getPublishedDate() > updatedDate) {
+							updatedDate = rssFeedEntry.getPublishedDate();
+						}
 					}
 				}
 				subscription.setUpdatedDate(updatedDate);
+				subscription.setRefreshDate(refreshDate);
 				subscriptionDao.save(subscription);
-				LOG.info(feed.getTitle() + " new items for user " +subscription.getGroup().getUser().getUsername() + ": " + counter);
+				LOG.info(feed.getTitle() + " new items for user " + subscription.getGroup().getUser().getUsername() + ": " + counter);
 			}
 		}
 	}

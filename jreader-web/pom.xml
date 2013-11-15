@@ -12,8 +12,8 @@
     <artifactId>jreader-web</artifactId>
 
     <properties>
-        <appengine.target.version>1.8.6</appengine.target.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<appengine.target.version>1.8.7</appengine.target.version>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>

@@ -80,7 +80,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		if (rssFeed == null) {
 			return;
 		}
-		long updatedDate = System.currentTimeMillis();
+		long refreshDate = System.currentTimeMillis();
 		Feed feed = feedDao.find(url);
 		if (feed == null) {
 			feed = mapper.map(rssFeed, Feed.class);
@@ -91,6 +91,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		if (subscription != null) {
 			return;
 		}
+		
+		Long updatedDate = null;
+		for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
+			if (updatedDate == null || rssFeedEntry.getPublishedDate() > updatedDate) {
+				updatedDate = rssFeedEntry.getPublishedDate();
+			}
+		}
 
 		subscription = new Subscription();
 		subscription.setTitle(feed.getTitle());
@@ -98,6 +105,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		subscription.setGroup(subscriptionGroup);
 		subscription.setOrder(subscriptionDao.getMaxOrder(subscriptionGroup) + 1);
 		subscription.setUpdatedDate(updatedDate);
+		subscription.setRefreshDate(refreshDate);
 		subscription = subscriptionDao.save(subscription);
 		
 		for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {

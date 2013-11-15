@@ -241,6 +241,7 @@ function refreshSubscriptions(subscriptionGroups) {
 			subscription.cssClass = (loadedSubscription != undefined && $(loadedSubscription).hasClass("selected")) ? " selected" : "";
 			subscription.feed.publishedDate = moment(new Date(subscription.feed.publishedDate)).format("YYYY-MM-DD HH:mm");
 			subscription.updatedDate = moment(new Date(subscription.updatedDate)).format("YYYY-MM-DD HH:mm");
+			subscription.refreshDate = moment(new Date(subscription.refreshDate)).format("YYYY-MM-DD HH:mm");
 		});
 	});
 
