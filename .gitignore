@@ -10,5 +10,6 @@
 .settings
 .project
 target
+.springBeans
 
 security.properties

@@ -30,23 +30,7 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
- 
-	<security:http>
-		<security:session-management invalid-session-url="/login" />
-		<security:intercept-url pattern="/reader/**" access="ROLE_USER" />
-		<security:intercept-url pattern="/appstats/**" access="ROLE_USER" />
-		<security:form-login login-page="/login" login-processing-url="/performlogin" authentication-failure-url="/login"
-			username-parameter="username" password-parameter="password" />
-		<security:logout logout-url="/reader/logout" logout-success-url="/login" delete-cookies="true" />
-	</security:http>
+	
+	<bean class="com.google.appengine.api.users.UserServiceFactory" factory-method="getUserService" />
 
-	<security:authentication-manager>
-		<security:authentication-provider>
-			<security:password-encoder hash="sha" />
-			<security:user-service>
-				<security:user name="#{securityProps.username}" password="#{securityProps.password}" authorities="ROLE_USER" />
-			</security:user-service>
-		</security:authentication-provider>
-	</security:authentication-manager>
- 
 </beans>

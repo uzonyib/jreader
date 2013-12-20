@@ -20,6 +20,9 @@ public class PageController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private com.google.appengine.api.users.UserService googleUserService;
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public void getMainPage(HttpServletResponse response) throws IOException {
 		response.sendRedirect("reader");
@@ -33,7 +36,9 @@ public class PageController {
 	@RequestMapping(value = "/reader", method = RequestMethod.GET)
 	public ModelAndView getHomePage(HttpServletResponse response, Principal principal) throws IOException {
 		userService.register(principal.getName());
-		return new ModelAndView("reader");
+		ModelAndView modelAndView = new ModelAndView("reader");
+		modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
+		return modelAndView;
 	}
 	
 }

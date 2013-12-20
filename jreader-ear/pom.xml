@@ -6,9 +6,7 @@
 		<artifactId>jreader</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>jreader</groupId>
 	<artifactId>jreader-ear</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>ear</packaging>
 	<build>
 		<plugins>
