@@ -6,7 +6,6 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletResponse;
 
 import jreader.service.UserService;
-import jreader.web.form.Login;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,11 +25,6 @@ public class PageController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public void getMainPage(HttpServletResponse response) throws IOException {
 		response.sendRedirect("reader");
-	}
-
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView getLoginPage() {
-		return new ModelAndView("login", "command", new Login());
 	}
 	
 	@RequestMapping(value = "/reader", method = RequestMethod.GET)

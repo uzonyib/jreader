@@ -11,5 +11,5 @@
 .project
 target
 .springBeans
-
-security.properties
+eclipse-launch-profiles
+appengine

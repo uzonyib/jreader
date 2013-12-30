@@ -8,11 +8,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import jreader.dto.FeedEntryDto;
+import jreader.dto.StatusDto;
 import jreader.dto.SubscriptionGroupDto;
 import jreader.service.FeedEntryService;
 import jreader.service.FeedService;
 import jreader.service.SubscriptionService;
-import jreader.web.dto.StatusDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

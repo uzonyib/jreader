@@ -7,14 +7,15 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
-		<appengine.target.version>1.8.7</appengine.target.version>
+		<appengine.target.version>1.8.8</appengine.target.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<modules>
 		<module>jreader-dao</module>
 		<module>jreader-rss</module>
 		<module>jreader-services</module>
-		<module>jreader-web</module>
+		<module>jreader-frontend</module>
+		<module>jreader-backend</module>
 		<module>jreader-ear</module>
 	</modules>
 </project>

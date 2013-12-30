@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <packaging>war</packaging>
-    <artifactId>jreader-web</artifactId>
+    <artifactId>jreader-backend</artifactId>
 
     <dependencies>
         <dependency>
@@ -31,21 +31,6 @@
         <dependency>
         	<groupId>org.springframework</groupId>
         	<artifactId>spring-webmvc</artifactId>
-        	<version>3.1.4.RELEASE</version>
-        </dependency>
-        <dependency>
-        	<groupId>org.springframework.security</groupId>
-        	<artifactId>spring-security-web</artifactId>
-			<version>3.1.4.RELEASE</version>
-        </dependency>
-        <dependency>
-        	<groupId>org.springframework.security</groupId>
-        	<artifactId>spring-security-config</artifactId>
-        	<version>3.1.4.RELEASE</version>
-        </dependency>
-        <dependency>
-        	<groupId>org.springframework.security</groupId>
-        	<artifactId>spring-security-taglibs</artifactId>
         	<version>3.1.4.RELEASE</version>
         </dependency>
         <dependency>

@@ -1,4 +1,4 @@
-package jreader.web.dto;
+package jreader.dto;
 
 public class StatusDto {
 	

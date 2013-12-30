@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jreader.dto.StatusDto;
 import jreader.service.FeedService;
-import jreader.web.dto.StatusDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

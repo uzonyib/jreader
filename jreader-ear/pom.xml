@@ -17,9 +17,15 @@
 					<modules>
 						<webModule>
 							<groupId>jreader</groupId>
-							<artifactId>jreader-web</artifactId>
-							<bundleFileName>jreader-web.war</bundleFileName>
-							<contextRoot>/jreader-web</contextRoot>
+							<artifactId>jreader-frontend</artifactId>
+							<bundleFileName>jreader-frontend.war</bundleFileName>
+							<contextRoot>/jreader-frontend</contextRoot>
+						</webModule>
+						<webModule>
+							<groupId>jreader</groupId>
+							<artifactId>jreader-backend</artifactId>
+							<bundleFileName>jreader-backend.war</bundleFileName>
+							<contextRoot>/jreader-backend</contextRoot>
 						</webModule>
 					</modules>
 					<displayName>jReader</displayName>
@@ -43,7 +49,14 @@
 	<dependencies>
 		<dependency>
 			<groupId>jreader</groupId>
-			<artifactId>jreader-web</artifactId>
+			<artifactId>jreader-frontend</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>war</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>jreader</groupId>
+			<artifactId>jreader-backend</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>war</type>
 			<scope>compile</scope>
