@@ -185,12 +185,12 @@ body {
 	margin: 5px 0px;
 }
 
-#nav-bar .status {
+#status-bar {
 	display: none;
 }
 
-#nav-bar .status.loading-subscriptions,
-#nav-bar .status.loading-feed-entries {
+#status-bar.loading-subscriptions,
+#status-bar.loading-feed-entries {
 	display: block;
 }
 

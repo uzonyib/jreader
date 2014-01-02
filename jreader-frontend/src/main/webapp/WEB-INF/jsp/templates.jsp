@@ -1,5 +1,5 @@
 <script type="text/x-template" id="template-subscription-menu-group">
-	<div class="menu-group menu-item{cssClass}" feed-group="{?title}{title}{:else}Ungrouped{/title}" subscription-group-id="{id}" view="items-contents" url="/reader/entries/group/{id}/{~lb}selection{~rb}?ascending={~lb}ascending{~rb}">
+	<div class="menu-group menu-item{cssClass}" feed-group="{?title}{title}{:else}Ungrouped{/title}" subscription-group-id="{id}" view="items-contents" url="/reader/entries/group/{id}/{~lb}selection{~rb}/{~lb}pageIndex{~rb}?ascending={~lb}ascending{~rb}">
 		<div>
 			<span class="group-collapse">
 				<span class="collapsed"></span>
@@ -15,7 +15,7 @@
 			</span>
 		</div>
 		{#subscriptions groupId=id}
-			<div class="menu-item feed-item{cssClass}" subscription-id="{id}" view="items-contents" url="/reader/entries/group/{groupId}/subscription/{id}/{~lb}selection{~rb}?ascending={~lb}ascending{~rb}">
+			<div class="menu-item feed-item{cssClass}" subscription-id="{id}" view="items-contents" url="/reader/entries/group/{groupId}/subscription/{id}/{~lb}selection{~rb}/{~lb}pageIndex{~rb}?ascending={~lb}ascending{~rb}">
 				<span class="title">{title}</span>
 				<span class="unread-count">
 					{@if cond="{unreadCount} > 0"}

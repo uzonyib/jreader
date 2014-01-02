@@ -136,6 +136,14 @@ $(document).ready(function() {
         reloadFeedEntries();
     });
 	
+	$(window).scroll(function() {
+		if ($(".menu-item.selected").attr("view") === "items-contents") {
+			if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+				loadNextPageOfFeedEntries();
+			}
+		}
+	});
+	
 	reloadSubscriptions();
 	setInterval(reloadSubscriptions, 1000 * 60 * 5);
 	
@@ -152,23 +160,53 @@ function template(templateName, data) {
 		result = res;
 	});
 	return result;
-};
+}
 
-function reloadFeedEntries() {
+var nextPageIndex = 0;
+var loading = false;
+var endOfList = false;
+
+function loadNextPageOfFeedEntries() {
+	if (loading || endOfList) {
+		return;
+	}
+	loading = true;
 	var selection = $("#nav-bar input[name=items-selection]:checked").val();
 	var ascending = $("#nav-bar input[name=items-order]:checked").val() === "asc";
-	var url = $(".menu-item.selected").attr("url").replace("{selection}", selection).replace("{ascending}", ascending);
+	var url = $(".menu-item.selected").attr("url").replace("{selection}", selection).replace("{ascending}", ascending).replace("{pageIndex}", nextPageIndex);
+	
 	var feedEntriesTable = $("#feed-entries");
-	feedEntriesTable.empty();
-	var statusDiv = $("#nav-bar .status");
+	if (nextPageIndex == 0) {
+		feedEntriesTable.empty();
+	}
+	
+	var statusDiv = $("#status-bar");
 	statusDiv.addClass("loading-feed-entries");
+	
+	++nextPageIndex;
+	
 	$.get(url, {}, function(data) {
-		$.each(JSON.parse(data), function (id, feedEntry) {
+		var json = JSON.parse(data);
+		if (json.length < 30) {
+			endOfList = true;
+		}
+		$.each(json, function (id, feedEntry) {
 	    	feedEntry.publishedDate = moment(new Date(feedEntry.publishedDate)).format("YYYY-MM-DD HH:mm");
 	    	feedEntriesTable.append(template("feedEntryTemplate", feedEntry));
 	    });
-		statusDiv.removeClass("loading-feed-entries");
+		loading = false;
+		if (!endOfList && $(window).height() >= $(document).height()) {
+			loadNextPageOfFeedEntries();
+		} else {
+			statusDiv.removeClass("loading-feed-entries");
+		}
 	});
+}
+
+function reloadFeedEntries() {
+	endOfList = false;
+	nextPageIndex = 0;
+	loadNextPageOfFeedEntries();
 }
 
 function refreshSubscriptions(subscriptionGroups) {
@@ -209,7 +247,7 @@ function refreshSubscriptions(subscriptionGroups) {
 }
 
 function reloadSubscriptions() {
-	var statusDiv = $("#nav-bar .status");
+	var statusDiv = $("#status-bar");
 	statusDiv.addClass("loading-subscriptions");
 	$.get("/reader/subscriptions", {}, function(data) {
 		refreshSubscriptions(data);

@@ -12,7 +12,7 @@
 	<span class="title">Settings</span>
 </div>
 
-<div class="menu-item" id="all-items-menu-item" view="items-contents" url="/reader/entries/all/{selection}?ascending={ascending}">
+<div class="menu-item" id="all-items-menu-item" view="items-contents" url="/reader/entries/all/{selection}/{pageIndex}?ascending={ascending}">
 	<span class="icon"></span>
 	<span class="title">All items<span class="unread-count"></span></span>
 </div>

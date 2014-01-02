@@ -21,9 +21,9 @@
 		
 		<button id="mark-all-read">Mark all as read</button>
 		
-		<div class="status">Loading...</div>
 	</div>
 	<table id="feed-entries"></table>
+	<div id="status-bar">Loading...</div>
 </div>
 
 <div id="settings-contents" style="display: none;">

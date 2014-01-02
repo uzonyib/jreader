@@ -99,7 +99,7 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 			default:
 				break;
 		}
-		return query.order(filter.isAscending() ? "publishedDate" : "-publishedDate").limit(10).list();
+		return query.order(filter.isAscending() ? "publishedDate" : "-publishedDate").offset(filter.getOffset()).limit(filter.getCount()).list();
 	}
 	
 	@Override

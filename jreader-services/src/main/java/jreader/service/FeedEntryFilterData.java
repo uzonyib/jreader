@@ -13,21 +13,21 @@ public class FeedEntryFilterData extends FeedEntryFilter {
 	private Long subscriptionGroupId;
 	private Long subscriptionId;
 	
-	public FeedEntryFilterData(String username, Selection selection, boolean ascending) {
-		super(selection, ascending);
+	public FeedEntryFilterData(String username, Selection selection, boolean ascending, int offset, int count) {
+		super(selection, ascending, offset, count);
 		this.username = username;
 		this.group = Group.ALL;
 	}
 
-	public FeedEntryFilterData(String username, Long subscriptionGroupId, Selection selection, boolean ascending) {
-		super(selection, ascending);
+	public FeedEntryFilterData(String username, Long subscriptionGroupId, Selection selection, boolean ascending, int offset, int count) {
+		super(selection, ascending, offset, count);
 		this.username = username;
 		this.subscriptionGroupId = subscriptionGroupId;
 		this.group = Group.SUBSCRIPTION_GROUP;
 	}
 
-	public FeedEntryFilterData(String username, Long subscriptionGroupId, Long subscriptionId, Selection selection, boolean ascending) {
-		super(selection, ascending);
+	public FeedEntryFilterData(String username, Long subscriptionGroupId, Long subscriptionId, Selection selection, boolean ascending, int offset, int count) {
+		super(selection, ascending, offset, count);
 		this.username = username;
 		this.subscriptionGroupId = subscriptionGroupId;
 		this.subscriptionId = subscriptionId;

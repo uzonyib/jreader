@@ -17,6 +17,7 @@ import jreader.service.FeedService;
 import jreader.service.SubscriptionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,9 @@ public class AjaxController {
 	
 	@Autowired
 	private FeedEntryService feedEntryService;
+	
+	@Value("#{readerProps.pageSize}")
+	private int pageSize;
 	
 	@RequestMapping(value = "/create-group", method = RequestMethod.POST)
 	public void createGroup(@RequestParam("title") String title, HttpServletResponse response, Principal principal) throws IOException {
@@ -62,21 +66,21 @@ public class AjaxController {
 		writeResponse(response, feeds);
 	}
 	
-	@RequestMapping(value = "/entries/all/{selection}", method = RequestMethod.GET)
-	public void getAllEntries(@PathVariable String selection, @RequestParam("ascending") boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending));
+	@RequestMapping(value = "/entries/all/{selection}/{pageIndex}", method = RequestMethod.GET)
+	public void getAllEntries(@PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
 		writeResponse(response, feeds);
 	}
 	
-	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/{selection}", method = RequestMethod.GET)
-	public void getAllEntries(@PathVariable Long subscriptionGroupId, @PathVariable String selection, @RequestParam("ascending") boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, parseSelection(selection), ascending));
+	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/{selection}/{pageIndex}", method = RequestMethod.GET)
+	public void getAllEntries(@PathVariable Long subscriptionGroupId, @PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
 		writeResponse(response, feeds);
 	}
 	
-	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/subscription/{subscriptionId}/{selection}", method = RequestMethod.GET)
-	public void getAllEntriesOfSubscription(@PathVariable Long subscriptionGroupId, @PathVariable Long subscriptionId, @PathVariable String selection, @RequestParam("ascending") boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, subscriptionId, parseSelection(selection), ascending));
+	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/subscription/{subscriptionId}/{selection}/{pageIndex}", method = RequestMethod.GET)
+	public void getAllEntriesOfSubscription(@PathVariable Long subscriptionGroupId, @PathVariable Long subscriptionId, @PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, subscriptionId, parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
 		writeResponse(response, feeds);
 	}
 
@@ -132,5 +136,9 @@ public class AjaxController {
 			return Selection.ALL;
 		}
 	}
-
+	
+	private int getOffset(int pageIndex) {
+		return pageIndex * pageSize;
+	}
+	
 }
