@@ -2,6 +2,7 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import jreader.common.FeedEntryFilter;
 import jreader.dao.FeedEntryDao;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
@@ -71,49 +72,46 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 	
 	@Override
-	public List<FeedEntry> list(User user, boolean onlyUnread, boolean ascending) {
-		return listForAncestor(user, onlyUnread, ascending);
+	public List<FeedEntry> list(User user, FeedEntryFilter filter) {
+		return listForAncestor(user, filter);
 	}
 	
 	@Override
-	public List<FeedEntry> list(SubscriptionGroup subscriptionGroup, boolean onlyUnread, boolean ascending) {
-		return listForAncestor(subscriptionGroup, onlyUnread, ascending);
+	public List<FeedEntry> list(SubscriptionGroup subscriptionGroup, FeedEntryFilter filter) {
+		return listForAncestor(subscriptionGroup, filter);
 	}
 	
 	@Override
-	public List<FeedEntry> list(Subscription subscription, boolean onlyUnread, boolean ascending) {
-		return listForAncestor(subscription, onlyUnread, ascending);
+	public List<FeedEntry> list(Subscription subscription, FeedEntryFilter filter) {
+		return listForAncestor(subscription, filter);
 	}
 	
-	private List<FeedEntry> listForAncestor(Object ancestor, boolean onlyUnread, boolean ascending) {
+	private List<FeedEntry> listForAncestor(Object ancestor, FeedEntryFilter filter) {
 		Objectify ofy = objectifyFactory.begin();
 		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).ancestor(ancestor);
-		if (onlyUnread) {
-			query = query.filter("read", false);
+		switch (filter.getSelection()) {
+			case UNREAD:
+				query = query.filter("read", false);
+				break;
+			case STARRED:
+				query = query.filter("starred", true);
+				break;
+			default:
+				break;
 		}
-		return query.order(ascending ? "publishedDate" : "-publishedDate").limit(10).list();
-	}
-	
-	@Override
-	public List<FeedEntry> listStarred(User user, boolean onlyUnread, boolean ascending) {
-		Objectify ofy = objectifyFactory.begin();
-		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).ancestor(user).filter("starred =", true);
-		if (onlyUnread) {
-			query = query.filter("read", false);
-		}
-		return query.order(ascending ? "publishedDate" : "-publishedDate").list();
+		return query.order(filter.isAscending() ? "publishedDate" : "-publishedDate").limit(10).list();
 	}
 	
 	@Override
 	public List<FeedEntry> listUnstarredOlderThan(Subscription subscription, long date) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("starred =", false).filter("publishedDate <", date).list();
+		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("starred", false).filter("publishedDate <", date).list();
 	}
 	
 	@Override
 	public int countUnread(Subscription subscription) {
 		Objectify ofy = objectifyFactory.begin();
-		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("read =", false).count();
+		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("read", false).count();
 	}
 
 }

@@ -49,19 +49,6 @@ body {
 	background-image: url('/images/list_hover.png');
 }
 
-#starred-menu-item .icon {
-	background-image: url('/images/star.png');
-}
-
-#starred-menu-item.selected .icon,
-#starred-menu-item.selected:hover .icon {
-	background-image: url('/images/star_selected.png');
-}
-
-#starred-menu-item:hover .icon {
-	background-image: url('/images/star_hover.png');
-}
-
 #settings-menu-item .icon {
 	background-image: url('/images/gear.png');
 }

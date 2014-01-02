@@ -1,37 +1,22 @@
 $(document).ready(function() {
 	
-	$("#home-menu-item").on("click", function(event) {
-		$("#items-contents").hide();
-		$("#settings-contents").hide();
-		$("#home-contents").show();
+	$("#menu").on("click", ".menu-item", function(event) {
 		refreshSelectedMenuItem(event);
-	});
-
-	$("#all-items-menu-item").on("click", function(event) {
-		$("#settings-contents").hide();
-		$("#home-contents").hide();
 		
-		loadFeedEntriesFrom("/reader/entries/all");
+		$(".menu-item[view]").each(function(id, item) {
+			$("#" + $(item).attr("view")).hide();
+		});
 		
-		$("#items-contents").show();
-		refreshSelectedMenuItem(event);
+		var div = $(event.target).closest(".menu-item");
+		$("#" + div.attr("view")).show();
+		
+		if (div.attr("url") !== undefined) {
+			reloadFeedEntries();
+		}
+		
+		return false;
 	});
-
-	$("#settings-menu-item").on("click", function(event) {
-		$("#items-contents").hide();
-		$("#home-contents").hide();
-		$("#settings-contents").show();
-		refreshSelectedMenuItem(event);
-	});
-	
-	$("#starred-menu-item").on("click", function(event) {
-		$("#settings-contents").hide();
-		$("#home-contents").hide();
-		$("#items-contents").show();
-		loadFeedEntriesFrom("/reader/entries/starred");
-		refreshSelectedMenuItem(event);
-	});
-	
+		
 	$("#main-area").on("click", ".unsubscribe-button", function(event) {
 		var div = $(event.target);
 		var id = div.parent().attr("subscription-id");
@@ -58,16 +43,6 @@ $(document).ready(function() {
 		});
 		return false;
 	});
-	
-	$("#subscription-menu").on("click", ".menu-item.feed-item", function(event) {
-		$("#home-contents").hide();
-		$("#settings-contents").hide();
-		$("#items-contents").show();
-		var menuItem = $(event.target).closest(".menu-item");
-		var subscriptionGroupId = menuItem.closest(".menu-group").attr("subscription-group-id");
-		var subscriptionId = menuItem.attr("subscription-id");
-		loadFeedEntriesFrom("/reader/entries/subscription?subscriptionGroupId=" + subscriptionGroupId + "&subscriptionId=" + subscriptionId);
-	});
 
 	$("#subscription-menu").on("click", ".menu-group .group-collapse", function(event) {
 		var menuGroup = $(event.target).closest(".menu-group");
@@ -77,21 +52,6 @@ $(document).ready(function() {
 			menuGroup.addClass("collapsed");
 		}
 		return false;
-	});
-
-	$("#subscription-menu").on("click", ".menu-group", function(event) {
-		if (!$(event.target).parent().hasClass("group-collapse")) {
-			refreshSelectedMenuItem(event);
-		}
-		if ($(event.target).closest(".menu-item").hasClass("feed-item")) {
-		    return;
-		}
-		$("#home-contents").hide();
-		$("#settings-contents").hide();
-		$("#items-contents").show();
-		var menuGroup = $(event.target);
-		var subscriptionGroupId = menuGroup.closest(".menu-group").attr("subscription-group-id");
-		loadFeedEntriesFrom("/reader/entries/group?subscriptionGroupId=" + subscriptionGroupId);
 	});
 
 	$("#main-area").on("click", ".set-item-title button", function(event) {
@@ -172,14 +132,9 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#main-area").on("click", "#only-unread", function(event) {
-		reloadFeedEntries();
-		$("#reverse-order-container").toggle();
-	});
-	
-	$("#main-area").on("click", "#reverse-order", function(event) {
-		reloadFeedEntries();
-	});
+	$('#nav-bar input').change(function() {
+        reloadFeedEntries();
+    });
 	
 	reloadSubscriptions();
 	setInterval(reloadSubscriptions, 1000 * 60 * 5);
@@ -200,27 +155,19 @@ function template(templateName, data) {
 };
 
 function reloadFeedEntries() {
-	var url = $("#feed-entries").attr("loaded-from");
-	if (typeof url !== "undefined" && url.length > 0) {
-		loadFeedEntriesFrom(url);
-	}
-}
-
-function loadFeedEntriesFrom(urlParam) {
-	var onlyUnread = $("#only-unread").is(":checked");
-	var url = urlParam + (urlParam.indexOf("?") > -1 ? "&" : "?") + "only-unread=" + onlyUnread
-		+ "&reverse-order=" + (!onlyUnread ? $("#reverse-order").is(":checked") : false);
+	var selection = $("#nav-bar input[name=items-selection]:checked").val();
+	var ascending = $("#nav-bar input[name=items-order]:checked").val() === "asc";
+	var url = $(".menu-item.selected").attr("url").replace("{selection}", selection).replace("{ascending}", ascending);
 	var feedEntriesTable = $("#feed-entries");
 	feedEntriesTable.empty();
 	var statusDiv = $("#nav-bar .status");
 	statusDiv.addClass("loading-feed-entries");
 	$.get(url, {}, function(data) {
-		feedEntriesTable.attr("loaded-from", urlParam);
-		statusDiv.removeClass("loading-feed-entries");
 		$.each(JSON.parse(data), function (id, feedEntry) {
 	    	feedEntry.publishedDate = moment(new Date(feedEntry.publishedDate)).format("YYYY-MM-DD HH:mm");
 	    	feedEntriesTable.append(template("feedEntryTemplate", feedEntry));
 	    });
+		statusDiv.removeClass("loading-feed-entries");
 	});
 }
 

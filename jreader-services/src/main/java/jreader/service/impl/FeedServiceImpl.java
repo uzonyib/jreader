@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import jreader.common.FeedEntryFilter;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
@@ -18,6 +19,7 @@ import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 import jreader.dto.FeedEntryDto;
 import jreader.rss.RssService;
+import jreader.service.FeedEntryFilterData;
 import jreader.service.FeedService;
 
 import org.dozer.Mapper;
@@ -51,19 +53,29 @@ public class FeedServiceImpl implements FeedService {
 	@Autowired
 	@Qualifier("servicesMapper")
 	private Mapper mapper;
-
+	
 	@Override
-	public List<FeedEntryDto> listAllEntries(String username, boolean onlyUnread, boolean ascending) {
+	public List<FeedEntryDto> listEntries(FeedEntryFilterData filterData) {
+		switch (filterData.getGroup()) {
+		case SUBSCRIPTION_GROUP:
+			return listSubscriptionGroupEntries(filterData.getUsername(), filterData.getSubscriptionGroupId(), filterData);
+		case SUBSCRIPTION:
+			return listSubscriptionEntries(filterData.getUsername(), filterData.getSubscriptionGroupId(), filterData.getSubscriptionId(), filterData);
+		default:
+			return listAllEntries(filterData.getUsername(), filterData);
+		}
+	}
+
+	private List<FeedEntryDto> listAllEntries(String username, FeedEntryFilter filter) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.list(user, onlyUnread, ascending));
+		return convert(user, feedEntryDao.list(user, filter));
 	}
 	
-	@Override
-	public List<FeedEntryDto> listSubscriptionGroupEntries(String username, Long subscriptionGroupId, boolean onlyUnread, boolean ascending) {
+	private List<FeedEntryDto> listSubscriptionGroupEntries(String username, Long subscriptionGroupId, FeedEntryFilter filter) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
@@ -74,11 +86,10 @@ public class FeedServiceImpl implements FeedService {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.list(subscriptionGroup, onlyUnread, ascending));
+		return convert(user, feedEntryDao.list(subscriptionGroup, filter));
 	}
 	
-	@Override
-	public List<FeedEntryDto> listSubscriptionEntries(String username, Long subscriptionGroupId, Long subscriptionId, boolean onlyUnread, boolean ascending) {
+	private List<FeedEntryDto> listSubscriptionEntries(String username, Long subscriptionGroupId, Long subscriptionId, FeedEntryFilter filter) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return Collections.emptyList();
@@ -94,17 +105,7 @@ public class FeedServiceImpl implements FeedService {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.list(subscription, onlyUnread, ascending));
-	}
-	
-	@Override
-	public List<FeedEntryDto> listStarredEntries(String username, boolean onlyUnread, boolean ascending) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return Collections.emptyList();
-		}
-		
-		return convert(user, feedEntryDao.listStarred(user, onlyUnread, ascending));
+		return convert(user, feedEntryDao.list(subscription, filter));
 	}
 
 	private List<FeedEntryDto> convert(User user, List<FeedEntry> starredEntries) {

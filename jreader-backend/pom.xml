@@ -83,6 +83,7 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
                 <configuration>
+				    <port>8081</port>
                 	<jvmFlags>
                 		<jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/eclipse_workspace/jreader/appengine</jvmFlag>
 					    <jvmFlag>-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=10</jvmFlag>

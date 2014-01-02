@@ -7,15 +7,18 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import jreader.common.FeedEntryFilter.Selection;
 import jreader.dto.FeedEntryDto;
 import jreader.dto.StatusDto;
 import jreader.dto.SubscriptionGroupDto;
+import jreader.service.FeedEntryFilterData;
 import jreader.service.FeedEntryService;
 import jreader.service.FeedService;
 import jreader.service.SubscriptionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,33 +59,25 @@ public class AjaxController {
 	@RequestMapping(value = "/subscriptions", method = RequestMethod.GET)
 	public void getSubscriptions(HttpServletResponse response, Principal principal) throws IOException {
 		List<SubscriptionGroupDto> feeds = subscriptionService.list(principal.getName());
-		response.setCharacterEncoding("UTF-8");
-		Gson gson = new Gson();
-		gson.toJson(feeds, response.getWriter());
+		writeResponse(response, feeds);
 	}
 	
-	@RequestMapping(value = "/entries/all", method = RequestMethod.GET)
-	public void getAllEntries(@RequestParam("only-unread") boolean onlyUnread, @RequestParam("reverse-order") boolean reverseOrder, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listAllEntries(principal.getName(), onlyUnread, reverseOrder);
-		response.setCharacterEncoding("UTF-8");
-		Gson gson = new Gson();
-		gson.toJson(feeds, response.getWriter());
+	@RequestMapping(value = "/entries/all/{selection}", method = RequestMethod.GET)
+	public void getAllEntries(@PathVariable String selection, @RequestParam("ascending") boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending));
+		writeResponse(response, feeds);
 	}
 	
-	@RequestMapping(value = "/entries/group", method = RequestMethod.GET)
-	public void getSubscriptionGroupEntries(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("only-unread") boolean onlyUnread, @RequestParam("reverse-order") boolean reverseOrder, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listSubscriptionGroupEntries(principal.getName(), subscriptionGroupId, onlyUnread, reverseOrder);
-		response.setCharacterEncoding("UTF-8");
-		Gson gson = new Gson();
-		gson.toJson(feeds, response.getWriter());
+	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/{selection}", method = RequestMethod.GET)
+	public void getAllEntries(@PathVariable Long subscriptionGroupId, @PathVariable String selection, @RequestParam("ascending") boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, parseSelection(selection), ascending));
+		writeResponse(response, feeds);
 	}
-
-	@RequestMapping(value = "/entries/subscription", method = RequestMethod.GET)
-	public void getSubscriptionEntries(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("subscriptionId") Long subscriptionId, @RequestParam("only-unread") boolean onlyUnread, @RequestParam("reverse-order") boolean reverseOrder, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listSubscriptionEntries(principal.getName(), subscriptionGroupId, subscriptionId, onlyUnread, reverseOrder);
-		response.setCharacterEncoding("UTF-8");
-		Gson gson = new Gson();
-		gson.toJson(feeds, response.getWriter());
+	
+	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/subscription/{subscriptionId}/{selection}", method = RequestMethod.GET)
+	public void getAllEntriesOfSubscription(@PathVariable Long subscriptionGroupId, @PathVariable Long subscriptionId, @PathVariable String selection, @RequestParam("ascending") boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+		List<FeedEntryDto> feeds = feedService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, subscriptionId, parseSelection(selection), ascending));
+		writeResponse(response, feeds);
 	}
 
 	@RequestMapping(value = "/entitle", method = RequestMethod.POST)
@@ -113,9 +108,7 @@ public class AjaxController {
 		feedEntryService.star(principal.getName(), subscriptionGroupId, subscriptionId, id);
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
-		response.setCharacterEncoding("UTF-8");
-		Gson gson = new Gson();
-		gson.toJson(result, response.getWriter());
+		writeResponse(response, result);
 	}
 	
 	@RequestMapping(value = "/unstar", method = RequestMethod.POST)
@@ -123,17 +116,21 @@ public class AjaxController {
 		feedEntryService.unstar(principal.getName(), subscriptionGroupId, subscriptionId, id);
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
-		response.setCharacterEncoding("UTF-8");
-		Gson gson = new Gson();
-		gson.toJson(result, response.getWriter());
+		writeResponse(response, result);
 	}
 	
-	@RequestMapping(value = "/entries/starred", method = RequestMethod.GET)
-	public void getStarredEntries(@RequestParam("only-unread") boolean onlyUnread, @RequestParam("reverse-order") boolean reverseOrder, HttpServletResponse response, Principal principal) throws IOException {
-		List<FeedEntryDto> feeds = feedService.listStarredEntries(principal.getName(), onlyUnread, reverseOrder);
+	private void writeResponse(HttpServletResponse response, Object data) throws IOException {
 		response.setCharacterEncoding("UTF-8");
 		Gson gson = new Gson();
-		gson.toJson(feeds, response.getWriter());
+		gson.toJson(data, response.getWriter());
+	}
+	
+	private Selection parseSelection(String selection) {
+		try {
+			return Selection.valueOf(Selection.class, selection.toUpperCase());
+		} catch (Exception e) {
+			return Selection.ALL;
+		}
 	}
 
 }

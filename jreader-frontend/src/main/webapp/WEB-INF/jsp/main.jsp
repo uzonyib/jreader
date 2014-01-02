@@ -5,13 +5,22 @@
 
 <div id="items-contents" style="display: none;">
 	<div id="nav-bar">
+		<div>
+			<input type="radio" id="items-selection-all" name="items-selection" value="all" />
+			<label for="items-selection-all">All</label>
+			<input type="radio" id="items-selection-unread" name="items-selection" value="unread" checked="checked" />
+			<label for="items-selection-unread">Unread</label>
+			<input type="radio" id="items-selection-starred" name="items-selection" value="starred" />
+			<label for="items-selection-starred">Starred</label>
+			
+			<input type="radio" id="items-order-asc" name="items-order" value="asc" checked="checked" />
+			<label for="items-order-asc">Ascending</label>
+			<input type="radio" id="items-order-desc" name="items-order" value="desc" />
+			<label for="items-order-desc">Descending</label>
+		</div>
+		
 		<button id="mark-all-read">Mark all as read</button>
-		<input id="only-unread" type="checkbox" checked="checked" />
-		<label for="only-unread">Show only unread</label>
-		<span id="reverse-order-container" style="display: none;">
-			<input id="reverse-order" type="checkbox" checked="checked" />
-			<label for="reverse-order">Reverse order</label>
-		</span>
+		
 		<div class="status">Loading...</div>
 	</div>
 	<table id="feed-entries"></table>

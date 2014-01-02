@@ -3,14 +3,14 @@
 	<cron>
 		<url>/cron/refresh</url>
 		<description>Refresh all feeds</description>
-		<schedule>every 30 mins from 07:00 to 00:00</schedule>
+		<schedule>every 60 mins from 07:00 to 23:00</schedule>
 		<timezone>Europe/Budapest</timezone>
 		<target>jreader-backend</target>
 	</cron>
 	<cron>
 		<url>/cron/cleanup</url>
 		<description>Delete old non-starred entries</description>
-		<schedule>every day 00:00</schedule>
+		<schedule>every day 23:00</schedule>
 		<timezone>Europe/Budapest</timezone>
 		<target>jreader-backend</target>
 	</cron>

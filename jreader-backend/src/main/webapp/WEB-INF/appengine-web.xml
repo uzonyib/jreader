@@ -11,6 +11,10 @@
 		<idle-timeout>2m</idle-timeout>
 	</basic-scaling>
 
+<!-- 	<manual-scaling> -->
+<!-- 		<instances>1</instances> -->
+<!-- 	</manual-scaling> -->
+
 	<system-properties>
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
 	</system-properties>
