@@ -12,8 +12,12 @@
  	
  	<util:properties id="cronProps" location="/WEB-INF/cron.properties" />
  
-	<context:component-scan base-package="jreader.web.controller" />
- 
 	<mvc:annotation-driven />
+	
+	<bean class="jreader.web.controller.CronJobController">
+		<property name="minAgeToDelete" value="#{cronProps.minAgeToDelete}" />
+		<property name="minCountToKeep" value="#{cronProps.minCountToKeep}" />
+		<property name="feedService" ref="feedService" />
+	</bean>
 	
 </beans>

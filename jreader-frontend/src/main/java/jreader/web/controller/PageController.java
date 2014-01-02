@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import jreader.service.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,10 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class PageController {
 	
-	@Autowired
 	private UserService userService;
-	
-	@Autowired
 	private com.google.appengine.api.users.UserService googleUserService;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -33,6 +29,23 @@ public class PageController {
 		ModelAndView modelAndView = new ModelAndView("reader");
 		modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
 		return modelAndView;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public com.google.appengine.api.users.UserService getGoogleUserService() {
+		return googleUserService;
+	}
+
+	public void setGoogleUserService(
+			com.google.appengine.api.users.UserService googleUserService) {
+		this.googleUserService = googleUserService;
 	}
 	
 }

@@ -6,21 +6,20 @@ import jreader.dao.FeedDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
 
-@Repository
 public class FeedDaoImpl implements FeedDao {
 	
-	@Autowired
 	private ObjectifyFactory objectifyFactory;
 	
+	public FeedDaoImpl(ObjectifyFactory objectifyFactory) {
+		this.objectifyFactory = objectifyFactory;
+	}
+
 	@Override
 	public Feed find(String url) {
 		Objectify ofy = objectifyFactory.begin();

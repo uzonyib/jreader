@@ -20,33 +20,17 @@ import jreader.rss.RssService;
 import jreader.service.SubscriptionService;
 
 import org.dozer.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
-@Service
 public class SubscriptionServiceImpl implements SubscriptionService {
 	
-	@Autowired
 	private UserDao userDao;
-	
-	@Autowired
 	private SubscriptionGroupDao subscriptionGroupDao;
-	
-	@Autowired
 	private SubscriptionDao subscriptionDao;
-	
-	@Autowired
 	private FeedDao feedDao;
-	
-	@Autowired
 	private FeedEntryDao feedEntryDao;
-	
-	@Autowired
+
 	private RssService rssService;
 	
-	@Autowired
-	@Qualifier("servicesMapper")
 	private Mapper mapper;
 	
 	@Override
@@ -179,6 +163,62 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		
 		subscription.setTitle(subscriptionTitle);
 		subscriptionDao.save(subscription);
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
+	public SubscriptionGroupDao getSubscriptionGroupDao() {
+		return subscriptionGroupDao;
+	}
+
+	public void setSubscriptionGroupDao(SubscriptionGroupDao subscriptionGroupDao) {
+		this.subscriptionGroupDao = subscriptionGroupDao;
+	}
+
+	public SubscriptionDao getSubscriptionDao() {
+		return subscriptionDao;
+	}
+
+	public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+		this.subscriptionDao = subscriptionDao;
+	}
+
+	public FeedDao getFeedDao() {
+		return feedDao;
+	}
+
+	public void setFeedDao(FeedDao feedDao) {
+		this.feedDao = feedDao;
+	}
+
+	public FeedEntryDao getFeedEntryDao() {
+		return feedEntryDao;
+	}
+
+	public void setFeedEntryDao(FeedEntryDao feedEntryDao) {
+		this.feedEntryDao = feedEntryDao;
+	}
+
+	public RssService getRssService() {
+		return rssService;
+	}
+
+	public void setRssService(RssService rssService) {
+		this.rssService = rssService;
+	}
+
+	public Mapper getMapper() {
+		return mapper;
+	}
+
+	public void setMapper(Mapper mapper) {
+		this.mapper = mapper;
 	}
 
 }

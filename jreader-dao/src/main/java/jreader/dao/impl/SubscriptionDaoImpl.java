@@ -9,9 +9,6 @@ import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
@@ -19,11 +16,13 @@ import com.googlecode.objectify.VoidWork;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.QueryKeys;
 
-@Repository
 public class SubscriptionDaoImpl implements SubscriptionDao {
 	
-	@Autowired
 	private ObjectifyFactory objectifyFactory;
+
+	public SubscriptionDaoImpl(ObjectifyFactory objectifyFactory) {
+		this.objectifyFactory = objectifyFactory;
+	}
 
 	@Override
 	public Subscription save(final Subscription subscription) {

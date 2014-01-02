@@ -13,22 +13,11 @@ import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 import jreader.service.FeedEntryService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-@Service
 public class FeedEntryServiceImpl implements FeedEntryService {
 	
-	@Autowired
 	private UserDao userDao;
-	
-	@Autowired
 	private SubscriptionGroupDao subscriptionGroupDao;
-	
-	@Autowired
 	private SubscriptionDao subscriptionDao;
-	
-	@Autowired
 	private FeedEntryDao feedEntryDao;
 
 	@Override
@@ -105,6 +94,38 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 			feedEntry.setStarred(false);
 			feedEntryDao.save(feedEntry);
 		}
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
+	public SubscriptionGroupDao getSubscriptionGroupDao() {
+		return subscriptionGroupDao;
+	}
+
+	public void setSubscriptionGroupDao(SubscriptionGroupDao subscriptionGroupDao) {
+		this.subscriptionGroupDao = subscriptionGroupDao;
+	}
+
+	public SubscriptionDao getSubscriptionDao() {
+		return subscriptionDao;
+	}
+
+	public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+		this.subscriptionDao = subscriptionDao;
+	}
+
+	public FeedEntryDao getFeedEntryDao() {
+		return feedEntryDao;
+	}
+
+	public void setFeedEntryDao(FeedEntryDao feedEntryDao) {
+		this.feedEntryDao = feedEntryDao;
 	}
 
 }

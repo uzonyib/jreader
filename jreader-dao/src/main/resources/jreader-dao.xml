@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	
-	<context:component-scan base-package="jreader.dao.impl" />
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<bean id="objectifyFactory" class="jreader.dao.impl.OfyService" factory-method="factory" />
 	
+	<bean class="jreader.dao.impl.UserDaoImpl" id="userDao">
+		<constructor-arg ref="objectifyFactory" />
+	</bean>
+	
+	<bean class="jreader.dao.impl.SubscriptionGroupDaoImpl" id="subscriptionGroupDao">
+		<constructor-arg ref="objectifyFactory" />
+	</bean>
+	
+	<bean class="jreader.dao.impl.SubscriptionDaoImpl" id="subscriptionDao">
+		<constructor-arg ref="objectifyFactory" />
+	</bean>
+	
+	<bean class="jreader.dao.impl.FeedDaoImpl" id="feedDao">
+		<constructor-arg ref="objectifyFactory" />
+	</bean>
+	
+	<bean class="jreader.dao.impl.FeedEntryDaoImpl" id="feedEntryDao">
+		<constructor-arg ref="objectifyFactory" />
+	</bean>
+
 </beans>

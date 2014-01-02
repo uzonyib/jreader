@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import jreader.dto.StatusDto;
 import jreader.service.FeedService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,15 +23,11 @@ public class CronJobController {
 	
 	private static final Logger LOG = Logger.getLogger(CronJobController.class.getName());
 	
-	@Value("#{cronProps.minAgeToDelete}")
 	private int minAgeToDelete;
-	
-	@Value("#{cronProps.minCountToKeep}")
 	private int minCountToKeep;
 	
-	@Autowired
 	private FeedService feedService;
-	
+
 	@RequestMapping(value = "/refresh", method = RequestMethod.GET)
 	public void refreshFeeds(HttpServletRequest request, HttpServletResponse response, Principal principal) throws JsonIOException, IOException {
 		StatusDto result = new StatusDto();
@@ -62,6 +56,30 @@ public class CronJobController {
 		}
 		Gson gson = new Gson();
 		gson.toJson(result, response.getWriter());
+	}
+
+	public int getMinAgeToDelete() {
+		return minAgeToDelete;
+	}
+
+	public void setMinAgeToDelete(int minAgeToDelete) {
+		this.minAgeToDelete = minAgeToDelete;
+	}
+
+	public int getMinCountToKeep() {
+		return minCountToKeep;
+	}
+
+	public void setMinCountToKeep(int minCountToKeep) {
+		this.minCountToKeep = minCountToKeep;
+	}
+
+	public FeedService getFeedService() {
+		return feedService;
+	}
+
+	public void setFeedService(FeedService feedService) {
+		this.feedService = feedService;
 	}
 
 }

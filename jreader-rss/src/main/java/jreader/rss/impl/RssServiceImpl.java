@@ -8,22 +8,20 @@ import jreader.rss.RssService;
 import jreader.rss.domain.Feed;
 
 import org.dozer.DozerBeanMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
-@Service
 public class RssServiceImpl implements RssService {
 	
 	private static final Logger LOG = Logger.getLogger(RssServiceImpl.class.getName());
 
-	@Autowired
-	@Qualifier("rssMapper")
 	private DozerBeanMapper mapper;
+
+	public RssServiceImpl(DozerBeanMapper mapper) {
+		this.mapper = mapper;
+	}
 
 	@Override
 	public Feed fetch(String url) {

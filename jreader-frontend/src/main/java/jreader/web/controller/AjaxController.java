@@ -16,8 +16,6 @@ import jreader.service.FeedEntryService;
 import jreader.service.FeedService;
 import jreader.service.SubscriptionService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,16 +28,10 @@ import com.google.gson.Gson;
 @RequestMapping(value = "/reader")
 public class AjaxController {
 	
-	@Autowired
 	private SubscriptionService subscriptionService;
-	
-	@Autowired
 	private FeedService feedService;
-	
-	@Autowired
 	private FeedEntryService feedEntryService;
 	
-	@Value("#{readerProps.pageSize}")
 	private int pageSize;
 	
 	@RequestMapping(value = "/create-group", method = RequestMethod.POST)
@@ -139,6 +131,38 @@ public class AjaxController {
 	
 	private int getOffset(int pageIndex) {
 		return pageIndex * pageSize;
+	}
+
+	public SubscriptionService getSubscriptionService() {
+		return subscriptionService;
+	}
+
+	public void setSubscriptionService(SubscriptionService subscriptionService) {
+		this.subscriptionService = subscriptionService;
+	}
+
+	public FeedService getFeedService() {
+		return feedService;
+	}
+
+	public void setFeedService(FeedService feedService) {
+		this.feedService = feedService;
+	}
+
+	public FeedEntryService getFeedEntryService() {
+		return feedEntryService;
+	}
+
+	public void setFeedEntryService(FeedEntryService feedEntryService) {
+		this.feedEntryService = feedEntryService;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 	
 }

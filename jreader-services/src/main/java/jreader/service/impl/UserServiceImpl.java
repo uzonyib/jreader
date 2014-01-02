@@ -4,13 +4,8 @@ import jreader.dao.UserDao;
 import jreader.domain.User;
 import jreader.service.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-@Service
 public class UserServiceImpl implements UserService {
 	
-	@Autowired
 	private UserDao userDao;
 
 	@Override
@@ -20,6 +15,14 @@ public class UserServiceImpl implements UserService {
 			user.setUsername(username);
 			userDao.save(user);
 		}
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}
 
 }

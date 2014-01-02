@@ -12,8 +12,6 @@
  	
  	<util:properties id="readerProps" location="/WEB-INF/reader.properties" />
  	
-	<context:component-scan base-package="jreader.web.controller" />
- 
 	<mvc:annotation-driven />
 
 	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
@@ -22,6 +20,19 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
-	<bean class="com.google.appengine.api.users.UserServiceFactory" factory-method="getUserService" />
+	<bean id="googleUserService"
+		class="com.google.appengine.api.users.UserServiceFactory" factory-method="getUserService" />
+	
+	<bean class="jreader.web.controller.PageController">
+		<property name="userService" ref="userService" />
+		<property name="googleUserService" ref="googleUserService" />
+	</bean>
+	
+	<bean class="jreader.web.controller.AjaxController">
+		<property name="subscriptionService" ref="subscriptionService" />
+		<property name="feedService" ref="feedService" />
+		<property name="feedEntryService" ref="feedEntryService" />
+		<property name="pageSize" value="#{readerProps.pageSize}" />
+	</bean>
 
 </beans>
