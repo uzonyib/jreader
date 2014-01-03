@@ -1,5 +1,8 @@
 <div id="logout-menu-item">
-	<a href="${ logoutUrl }">Logout</a>
+	<a href="${ logoutUrl }">
+		<span class="icon"></span>
+		<span class="title">Logout</span>
+	</a>
 </div>
 
 <div class="menu-item selected" id="home-menu-item" view="home-contents">

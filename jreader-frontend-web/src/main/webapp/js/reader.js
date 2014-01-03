@@ -136,8 +136,22 @@ $(document).ready(function() {
 		reloadFeedEntries();
 	});
 	
-	$('#nav-bar input').change(function() {
-        reloadFeedEntries();
+	$("#nav-bar .items-selection button").click(function(event) {
+		var button = $(event.target).closest("button");
+		if (button.attr("data-selected") !== "true") {
+			$("#nav-bar .items-selection button[data-selected='true']").attr("data-selected", "false");
+			button.attr("data-selected", "true");
+	        reloadFeedEntries();
+		}
+    });
+	
+	$("#nav-bar .items-order button").click(function(event) {
+		var button = $(event.target).closest("button");
+		if (button.attr("data-selected") !== "true") {
+			$("#nav-bar .items-order button[data-selected='true']").attr("data-selected", "false");
+			button.attr("data-selected", "true");
+	        reloadFeedEntries();
+		}
     });
 	
 	$(window).scroll(function() {
@@ -175,8 +189,8 @@ function loadNextPageOfFeedEntries() {
 		return;
 	}
 	loading = true;
-	var selection = $("#nav-bar input[name=items-selection]:checked").val();
-	var ascending = $("#nav-bar input[name=items-order]:checked").val() === "asc";
+	var selection = $("#nav-bar .items-selection button[data-selected='true']").attr("data-value");
+	var ascending = $("#nav-bar .items-order button[data-selected='true']").attr("data-value") === "asc";
 	var url = $(".menu-item.selected").attr("url").replace("{selection}", selection).replace("{ascending}", ascending).replace("{pageIndex}", nextPageIndex);
 	
 	var feedEntriesTable = $("#feed-entries");
