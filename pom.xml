@@ -13,10 +13,11 @@
 	<modules>
 		<module>jreader-common</module>
 		<module>jreader-dao</module>
-		<module>jreader-rss</module>
-		<module>jreader-services</module>
-		<module>jreader-frontend</module>
-		<module>jreader-backend</module>
+		<module>jreader-rss-services</module>
+		<module>jreader-frontend-services</module>
+		<module>jreader-backend-services</module>
+		<module>jreader-frontend-web</module>
+		<module>jreader-backend-web</module>
 		<module>jreader-ear</module>
 	</modules>
 </project>

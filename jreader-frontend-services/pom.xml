@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>jreader</artifactId>
+    <groupId>jreader</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+  <artifactId>jreader-frontend-services</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>jreader</groupId>
+  		<artifactId>jreader-dao</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-core</artifactId>
+  		<version>3.1.4.RELEASE</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.sf.dozer</groupId>
+  		<artifactId>dozer</artifactId>
+  		<version>5.4.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>jreader</groupId>
+  		<artifactId>jreader-rss-services</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>jreader</groupId>
+  		<artifactId>jreader-common</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
+</project>
