@@ -20,6 +20,7 @@
 		</div>
 		
 		<button id="mark-all-read">Mark all as read</button>
+		<button id="refresh">Refresh</button>
 		
 	</div>
 	<table id="feed-entries"></table>

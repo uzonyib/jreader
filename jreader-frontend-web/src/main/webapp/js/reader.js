@@ -132,6 +132,10 @@ $(document).ready(function() {
 		}
 	});
 	
+	$("#main-area").on("click", "#refresh", function() {
+		reloadFeedEntries();
+	});
+	
 	$('#nav-bar input').change(function() {
         reloadFeedEntries();
     });
