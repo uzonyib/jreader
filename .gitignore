@@ -13,3 +13,4 @@ target
 .springBeans
 eclipse-launch-profiles
 appengine
+jreader-frontend-web/src/main/webapp/css/reader.css

@@ -1,13 +1,17 @@
 $(document).ready(function() {
 	
 	$("#menu").on("click", ".menu-item", function(event) {
+		var div = $(event.target).closest(".menu-item");
+		if (div.attr("view") === undefined) {
+			return;
+		}
+		
 		refreshSelectedMenuItem(event);
 		
 		$(".menu-item[view]").each(function(id, item) {
 			$("#" + $(item).attr("view")).hide();
 		});
 		
-		var div = $(event.target).closest(".menu-item");
 		$("#" + div.attr("view")).show();
 		
 		if (div.attr("url") !== undefined) {
@@ -125,9 +129,7 @@ $(document).ready(function() {
 			subscriptionGroupIds = subscriptionGroupIds.substring(1);
 			$.post("/reader/read", { "ids" : ids, "subscriptionIds" : subscriptionIds, "subscriptionGroupIds" : subscriptionGroupIds }, function(data) {
 				refreshSubscriptions(data);
-				if ($("#only-unread").is(":checked")) {
-					reloadFeedEntries();
-				}
+				reloadFeedEntries();
 			});
 		}
 	});

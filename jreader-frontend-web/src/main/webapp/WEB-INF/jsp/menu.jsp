@@ -1,4 +1,4 @@
-<div id="logout-menu-item">
+<div class="menu-item" id="logout-menu-item">
 	<a href="${ logoutUrl }">
 		<span class="icon"></span>
 		<span class="title">Logout</span>
@@ -17,7 +17,7 @@
 
 <div class="menu-item" id="all-items-menu-item" view="items-contents" url="/reader/entries/all/{selection}/{pageIndex}?ascending={ascending}">
 	<span class="icon"></span>
-	<span class="title">All items<span class="unread-count"></span></span>
+	<span class="title">All feeds<span class="unread-count"></span></span>
 </div>
 
 <div id="subscription-menu"></div>
