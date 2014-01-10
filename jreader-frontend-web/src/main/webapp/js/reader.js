@@ -48,7 +48,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$("#subscription-menu").on("click", ".menu-group .group-collapse", function(event) {
+	$("#subscription-menu").on("click", ".menu-group .icon", function(event) {
 		var menuGroup = $(event.target).closest(".menu-group");
 		if (menuGroup.hasClass("collapsed")) {
 			menuGroup.removeClass("collapsed");
@@ -234,16 +234,17 @@ function refreshSubscriptions(subscriptionGroups) {
 	var parsedGroups = JSON.parse(subscriptionGroups);
 	$.each(parsedGroups, function(groupIndex, group) {
 		totalUnreadCount += group.unreadCount;
-		var groupTitle = group.title == undefined ? "Ungrouped" : group.title;
-		var loadedGroup = $(".menu-group.menu-item[feed-group='" + groupTitle + "']").get(0);
-		if (loadedGroup != undefined) {
-			group.cssClass = ($(loadedGroup).hasClass("selected") ? " selected" : "") + ($(loadedGroup).hasClass("collapsed") ? " collapsed" : "");
+		var domGroup = $(".menu-group[feed-group='" + group.title + "']").get(0);
+		if (domGroup != undefined) {
+			group.collapsed = $(domGroup).hasClass("collapsed");
+			group.selected = $(domGroup).find(".group-item").hasClass("selected");
 		} else {
-			group.cssClass = " collapsed";
+			group.collapsed = true;
+			group.selected = false;
 		}
 		$.each(group.subscriptions, function(index, subscription) {
-			var loadedSubscription = $(".menu-item.feed-item[feed-id='" + subscription.feed.id + "']").get(0);
-			subscription.cssClass = (loadedSubscription != undefined && $(loadedSubscription).hasClass("selected")) ? " selected" : "";
+			var loadedSubscription = $(".menu-item.feed-item[subscription-id='" + subscription.id + "']").get(0);
+			subscription.selected = loadedSubscription != undefined && $(loadedSubscription).hasClass("selected");
 			subscription.feed.publishedDate = moment(new Date(subscription.feed.publishedDate)).format("YYYY-MM-DD HH:mm");
 			subscription.updatedDate = moment(new Date(subscription.updatedDate)).format("YYYY-MM-DD HH:mm");
 			subscription.refreshDate = moment(new Date(subscription.refreshDate)).format("YYYY-MM-DD HH:mm");
@@ -263,7 +264,7 @@ function refreshSubscriptions(subscriptionGroups) {
 	});
 	
 	document.title = (totalUnreadCount > 0 ? "(" + totalUnreadCount + ") " : "") + "jReader";
-	$("#all-items-menu-item .title .unread-count").html(totalUnreadCount > 0 ? " (" + totalUnreadCount + ")" : "");
+	$("#all-items-menu-item .unread-count").html(totalUnreadCount > 0 ? "(" + totalUnreadCount + ")" : "");
 }
 
 function reloadSubscriptions() {

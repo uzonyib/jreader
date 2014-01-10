@@ -1,27 +1,19 @@
 <script type="text/x-template" id="template-subscription-menu-group">
-	<div class="menu-group menu-item{cssClass}" feed-group="{?title}{title}{:else}Ungrouped{/title}" subscription-group-id="{id}" view="items-contents" url="/reader/entries/group/{id}/{~lb}selection{~rb}/{~lb}pageIndex{~rb}?ascending={~lb}ascending{~rb}">
-		<div>
-			<span class="group-collapse">
-				<span class="collapsed"></span>
-				<span class="uncollapsed"></span>
-			</span>
-			<span class="group-title">
-				{?title}{title}{:else}Ungrouped{/title}
-			</span>
-			<span class="unread-count">
-				{@if cond="{unreadCount} > 0"}
-					({unreadCount})
-				{/if}
-			</span>
+	<div class="menu-group{@if cond="{collapsed}"} collapsed{/if}" feed-group="{title}">
+		<div class="menu-item group-item{@if cond="{selected}"} selected{/if}" subscription-group-id="{id}" view="items-contents" url="/reader/entries/group/{id}/{~lb}selection{~rb}/{~lb}pageIndex{~rb}?ascending={~lb}ascending{~rb}">
+			<span class="icon collapsed-icon"></span>
+			<span class="icon uncollapsed-icon"></span>
+			<span class="title">{title}</span>
+			{@if cond="{unreadCount} > 0"}
+				<span class="unread-count">({unreadCount})</span>
+			{/if}
 		</div>
 		{#subscriptions groupId=id}
-			<div class="menu-item feed-item{cssClass}" subscription-id="{id}" view="items-contents" url="/reader/entries/group/{groupId}/subscription/{id}/{~lb}selection{~rb}/{~lb}pageIndex{~rb}?ascending={~lb}ascending{~rb}">
+			<div class="menu-item feed-item{@if cond="{selected}"} selected{/if}" subscription-id="{id}" view="items-contents" url="/reader/entries/group/{groupId}/subscription/{id}/{~lb}selection{~rb}/{~lb}pageIndex{~rb}?ascending={~lb}ascending{~rb}">
 				<span class="title">{title}</span>
-				<span class="unread-count">
-					{@if cond="{unreadCount} > 0"}
-						({unreadCount})
-					{/if}
-				</span>
+				{@if cond="{unreadCount} > 0"}
+					<span class="unread-count">({unreadCount})</span>
+				{/if}
 			</div>
 		{/subscriptions}
 	</div>
