@@ -211,7 +211,7 @@ function loadNextPageOfFeedEntries() {
 			endOfList = true;
 		}
 		$.each(json, function (id, feedEntry) {
-	    	feedEntry.publishedDate = moment(new Date(feedEntry.publishedDate)).format("YYYY-MM-DD HH:mm");
+	    	feedEntry.publishedDate = displayDate(feedEntry.publishedDate);
 	    	feedEntriesTable.append(template("feedEntryTemplate", feedEntry));
 	    });
 		loading = false;
@@ -245,9 +245,9 @@ function refreshSubscriptions(subscriptionGroups) {
 		$.each(group.subscriptions, function(index, subscription) {
 			var loadedSubscription = $(".menu-item.feed-item[subscription-id='" + subscription.id + "']").get(0);
 			subscription.selected = loadedSubscription != undefined && $(loadedSubscription).hasClass("selected");
-			subscription.feed.publishedDate = moment(new Date(subscription.feed.publishedDate)).format("YYYY-MM-DD HH:mm");
-			subscription.updatedDate = moment(new Date(subscription.updatedDate)).format("YYYY-MM-DD HH:mm");
-			subscription.refreshDate = moment(new Date(subscription.refreshDate)).format("YYYY-MM-DD HH:mm");
+			subscription.feed.publishedDate = displayDate(subscription.feed.publishedDate);
+			subscription.updatedDate = displayDate(subscription.updatedDate);
+			subscription.refreshDate = displayDate(subscription.refreshDate);
 		});
 	});
 
@@ -279,4 +279,13 @@ function reloadSubscriptions() {
 function refreshSelectedMenuItem(event) {
 	$("#menu .menu-item.selected").removeClass("selected");
 	$(event.target).closest(".menu-item").addClass("selected");
+}
+
+function displayDate(date) {
+	var m = moment(date);
+	var duration = moment.duration(m.diff(moment()));
+	if (duration.asDays() <= -1) {
+		return m.format("YYYY-MM-DD HH:mm");
+	}
+	return duration.humanize(true);
 }
