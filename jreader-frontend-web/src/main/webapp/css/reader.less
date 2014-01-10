@@ -26,7 +26,7 @@ button::-moz-focus-inner {
 } 
 
 body {
-	font-family: Arial;
+	font-family: Helvetica;
 	background-color: @bg-color;
 	color: @base-color;
 	font-size: 110%;
@@ -300,4 +300,31 @@ body {
 			color: @highlight-color;
 		}
 	}
+}
+
+.subscription-group-stat {
+	.group-title {
+		font-size: 120%;
+		font-weight: bold;
+		text-align: center;
+	}
+	.subscription-stat {
+		width: 300px;
+		height: 150px;
+		display: inline-table;
+		text-align: center;
+		border: 1px solid @base-color;
+		padding: 10px 10px;
+		margin: 10px;
+		border-radius: 5px;
+		.title {
+			font-weight: bold; 
+		}
+		.subtitle a {
+			color: @base-color;
+		}
+		.description {
+			font-style: italic;
+		}
+	}	
 }

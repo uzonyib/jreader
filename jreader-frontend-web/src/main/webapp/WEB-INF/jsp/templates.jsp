@@ -60,18 +60,16 @@
 
 <script type="text/x-template" id="template-subscription-group-stat">
 	<div class="subscription-group-stat">
-		<div class="group-title">
-			{?title}{title}{:else}Ungrouped{/title}
-		</div>
+		<div class="group-title">{title}</div>
 		{#subscriptions}
 			<div class="subscription-stat" subscription-id="{id}">
-				<div class="title">
-					<span class="feed-title">{title}</span>
-					&nbsp;({feed.title} - {feed.url})
+				<div class="title">{title}</div>
+				<div class="subtitle">
+					<a href="{feed.url}">{feed.title}</a>
 				</div>
 				{?feed.description}<div class="description">{feed.description}</div>{/feed.description}
-				<div class="updated-date">Refreshed: {refreshDate}</div>
-				<div class="updated-date">Updated: {updatedDate}</div>
+				<div class="date">Refreshed: {refreshDate}</div>
+				<div class="date">Updated: {updatedDate}</div>
 			</div>
 		{/subscriptions}
 	</div>

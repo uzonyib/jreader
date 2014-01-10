@@ -1,5 +1,4 @@
 <div id="home-contents">
-	Welcome!
 	<div id="subscription-group-stats"></div>
 </div>
 
