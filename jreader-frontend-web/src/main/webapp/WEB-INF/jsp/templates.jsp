@@ -21,16 +21,20 @@
 
 <script type="text/x-template" id="template-subscription-group-settings">
 	<div class="settings-group" subscription-group-id="{id}">
-		<div class="group-title">
-			{?title}{title}{:else}Ungrouped{/title}
-		</div>
-		{#subscriptions groupTitle=title}
+		<div class="group-title">{title}</div>
+		{#subscriptions groupId=id}
 			<div class="settings-item" subscription-id="{id}">
-				<div class="set-item-title">
-					<input type="text" value="{title}" />
-					<button>Change</button>
-				</div>
-				<button class="unsubscribe-button">Unsubscribe</button>
+				<form class="set-item-title" method="post" action="/reader/entitle">
+					<input type="text" name="title" placeholder="name" value="{title}" />
+					<input type="hidden" name="subscriptionGroupId"  value="{groupId}" />
+					<input type="hidden" name="subscriptionId"  value="{id}" />
+					<input type="image" src="/images/tick_black.png" title="Change" />
+				</form>
+				<form method="post" action="/reader/unsubscribe">
+					<input type="hidden" name="subscriptionGroupId"  value="{groupId}" />
+					<input type="hidden" name="subscriptionId"  value="{id}" />
+					<input type="image" src="/images/cross_black.png" title="Unsubscribe" class="unsubscribe-button" />
+				</form>
 			</div>
 		{/subscriptions}
 	</div>
@@ -52,6 +56,11 @@
 				<div class="link">
 					<a target=_blank href="{link}">Open</a>
 				</div>
+				{?author}
+					<div class="author">
+						Author: {author}
+					</div>
+				{/author}
 				<div class="description">{description|s}</div>
 			</td>
 		</tr>
@@ -63,13 +72,17 @@
 		<div class="group-title">{title}</div>
 		{#subscriptions}
 			<div class="subscription-stat" subscription-id="{id}">
-				<div class="title">{title}</div>
-				<div class="subtitle">
-					<a href="{feed.url}">{feed.title}</a>
-				</div>
+				<span class="title">{title}</span>
+				&nbsp;
+				<span class="subtitle">
+					(<a href="{feed.url}">{feed.title}</a>)
+				</span>
 				{?feed.description}<div class="description">{feed.description}</div>{/feed.description}
-				<div class="date">Refreshed: {refreshDate}</div>
-				<div class="date">Updated: {updatedDate}</div>
+				<div class="stats">
+					<div>Refreshed<br /><span>{refreshDate}</span></div>
+					<div>Updated<br /><span>{updatedDate}</span></div>
+					<div>Unread<br /><span>{unreadCount}</span></div>
+				</div>
 			</div>
 		{/subscriptions}
 	</div>

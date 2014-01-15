@@ -13,6 +13,8 @@
 @nav-button-gradient-start: #eee;
 @nav-button-gradient-end: @nav-button-gradient-start - #444;
 
+@button-border-radius: 3px;
+
 @menu-item-gradient-start: #222;
 @menu-item-gradient-end: @menu-item-gradient-start + #444;
 
@@ -185,7 +187,6 @@ body {
 }
 
 #nav-bar {
-	@button-border-radius: 3px;
 	margin: 5px 0px;
 	span {
 		margin-right: 10px;
@@ -303,20 +304,18 @@ body {
 }
 
 .subscription-group-stat {
+    border: 1px solid @base-color;
+    border-radius: 5px;
+    margin-bottom: 10px;
 	.group-title {
 		font-size: 120%;
 		font-weight: bold;
 		text-align: center;
+		padding-top: 10px;
 	}
 	.subscription-stat {
-		width: 300px;
-		height: 150px;
-		display: inline-table;
 		text-align: center;
-		border: 1px solid @base-color;
-		padding: 10px 10px;
-		margin: 10px;
-		border-radius: 5px;
+		padding: 20px 0px;
 		.title {
 			font-weight: bold; 
 		}
@@ -325,6 +324,77 @@ body {
 		}
 		.description {
 			font-style: italic;
+			padding-top: 10px;
+		}
+		.stats {
+			padding-top: 10px; 
+			div {
+			    width: 33%;
+			    display: inline-table;
+			    span {
+			    	font-size: 120%;
+			    	font-weight: bold;
+			    }
+			}
 		}
 	}	
+}
+
+.settings-group {
+	width: 100%;
+	border: 1px solid @base-color;
+    border-radius: 5px;
+    margin-bottom: 10px;
+	.group-title {
+		font-size: 120%;
+		font-weight: bold;
+		text-align: center;
+		padding: 10px 0px;
+	}
+	.settings-item {
+	    padding: 0px 10px 10px 10px;
+	    text-align: center;
+	}
+	form {
+	    display: inline;
+	}
+}
+
+input {
+    margin: 0px 3px;
+}
+
+input[type='image'] {
+	width: @menu-icon-width;
+	height: @menu-icon-width;
+	vertical-align: middle;
+	@border-width: 1px;
+	@selected-border-color: #aaa;
+	@img-size: 16px;
+	@img-padding: 1px;
+	padding : 2px;
+	background-color: @base-color;
+	border: @border-width outset @highlight-bg-color;
+	border-radius: @button-border-radius;
+	cursor: pointer;
+	.gradient(bottom, @nav-button-gradient-start, @nav-button-gradient-end);
+	&:hover {
+		border: @border-width inset @selected-border-color;
+		.gradient(bottom, @nav-button-gradient-end, @nav-button-gradient-start);
+	}
+}
+
+input[type='text'] {
+    border-width: 0px;
+    height: 19px;
+    padding: 1px 2px;
+}
+
+select {
+    height: 19px;
+    border-width: 0px;
+}
+
+#subscription-form {
+	padding: 10px 0px;
 }

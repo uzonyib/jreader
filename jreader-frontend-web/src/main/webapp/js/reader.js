@@ -20,30 +20,24 @@ $(document).ready(function() {
 		
 		return false;
 	});
+	
+	$("#main-area").on("submit", "form", function() {
+		var url = $(this).attr("action");
+		if (url === undefined) {
+			return false;
+		}
 		
-	$("#main-area").on("click", ".unsubscribe-button", function(event) {
-		var div = $(event.target);
-		var id = div.parent().attr("subscription-id");
-		var groupId = div.closest(".settings-group").attr("subscription-group-id");
-		$.post("/reader/unsubscribe", { "subscriptionId" : id, "subscriptionGroupId" : groupId }, function(data) {
-			refreshSubscriptions(data);
+		var data = {};
+		$(this).find("input, select").each(function() {
+			var name = $(this).attr("name");
+			if (name !== undefined) {
+				var value = $(this).val();
+				data[name] = value;
+			}
 		});
-	});
-	
-	$("#main-area").on("submit", "#subscription-group-form", function() {
-		var title = $("#subscription-group-form #group-name").val();
-		$.post($(this).attr("action"), { "title" : title }, function(data) {
-			refreshSubscriptions(data);
-		});
-		return false;
-	});
-	
-
-	$("#main-area").on("submit", "#subscription-form", function() {
-		var subscriptionGroupId = $("#subscription-form #subscription-group").val();
-		var url = $("#subscription-form #subscription-url").val();
-		$.post($(this).attr("action"), { "subscriptionGroupId" : subscriptionGroupId, "url" : url }, function(data) {
-			refreshSubscriptions(data);
+		
+		$.post(url, data, function(response) {
+			refreshSubscriptions(response);
 		});
 		return false;
 	});
@@ -56,20 +50,6 @@ $(document).ready(function() {
 			menuGroup.addClass("collapsed");
 		}
 		return false;
-	});
-
-	$("#main-area").on("click", ".set-item-title button", function(event) {
-		var div = $(event.target).parent();
-		var input = div.children("input").first();
-		var title = input.val();
-		if (title == "") {
-			return;
-		}
-		var id = div.parent().attr("subscription-id");
-		var groupId = div.closest(".settings-group").attr("subscription-group-id");
-		$.post("/reader/entitle", { "subscriptionId" : id, "subscriptionGroupId" : groupId, "title" : title }, function(data) {
-			refreshSubscriptions(data);
-		});
 	});
 	
 	$("#main-area").on("click", ".feed-entry .breadcrumb .feed-title, .feed-entry .breadcrumb .title, .feed-entry .breadcrumb .date", function(event) {
