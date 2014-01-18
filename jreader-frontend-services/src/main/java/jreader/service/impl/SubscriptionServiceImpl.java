@@ -153,15 +153,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return;
 		}
 		
-		List<SubscriptionGroup> updatedGroups = new ArrayList<SubscriptionGroup>();
-		updatedGroups.add(subscriptionGroups.get(groupIndex - 1));
-		updatedGroups.add(subscriptionGroups.get(groupIndex));
-		
-		int order = updatedGroups.get(1).getOrder();
-		updatedGroups.get(1).setOrder(updatedGroups.get(0).getOrder());
-		updatedGroups.get(0).setOrder(order);
-		
-		subscriptionGroupDao.saveAll(updatedGroups);
+		swap(subscriptionGroups.get(groupIndex - 1), subscriptionGroups.get(groupIndex));
 	}
 	
 	@Override
@@ -183,15 +175,85 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return;
 		}
 		
-		List<SubscriptionGroup> updatedGroups = new ArrayList<SubscriptionGroup>();
-		updatedGroups.add(subscriptionGroups.get(groupIndex));
-		updatedGroups.add(subscriptionGroups.get(groupIndex + 1));
+		swap(subscriptionGroups.get(groupIndex), subscriptionGroups.get(groupIndex + 1));
+	}
+	
+	private void swap(SubscriptionGroup group1, SubscriptionGroup group2) {
+		int order = group1.getOrder();
+		group1.setOrder(group2.getOrder());
+		group2.setOrder(order);
 		
-		int order = updatedGroups.get(0).getOrder();
-		updatedGroups.get(0).setOrder(updatedGroups.get(1).getOrder());
-		updatedGroups.get(1).setOrder(order);
+		List<SubscriptionGroup> updatedGroups = new ArrayList<SubscriptionGroup>();
+		updatedGroups.add(group1);
+		updatedGroups.add(group2);
 		
 		subscriptionGroupDao.saveAll(updatedGroups);
+	}
+	
+	@Override
+	public void moveUp(String username, Long subscriptionGroupId, Long subscriptionId) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroup == null) {
+			return;
+		}
+		
+		List<Subscription> subscriptions = subscriptionDao.list(subscriptionGroup);
+		Integer subscriptionIndex = null;
+		for (int i = 0; i < subscriptions.size(); ++i) {
+			if (subscriptions.get(i).getId().equals(subscriptionId)) {
+				subscriptionIndex = i;
+			}
+		}
+		
+		if (subscriptionIndex == null || subscriptionIndex == 0) {
+			return;
+		}
+		
+		swap(subscriptions.get(subscriptionIndex - 1), subscriptions.get(subscriptionIndex));
+	}
+	
+	@Override
+	public void moveDown(String username, Long subscriptionGroupId, Long subscriptionId) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroup == null) {
+			return;
+		}
+		
+		List<Subscription> subscriptions = subscriptionDao.list(subscriptionGroup);
+		Integer subscriptionIndex = null;
+		for (int i = 0; i < subscriptions.size(); ++i) {
+			if (subscriptions.get(i).getId().equals(subscriptionId)) {
+				subscriptionIndex = i;
+			}
+		}
+		
+		if (subscriptionIndex == null || subscriptionIndex == subscriptions.size() - 1) {
+			return;
+		}
+		
+		swap(subscriptions.get(subscriptionIndex), subscriptions.get(subscriptionIndex + 1));
+	}
+	
+	private void swap(Subscription subscription1, Subscription subscription2) {
+		int order = subscription1.getOrder();
+		subscription1.setOrder(subscription2.getOrder());
+		subscription2.setOrder(order);
+		
+		List<Subscription> updatedSubscriptions = new ArrayList<Subscription>();
+		updatedSubscriptions.add(subscription1);
+		updatedSubscriptions.add(subscription2);
+		
+		subscriptionDao.saveAll(updatedSubscriptions);
 	}
 	
 	@Override

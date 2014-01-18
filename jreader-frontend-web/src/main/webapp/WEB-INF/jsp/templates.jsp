@@ -61,6 +61,20 @@
 					<input type="hidden" name="subscriptionId" value="{id}" />
 					<input type="image" src="/images/cross_black.png" title="Unsubscribe" class="unsubscribe-button" />
 				</form>
+				{^first}
+					<form method="post" action="/reader/move-up">
+						<input type="hidden" name="subscriptionGroupId"  value="{groupId}" />
+						<input type="hidden" name="subscriptionId" value="{id}" />
+						<input type="image" src="/images/move_up_black.png" title="Move up" />
+					</form>
+				{/first}
+				{^last}
+					<form method="post" action="/reader/move-down">
+						<input type="hidden" name="subscriptionGroupId"  value="{groupId}" />
+						<input type="hidden" name="subscriptionId" value="{id}" />
+						<input type="image" src="/images/move_down_black.png" title="Move down" />
+					</form>
+				{/last}
 			</div>
 		{/subscriptions}
 	</div>

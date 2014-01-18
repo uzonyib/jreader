@@ -18,6 +18,10 @@ public interface SubscriptionService {
 	
 	void moveDown(String username, Long subscriptionGroupId);
 	
+	void moveUp(String username, Long subscriptionGroupId, Long subscriptionId);
+	
+	void moveDown(String username, Long subscriptionGroupId, Long subscriptionId);
+	
 	List<SubscriptionGroupDto> list(String username);
 	
 	void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String title);

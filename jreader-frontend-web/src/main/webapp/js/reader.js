@@ -219,8 +219,8 @@ function refreshSubscriptions(subscriptionGroups) {
 	var parsedGroups = JSON.parse(subscriptionGroups);
 	$.each(parsedGroups, function(groupIndex, group) {
 		totalUnreadCount += group.unreadCount;
-		group.first = groupIndex == 0 ? true : false;
-		group.last = groupIndex == parsedGroups.length - 1 ? true : false;
+		group.first = (groupIndex == 0);
+		group.last = (groupIndex == parsedGroups.length - 1);
 		var domGroup = $(".menu-group[feed-group='" + group.title + "']").get(0);
 		if (domGroup != undefined) {
 			group.collapsed = $(domGroup).hasClass("collapsed");
@@ -235,6 +235,8 @@ function refreshSubscriptions(subscriptionGroups) {
 			subscription.feed.publishedDate = displayDate(subscription.feed.publishedDate);
 			subscription.updatedDate = displayDate(subscription.updatedDate);
 			subscription.refreshDate = displayDate(subscription.refreshDate);
+			subscription.first = (index == 0);
+			subscription.last = (index == group.subscriptions.length - 1);
 		});
 	});
 
