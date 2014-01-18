@@ -31,9 +31,21 @@
 			{^subscriptions}
 				<form method="post" action="/reader/delete">
 					<input type="hidden" name="subscriptionGroupId"  value="{id}" />
-					<input type="image" src="/images/cross_black.png" title="delete" />
+					<input type="image" src="/images/cross_black.png" title="Delete" />
 				</form>
 			{/subscriptions}
+			{^first}
+				<form method="post" action="/reader/move-group-up">
+					<input type="hidden" name="subscriptionGroupId"  value="{id}" />
+					<input type="image" src="/images/move_up_black.png" title="Move up" />
+				</form>
+			{/first}
+			{^last}
+				<form method="post" action="/reader/move-group-down">
+					<input type="hidden" name="subscriptionGroupId"  value="{id}" />
+					<input type="image" src="/images/move_down_black.png" title="Move down" />
+				</form>
+			{/last}
 		</div>
 		{#subscriptions groupId=id}
 			<div class="settings-item" subscription-id="{id}">

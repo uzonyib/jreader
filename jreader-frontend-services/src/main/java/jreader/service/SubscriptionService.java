@@ -14,6 +14,10 @@ public interface SubscriptionService {
 	
 	void deleteGroup(String username, Long subscriptionGroupId);
 	
+	void moveUp(String username, Long subscriptionGroupId);
+	
+	void moveDown(String username, Long subscriptionGroupId);
+	
 	List<SubscriptionGroupDto> list(String username);
 	
 	void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String title);

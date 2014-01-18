@@ -1,5 +1,6 @@
 package jreader.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import jreader.domain.SubscriptionGroup;
@@ -12,6 +13,8 @@ public interface SubscriptionGroupDao {
 	SubscriptionGroup find(User user, String title);
 	
 	SubscriptionGroup save(SubscriptionGroup subscriptionGroup);
+	
+	void saveAll(Collection<SubscriptionGroup> subscriptionGroups);
 	
 	void delete(SubscriptionGroup group);
 	

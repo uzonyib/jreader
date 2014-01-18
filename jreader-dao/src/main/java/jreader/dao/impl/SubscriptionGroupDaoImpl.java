@@ -1,5 +1,6 @@
 package jreader.dao.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import jreader.dao.SubscriptionGroupDao;
@@ -41,6 +42,17 @@ public class SubscriptionGroupDaoImpl implements SubscriptionGroupDao {
 			public SubscriptionGroup run() {
 				Key<SubscriptionGroup> key = ofy.save().entity(subscriptionGroup).now();
 				return ofy.load().key(key).now();
+			}
+		});
+	}
+	
+	@Override
+	public void saveAll(final Collection<SubscriptionGroup> subscriptionGroups) {
+		final Objectify ofy = objectifyFactory.begin();
+		ofy.transact(new VoidWork() {
+			@Override
+			public void vrun() {
+				ofy.save().entities(subscriptionGroups).now();
 			}
 		});
 	}

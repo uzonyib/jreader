@@ -219,6 +219,8 @@ function refreshSubscriptions(subscriptionGroups) {
 	var parsedGroups = JSON.parse(subscriptionGroups);
 	$.each(parsedGroups, function(groupIndex, group) {
 		totalUnreadCount += group.unreadCount;
+		group.first = groupIndex == 0 ? true : false;
+		group.last = groupIndex == parsedGroups.length - 1 ? true : false;
 		var domGroup = $(".menu-group[feed-group='" + group.title + "']").get(0);
 		if (domGroup != undefined) {
 			group.collapsed = $(domGroup).hasClass("collapsed");

@@ -8,6 +8,7 @@ public class SubscriptionGroupDto {
 	private String title;
 	private List<SubscriptionDto> subscriptions;
 	private int unreadCount;
+	private int order;
 
 	public String getId() {
 		return id;
@@ -39,6 +40,14 @@ public class SubscriptionGroupDto {
 
 	public void setUnreadCount(int unreadCount) {
 		this.unreadCount = unreadCount;
+	}
+
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 }

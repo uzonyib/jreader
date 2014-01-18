@@ -135,6 +135,66 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
+	public void moveUp(String username, Long subscriptionGroupId) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		List<SubscriptionGroup> subscriptionGroups = subscriptionGroupDao.list(user);
+		Integer groupIndex = null;
+		for (int i = 0; i < subscriptionGroups.size(); ++i) {
+			if (subscriptionGroups.get(i).getId().equals(subscriptionGroupId)) {
+				groupIndex = i;
+			}
+		}
+		
+		if (groupIndex == null || groupIndex == 0) {
+			return;
+		}
+		
+		List<SubscriptionGroup> updatedGroups = new ArrayList<SubscriptionGroup>();
+		updatedGroups.add(subscriptionGroups.get(groupIndex - 1));
+		updatedGroups.add(subscriptionGroups.get(groupIndex));
+		
+		int order = updatedGroups.get(1).getOrder();
+		updatedGroups.get(1).setOrder(updatedGroups.get(0).getOrder());
+		updatedGroups.get(0).setOrder(order);
+		
+		subscriptionGroupDao.saveAll(updatedGroups);
+	}
+	
+	@Override
+	public void moveDown(String username, Long subscriptionGroupId) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		List<SubscriptionGroup> subscriptionGroups = subscriptionGroupDao.list(user);
+		Integer groupIndex = null;
+		for (int i = 0; i < subscriptionGroups.size(); ++i) {
+			if (subscriptionGroups.get(i).getId().equals(subscriptionGroupId)) {
+				groupIndex = i;
+			}
+		}
+		
+		if (groupIndex == null || groupIndex == subscriptionGroups.size() - 1) {
+			return;
+		}
+		
+		List<SubscriptionGroup> updatedGroups = new ArrayList<SubscriptionGroup>();
+		updatedGroups.add(subscriptionGroups.get(groupIndex));
+		updatedGroups.add(subscriptionGroups.get(groupIndex + 1));
+		
+		int order = updatedGroups.get(0).getOrder();
+		updatedGroups.get(0).setOrder(updatedGroups.get(1).getOrder());
+		updatedGroups.get(1).setOrder(order);
+		
+		subscriptionGroupDao.saveAll(updatedGroups);
+	}
+	
+	@Override
 	public List<SubscriptionGroupDto> list(String username) {
 		User user = userDao.find(username);
 		if (user == null) {

@@ -56,6 +56,18 @@ public class AjaxController {
 		getSubscriptions(response, principal);
 	}
 	
+	@RequestMapping(value = "/move-group-up", method = RequestMethod.POST)
+	public void moveUp(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+		subscriptionService.moveUp(principal.getName(), subscriptionGroupId);
+		getSubscriptions(response, principal);
+	}
+	
+	@RequestMapping(value = "/move-group-down", method = RequestMethod.POST)
+	public void moveDown(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+		subscriptionService.moveDown(principal.getName(), subscriptionGroupId);
+		getSubscriptions(response, principal);
+	}
+	
 	@RequestMapping(value = "/subscriptions", method = RequestMethod.GET)
 	public void getSubscriptions(HttpServletResponse response, Principal principal) throws IOException {
 		List<SubscriptionGroupDto> feeds = subscriptionService.list(principal.getName());
