@@ -88,6 +88,14 @@ public class AjaxController {
 		getSubscriptions(response, principal);
 	}
 	
+	@RequestMapping(value = "/entitle-group", method = RequestMethod.POST)
+	public void entitle(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("title") String title, HttpServletResponse response, Principal principal) throws IOException {
+		if (title != null && !"".equals(title)) {
+			subscriptionService.entitle(principal.getName(), subscriptionGroupId, title);
+		}
+		getSubscriptions(response, principal);
+	}
+	
 	@RequestMapping(value = "/read", method = RequestMethod.POST)
 	public void read(@RequestParam("subscriptionGroupIds") String subscriptionGroupIds, @RequestParam("subscriptionIds") String subscriptionIds, @RequestParam("ids") String ids, HttpServletResponse response, Principal principal) throws IOException {
 		feedEntryService.markRead(principal.getName(), parseIds(subscriptionGroupIds), parseIds(subscriptionIds), parseIds(ids));

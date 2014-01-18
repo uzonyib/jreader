@@ -42,9 +42,9 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$("#subscription-settings").on("click", ".settings-item .title", function() {
+	$("#subscription-settings").on("click", ".settings-item .title, .group-title .title", function() {
 		$(this).hide();
-		$(this).parent().find("form.set-item-title").removeClass("hidden");
+		$(this).parent().find("form").removeClass("hidden");
 	});
 
 	$("#subscription-menu").on("click", ".menu-group .icon", function(event) {

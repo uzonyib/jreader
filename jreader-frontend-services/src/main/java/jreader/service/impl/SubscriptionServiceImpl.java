@@ -160,7 +160,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
-	public void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String subscriptionTitle) {
+	public void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String title) {
 		User user = userDao.find(username);
 		if (user == null) {
 			return;
@@ -176,8 +176,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return;
 		}
 		
-		subscription.setTitle(subscriptionTitle);
+		subscription.setTitle(title);
 		subscriptionDao.save(subscription);
+	}
+	
+	@Override
+	public void entitle(String username, Long subscriptionGroupId, String title) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroup == null) {
+			return;
+		}
+		
+		subscriptionGroup.setTitle(title);
+		subscriptionGroupDao.save(subscriptionGroup);
 	}
 
 	public UserDao getUserDao() {

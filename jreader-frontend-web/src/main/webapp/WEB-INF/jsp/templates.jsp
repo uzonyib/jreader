@@ -22,7 +22,12 @@
 <script type="text/x-template" id="template-subscription-group-settings">
 	<div class="settings-group" subscription-group-id="{id}">
 		<div class="group-title">
-			<span>{title}</span>
+			<span class="title">{title}</span>
+			<form class="set-group-title hidden" method="post" action="/reader/entitle-group">
+				<input type="text" name="title" placeholder="name" value="{title}" />
+				<input type="hidden" name="subscriptionGroupId" value="{id}" />
+				<input type="image" src="/images/tick_black.png" title="Change" />
+			</form>
 			{^subscriptions}
 				<form method="post" action="/reader/delete">
 					<input type="hidden" name="subscriptionGroupId"  value="{id}" />
@@ -36,12 +41,12 @@
 				<form class="set-item-title hidden" method="post" action="/reader/entitle">
 					<input type="text" name="title" placeholder="name" value="{title}" />
 					<input type="hidden" name="subscriptionGroupId"  value="{groupId}" />
-					<input type="hidden" name="subscriptionId"  value="{id}" />
+					<input type="hidden" name="subscriptionId" value="{id}" />
 					<input type="image" src="/images/tick_black.png" title="Change" />
 				</form>
 				<form method="post" action="/reader/unsubscribe">
 					<input type="hidden" name="subscriptionGroupId"  value="{groupId}" />
-					<input type="hidden" name="subscriptionId"  value="{id}" />
+					<input type="hidden" name="subscriptionId" value="{id}" />
 					<input type="image" src="/images/cross_black.png" title="Unsubscribe" class="unsubscribe-button" />
 				</form>
 			</div>

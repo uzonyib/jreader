@@ -16,6 +16,8 @@ public interface SubscriptionService {
 	
 	List<SubscriptionGroupDto> list(String username);
 	
-	void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String subscriptionTitle);
+	void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String title);
+	
+	void entitle(String username, Long subscriptionGroupId, String title);
 
 }
