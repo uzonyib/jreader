@@ -350,10 +350,19 @@ body {
 		font-weight: bold;
 		text-align: center;
 		padding: 10px 0px;
+		span {
+			cursor: pointer;
+		}
 	}
 	.settings-item {
 	    padding: 0px 10px 10px 10px;
 	    text-align: center;
+	    .title {
+	    	cursor: pointer;
+	    }
+	    form.set-item-title.hidden {
+	    	display: none;
+	    }
 	}
 	form {
 	    display: inline;

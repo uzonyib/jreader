@@ -50,6 +50,12 @@ public class AjaxController {
 		getSubscriptions(response, principal);
 	}
 
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public void delete(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+		subscriptionService.deleteGroup(principal.getName(), subscriptionGroupId);
+		getSubscriptions(response, principal);
+	}
+	
 	@RequestMapping(value = "/subscriptions", method = RequestMethod.GET)
 	public void getSubscriptions(HttpServletResponse response, Principal principal) throws IOException {
 		List<SubscriptionGroupDto> feeds = subscriptionService.list(principal.getName());

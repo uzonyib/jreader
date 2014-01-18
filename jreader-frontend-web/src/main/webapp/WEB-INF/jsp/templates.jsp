@@ -21,10 +21,19 @@
 
 <script type="text/x-template" id="template-subscription-group-settings">
 	<div class="settings-group" subscription-group-id="{id}">
-		<div class="group-title">{title}</div>
+		<div class="group-title">
+			<span>{title}</span>
+			{^subscriptions}
+				<form method="post" action="/reader/delete">
+					<input type="hidden" name="subscriptionGroupId"  value="{id}" />
+					<input type="image" src="/images/cross_black.png" title="delete" />
+				</form>
+			{/subscriptions}
+		</div>
 		{#subscriptions groupId=id}
 			<div class="settings-item" subscription-id="{id}">
-				<form class="set-item-title" method="post" action="/reader/entitle">
+				<span class="title">{title}</span>
+				<form class="set-item-title hidden" method="post" action="/reader/entitle">
 					<input type="text" name="title" placeholder="name" value="{title}" />
 					<input type="hidden" name="subscriptionGroupId"  value="{groupId}" />
 					<input type="hidden" name="subscriptionId"  value="{id}" />

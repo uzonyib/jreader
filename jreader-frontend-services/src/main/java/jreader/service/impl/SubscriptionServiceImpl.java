@@ -120,6 +120,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
+	public void deleteGroup(String username, Long subscriptionGroupId) {
+		User user = userDao.find(username);
+		if (user == null) {
+			return;
+		}
+		
+		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
+		if (subscriptionGroup == null) {
+			return;
+		}
+		
+		subscriptionGroupDao.delete(subscriptionGroup);
+	}
+	
+	@Override
 	public List<SubscriptionGroupDto> list(String username) {
 		User user = userDao.find(username);
 		if (user == null) {

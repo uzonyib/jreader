@@ -12,6 +12,8 @@ public interface SubscriptionService {
 	
 	void unsubscribe(String username, Long subscriptionGroupId, Long subscriptionId);
 	
+	void deleteGroup(String username, Long subscriptionGroupId);
+	
 	List<SubscriptionGroupDto> list(String username);
 	
 	void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String subscriptionTitle);
