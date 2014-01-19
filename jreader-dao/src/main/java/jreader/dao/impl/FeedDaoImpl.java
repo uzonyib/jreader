@@ -6,58 +6,30 @@ import jreader.dao.FeedDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.Work;
 
-public class FeedDaoImpl implements FeedDao {
-	
-	private ObjectifyFactory objectifyFactory;
+public class FeedDaoImpl extends AbstractOfyDao<Feed> implements FeedDao {
 	
 	public FeedDaoImpl(ObjectifyFactory objectifyFactory) {
-		this.objectifyFactory = objectifyFactory;
+		super(objectifyFactory);
 	}
 
 	@Override
 	public Feed find(String url) {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = getOfy();
 		return ofy.load().type(Feed.class).id(url).now();
 	}
 
 	@Override
 	public List<Feed> listAll() {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = getOfy();
 		return ofy.load().type(Feed.class).list();
 	}
 
 	@Override
-	public Feed save(final Feed feed) {
-		final Objectify ofy = objectifyFactory.begin();
-		return ofy.transact(new Work<Feed>() {
-			@Override
-			public Feed run() {
-				Key<Feed> key = ofy.save().entity(feed).now();
-				return ofy.load().key(key).now();
-			}
-		});
-	}
-
-	@Override
-	public void delete(final Feed feed) {
-		final Objectify ofy = objectifyFactory.begin();
-		ofy.transact(new VoidWork() {
-			@Override
-			public void vrun() {
-				ofy.delete().entity(feed).now();
-			}
-		});
-	}
-	
-	@Override
 	public Long getLastUpdatedDate(Feed feed) {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = getOfy();
 		FeedEntry last = ofy.load().type(FeedEntry.class).filter("feedRef =", feed).order("-publishedDate").first().now();
 		return last == null ? null : last.getPublishedDate();
 	}

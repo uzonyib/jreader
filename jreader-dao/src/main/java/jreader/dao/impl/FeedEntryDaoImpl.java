@@ -9,65 +9,26 @@ import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.VoidWork;
-import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
 
-public class FeedEntryDaoImpl implements FeedEntryDao {
-	
-	private ObjectifyFactory objectifyFactory;
+public class FeedEntryDaoImpl extends AbstractOfyDao<FeedEntry> implements FeedEntryDao {
 	
 	public FeedEntryDaoImpl(ObjectifyFactory objectifyFactory) {
-		this.objectifyFactory = objectifyFactory;
+		super(objectifyFactory);
 	}
 
 	@Override
 	public FeedEntry find(Subscription subscription, Long id) {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = getOfy();
 		return ofy.load().type(FeedEntry.class).parent(subscription).id(id).now();
 	}
 	
 	@Override
 	public FeedEntry find(Subscription subscription, int ordinal) {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = getOfy();
 		return ofy.load().type(FeedEntry.class).ancestor(subscription).order("-publishedDate").offset(ordinal - 1).limit(1).first().now();
-	}
-	
-	@Override
-	public FeedEntry save(final FeedEntry feedEntry) {
-		final Objectify ofy = objectifyFactory.begin();
-		return ofy.transact(new Work<FeedEntry>() {
-			@Override
-			public FeedEntry run() {
-				Key<FeedEntry> key = ofy.save().entity(feedEntry).now();
-				return ofy.load().key(key).now();
-			}
-		});
-	}
-	
-	@Override
-	public void saveAll(final List<FeedEntry> feedEntries) {
-		final Objectify ofy = objectifyFactory.begin();
-		ofy.transact(new VoidWork() {
-			@Override
-			public void vrun() {
-				ofy.save().entities(feedEntries).now();
-			}
-		});
-	}
-	
-	@Override
-	public void delete(final FeedEntry feedEntry) {
-		final Objectify ofy = objectifyFactory.begin();
-		ofy.transact(new VoidWork() {
-			@Override
-			public void vrun() {
-				ofy.delete().entity(feedEntry).now();
-			}
-		});
 	}
 	
 	@Override
@@ -86,7 +47,7 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	}
 	
 	private List<FeedEntry> listForAncestor(Object ancestor, FeedEntryFilter filter) {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = getOfy();
 		Query<FeedEntry> query = ofy.load().type(FeedEntry.class).ancestor(ancestor);
 		switch (filter.getSelection()) {
 			case UNREAD:
@@ -103,13 +64,13 @@ public class FeedEntryDaoImpl implements FeedEntryDao {
 	
 	@Override
 	public List<FeedEntry> listUnstarredOlderThan(Subscription subscription, long date) {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = getOfy();
 		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("starred", false).filter("publishedDate <", date).list();
 	}
 	
 	@Override
 	public int countUnread(Subscription subscription) {
-		Objectify ofy = objectifyFactory.begin();
+		Objectify ofy = getOfy();
 		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("read", false).count();
 	}
 

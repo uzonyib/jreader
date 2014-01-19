@@ -8,17 +8,11 @@ import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
-public interface FeedEntryDao {
+public interface FeedEntryDao extends OfyDao<FeedEntry> {
 	
 	FeedEntry find(Subscription subscription, Long id);
 	
 	FeedEntry find(Subscription subscription, int ordinal);
-	
-	FeedEntry save(FeedEntry feedEntry);
-	
-	void saveAll(List<FeedEntry> feedEntries);
-	
-	void delete(FeedEntry feedEntry);
 	
 	List<FeedEntry> list(User user, FeedEntryFilter filter);
 	
