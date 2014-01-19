@@ -43,6 +43,10 @@ public class CronServiceImpl implements CronService {
 				int counter = 0;
 				Long updatedDate = subscription.getUpdatedDate();
 				for (jreader.rss.domain.FeedEntry rssFeedEntry : rssFeed.getEntries()) {
+					if (rssFeedEntry.getPublishedDate() == null) {
+						LOG.warning("Publish date is null. Feed: " + feed.getTitle());
+						continue;
+					}
 					if (rssFeedEntry.getPublishedDate() > subscription.getUpdatedDate()) {
 						FeedEntry feedEntry = mapper.map(rssFeedEntry, FeedEntry.class);
 						feedEntry.setSubscription(subscription);
