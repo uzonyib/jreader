@@ -36,7 +36,7 @@
 			<plugin>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
-                <version>${appengine.target.version}</version>
+                <version>${appengine.sdk.version}</version>
                 <configuration>
                 	<jvmFlags>
                 		<jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/eclipse_workspace/jreader/appengine</jvmFlag>
@@ -50,13 +50,13 @@
 		<dependency>
 			<groupId>jreader</groupId>
 			<artifactId>jreader-frontend-web</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>jreader</groupId>
 			<artifactId>jreader-backend-web</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 	</dependencies>

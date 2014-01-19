@@ -11,22 +11,22 @@
   	<dependency>
   		<groupId>jreader</groupId>
   		<artifactId>jreader-dao</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>jreader</groupId>
+  		<artifactId>jreader-rss-services</artifactId>
+  		<version>${project.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-core</artifactId>
-  		<version>3.1.4.RELEASE</version>
+  		<version>${spring.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>net.sf.dozer</groupId>
   		<artifactId>dozer</artifactId>
   		<version>5.4.0</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>jreader</groupId>
-  		<artifactId>jreader-rss-services</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

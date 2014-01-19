@@ -7,7 +7,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
-		<appengine.target.version>1.8.8</appengine.target.version>
+		<appengine.sdk.version>1.8.9</appengine.sdk.version>
+		<objectify.version>4.0rc1</objectify.version>
+		<spring.version>3.2.6.RELEASE</spring.version>
+		<gson.version>2.2.4</gson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<modules>
@@ -20,4 +23,17 @@
 		<module>jreader-backend-web</module>
 		<module>jreader-ear</module>
 	</modules>
+	<build>
+		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>3.1</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+		</plugins>
+	</build>
 </project>
