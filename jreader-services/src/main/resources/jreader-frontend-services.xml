@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<import resource="classpath:/jreader-dao.xml" />
+	
+	<bean class="jreader.services.impl.UserServiceImpl" id="userService">
+		<property name="userDao" ref="userDao" />
+	</bean>
+	
+	<bean class="org.springframework.context.support.ConversionServiceFactoryBean" id="conversionService">
+		<property name="converters">
+			<list>
+				<bean class="jreader.converter.RssFetchResultConverter" />
+				<bean class="jreader.converter.FeedEntryDtoConverter" />
+				<bean class="jreader.converter.SubscriptionGroupConverter" />
+				<bean class="jreader.converter.SubscriptionConverter" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="jreader.services.impl.SubscriptionServiceImpl" id="subscriptionService">
+		<property name="userDao" ref="userDao" />
+		<property name="subscriptionGroupDao" ref="subscriptionGroupDao" />
+		<property name="subscriptionDao" ref="subscriptionDao" />
+		<property name="feedDao" ref="feedDao" />
+		<property name="feedEntryDao" ref="feedEntryDao" />
+		<property name="rssService">
+			<bean class="jreader.services.impl.RssServiceImpl">
+				<constructor-arg ref="conversionService" />
+			</bean>
+		</property>
+		<property name="conversionService" ref="conversionService" />
+	</bean>
+	
+	<bean class="jreader.services.impl.FeedEntryServiceImpl" id="feedEntryService">
+		<property name="userDao" ref="userDao" />
+		<property name="subscriptionGroupDao" ref="subscriptionGroupDao" />
+		<property name="subscriptionDao" ref="subscriptionDao" />
+		<property name="feedEntryDao" ref="feedEntryDao" />
+		<property name="conversionService" ref="conversionService" />
+	</bean>
+	
+</beans>
