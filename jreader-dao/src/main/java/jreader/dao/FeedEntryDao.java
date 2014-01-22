@@ -21,6 +21,8 @@ public interface FeedEntryDao extends OfyDao<FeedEntry> {
 	
 	List<FeedEntry> listUnstarredOlderThan(Subscription subscription, long date);
 	
+	List<FeedEntry> list(Subscription subscription);
+	
 	int countUnread(Subscription subscription);
 
 }

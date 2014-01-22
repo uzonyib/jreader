@@ -69,6 +69,12 @@ public class FeedEntryDaoImpl extends AbstractOfyDao<FeedEntry> implements FeedE
 	}
 	
 	@Override
+	public List<FeedEntry> list(Subscription subscription) {
+		Objectify ofy = getOfy();
+		return ofy.load().type(FeedEntry.class).ancestor(subscription).list();
+	}
+	
+	@Override
 	public int countUnread(Subscription subscription) {
 		Objectify ofy = getOfy();
 		return ofy.load().type(FeedEntry.class).ancestor(subscription).filter("read", false).count();

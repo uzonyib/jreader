@@ -114,10 +114,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		
 		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
 		if (subscription != null) {
+			List<FeedEntry> feedEntries = feedEntryDao.list(subscription);
+			feedEntryDao.deleteAll(feedEntries);
 			subscriptionDao.delete(subscription);
 		}
-		
-		// TODO delete feed entries
 	}
 	
 	@Override

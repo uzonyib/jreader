@@ -55,5 +55,16 @@ abstract class AbstractOfyDao<EntityType> implements OfyDao<EntityType> {
 			}
 		});
 	}
+	
+	@Override
+	public void deleteAll(final Collection<EntityType> entities) {
+		final Objectify ofy = objectifyFactory.begin();
+		ofy.transact(new VoidWork() {
+			@Override
+			public void vrun() {
+				ofy.delete().entities(entities).now();
+			}
+		});
+	}
 
 }

@@ -10,4 +10,6 @@ public interface OfyDao<EntityType> {
 	
 	void delete(EntityType entity);
 	
+	void deleteAll(Collection<EntityType> entities);
+	
 }
