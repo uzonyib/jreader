@@ -10,11 +10,6 @@
   <dependencies>
   	<dependency>
   		<groupId>jreader</groupId>
-  		<artifactId>jreader-common</artifactId>
-  		<version>${project.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>jreader</groupId>
   		<artifactId>jreader-dao</artifactId>
   		<version>${project.version}</version>
   	</dependency>

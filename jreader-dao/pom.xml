@@ -10,11 +10,6 @@
 	<artifactId>jreader-dao</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>jreader</groupId>
-			<artifactId>jreader-common</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
 			<artifactId>objectify</artifactId>
 			<version>${objectify.version}</version>

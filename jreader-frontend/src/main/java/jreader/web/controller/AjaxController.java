@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import jreader.common.FeedEntryFilter.Selection;
+import jreader.dao.FeedEntryFilter.Selection;
 import jreader.dto.FeedEntryDto;
 import jreader.dto.StatusDto;
 import jreader.dto.SubscriptionGroupDto;

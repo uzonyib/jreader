@@ -2,8 +2,8 @@ package jreader.dao.impl;
 
 import java.util.List;
 
-import jreader.common.FeedEntryFilter;
 import jreader.dao.FeedEntryDao;
+import jreader.dao.FeedEntryFilter;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;

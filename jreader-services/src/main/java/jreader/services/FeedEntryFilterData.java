@@ -1,6 +1,6 @@
 package jreader.services;
 
-import jreader.common.FeedEntryFilter;
+import jreader.dao.FeedEntryFilter;
 
 public class FeedEntryFilterData extends FeedEntryFilter {
 

@@ -1,4 +1,4 @@
-package jreader.common;
+package jreader.dao;
 
 public class FeedEntryFilter {
 	

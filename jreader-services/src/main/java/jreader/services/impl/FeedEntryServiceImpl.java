@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import jreader.common.FeedEntryFilter;
 import jreader.dao.FeedEntryDao;
+import jreader.dao.FeedEntryFilter;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.SubscriptionGroupDao;
 import jreader.dao.UserDao;
