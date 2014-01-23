@@ -185,6 +185,11 @@ function loadNextPageOfFeedEntries() {
 		feedEntriesTable.empty();
 	}
 	
+	var entryCount = 0;
+	if (nextPageIndex > 0) {
+		entryCount = parseInt($("#entry-count").html());
+	}
+	
 	var statusDiv = $("#status-bar");
 	statusDiv.addClass("loading-feed-entries");
 	
@@ -195,6 +200,8 @@ function loadNextPageOfFeedEntries() {
 		if (json.length < 30) {
 			endOfList = true;
 		}
+		entryCount += json.length;
+		$("#entry-count").html(entryCount);
 		$.each(json, function (id, feedEntry) {
 	    	feedEntry.publishedDate = displayDate(feedEntry.publishedDate);
 	    	feedEntriesTable.append(template("feedEntryTemplate", feedEntry));

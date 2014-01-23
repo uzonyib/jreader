@@ -31,6 +31,7 @@
 				<img src="/images/up_black.png">
 			</button>
 		</span>
+		<span>Items displayed:&nbsp;<span id="entry-count">0</span></span>
 	</div>
 	<table id="feed-entries"></table>
 	<div id="status-bar">Loading...</div>
