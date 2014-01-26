@@ -1,4 +1,6 @@
 $(document).ready(function() {
+
+	$("#feed-entries-container").height($(document).height() - 34);
 	
 	$("#menu").on("click", ".menu-item", function(event) {
 		var div = $(event.target).closest(".menu-item");
@@ -141,9 +143,9 @@ $(document).ready(function() {
 		}
     });
 	
-	$(window).scroll(function() {
+	$("#feed-entries-container").scroll(function() {
 		if ($(".menu-item.selected").attr("view") === "items-contents") {
-			if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+			if ($("#feed-entries-container").scrollTop() + $("#feed-entries-container").height() == $("#feed-entries").height()) {
 				loadNextPageOfFeedEntries();
 			}
 		}
@@ -190,8 +192,10 @@ function loadNextPageOfFeedEntries() {
 		entryCount = parseInt($("#entry-count").html());
 	}
 	
-	var statusDiv = $("#status-bar");
-	statusDiv.addClass("loading-feed-entries");
+	var loadingDiv = $("#status-bar-loading");
+	loadingDiv.removeClass("hidden");
+	var countDiv = $("#status-bar-count");
+	countDiv.addClass("hidden");
 	
 	++nextPageIndex;
 	
@@ -207,10 +211,11 @@ function loadNextPageOfFeedEntries() {
 	    	feedEntriesTable.append(template("feedEntryTemplate", feedEntry));
 	    });
 		loading = false;
-		if (!endOfList && $(window).height() >= $(document).height()) {
+		if (!endOfList && $("#feed-entries-container").height() >= $("#feed-entries").height()) {
 			loadNextPageOfFeedEntries();
 		} else {
-			statusDiv.removeClass("loading-feed-entries");
+			loadingDiv.addClass("hidden");
+			countDiv.removeClass("hidden");
 		}
 	});
 }
@@ -264,11 +269,14 @@ function refreshSubscriptions(subscriptionGroups) {
 }
 
 function reloadSubscriptions() {
-	var statusDiv = $("#status-bar");
-	statusDiv.addClass("loading-subscriptions");
+	var statusDiv = $("#status-bar-loading");
+	statusDiv.removeClass("hidden");
+	var countDiv = $("#status-bar-count");
+	countDiv.addClass("hidden");
 	$.get("/reader/subscriptions", {}, function(data) {
 		refreshSubscriptions(data);
-		statusDiv.removeClass("loading-subscriptions");
+		statusDiv.addClass("hidden");
+		countDiv.removeClass("hidden");
 	});
 }
 

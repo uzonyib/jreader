@@ -31,10 +31,12 @@
 				<img src="/images/up_black.png">
 			</button>
 		</span>
-		<span>Items displayed:&nbsp;<span id="entry-count">0</span></span>
+		<span id="status-bar-count">Items displayed:&nbsp;<span id="entry-count">0</span></span>
+		<span id="status-bar-loading">Loading...</span>
 	</div>
-	<table id="feed-entries"></table>
-	<div id="status-bar">Loading...</div>
+	<div id="feed-entries-container">
+		<table id="feed-entries"></table>
+	</div>
 </div>
 
 <div id="settings-contents" style="display: none;">
