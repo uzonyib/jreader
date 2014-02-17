@@ -199,8 +199,7 @@ function loadNextPageOfFeedEntries() {
 	
 	++nextPageIndex;
 	
-	$.get(url, {}, function(data) {
-		var json = JSON.parse(data);
+	$.get(url, {}, function(json) {
 		if (json.length < 30) {
 			endOfList = true;
 		}
@@ -228,11 +227,10 @@ function reloadFeedEntries() {
 
 function refreshSubscriptions(subscriptionGroups) {
 	var totalUnreadCount = 0;
-	var parsedGroups = JSON.parse(subscriptionGroups);
-	$.each(parsedGroups, function(groupIndex, group) {
+	$.each(subscriptionGroups, function(groupIndex, group) {
 		totalUnreadCount += group.unreadCount;
 		group.first = (groupIndex == 0);
-		group.last = (groupIndex == parsedGroups.length - 1);
+		group.last = (groupIndex == subscriptionGroups.length - 1);
 		var domGroup = $(".menu-group[feed-group='" + group.title + "']").get(0);
 		if (domGroup != undefined) {
 			group.collapsed = $(domGroup).hasClass("collapsed");
@@ -257,7 +255,7 @@ function refreshSubscriptions(subscriptionGroups) {
 	$("#subscription-group-stats").empty();
 	$("#subscription-form #subscription-group option").remove();
 
-	$.each(parsedGroups, function(id, group) {
+	$.each(subscriptionGroups, function(id, group) {
 		$("#subscription-menu").append(template("subscriptionMenuGroupTemplate", group));
 		$("#subscription-settings").append(template("subscriptionGroupSettingsTemplate", group));
 		$("#subscription-group-stats").append(template("subscriptionGroupStatTemplate", group));

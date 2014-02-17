@@ -1,11 +1,8 @@
 package jreader.web.controller;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
 
 import jreader.dao.FeedEntryFilter.Selection;
 import jreader.dto.FeedEntryDto;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
@@ -32,98 +30,113 @@ public class AjaxController {
 	
 	private int pageSize;
 	
-	@RequestMapping(value = "/create-group", method = RequestMethod.POST)
-	public void createGroup(@RequestParam("title") String title, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/create-group", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String createGroup(@RequestParam("title") String title, Principal principal) {
 		subscriptionService.createGroup(principal.getName(), title);
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 
-	@RequestMapping(value = "/subscribe", method = RequestMethod.POST)
-	public void subscribe(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("url") String url, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/subscribe", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String subscribe(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("url") String url, Principal principal) {
 		subscriptionService.subscribe(principal.getName(), subscriptionGroupId, url);
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 
-	@RequestMapping(value = "/unsubscribe", method = RequestMethod.POST)
-	public void unsubscribe(@RequestParam("subscriptionId") Long subscriptionId, @RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/unsubscribe", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String unsubscribe(@RequestParam("subscriptionId") Long subscriptionId, @RequestParam("subscriptionGroupId") Long subscriptionGroupId, Principal principal) {
 		subscriptionService.unsubscribe(principal.getName(), subscriptionGroupId, subscriptionId);
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public void delete(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String delete(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, Principal principal) {
 		subscriptionService.deleteGroup(principal.getName(), subscriptionGroupId);
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 	
-	@RequestMapping(value = "/move-group-up", method = RequestMethod.POST)
-	public void moveUp(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/move-group-up", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String moveUp(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, Principal principal) {
 		subscriptionService.moveUp(principal.getName(), subscriptionGroupId);
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 	
-	@RequestMapping(value = "/move-group-down", method = RequestMethod.POST)
-	public void moveDown(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/move-group-down", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String moveDown(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, Principal principal) {
 		subscriptionService.moveDown(principal.getName(), subscriptionGroupId);
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 	
-	@RequestMapping(value = "/move-up", method = RequestMethod.POST)
-	public void moveUp(@RequestParam("subscriptionId") Long subscriptionId, @RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/move-up", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String moveUp(@RequestParam("subscriptionId") Long subscriptionId, @RequestParam("subscriptionGroupId") Long subscriptionGroupId, Principal principal) {
 		subscriptionService.moveUp(principal.getName(), subscriptionGroupId, subscriptionId);
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 	
-	@RequestMapping(value = "/move-down", method = RequestMethod.POST)
-	public void moveDown(@RequestParam("subscriptionId") Long subscriptionId, @RequestParam("subscriptionGroupId") Long subscriptionGroupId, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/move-down", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String moveDown(@RequestParam("subscriptionId") Long subscriptionId, @RequestParam("subscriptionGroupId") Long subscriptionGroupId, Principal principal) {
 		subscriptionService.moveDown(principal.getName(), subscriptionGroupId, subscriptionId);
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 	
-	@RequestMapping(value = "/subscriptions", method = RequestMethod.GET)
-	public void getSubscriptions(HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/subscriptions", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String getSubscriptions(Principal principal) {
 		List<SubscriptionGroupDto> feeds = subscriptionService.list(principal.getName());
-		writeResponse(response, feeds);
+		return new Gson().toJson(feeds);
 	}
 	
-	@RequestMapping(value = "/entries/all/{selection}/{pageIndex}", method = RequestMethod.GET)
-	public void getEntries(@PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/entries/all/{selection}/{pageIndex}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String getEntries(@PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, Principal principal) {
 		List<FeedEntryDto> feeds = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
-		writeResponse(response, feeds);
+		return new Gson().toJson(feeds);
 	}
 	
-	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/{selection}/{pageIndex}", method = RequestMethod.GET)
-	public void getEntries(@PathVariable Long subscriptionGroupId, @PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/{selection}/{pageIndex}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String getEntries(@PathVariable Long subscriptionGroupId, @PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, Principal principal) {
 		List<FeedEntryDto> feeds = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
-		writeResponse(response, feeds);
+		return new Gson().toJson(feeds);
 	}
 	
-	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/subscription/{subscriptionId}/{selection}/{pageIndex}", method = RequestMethod.GET)
-	public void getEntries(@PathVariable Long subscriptionGroupId, @PathVariable Long subscriptionId, @PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/subscription/{subscriptionId}/{selection}/{pageIndex}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String getEntries(@PathVariable Long subscriptionGroupId, @PathVariable Long subscriptionId, @PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, Principal principal) {
 		List<FeedEntryDto> feeds = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, subscriptionId, parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
-		writeResponse(response, feeds);
+		return new Gson().toJson(feeds);
 	}
 
-	@RequestMapping(value = "/entitle", method = RequestMethod.POST)
-	public void entitle(@RequestParam("subscriptionId") Long subscriptionId, @RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("title") String title, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/entitle", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String entitle(@RequestParam("subscriptionId") Long subscriptionId, @RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("title") String title, Principal principal) {
 		if (title != null && !"".equals(title)) {
 			subscriptionService.entitle(principal.getName(), subscriptionGroupId, subscriptionId, title);
 		}
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 	
-	@RequestMapping(value = "/entitle-group", method = RequestMethod.POST)
-	public void entitle(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("title") String title, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/entitle-group", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String entitle(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("title") String title, Principal principal) {
 		if (title != null && !"".equals(title)) {
 			subscriptionService.entitle(principal.getName(), subscriptionGroupId, title);
 		}
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 	
-	@RequestMapping(value = "/read", method = RequestMethod.POST)
-	public void read(@RequestParam("subscriptionGroupIds") String subscriptionGroupIds, @RequestParam("subscriptionIds") String subscriptionIds, @RequestParam("ids") String ids, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/read", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String read(@RequestParam("subscriptionGroupIds") String subscriptionGroupIds, @RequestParam("subscriptionIds") String subscriptionIds, @RequestParam("ids") String ids, Principal principal) {
 		feedEntryService.markRead(principal.getName(), parseIds(subscriptionGroupIds), parseIds(subscriptionIds), parseIds(ids));
-		getSubscriptions(response, principal);
+		return getSubscriptions(principal);
 	}
 	
 	private List<Long> parseIds(String rawIds) {
@@ -135,26 +148,22 @@ public class AjaxController {
 		return ids;
 	}
 
-	@RequestMapping(value = "/star", method = RequestMethod.POST)
-	public void star(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("subscriptionId") Long subscriptionId, @RequestParam("id") Long id, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/star", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String star(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("subscriptionId") Long subscriptionId, @RequestParam("id") Long id, Principal principal) {
 		feedEntryService.star(principal.getName(), subscriptionGroupId, subscriptionId, id);
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
-		writeResponse(response, result);
+		return new Gson().toJson(result);
 	}
 	
-	@RequestMapping(value = "/unstar", method = RequestMethod.POST)
-	public void unstar(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("subscriptionId") Long subscriptionId, @RequestParam("id") Long id, HttpServletResponse response, Principal principal) throws IOException {
+	@RequestMapping(value = "/unstar", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String unstar(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("subscriptionId") Long subscriptionId, @RequestParam("id") Long id, Principal principal) {
 		feedEntryService.unstar(principal.getName(), subscriptionGroupId, subscriptionId, id);
 		StatusDto result = new StatusDto();
 		result.setErrorCode(0);
-		writeResponse(response, result);
-	}
-	
-	private void writeResponse(HttpServletResponse response, Object data) throws IOException {
-		response.setCharacterEncoding("UTF-8");
-		Gson gson = new Gson();
-		gson.toJson(data, response.getWriter());
+		return new Gson().toJson(result);
 	}
 	
 	private Selection parseSelection(String selection) {
