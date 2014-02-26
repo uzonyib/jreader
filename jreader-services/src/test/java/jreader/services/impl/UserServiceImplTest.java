@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import jreader.dao.UserDao;
 import jreader.domain.User;
-import jreader.services.UserService;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -23,7 +22,7 @@ public class UserServiceImplTest {
 	private static final String EXISTING_USER = "existing_user";
 	
 	@InjectMocks
-	private UserService service = new UserServiceImpl();
+	private UserServiceImpl service;
 	
 	@Mock
 	private UserDao userDao;

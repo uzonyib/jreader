@@ -7,12 +7,16 @@
 	
 	<bean class="jreader.services.impl.RssServiceImpl" id="rssService">
 		<constructor-arg>
-			<bean class="org.springframework.context.support.ConversionServiceFactoryBean">
-				<property name="converters">
-					<list>
-						<bean class="jreader.converter.RssFetchResultConverter" />
-					</list>
-				</property>
+			<bean class="jreader.services.impl.RomeFeedReader">
+				<constructor-arg>
+					<bean class="org.springframework.context.support.ConversionServiceFactoryBean">
+						<property name="converters">
+							<list>
+								<bean class="jreader.converter.RssFetchResultConverter" />
+							</list>
+						</property>
+					</bean>
+				</constructor-arg>
 			</bean>
 		</constructor-arg>
 	</bean>

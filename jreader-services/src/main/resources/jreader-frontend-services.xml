@@ -28,7 +28,11 @@
 		<property name="feedEntryDao" ref="feedEntryDao" />
 		<property name="rssService">
 			<bean class="jreader.services.impl.RssServiceImpl">
-				<constructor-arg ref="conversionService" />
+				<constructor-arg>
+					<bean class="jreader.services.impl.RomeFeedReader">
+						<constructor-arg ref="conversionService" />
+					</bean>
+				</constructor-arg>
 			</bean>
 		</property>
 		<property name="conversionService" ref="conversionService" />
