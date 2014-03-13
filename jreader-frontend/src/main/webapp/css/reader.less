@@ -206,7 +206,7 @@ body {
 			border: @border-width inset @selected-border-color;
 			.gradient(bottom, @nav-button-gradient-end, @nav-button-gradient-start);
 		}
-		&[data-selected="true"] {
+		&.selected {
 			background-color: @selected-border-color;
 			border: @border-width inset @selected-border-color;
 			.gradient(bottom, @nav-button-gradient-end, @nav-button-gradient-start);
@@ -217,7 +217,7 @@ body {
 			padding: @img-padding;
 		}
 		&:hover img,
-		&[data-selected="true"] img {
+		&.selected img {
 		    padding: (@img-padding * 2) 0px 0px (@img-padding * 2);
 		}
 	}

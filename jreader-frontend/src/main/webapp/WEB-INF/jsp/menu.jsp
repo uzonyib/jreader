@@ -4,16 +4,41 @@
 	</a>
 </div>
 
-<div class="menu-item selected" id="home-menu-item" view="home-contents">
+<div id="home-menu-item" class="menu-item"
+	ng-class="{selected: home.selected}"
+	ng-click="selectHome()">
 	<span class="icon"></span><span class="title">Home</span>
 </div>
 
-<div class="menu-item" id="settings-menu-item" view="settings-contents">
+<div id="settings-menu-item" class="menu-item"
+	ng-class="{selected: settings.selected}"
+	ng-click="selectSettings()">
 	<span class="icon"></span><span class="title">Settings</span>
 </div>
 
-<div class="menu-item" id="all-items-menu-item" view="items-contents" url="/reader/entries/all/{selection}/{pageIndex}?ascending={ascending}">
-	<span class="icon"></span><span class="title">All feeds</span><span class="unread-count"></span>
+<div id="all-items-menu-item" class="menu-item"
+	ng-class="{selected: allItems.selected}"
+	ng-click="selectAllItems()">
+	<span class="icon"></span><span class="title">All feeds</span><span class="unread-count" ng-if="unreadCount">({{unreadCount}})</span>
 </div>
 
-<div id="subscription-menu"></div>
+<div id="subscription-menu">
+	<div ng-repeat="group in subscriptionGroups"
+		class="menu-group" ng-class="{collapsed: group.collapsed}">
+		<div class="menu-item group-item"
+			ng-class="{selected: group.selected}"
+			ng-click="selectSubscriptionGroup(group)">
+			<span class="icon collapsed-icon" ng-click="uncollapse(group.id, $event)"></span>
+			<span class="icon uncollapsed-icon" ng-click="collapse(group.id, $event)"></span>
+			<span class="title">{{group.title}}</span>
+			<span ng-if="group.unreadCount > 0" class="unread-count">({{group.unreadCount}})</span>
+		</div>
+		<div ng-repeat="subscription in group.subscriptions"
+			class="menu-item feed-item"
+			ng-class="{selected: subscription.selected}"
+			ng-click="selectSubscription(group, subscription)">
+			<span class="title">{{subscription.title}}</span>
+			<span ng-if="subscription.unreadCount > 0" class="unread-count">({{subscription.unreadCount}})</span>
+		</div>
+	</div>
+</div>
