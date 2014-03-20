@@ -64,7 +64,7 @@ public class CronServiceImpl implements CronService {
 	@Override
 	public void cleanup(int olderThanDays, int keptCount) {
 		List<Feed> feeds = feedDao.listAll();
-		long date = new Date().getTime() - 1000 * 60 * 60 * 24 * olderThanDays;
+		long date = System.currentTimeMillis() - 1000 * 60 * 60 * 24 * olderThanDays;
 		for (Feed feed : feeds) {
 			for (Subscription subscription : subscriptionDao.listSubscriptions(feed)) {
 				int count = 0;
