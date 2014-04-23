@@ -9,6 +9,7 @@ import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.SubscriptionGroupDao;
 import jreader.dao.UserDao;
+import jreader.dao.impl.EntityFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
@@ -34,6 +35,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	private ConversionService conversionService;
 	
+	private EntityFactory entityFactory;
+	
 	@Override
 	public void createGroup(String username, String title) {
 		User user = userDao.find(username);
@@ -41,11 +44,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return;
 		}
 		if (subscriptionGroupDao.find(user, title) == null) {
-			SubscriptionGroup subscriptionGroup = new SubscriptionGroup();
-			subscriptionGroup.setUser(user);
-			subscriptionGroup.setTitle(title);
-			subscriptionGroup.setOrder(subscriptionGroupDao.getMaxOrder(user) + 1);
-			subscriptionGroupDao.save(subscriptionGroup);
+			subscriptionGroupDao.save(entityFactory.createGroup(user, title, subscriptionGroupDao.getMaxOrder(user) + 1));
 		}
 	}
 	
@@ -83,13 +82,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			}
 		}
 
-		subscription = new Subscription();
-		subscription.setTitle(feed.getTitle());
-		subscription.setFeed(feed);
-		subscription.setGroup(subscriptionGroup);
-		subscription.setOrder(subscriptionDao.getMaxOrder(subscriptionGroup) + 1);
-		subscription.setUpdatedDate(updatedDate);
-		subscription.setRefreshDate(refreshDate);
+		subscription = entityFactory.createSubscription(subscriptionGroup, feed, feed.getTitle(),
+				subscriptionDao.getMaxOrder(subscriptionGroup) + 1, updatedDate, refreshDate);
 		subscription = subscriptionDao.save(subscription);
 		
 		for (FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
@@ -264,11 +258,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return Collections.emptyList();
 		}
 		List<SubscriptionGroupDto> dtos = new ArrayList<SubscriptionGroupDto>();
-		for (SubscriptionGroup subscriptiongroup : subscriptionGroupDao.list(user)) {
-			SubscriptionGroupDto dto = conversionService.convert(subscriptiongroup, SubscriptionGroupDto.class);
+		for (SubscriptionGroup subscriptionGroup : subscriptionGroupDao.list(user)) {
+			SubscriptionGroupDto dto = conversionService.convert(subscriptionGroup, SubscriptionGroupDto.class);
 			dto.setSubscriptions(new ArrayList<SubscriptionDto>());
 			dtos.add(dto);
-			List<Subscription> subscriptions = subscriptionDao.list(subscriptiongroup);
+			List<Subscription> subscriptions = subscriptionDao.list(subscriptionGroup);
 			int groupUnreadCount = 0;
 			for (Subscription subscription : subscriptions) {
 				SubscriptionDto subscriptionDto = conversionService.convert(subscription, SubscriptionDto.class);

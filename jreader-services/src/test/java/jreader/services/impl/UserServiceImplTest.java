@@ -43,6 +43,7 @@ public class UserServiceImplTest {
 		when(userDao.find(NEW_USER)).thenReturn(null);
 		
 		service.register(NEW_USER);
+		
 		verify(userDao).save(userCaptor.capture());
 		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
 	}
@@ -53,6 +54,7 @@ public class UserServiceImplTest {
 		when(userDao.find(EXISTING_USER)).thenReturn(user);
 		
 		service.register(EXISTING_USER);
+		
 		verify(userDao, never()).save(any(User.class));
 	}
 
