@@ -46,7 +46,7 @@
 					<div class="link">
 						<a target=_blank href="{{entry.link}}">Open</a>
 					</div>
-					<div class="author" ng-if="author">
+					<div class="author" ng-if="entry.author">
 						Author: {{entry.author}}
 					</div>
 					<div class="description" ng-bind-html="entry.description"></div>
