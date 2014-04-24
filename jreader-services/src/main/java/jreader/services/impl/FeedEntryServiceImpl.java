@@ -122,7 +122,7 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.list(user, filter));
+		return convert(feedEntryDao.list(user, filter));
 	}
 	
 	private List<FeedEntryDto> listSubscriptionGroupEntries(String username, Long subscriptionGroupId, FeedEntryFilter filter) {
@@ -136,7 +136,7 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.list(subscriptionGroup, filter));
+		return convert(feedEntryDao.list(subscriptionGroup, filter));
 	}
 	
 	private List<FeedEntryDto> listSubscriptionEntries(String username, Long subscriptionGroupId, Long subscriptionId, FeedEntryFilter filter) {
@@ -155,10 +155,10 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 			return Collections.emptyList();
 		}
 		
-		return convert(user, feedEntryDao.list(subscription, filter));
+		return convert(feedEntryDao.list(subscription, filter));
 	}
 
-	private List<FeedEntryDto> convert(User user, List<FeedEntry> feedEntries) {
+	private List<FeedEntryDto> convert(List<FeedEntry> feedEntries) {
 		List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
 		for (FeedEntry feedEntry : feedEntries) {
 			dtos.add(conversionService.convert(feedEntry, FeedEntryDto.class));
