@@ -10,14 +10,14 @@
 	<cron>
 		<url>/cron/refresh</url>
 		<description>Refresh all feeds</description>
-		<schedule>every 30 mins from 09:00 to 18:00</schedule>
+		<schedule>every 30 mins from 09:00 to 20:00</schedule>
 		<timezone>Europe/Budapest</timezone>
 		<target>jreader-backend</target>
 	</cron>
 	<cron>
 		<url>/cron/refresh</url>
 		<description>Refresh all feeds</description>
-		<schedule>every 60 mins from 19:00 to 23:00</schedule>
+		<schedule>every 60 mins from 21:00 to 23:00</schedule>
 		<timezone>Europe/Budapest</timezone>
 		<target>jreader-backend</target>
 	</cron>
