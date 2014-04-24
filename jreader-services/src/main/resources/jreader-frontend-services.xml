@@ -20,6 +20,8 @@
 		</property>
 	</bean>
 	
+	<bean class="jreader.dao.impl.EntityFactory" id="entityFactory" />
+	
 	<bean class="jreader.services.impl.SubscriptionServiceImpl" id="subscriptionService">
 		<property name="userDao" ref="userDao" />
 		<property name="subscriptionGroupDao" ref="subscriptionGroupDao" />
@@ -36,6 +38,7 @@
 			</bean>
 		</property>
 		<property name="conversionService" ref="conversionService" />
+		<property name="entityFactory" ref="entityFactory"></property>
 	</bean>
 	
 	<bean class="jreader.services.impl.FeedEntryServiceImpl" id="feedEntryService">

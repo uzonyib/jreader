@@ -369,4 +369,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		this.conversionService = conversionService;
 	}
 
+	public EntityFactory getEntityFactory() {
+		return entityFactory;
+	}
+
+	public void setEntityFactory(EntityFactory entityFactory) {
+		this.entityFactory = entityFactory;
+	}
+
 }
