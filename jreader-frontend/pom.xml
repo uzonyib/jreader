@@ -15,18 +15,23 @@
         <dependency>
         	<groupId>jreader</groupId>
         	<artifactId>jreader-services</artifactId>
-        	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
+		<dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
         </dependency>
         <dependency>
         	<groupId>com.googlecode.objectify</groupId>
         	<artifactId>objectify</artifactId>
-        	<version>${objectify.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-1.0-sdk</artifactId>
-            <version>${appengine.sdk.version}</version>
+        	<groupId>org.springframework</groupId>
+        	<artifactId>spring-webmvc</artifactId>
         </dependency>
+        <dependency>
+		    <groupId>org.codehaus.jackson</groupId>
+		    <artifactId>jackson-mapper-asl</artifactId>
+		</dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -38,16 +43,6 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-        <dependency>
-        	<groupId>org.springframework</groupId>
-        	<artifactId>spring-webmvc</artifactId>
-        	<version>${spring.version}</version>
-        </dependency>
-        <dependency>
-		    <groupId>org.codehaus.jackson</groupId>
-		    <artifactId>jackson-mapper-asl</artifactId>
-		    <version>${jackson.version}</version>
-		</dependency>
     </dependencies>
 
     <build>
@@ -88,7 +83,6 @@
             <plugin>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
-                <version>${appengine.sdk.version}</version>
                 <configuration>
                 	<jvmFlags>
                 		<jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/eclipse_workspace/jreader/appengine</jvmFlag>

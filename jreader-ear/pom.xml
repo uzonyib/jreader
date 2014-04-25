@@ -1,13 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
 	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
 		<groupId>jreader</groupId>
 		<artifactId>jreader</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>jreader-ear</artifactId>
 	<packaging>ear</packaging>
+	<artifactId>jreader-ear</artifactId>
+	
+	<dependencies>
+		<dependency>
+			<groupId>jreader</groupId>
+			<artifactId>jreader-frontend</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>jreader</groupId>
+			<artifactId>jreader-backend</artifactId>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -36,7 +52,6 @@
 			<plugin>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
-                <version>${appengine.sdk.version}</version>
                 <configuration>
                 	<jvmFlags>
                 		<jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/eclipse_workspace/jreader/appengine</jvmFlag>
@@ -46,18 +61,5 @@
             </plugin>
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>jreader</groupId>
-			<artifactId>jreader-frontend</artifactId>
-			<version>${project.version}</version>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>jreader</groupId>
-			<artifactId>jreader-backend</artifactId>
-			<version>${project.version}</version>
-			<type>war</type>
-		</dependency>
-	</dependencies>
+	
 </project>
