@@ -1,6 +1,5 @@
 package jreader.web.controller;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.logging.Logger;
 
@@ -10,14 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import jreader.dto.StatusDto;
 import jreader.services.CronService;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-
-@Controller
+@RestController
 @RequestMapping(value = "/cron")
 public class CronJobController {
 	
@@ -29,33 +25,31 @@ public class CronJobController {
 	private CronService cronService;
 
 	@RequestMapping(value = "/refresh", method = RequestMethod.GET)
-	public void refreshFeeds(HttpServletRequest request, HttpServletResponse response, Principal principal) throws JsonIOException, IOException {
-		StatusDto result = new StatusDto();
+	public StatusDto refreshFeeds(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+		StatusDto result;
 		if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
 			cronService.refreshFeeds();
-			result.setErrorCode(0);
+			result = new StatusDto(0);
 			LOG.info("Feeds refreshed.");
 		} else {
-			result.setErrorCode(1);
+			result = new StatusDto(1);
 			LOG.warning("Feed refresh prevented.");
 		}
-		Gson gson = new Gson();
-		gson.toJson(result, response.getWriter());
+		return result;
 	}
 
 	@RequestMapping(value = "/cleanup", method = RequestMethod.GET)
-	public void cleanup(HttpServletRequest request, HttpServletResponse response, Principal principal) throws JsonIOException, IOException {
-		StatusDto result = new StatusDto();
+	public StatusDto cleanup(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+		StatusDto result;
 		if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
 			cronService.cleanup(minAgeToDelete, minCountToKeep);
-			result.setErrorCode(0);
+			result = new StatusDto(0);
 			LOG.info("Cleanup completed.");
 		} else {
-			result.setErrorCode(1);
+			result = new StatusDto(1);
 			LOG.warning("Cleanup prevented.");
 		}
-		Gson gson = new Gson();
-		gson.toJson(result, response.getWriter());
+		return result;
 	}
 
 	public int getMinAgeToDelete() {

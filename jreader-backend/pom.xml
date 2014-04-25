@@ -39,10 +39,10 @@
         	<version>${spring.version}</version>
         </dependency>
         <dependency>
-        	<groupId>com.google.code.gson</groupId>
-        	<artifactId>gson</artifactId>
-        	<version>${gson.version}</version>
-        </dependency>
+		    <groupId>org.codehaus.jackson</groupId>
+		    <artifactId>jackson-mapper-asl</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
     </dependencies>
 
     <build>
