@@ -5,6 +5,7 @@
     <version>1</version>
     <threadsafe>true</threadsafe>
 	<instance-class>F1</instance-class>
+	<warmup-requests-enabled>false</warmup-requests-enabled>
 	
 	<automatic-scaling>
 		<min-idle-instances>1</min-idle-instances>
@@ -20,8 +21,8 @@
     
     <sessions-enabled>true</sessions-enabled>
 
-	<admin-console>
-		<page name="Appstats" url="/appstats" />
-	</admin-console>
+<!-- 	<admin-console> -->
+<!-- 		<page name="Appstats" url="/appstats" /> -->
+<!-- 	</admin-console> -->
     
 </appengine-web-app>
