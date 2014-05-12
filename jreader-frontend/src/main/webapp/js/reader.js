@@ -399,6 +399,8 @@ jReaderApp.controller("SettingsCtrl", function ($scope, $http, ajaxService, view
 	$scope.newSubscription.group = {};
 	$scope.newSubscription.url = "";
 	
+	$scope.exportImportJson = "";
+	
 	$scope.$watch("viewService.activeView", function() {
 		$scope.active = $scope.viewService.isSettingsSelected();
 	});
@@ -419,6 +421,23 @@ jReaderApp.controller("SettingsCtrl", function ($scope, $http, ajaxService, view
 	$scope.createGroup = function() {
 		$scope.ajaxService.createGroup($scope.newGroupTitle);
 		$scope.newGroupTitle = "";
+	};
+	
+	$scope.exportSubscriptions = function() {
+		var result = [];
+		angular.forEach($scope.subscriptionGroups, function(group) {
+			var groupCopy = {};
+			groupCopy.title = group.title;
+			groupCopy.subscriptions = [];
+			angular.forEach(group.subscriptions, function(subscription) {
+				var subscriptionCopy = {};
+				subscriptionCopy.title = subscription.title;
+				subscriptionCopy.url = subscription.feed.url;
+				groupCopy.subscriptions.push(subscriptionCopy);
+			});
+			result.push(groupCopy);
+		});
+		$scope.exportImportJson = angular.toJson(result, true);
 	};
 	
 	$scope.deleteGroup = function(subscriptionGroupId) {

@@ -283,13 +283,18 @@ body {
 	}
 }
 
+#export-import textarea {
+	width: 95%;
+	height: 300px;
+	margin: 5px 0px;
+}
+
 input {
     margin: 0px 3px;
 }
 
+input[type='submit'],
 input[type='image'] {
-	width: 20px;
-	height: 20px;
 	vertical-align: middle;
 	padding : 2px;
 	background-color: @clr-bg-soft;
@@ -298,6 +303,11 @@ input[type='image'] {
 	&:hover {
 		background-color: @clr-bg-hard-1;
 	}
+}
+
+input[type='image'] {
+	width: 20px;
+	height: 20px;
 }
 
 input[type='text'] {

@@ -15,6 +15,7 @@
 			type="image" src="/images/tick_black.png" title="Subscribe" />
 	</form>
 </div>
+
 <table id="subscription-settings">
 	<tbody class="settings-group" ng-repeat="group in subscriptionGroups">
 		<tr class="group-title">
@@ -68,3 +69,9 @@
 		</tr>
 	</tbody>
 </table>
+
+<form id="export-import" ng-submit="exportSubscriptions()">
+	<input type="submit" value="Export" />
+	<textarea ng-bind="exportImportJson"></textarea>
+</form>
+	
