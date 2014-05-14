@@ -33,6 +33,7 @@ body {
 }
 
 #menu {
+	position: fixed;
 	width: @menu-width;
 	float: left;
 	margin: 0px 0px 0px 5px;
@@ -122,6 +123,10 @@ body {
 #main-area {
 	padding-left: (@menu-width + 10px);
 	margin-right: 5px;
+}
+
+#home-contents,
+#settings-contents {
 	margin-top: 5px;
 }
 
@@ -130,7 +135,10 @@ body {
 }
 
 #nav-bar {
-	margin: 5px 0px;
+	position: fixed;
+	width: 100%;
+	background-color: @clr-bg-default;
+	padding: 5px 0px;
 	span {
 		margin-right: 10px;
 	}
@@ -159,6 +167,7 @@ body {
 
 #feed-entries-container {
 	overflow-y: auto;
+	padding-top: 33px;
 }
 
 #feed-entries {
