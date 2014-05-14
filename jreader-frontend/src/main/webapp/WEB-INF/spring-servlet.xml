@@ -10,8 +10,6 @@
  
  	<import resource="classpath:/jreader-frontend-services.xml" />
  	
- 	<util:properties id="readerProps" location="/WEB-INF/reader.properties" />
- 	
 	<mvc:annotation-driven />
 
 	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
@@ -31,7 +29,6 @@
 	<bean class="jreader.web.controller.AjaxController">
 		<property name="subscriptionService" ref="subscriptionService" />
 		<property name="feedEntryService" ref="feedEntryService" />
-		<property name="pageSize" value="#{readerProps.pageSize}" />
 	</bean>
 
 </beans>

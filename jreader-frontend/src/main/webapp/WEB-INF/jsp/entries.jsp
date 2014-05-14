@@ -29,7 +29,11 @@
 	<span id="status-bar-count" ng-if="!loading">Items displayed:&nbsp;<span id="entry-count">{{entries.length}}</span></span>
 	<span id="status-bar-loading" ng-if="loading">Loading...</span>
 </div>
-<div id="feed-entries-container" when-scrolled="loadMoreEntries()">
+<div id="feed-entries-container"
+	infinite-scroll="loadMoreEntries()"
+	infinite-scroll-distance="1"
+	infinite-scroll-disabled="ajaxService.loadingEntries || !ajaxService.moreEntriesAvailable"
+	infinite-scroll-immediate-check="false">
 	<table id="feed-entries">
 		<tbody ng-repeat="entry in entries" class="feed-entry" ng-class="{unread: !entry.read}">
 			<tr class="breadcrumb">

@@ -25,8 +25,6 @@ public class AjaxController {
 	private SubscriptionService subscriptionService;
 	private FeedEntryService feedEntryService;
 	
-	private int pageSize;
-	
 	@RequestMapping(value = "/create-group", method = RequestMethod.POST)
 	public List<SubscriptionGroupDto> createGroup(@RequestParam("title") String title, Principal principal) {
 		subscriptionService.createGroup(principal.getName(), title);
@@ -80,19 +78,19 @@ public class AjaxController {
 		return subscriptionService.list(principal.getName());
 	}
 	
-	@RequestMapping(value = "/entries/all/{selection}/{pageIndex}", method = RequestMethod.GET)
-	public List<FeedEntryDto> getEntries(@PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, Principal principal) {
-		return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
+	@RequestMapping(value = "/entries/all/{selection}", method = RequestMethod.GET)
+	public List<FeedEntryDto> getEntries(@PathVariable String selection, @RequestParam int offset, @RequestParam int count, @RequestParam boolean ascending, Principal principal) {
+		return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending, offset, count));
 	}
 	
-	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/{selection}/{pageIndex}", method = RequestMethod.GET)
-	public List<FeedEntryDto> getEntries(@PathVariable Long subscriptionGroupId, @PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, Principal principal) {
-		return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
+	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/{selection}", method = RequestMethod.GET)
+	public List<FeedEntryDto> getEntries(@PathVariable Long subscriptionGroupId, @PathVariable String selection, @RequestParam int offset, @RequestParam int count, @RequestParam boolean ascending, Principal principal) {
+		return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, parseSelection(selection), ascending, offset, count));
 	}
 	
-	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/subscription/{subscriptionId}/{selection}/{pageIndex}", method = RequestMethod.GET)
-	public List<FeedEntryDto> getEntries(@PathVariable Long subscriptionGroupId, @PathVariable Long subscriptionId, @PathVariable String selection, @PathVariable int pageIndex, @RequestParam boolean ascending, Principal principal) {
-		return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, subscriptionId, parseSelection(selection), ascending, getOffset(pageIndex), pageSize));
+	@RequestMapping(value = "/entries/group/{subscriptionGroupId}/subscription/{subscriptionId}/{selection}", method = RequestMethod.GET)
+	public List<FeedEntryDto> getEntries(@PathVariable Long subscriptionGroupId, @PathVariable Long subscriptionId, @PathVariable String selection, @RequestParam int offset, @RequestParam int count, @RequestParam boolean ascending, Principal principal) {
+		return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), subscriptionGroupId, subscriptionId, parseSelection(selection), ascending, offset, count));
 	}
 
 	@RequestMapping(value = "/entitle", method = RequestMethod.POST)
@@ -145,10 +143,6 @@ public class AjaxController {
 			return Selection.ALL;
 		}
 	}
-	
-	private int getOffset(int pageIndex) {
-		return pageIndex * pageSize;
-	}
 
 	public SubscriptionService getSubscriptionService() {
 		return subscriptionService;
@@ -164,14 +158,6 @@ public class AjaxController {
 
 	public void setFeedEntryService(FeedEntryService feedEntryService) {
 		this.feedEntryService = feedEntryService;
-	}
-
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
 	}
 	
 }

@@ -8,8 +8,7 @@ angular.module("jReaderFilters", []).filter("moment", function() {
 		return duration.humanize(true);
 	};
 });
-
-var jReaderApp = angular.module("jReaderApp", ["ngSanitize", "jReaderFilters"]);
+var jReaderApp = angular.module("jReaderApp", ["ngSanitize", "jReaderFilters", "infinite-scroll"]);
 
 jReaderApp.service("viewService", function () {
 	this.activeView = {
@@ -155,7 +154,7 @@ jReaderApp.service("ajaxService", function ($http, $interval) {
     		return;
     	}
     	this.loadingEntries = true;
-    	if (filter.pageIndex == 0) {
+    	if (filter.pageIndex === 0) {
     		this.resetEntries();
     	}
     	var items = "all";
@@ -165,10 +164,12 @@ jReaderApp.service("ajaxService", function ($http, $interval) {
     			items += "/subscription/" + filter.subscriptionId;
     		}
     	}
-    	$http.get("/reader/entries/" + items + "/" + filter.selection + "/" + filter.pageIndex + "?ascending=" + filter.ascendingOrder).success(function(data) {
-    		service.moreEntriesAvailable = data.length == 30;
+    	var offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
+    	var count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
+    	$http.get("/reader/entries/" + items + "/" + filter.selection + "?offset=" + offset + "&count=" + count + "&ascending=" + filter.ascendingOrder).success(function(data) {
+    		service.moreEntriesAvailable = data.length === count;
+    		service.loadingEntries = false;
         	service.setEntries(service.entries.concat(data));
-        	service.loadingEntries = false;
         });
     };
     
@@ -230,6 +231,11 @@ jReaderApp.service("ajaxService", function ($http, $interval) {
 	};
 	
 	this.markRead = function(entry) {
+		angular.forEach(service.entries, function(e) {
+			if (entry.id === e.id) {
+				e.read = true;
+			}
+		});
 		this.post("/reader/read", "ids=" + entry.id + "&subscriptionIds=" + entry.subscriptionId + "&subscriptionGroupIds=" + entry.subscriptionGroupId, this.setSubscriptionGroups);
 	};
 	
@@ -481,7 +487,7 @@ jReaderApp.controller("SettingsCtrl", function ($scope, $http, ajaxService, view
 	};
 });
 
-jReaderApp.controller("EntriesCtrl", function ($scope, ajaxService, viewService) {
+jReaderApp.controller("EntriesCtrl", function ($scope, $element, $window, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 	
@@ -495,6 +501,8 @@ jReaderApp.controller("EntriesCtrl", function ($scope, ajaxService, viewService)
 	$scope.filter.selection = "unread";
 	$scope.filter.pageIndex = 0;
 	$scope.filter.ascendingOrder = true;
+	$scope.filter.pageSize = Math.ceil($window.innerHeight / 29 / 10) * 10;
+	$scope.filter.initialPagesToLoad = 2;
 	
 	$scope.loading = false;
 	
@@ -580,18 +588,4 @@ jReaderApp.controller("EntriesCtrl", function ($scope, ajaxService, viewService)
 		$scope.ajaxService.unstar(entry);
 	};
 	
-});
-
-jReaderApp.directive('whenScrolled', function() {
-    return function(scope, elm, attr) {
-        var raw = elm[0];
-        var checkBounds = function(evt) {
-            var rectObject = raw.getBoundingClientRect();
-            if (rectObject.bottom === window.innerHeight) {
-                scope.$apply(attr.whenScrolled);
-            }
-
-        };
-        angular.element(window).bind('scroll load', checkBounds);
-    };
 });
