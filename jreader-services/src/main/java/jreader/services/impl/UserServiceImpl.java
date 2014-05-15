@@ -2,6 +2,8 @@ package jreader.services.impl;
 
 import jreader.dao.UserDao;
 import jreader.domain.User;
+import jreader.services.ServiceException;
+import jreader.services.ServiceStatus;
 import jreader.services.UserService;
 
 public class UserServiceImpl implements UserService {
@@ -10,11 +12,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void register(String username) {
-		if (userDao.find(username) == null) {
-			User user = new User();
-			user.setUsername(username);
-			userDao.save(user);
+		if (userDao.find(username) != null) {
+			throw new ServiceException("User already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
 		}
+		User user = new User();
+		user.setUsername(username);
+		userDao.save(user);
 	}
 
 	public UserDao getUserDao() {

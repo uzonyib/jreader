@@ -1,14 +1,10 @@
 package jreader.services.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import jreader.dao.FeedEntryDao;
 import jreader.dao.FeedEntryFilter;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
-import jreader.dao.UserDao;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
@@ -19,11 +15,8 @@ import jreader.services.FeedEntryService;
 
 import org.springframework.core.convert.ConversionService;
 
-public class FeedEntryServiceImpl implements FeedEntryService {
+public class FeedEntryServiceImpl extends AbstractService implements FeedEntryService {
 	
-	private UserDao userDao;
-	private SubscriptionGroupDao subscriptionGroupDao;
-	private SubscriptionDao subscriptionDao;
 	private FeedEntryDao feedEntryDao;
 	
 	private ConversionService conversionService;
@@ -34,21 +27,12 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 			return;
 		}
 		
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
+		User user = this.getUser(username);
 
 		List<FeedEntry> feedEntriesToSave = new ArrayList<FeedEntry>();
 		for (int i = 0; i < feedEntryIds.size(); ++i) {
-			SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupIds.get(i));
-			if (subscriptionGroup == null) {
-				continue;
-			}
-			Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionIds.get(i));
-			if (subscription == null) {
-				continue;
-			}
+			SubscriptionGroup group = this.getGroup(user, subscriptionGroupIds.get(i)); 
+			Subscription subscription = this.getSubscription(group, subscriptionIds.get(i));
 			FeedEntry feedEntry = feedEntryDao.find(subscription, feedEntryIds.get(i));
 			if (feedEntry != null && !feedEntry.isRead()) {
 				feedEntry.setRead(true);
@@ -60,19 +44,9 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 	
 	@Override
 	public void star(String username, Long subscriptionGroupId, Long subscriptionId, Long feedEntryId) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return;
-		}
-		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
-		if (subscription == null) {
-			return;
-		}
+		User user = this.getUser(username);
+		SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+		Subscription subscription = this.getSubscription(group, subscriptionId);
 		
 		FeedEntry feedEntry = feedEntryDao.find(subscription, feedEntryId);
 		if (feedEntry != null && !feedEntry.isStarred()) {
@@ -83,19 +57,9 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 	
 	@Override
 	public void unstar(String username, Long subscriptionGroupId, Long subscriptionId, Long feedEntryId) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return;
-		}
-		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
-		if (subscription == null) {
-			return;
-		}
+		User user = this.getUser(username);
+		SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+		Subscription subscription = this.getSubscription(group, subscriptionId);
 		
 		FeedEntry feedEntry = feedEntryDao.find(subscription, feedEntryId);
 		if (feedEntry != null && feedEntry.isStarred()) {
@@ -117,44 +81,20 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 	}
 
 	private List<FeedEntryDto> listAllEntries(String username, FeedEntryFilter filter) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return Collections.emptyList();
-		}
-		
+		User user = this.getUser(username);
 		return convert(feedEntryDao.list(user, filter));
 	}
 	
 	private List<FeedEntryDto> listSubscriptionGroupEntries(String username, Long subscriptionGroupId, FeedEntryFilter filter) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return Collections.emptyList();
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return Collections.emptyList();
-		}
-		
+		User user = this.getUser(username);
+		SubscriptionGroup subscriptionGroup = getGroup(user, subscriptionGroupId);
 		return convert(feedEntryDao.list(subscriptionGroup, filter));
 	}
 	
 	private List<FeedEntryDto> listSubscriptionEntries(String username, Long subscriptionGroupId, Long subscriptionId, FeedEntryFilter filter) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return Collections.emptyList();
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return Collections.emptyList();
-		}
-		
-		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
-		if (subscription == null) {
-			return Collections.emptyList();
-		}
-		
+		User user = this.getUser(username);
+		SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+		Subscription subscription = this.getSubscription(group, subscriptionId);
 		return convert(feedEntryDao.list(subscription, filter));
 	}
 
@@ -164,30 +104,6 @@ public class FeedEntryServiceImpl implements FeedEntryService {
 			dtos.add(conversionService.convert(feedEntry, FeedEntryDto.class));
 		}
 		return dtos;
-	}
-
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-
-	public SubscriptionGroupDao getSubscriptionGroupDao() {
-		return subscriptionGroupDao;
-	}
-
-	public void setSubscriptionGroupDao(SubscriptionGroupDao subscriptionGroupDao) {
-		this.subscriptionGroupDao = subscriptionGroupDao;
-	}
-
-	public SubscriptionDao getSubscriptionDao() {
-		return subscriptionDao;
-	}
-
-	public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
-		this.subscriptionDao = subscriptionDao;
 	}
 
 	public FeedEntryDao getFeedEntryDao() {

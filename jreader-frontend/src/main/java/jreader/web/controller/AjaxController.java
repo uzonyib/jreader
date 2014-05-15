@@ -3,6 +3,9 @@ package jreader.web.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletResponse;
 
 import jreader.dao.FeedEntryFilter.Selection;
 import jreader.dto.FeedEntryDto;
@@ -10,8 +13,10 @@ import jreader.dto.StatusDto;
 import jreader.dto.SubscriptionGroupDto;
 import jreader.services.FeedEntryFilterData;
 import jreader.services.FeedEntryService;
+import jreader.services.ServiceException;
 import jreader.services.SubscriptionService;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/reader")
 public class AjaxController {
+	
+	private static final Logger LOG = Logger.getLogger(AjaxController.class.getName());
 	
 	private SubscriptionService subscriptionService;
 	private FeedEntryService feedEntryService;
@@ -134,6 +141,12 @@ public class AjaxController {
 	public StatusDto unstar(@RequestParam("subscriptionGroupId") Long subscriptionGroupId, @RequestParam("subscriptionId") Long subscriptionId, @RequestParam("id") Long id, Principal principal) {
 		feedEntryService.unstar(principal.getName(), subscriptionGroupId, subscriptionId, id);
 		return new StatusDto(0);
+	}
+
+	@ExceptionHandler(ServiceException.class)
+	public StatusDto handleServiceException(ServiceException e, HttpServletResponse response) {
+		response.setStatus(e.getStatus().getCode());
+		return new StatusDto(1, e.getMessage());
 	}
 	
 	private Selection parseSelection(String selection) {

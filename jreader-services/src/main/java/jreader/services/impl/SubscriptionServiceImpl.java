@@ -1,14 +1,10 @@
 package jreader.services.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
-import jreader.dao.UserDao;
 import jreader.dao.impl.EntityFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
@@ -19,15 +15,14 @@ import jreader.dto.RssFetchResult;
 import jreader.dto.SubscriptionDto;
 import jreader.dto.SubscriptionGroupDto;
 import jreader.services.RssService;
+import jreader.services.ServiceException;
+import jreader.services.ServiceStatus;
 import jreader.services.SubscriptionService;
 
 import org.springframework.core.convert.ConversionService;
 
-public class SubscriptionServiceImpl implements SubscriptionService {
+public class SubscriptionServiceImpl extends AbstractService implements SubscriptionService {
 	
-	private UserDao userDao;
-	private SubscriptionGroupDao subscriptionGroupDao;
-	private SubscriptionDao subscriptionDao;
 	private FeedDao feedDao;
 	private FeedEntryDao feedEntryDao;
 
@@ -39,26 +34,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Override
 	public void createGroup(String username, String title) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
+		User user = this.getUser(username);
+		if (subscriptionGroupDao.find(user, title) != null) {
+			throw new ServiceException("Group already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
 		}
-		if (subscriptionGroupDao.find(user, title) == null) {
-			subscriptionGroupDao.save(entityFactory.createGroup(user, title, subscriptionGroupDao.getMaxOrder(user) + 1));
-		}
+		subscriptionGroupDao.save(entityFactory.createGroup(user, title, subscriptionGroupDao.getMaxOrder(user) + 1));
 	}
 	
 	@Override
 	public void subscribe(String username, Long subscriptionGroupId, String url) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroupId == null) {
-			return;
-		}
+		User user = this.getUser(username);
+		SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 		
 		RssFetchResult rssFetchResult = rssService.fetch(url);
 		if (rssFetchResult == null) {
@@ -72,7 +58,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		
 		Subscription subscription = subscriptionDao.find(user, feed);
 		if (subscription != null) {
-			return;
+			throw new ServiceException("Subscription already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
 		}
 		
 		Long updatedDate = null;
@@ -96,45 +82,25 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Override
 	public void unsubscribe(String username, Long subscriptionGroupId, Long subscriptionId) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
+		User user = this.getUser(username);
+		SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+		Subscription subscription = this.getSubscription(group, subscriptionId);
 		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return;
-		}
-		
-		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
-		if (subscription != null) {
-			List<FeedEntry> feedEntries = feedEntryDao.list(subscription);
-			feedEntryDao.deleteAll(feedEntries);
-			subscriptionDao.delete(subscription);
-		}
+		List<FeedEntry> feedEntries = feedEntryDao.list(subscription);
+		feedEntryDao.deleteAll(feedEntries);
+		subscriptionDao.delete(subscription);
 	}
 	
 	@Override
 	public void deleteGroup(String username, Long subscriptionGroupId) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return;
-		}
-		
+		User user = this.getUser(username);
+		SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 		subscriptionGroupDao.delete(subscriptionGroup);
 	}
 	
 	@Override
 	public void moveUp(String username, Long subscriptionGroupId) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
+		User user = this.getUser(username);
 		
 		List<SubscriptionGroup> subscriptionGroups = subscriptionGroupDao.list(user);
 		Integer groupIndex = null;
@@ -153,10 +119,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Override
 	public void moveDown(String username, Long subscriptionGroupId) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
+		User user = this.getUser(username);
 		
 		List<SubscriptionGroup> subscriptionGroups = subscriptionGroupDao.list(user);
 		Integer groupIndex = null;
@@ -187,15 +150,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Override
 	public void moveUp(String username, Long subscriptionGroupId, Long subscriptionId) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return;
-		}
+		User user = this.getUser(username);
+		SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 		
 		List<Subscription> subscriptions = subscriptionDao.list(subscriptionGroup);
 		Integer subscriptionIndex = null;
@@ -214,15 +170,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Override
 	public void moveDown(String username, Long subscriptionGroupId, Long subscriptionId) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return;
-		}
+		User user = this.getUser(username);
+		SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 		
 		List<Subscription> subscriptions = subscriptionDao.list(subscriptionGroup);
 		Integer subscriptionIndex = null;
@@ -253,10 +202,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Override
 	public List<SubscriptionGroupDto> list(String username) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return Collections.emptyList();
-		}
+		User user = this.getUser(username);
 		List<SubscriptionGroupDto> dtos = new ArrayList<SubscriptionGroupDto>();
 		for (SubscriptionGroup subscriptionGroup : subscriptionGroupDao.list(user)) {
 			SubscriptionGroupDto dto = conversionService.convert(subscriptionGroup, SubscriptionGroupDto.class);
@@ -278,20 +224,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Override
 	public void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String title) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return;
-		}
-		
-		Subscription subscription = subscriptionDao.find(subscriptionGroup, subscriptionId);
-		if (subscription == null) {
-			return;
-		}
+		User user = this.getUser(username);
+		SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+		Subscription subscription = this.getSubscription(group, subscriptionId);
 		
 		subscription.setTitle(title);
 		subscriptionDao.save(subscription);
@@ -299,42 +234,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Override
 	public void entitle(String username, Long subscriptionGroupId, String title) {
-		User user = userDao.find(username);
-		if (user == null) {
-			return;
-		}
-		
-		SubscriptionGroup subscriptionGroup = subscriptionGroupDao.find(user, subscriptionGroupId);
-		if (subscriptionGroup == null) {
-			return;
-		}
+		User user = this.getUser(username);
+		SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 		
 		subscriptionGroup.setTitle(title);
 		subscriptionGroupDao.save(subscriptionGroup);
-	}
-
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-
-	public SubscriptionGroupDao getSubscriptionGroupDao() {
-		return subscriptionGroupDao;
-	}
-
-	public void setSubscriptionGroupDao(SubscriptionGroupDao subscriptionGroupDao) {
-		this.subscriptionGroupDao = subscriptionGroupDao;
-	}
-
-	public SubscriptionDao getSubscriptionDao() {
-		return subscriptionDao;
-	}
-
-	public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
-		this.subscriptionDao = subscriptionDao;
 	}
 
 	public FeedDao getFeedDao() {

@@ -5,8 +5,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 import jreader.dao.UserDao;
 import jreader.domain.User;
+import jreader.services.ServiceException;
+import jreader.services.ServiceStatus;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -50,10 +53,14 @@ public class UserServiceImplTest {
 	
 	@Test
 	public void registerExistingUser() {
-		when(user.getUsername()).thenReturn(EXISTING_USER);
 		when(userDao.find(EXISTING_USER)).thenReturn(user);
-		
-		service.register(EXISTING_USER);
+
+		try {
+			service.register(EXISTING_USER);
+			fail();
+		} catch (ServiceException e) {
+			assertEquals(e.getStatus(), ServiceStatus.RESOURCE_ALREADY_EXISTS);
+		}
 		
 		verify(userDao, never()).save(any(User.class));
 	}

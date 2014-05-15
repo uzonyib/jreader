@@ -6,6 +6,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +28,8 @@ import jreader.dto.RssFetchResult;
 import jreader.dto.SubscriptionDto;
 import jreader.dto.SubscriptionGroupDto;
 import jreader.services.RssService;
+import jreader.services.ServiceException;
+import jreader.services.ServiceStatus;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -128,7 +132,12 @@ public class SubscriptionServiceImplTest {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(subscriptionGroupDao.find(user, GROUP_TITLE)).thenReturn(group);
 		
-		service.createGroup(USERNAME, GROUP_TITLE);
+		try {
+			service.createGroup(USERNAME, GROUP_TITLE);
+			fail();
+		} catch(ServiceException e) {
+			assertEquals(e.getStatus(), ServiceStatus.RESOURCE_ALREADY_EXISTS);
+		}
 		
 		verify(userDao).find(USERNAME);
 		verify(subscriptionGroupDao).find(user, GROUP_TITLE);
@@ -233,7 +242,12 @@ public class SubscriptionServiceImplTest {
 		when(feedDao.find(URL)).thenReturn(feed);
 		when(subscriptionDao.find(user, feed)).thenReturn(subscription);
 		
-		service.subscribe(USERNAME, GROUP_ID, URL);
+		try {
+			service.subscribe(USERNAME, GROUP_ID, URL);
+			fail();
+		} catch(ServiceException e) {
+			assertEquals(e.getStatus(), ServiceStatus.RESOURCE_ALREADY_EXISTS);
+		}
 		
 		verify(userDao).find(USERNAME);
 		verify(subscriptionGroupDao).find(user, GROUP_ID);
