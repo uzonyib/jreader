@@ -70,8 +70,12 @@
 	</tbody>
 </table>
 
-<form id="export-import" ng-submit="exportSubscriptions()">
+<form id="export" ng-submit="exportSubscriptions()">
 	<input type="submit" value="Export" />
-	<textarea ng-bind="exportImportJson"></textarea>
 </form>
+<textarea id="export-import" ng-model="exportImportJson"></textarea>
+<form id="import" ng-submit="importSubscriptions()">
+	<input type="submit" value="Import" />
+</form>
+<textarea id="import-log" ng-model="importLog" ng-show="showImportLog"></textarea>
 	
