@@ -26,9 +26,19 @@
 		<property name="googleUserService" ref="googleUserService" />
 	</bean>
 	
-	<bean class="jreader.web.controller.AjaxController">
+	<bean class="jreader.web.controller.ajax.GroupController">
+		<property name="subscriptionService" ref="subscriptionService" />
+	</bean>
+	
+	<bean class="jreader.web.controller.ajax.SubscriptionController">
+		<property name="subscriptionService" ref="subscriptionService" />
+	</bean>
+	
+	<bean class="jreader.web.controller.ajax.EntryController">
 		<property name="subscriptionService" ref="subscriptionService" />
 		<property name="feedEntryService" ref="feedEntryService" />
 	</bean>
+	
+	<bean class="jreader.web.controller.ajax.GlobalExceptionHandler" />
 
 </beans>

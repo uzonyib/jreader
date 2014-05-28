@@ -144,7 +144,7 @@ jReaderApp.service("ajaxService", function ($http, $interval) {
 	};
 	
 	this.refreshSubscriptions = function() {
-    	$http.get("/reader/subscriptions").success(function(data) {
+    	$http.get("/reader/groups").success(function(data) {
         	service.setSubscriptionGroups(data);
         });
     };
@@ -157,77 +157,126 @@ jReaderApp.service("ajaxService", function ($http, $interval) {
     	if (filter.pageIndex === 0) {
     		this.resetEntries();
     	}
-    	var items = "all";
+    	
+    	var items = "";
     	if (filter.subscriptionGroupId != null) {
-    		items = "group/" + filter.subscriptionGroupId;
+    		items = "/groups/" + filter.subscriptionGroupId;
     		if (filter.subscriptionId != null) {
-    			items += "/subscription/" + filter.subscriptionId;
+    			items += "/subscriptions/" + filter.subscriptionId;
     		}
     	}
+    	items += "/entries";
+    	
     	var offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
     	var count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
-    	$http.get("/reader/entries/" + items + "/" + filter.selection + "?offset=" + offset + "&count=" + count + "&ascending=" + filter.ascendingOrder).success(function(data) {
+    	
+    	$http({
+    		method: "GET",
+    		url: "/reader" + items + "/" + filter.selection,
+    		params: {
+    			"offset": offset,
+    			"count": count,
+    			"ascending": filter.ascendingOrder
+    		}
+    	}).success(function(data) {
     		service.moreEntriesAvailable = data.length === count;
     		service.loadingEntries = false;
         	service.setEntries(service.entries.concat(data));
         });
     };
     
-    this.createPost = function(url, params) {
-    	return $http({
-			method: "POST",
-			url: url,
-            data: params,
-            headers: {"Content-Type": "application/x-www-form-urlencoded"}
-        });
-    };
-    
-    this.post = function(url, params, callback) {
-    	this.createPost(url, params).success(function(response) {
-        	if (angular.isDefined(callback)) {
-        		callback(response);
-        	}
-        });
-    };
-    
     this.createGroup = function(title) {
-    	this.post("/reader/create-group", "title=" + title, this.setSubscriptionGroups);
+    	$http({
+			method: "POST",
+			url: "/reader/groups",
+            params: { "title": title }
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
 	};
 	
 	this.deleteGroup = function(id) {
-		this.post("/reader/delete", "subscriptionGroupId=" + id, this.setSubscriptionGroups);
-	};
-	
-	this.moveGroupUp = function(id) {
-		this.post("/reader/move-group-up", "subscriptionGroupId=" + id, this.setSubscriptionGroups);
-	};
-	
-	this.moveGroupDown = function(id) {
-		this.post("/reader/move-group-down", "subscriptionGroupId=" + id, this.setSubscriptionGroups);
-	};
-	
-	this.moveSubscriptionUp = function(groupId, subscriptionId) {
-		this.post("/reader/move-up", "subscriptionGroupId=" + groupId + "&subscriptionId=" + subscriptionId, this.setSubscriptionGroups);
-	};
-	
-	this.moveSubscriptionDown = function(groupId, subscriptionId) {
-		this.post("/reader/move-down", "subscriptionGroupId=" + groupId + "&subscriptionId=" + subscriptionId, this.setSubscriptionGroups);
-	};
-	
-	this.subscribe = function(groupId, url) {
-		this.post("/reader/subscribe", "subscriptionGroupId=" + groupId + "&url=" + url, this.setSubscriptionGroups);
-	};
-	
-	this.unsubscribe = function(groupId, subscriptionId) {
-		this.post("/reader/unsubscribe", "subscriptionGroupId=" + groupId + "&subscriptionId=" + subscriptionId, this.setSubscriptionGroups);
+		$http({
+			method: "DELETE",
+			url: "/reader/groups/" + id
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
 	};
 	
 	this.entitleGroup = function(groupId, title) {
-		this.post("/reader/entitle-group", "subscriptionGroupId=" + groupId + "&title=" + title, this.setSubscriptionGroups);
+		$http({
+			method: "PUT",
+			url: "/reader/groups/" + groupId + "/title",
+            params: { "value": title }
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
+	};
+	
+	this.moveGroup = function(id, up) {
+		$http({
+			method: "PUT",
+			url: "/reader/groups/" + id + "/order",
+            params: { "up": up }
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
+	};
+	
+	this.moveGroupUp = function(id) {
+		service.moveGroup(id, true);
+	};
+	
+	this.moveGroupDown = function(id) {
+		service.moveGroup(id, false);
+	};
+	
+	this.subscribe = function(groupId, url) {
+		$http({
+			method: "POST",
+			url: "/reader/groups/" + groupId + "/subscriptions",
+            params: { "url": url }
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
+	};
+	
+	this.unsubscribe = function(groupId, subscriptionId) {
+		$http({
+			method: "DELETE",
+			url: "/reader/groups/" + groupId + "/subscriptions/" + subscriptionId
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
 	};
 	
 	this.entitleSubscription = function(groupId, subscriptionId, title) {
-		this.post("/reader/entitle", "subscriptionGroupId=" + groupId + "&subscriptionId=" + subscriptionId + "&title=" + title, this.setSubscriptionGroups);
+		$http({
+			method: "PUT",
+			url: "/reader/groups/" + groupId + "/subscriptions/" + subscriptionId + "/title",
+            params: { "value": title }
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
+	};
+	
+	this.moveSubscription = function(groupId, subscriptionId, up) {
+		$http({
+			method: "PUT",
+			url: "/reader/groups/" + groupId + "/subscriptions/" + subscriptionId + "/order",
+            params: { "up": up }
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
+	};
+	
+	this.moveSubscriptionUp = function(groupId, subscriptionId) {
+		service.moveSubscription(groupId, subscriptionId, true);
+	};
+	
+	this.moveSubscriptionDown = function(groupId, subscriptionId) {
+		service.moveSubscription(groupId, subscriptionId, false);
 	};
 	
 	this.markRead = function(entry) {
@@ -236,7 +285,19 @@ jReaderApp.service("ajaxService", function ($http, $interval) {
 				e.read = true;
 			}
 		});
-		this.post("/reader/read", "ids=" + entry.id + "&subscriptionIds=" + entry.subscriptionId + "&subscriptionGroupIds=" + entry.subscriptionGroupId, this.setSubscriptionGroups);
+		
+		var map = {};
+		map[entry.subscriptionGroupId] = {};
+		map[entry.subscriptionGroupId][entry.subscriptionId] = [entry.id];
+		
+		$http({
+			method: "POST",
+			url: "/reader/entries",
+            data: map,
+            headers: { "Content-Type": "application/json" }
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        });
 	};
 	
 	this.markAllRead = function(entries, filter) {
@@ -244,27 +305,43 @@ jReaderApp.service("ajaxService", function ($http, $interval) {
 			return;
 		}
 		this.loadingEntries = true;
-		var ids = "";
-		var subscriptionIds = "";
-		var subscriptionGroupIds = "";
+		var map = {};
 		angular.forEach(entries, function(entry) {
-			ids += "," + entry.id;
-			subscriptionIds += "," + entry.subscriptionId;
-			subscriptionGroupIds += "," + entry.subscriptionGroupId;
+			if (!angular.isDefined(map[entry.subscriptionGroupId])) {
+				map[entry.subscriptionGroupId] = {};
+			}
+			if (!angular.isDefined(map[entry.subscriptionGroupId][entry.subscriptionId])) {
+				map[entry.subscriptionGroupId][entry.subscriptionId] = [];
+			}
+			map[entry.subscriptionGroupId][entry.subscriptionId].push(entry.id);
 		});
-		this.createPost("/reader/read", "ids=" + ids.substring(1) + "&subscriptionIds=" + subscriptionIds.substring(1) + "&subscriptionGroupIds=" + subscriptionGroupIds.substring(1)).success(function(response) {
-			service.setSubscriptionGroups(response);
-			service.loadingEntries = false;
+
+		$http({
+			method: "POST",
+			url: "/reader/entries",
+            data: map,
+            headers: { "Content-Type": "application/json" }
+        }).success(function(response) {
+        	service.setSubscriptionGroups(response);
+        	service.loadingEntries = false;
 			service.loadEntries(filter);
         });
 	};
 	
+	this.setStarred = function(entry, starred) {
+		$http({
+			method: "PUT",
+			url: "/reader/groups/" + entry.subscriptionGroupId + "/subscriptions/" + entry.subscriptionId + "/entries/" + entry.id + "/starred",
+            params: { "value": starred }
+        });
+	};
+	
 	this.star = function(entry) {
-		this.post("/reader/star", "id=" + entry.id + "&subscriptionId=" + entry.subscriptionId + "&subscriptionGroupId=" + entry.subscriptionGroupId);
+		service.setStarred(entry, true);
 	};
 	
 	this.unstar = function(entry) {
-		this.post("/reader/unstar", "id=" + entry.id + "&subscriptionId=" + entry.subscriptionId + "&subscriptionGroupId=" + entry.subscriptionGroupId);
+		service.setStarred(entry, false);
 	};
     
     $interval(this.refreshSubscriptions, 1000 * 60 * 5);

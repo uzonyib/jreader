@@ -1,12 +1,13 @@
 package jreader.services;
 
 import java.util.List;
+import java.util.Map;
 
 import jreader.dto.FeedEntryDto;
 
 public interface FeedEntryService {
 	
-	void markRead(String username, List<Long> subscriptionGroupIds, List<Long> subscriptionIds, List<Long> feedEntryIds);
+	void markRead(String username, Map<Long, Map<Long, List<Long>>> ids);
 	
 	void star(String username, Long subscriptionGroupId, Long subscriptionId, Long feedEntryId);
 	

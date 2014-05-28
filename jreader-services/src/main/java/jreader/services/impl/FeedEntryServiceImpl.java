@@ -2,6 +2,7 @@ package jreader.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import jreader.dao.FeedEntryDao;
 import jreader.dao.FeedEntryFilter;
@@ -22,24 +23,28 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
 	private ConversionService conversionService;
 
 	@Override
-	public void markRead(String username, List<Long> subscriptionGroupIds, List<Long> subscriptionIds, List<Long> feedEntryIds) {
-		if (feedEntryIds == null || subscriptionIds == null || subscriptionGroupIds == null || feedEntryIds.size() != subscriptionIds.size() || feedEntryIds.size() != subscriptionGroupIds.size()) {
+	public void markRead(String username, Map<Long, Map<Long, List<Long>>> ids) {
+		if (ids == null) {
 			return;
 		}
 		
 		User user = this.getUser(username);
 
-		List<FeedEntry> feedEntriesToSave = new ArrayList<FeedEntry>();
-		for (int i = 0; i < feedEntryIds.size(); ++i) {
-			SubscriptionGroup group = this.getGroup(user, subscriptionGroupIds.get(i)); 
-			Subscription subscription = this.getSubscription(group, subscriptionIds.get(i));
-			FeedEntry feedEntry = feedEntryDao.find(subscription, feedEntryIds.get(i));
-			if (feedEntry != null && !feedEntry.isRead()) {
-				feedEntry.setRead(true);
-				feedEntriesToSave.add(feedEntry);
+		List<FeedEntry> entriesToSave = new ArrayList<FeedEntry>();
+		for (Long groupId : ids.keySet()) {
+			SubscriptionGroup group = this.getGroup(user, groupId);
+			for (Long subscriptionId : ids.get(groupId).keySet()) {
+				Subscription subscription = this.getSubscription(group, subscriptionId);
+				for (Long entryId : ids.get(groupId).get(subscriptionId)) {
+					FeedEntry entry = feedEntryDao.find(subscription, entryId);
+					if (entry != null && !entry.isRead()) {
+						entry.setRead(true);
+						entriesToSave.add(entry);
+					}
+				}
 			}
 		}
-		feedEntryDao.saveAll(feedEntriesToSave);
+		feedEntryDao.saveAll(entriesToSave);
 	}
 	
 	@Override

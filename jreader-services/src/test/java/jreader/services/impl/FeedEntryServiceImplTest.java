@@ -4,7 +4,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
@@ -88,7 +90,14 @@ public class FeedEntryServiceImplTest {
 		when(entry1.isRead()).thenReturn(false);
 		when(entry2.isRead()).thenReturn(false);
 		
-		service.markRead(USERNAME, Arrays.asList(GROUP_ID_1, GROUP_ID_2), Arrays.asList(SUBSCRIPTION_ID_1, SUBSCRIPTION_ID_2), Arrays.asList(ENTRY_ID_1, ENTRY_ID_2));
+		Map<Long, List<Long>> subscription1Ids = new HashMap<Long, List<Long>>();
+		subscription1Ids.put(SUBSCRIPTION_ID_1, Arrays.asList(ENTRY_ID_1));
+		Map<Long, List<Long>> subscription2Ids = new HashMap<Long, List<Long>>();
+		subscription2Ids.put(SUBSCRIPTION_ID_2, Arrays.asList(ENTRY_ID_2));
+		Map<Long, Map<Long, List<Long>>> ids = new HashMap<Long, Map<Long,List<Long>>>();
+		ids.put(GROUP_ID_1, subscription1Ids);
+		ids.put(GROUP_ID_2, subscription2Ids);
+		service.markRead(USERNAME, ids);
 		
 		verify(entry1).setRead(true);
 		verify(entry2).setRead(true);

@@ -9,7 +9,7 @@ import jreader.domain.User;
 import jreader.services.ServiceException;
 import jreader.services.ServiceStatus;
 
-public abstract class AbstractService {
+abstract class AbstractService {
 	
 	protected UserDao userDao;
 	protected SubscriptionGroupDao subscriptionGroupDao;
@@ -26,7 +26,7 @@ public abstract class AbstractService {
 	protected SubscriptionGroup getGroup(User user, Long subscriptionGroupId) {
 		SubscriptionGroup group = subscriptionGroupDao.find(user, subscriptionGroupId);
 		if (group == null) {
-			throw new ServiceException("Group not found.", ServiceStatus.RESOURCE_NOT_FOUND);
+			throw new ServiceException("Group not found, ID " + subscriptionGroupId, ServiceStatus.RESOURCE_NOT_FOUND);
 		}
 		return group;
 	}
@@ -34,7 +34,7 @@ public abstract class AbstractService {
 	protected Subscription getSubscription(SubscriptionGroup group, Long subscriptionId) {
 		Subscription subscription = subscriptionDao.find(group, subscriptionId);
 		if (subscription == null) {
-			throw new ServiceException("Subscription not found.", ServiceStatus.RESOURCE_NOT_FOUND);
+			throw new ServiceException("Subscription not found, ID: " + subscriptionId, ServiceStatus.RESOURCE_NOT_FOUND);
 		}
 		return subscription;
 	}
