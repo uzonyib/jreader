@@ -118,8 +118,11 @@ public class SubscriptionServiceImplTest {
 		when(subscriptionGroupDao.find(user, GROUP_TITLE)).thenReturn(null);
 		when(subscriptionGroupDao.getMaxOrder(user)).thenReturn(GROUP_ORDER - 1);
 		when(entityFactory.createGroup(user, GROUP_TITLE, GROUP_ORDER)).thenReturn(group);
+		when(subscriptionGroupDao.save(group)).thenReturn(group);
+		when(conversionService.convert(group, SubscriptionGroupDto.class)).thenReturn(groupDto);
 		
-		service.createGroup(USERNAME, GROUP_TITLE);
+		SubscriptionGroupDto result = service.createGroup(USERNAME, GROUP_TITLE);
+		assertEquals(result, groupDto);
 		
 		verify(userDao).find(USERNAME);
 		verify(subscriptionGroupDao).find(user, GROUP_TITLE);
@@ -184,8 +187,11 @@ public class SubscriptionServiceImplTest {
 		when(subscriptionDao.getMaxOrder(group)).thenReturn(SUBSCRIPTION_ORDER - 1);
 		when(entityFactory.createSubscription(eq(group), eq(feed), eq(FEED_TITLE),
 				eq(SUBSCRIPTION_ORDER), eq(2000L), anyLong())).thenReturn(subscription);
+		when(subscriptionDao.save(subscription)).thenReturn(subscription);
+		when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
 		
-		service.subscribe(USERNAME, GROUP_ID, URL);
+		SubscriptionDto result = service.subscribe(USERNAME, GROUP_ID, URL);
+		assertEquals(result, subscriptionDto);
 		
 		verify(userDao).find(USERNAME);
 		verify(subscriptionGroupDao).find(user, GROUP_ID);

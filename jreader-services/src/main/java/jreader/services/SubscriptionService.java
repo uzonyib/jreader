@@ -2,13 +2,14 @@ package jreader.services;
 
 import java.util.List;
 
+import jreader.dto.SubscriptionDto;
 import jreader.dto.SubscriptionGroupDto;
 
 public interface SubscriptionService {
 	
-	void createGroup(String username, String title);
+	SubscriptionGroupDto createGroup(String username, String title);
 	
-	void subscribe(String username, Long subscriptionGroupId, String url);
+	SubscriptionDto subscribe(String username, Long subscriptionGroupId, String url);
 	
 	void unsubscribe(String username, Long subscriptionGroupId, Long subscriptionId);
 	

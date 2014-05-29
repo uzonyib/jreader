@@ -33,22 +33,23 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 	private EntityFactory entityFactory;
 	
 	@Override
-	public void createGroup(String username, String title) {
+	public SubscriptionGroupDto createGroup(String username, String title) {
 		User user = this.getUser(username);
 		if (subscriptionGroupDao.find(user, title) != null) {
 			throw new ServiceException("Group already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
 		}
-		subscriptionGroupDao.save(entityFactory.createGroup(user, title, subscriptionGroupDao.getMaxOrder(user) + 1));
+		SubscriptionGroup group = subscriptionGroupDao.save(entityFactory.createGroup(user, title, subscriptionGroupDao.getMaxOrder(user) + 1));
+		return conversionService.convert(group, SubscriptionGroupDto.class);
 	}
 	
 	@Override
-	public void subscribe(String username, Long subscriptionGroupId, String url) {
+	public SubscriptionDto subscribe(String username, Long subscriptionGroupId, String url) {
 		User user = this.getUser(username);
 		SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 		
 		RssFetchResult rssFetchResult = rssService.fetch(url);
 		if (rssFetchResult == null) {
-			return;
+			throw new ServiceException("Cannot fetch RSS: " + url, ServiceStatus.OTHER_ERROR);
 		}
 		long refreshDate = System.currentTimeMillis();
 		Feed feed = feedDao.find(url);
@@ -78,6 +79,8 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 		}
 		
 		// TODO create assignments for all subscribers
+		
+		return conversionService.convert(subscription, SubscriptionDto.class);
 	}
 
 	@Override
