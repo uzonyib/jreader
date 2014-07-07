@@ -14,5 +14,7 @@ target
 eclipse-launch-profiles
 appengine
 jreader-frontend/src/main/webapp/css/reader.css
+jreader-frontend/src/main/webapp/css/reader-all.css
+jreader-frontend/src/main/webapp/js/reader-all.js
 test-output
 
