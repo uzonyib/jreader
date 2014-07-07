@@ -13,6 +13,7 @@
 		<appengine.sdk.version>1.9.3</appengine.sdk.version>
 		<spring.version>4.0.3.RELEASE</spring.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<ui.minify>false</ui.minify>
 	</properties>
 	
 	<modules>
@@ -89,6 +90,21 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<ui.minify>true</ui.minify>
+			</properties>
+		</profile>
+	</profiles>
 	
 	<build>
 		<pluginManagement>

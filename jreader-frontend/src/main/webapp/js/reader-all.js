@@ -8,9 +8,10 @@ angular.module("jReaderFilters", []).filter("moment", function() {
 		return duration.humanize(true);
 	};
 });
-var jReaderApp = angular.module("jReaderApp", ["ngSanitize", "jReaderFilters", "infinite-scroll"]);
 
-jReaderApp.service("viewService", function () {
+angular.module("jReaderApp", ["ngSanitize", "jReaderFilters", "infinite-scroll"]);
+
+angular.module("jReaderApp").service("viewService", function () {
 	this.activeView = {
 		type: "home",
 		subscriptionGroupId: null,
@@ -111,7 +112,7 @@ jReaderApp.service("viewService", function () {
 	};
 });
 
-jReaderApp.service("ajaxService", function ($http, $interval) {
+angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", function ($http, $interval) {
 	var service = this;
 
 	this.subscriptionGroups = [];
@@ -346,9 +347,9 @@ jReaderApp.service("ajaxService", function ($http, $interval) {
     
     $interval(this.refreshSubscriptions, 1000 * 60 * 5);
     this.refreshSubscriptions();
-});
+}]);
 
-jReaderApp.controller("HeadCtrl", function ($scope, ajaxService) {
+angular.module("jReaderApp").controller("HeadCtrl", ["$scope", "ajaxService", function ($scope, ajaxService) {
 	$scope.ajaxService = ajaxService;
 
 	$scope.titlePrefix = "jReader";
@@ -361,9 +362,9 @@ jReaderApp.controller("HeadCtrl", function ($scope, ajaxService) {
 			$scope.title = $scope.titlePrefix;
 		}
 	});
-});
- 
-jReaderApp.controller("MenuCtrl", function ($scope, ajaxService, viewService) {
+}]);
+
+angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "viewService", function ($scope, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 
@@ -451,9 +452,9 @@ jReaderApp.controller("MenuCtrl", function ($scope, ajaxService, viewService) {
 		$scope.viewService.selectSubscription(group.id, subscription.id);
 	};
 	
-});
+}]);
 
-jReaderApp.controller("HomeCtrl", function ($scope, ajaxService, viewService) {
+angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "viewService", function ($scope, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 	
@@ -467,9 +468,9 @@ jReaderApp.controller("HomeCtrl", function ($scope, ajaxService, viewService) {
 	$scope.$watch("ajaxService.subscriptionGroups", function(subscriptionGroups) {
 		$scope.subscriptionGroups = angular.copy(subscriptionGroups);
 	});
-});
+}]);
 
-jReaderApp.controller("SettingsCtrl", function ($scope, $http, ajaxService, viewService) {
+angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "$http", "ajaxService", "viewService", function ($scope, $http, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 	
@@ -685,9 +686,9 @@ jReaderApp.controller("SettingsCtrl", function ($scope, $http, ajaxService, view
 	$scope.entitleSubscription = function(group, subscription) {
 		$scope.ajaxService.entitleSubscription(group.id, subscription.id, subscription.newTitle);
 	};
-});
+}]);
 
-jReaderApp.controller("EntriesCtrl", function ($scope, $element, $window, ajaxService, viewService) {
+angular.module("jReaderApp").controller("EntriesCtrl", function ($scope, $element, $window, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 	
@@ -789,3 +790,4 @@ jReaderApp.controller("EntriesCtrl", function ($scope, $element, $window, ajaxSe
 	};
 	
 });
+

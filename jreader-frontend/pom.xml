@@ -63,6 +63,29 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+				<groupId>ro.isdc.wro4j</groupId>
+				<artifactId>wro4j-maven-plugin</artifactId>
+				<version>1.7.6</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<targetGroups>reader-all</targetGroups>
+					<minimize>${ui.minify}</minimize>
+					<cssDestinationFolder>${basedir}/src/main/webapp/css/</cssDestinationFolder>
+					<jsDestinationFolder>${basedir}/src/main/webapp/js/</jsDestinationFolder>
+					<contextFolder>${basedir}/src/main/webapp/</contextFolder>
+					<wroFile>${basedir}/src/main/webapp/WEB-INF/wro.xml</wroFile>
+					<ignoreMissingResources>false</ignoreMissingResources>
+				</configuration>
+			</plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
