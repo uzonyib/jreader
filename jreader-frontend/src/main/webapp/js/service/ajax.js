@@ -3,6 +3,7 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 
 	this.subscriptionGroups = [];
 	this.entries = [];
+	this.archives = [];
 	this.unreadCount = 0;
 	
 	this.loadingEntries = false;
@@ -25,6 +26,12 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 		}
 	};
 	
+	this.setArchives = function(as) {
+		if (!angular.equals(this.archives, as)) {
+			service.archives = as;
+		}
+	};
+	
 	this.resetEntries = function() {
 		this.entries = [];
 		this.moreEntriesAvailable = true;
@@ -33,6 +40,12 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 	this.refreshSubscriptions = function() {
     	$http.get("/reader/groups").success(function(data) {
         	service.setSubscriptionGroups(data);
+        });
+    };
+    
+    this.refreshArchives = function() {
+    	$http.get("/reader/archives").success(function(data) {
+        	service.setArchives(data);
         });
     };
     
@@ -166,6 +179,53 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 		service.moveSubscription(groupId, subscriptionId, false);
 	};
 	
+	this.createArchive = function(title) {
+    	$http({
+			method: "POST",
+			url: "/reader/archives",
+            params: { "title": title }
+        }).success(function(response) {
+        	service.setArchives(response);
+        });
+	};
+	
+	this.deleteArchive = function(id) {
+		$http({
+			method: "DELETE",
+			url: "/reader/archives/" + id
+        }).success(function(response) {
+        	service.setArchives(response);
+        });
+	};
+	
+	this.entitleArchive = function(archiveId, title) {
+		$http({
+			method: "PUT",
+			url: "/reader/archives/" + archiveId + "/title",
+            params: { "value": title }
+        }).success(function(response) {
+        	service.setArchives(response);
+        });
+	};
+	
+	this.moveArchive = function(id, up) {
+		$http({
+			method: "PUT",
+			url: "/reader/archives/" + id + "/order",
+            params: { "up": up }
+        }).success(function(response) {
+        	service.setArchives(response);
+        });
+	};
+	
+	this.moveArchiveUp = function(id) {
+		service.moveArchive(id, true);
+	};
+	
+	this.moveArchiveDown = function(id) {
+		service.moveArchive(id, false);
+	};
+	
 	this.markRead = function(entry) {
 		angular.forEach(service.entries, function(e) {
 			if (entry.id === e.id) {
@@ -233,4 +293,5 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
     
     $interval(this.refreshSubscriptions, 1000 * 60 * 5);
     this.refreshSubscriptions();
+    this.refreshArchives();
 }]);

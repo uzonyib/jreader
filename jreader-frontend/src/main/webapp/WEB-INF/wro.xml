@@ -11,5 +11,6 @@
     <js>/js/ctrl/home.js</js>
     <js>/js/ctrl/settings.js</js>
     <js>/js/ctrl/entries.js</js>
+    <js>/js/ctrl/archives.js</js>
   </group>
 </groups>

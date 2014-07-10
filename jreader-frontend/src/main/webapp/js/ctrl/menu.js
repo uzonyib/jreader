@@ -7,13 +7,17 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 	$scope.home = {};
 	$scope.settings = {};
 	$scope.allItems = {};
+	$scope.archivedItems = {};
 	
 	$scope.home.selected = true;
 	$scope.settings.selected = false;
 	$scope.allItems.selected = false;
+	$scope.archivedItems.selected = false;
+	$scope.archivedItems.collapsed = true;
 	
 	$scope.subscriptionGroups = [];
 	$scope.unreadCount = 0;
+	$scope.archives = [];
 	
 	$scope.$watch("viewService.activeView", function() {
 		$scope.refreshSelection();
@@ -29,16 +33,25 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 		$scope.unreadCount = count;
 	});
 	
+	$scope.$watch("ajaxService.archives", function(archives) {
+		$scope.archives = angular.copy(archives);
+	});
+	
 	$scope.refreshSelection = function() {
 		$scope.home.selected = $scope.viewService.isHomeSelected();
 		$scope.settings.selected = $scope.viewService.isSettingsSelected();
 		$scope.allItems.selected = $scope.viewService.isAllItemsSelected();
+		$scope.archivedItems.selected = $scope.viewService.isArchivedItemsSelected();
 		
 		angular.forEach($scope.subscriptionGroups, function(group) {
 			group.selected = $scope.viewService.isSubscriptionGroupSelected(group.id);
 			angular.forEach(group.subscriptions, function(subscription) {
 				subscription.selected = $scope.viewService.isSubscriptionSelected(group.id, subscription.id);
 			});
+		});
+		
+		angular.forEach($scope.archives, function(archive) {
+			archive.selected = $scope.viewService.isArchiveSelected(archive.id);
 		});
 	};
 	
@@ -84,6 +97,24 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 	
 	$scope.selectSubscription = function(group, subscription) {
 		$scope.viewService.selectSubscription(group.id, subscription.id);
+	};
+	
+	$scope.selectArchivedItems = function() {
+		$scope.viewService.selectArchivedItems();
+	};
+	
+	$scope.selectArchive = function(archive) {
+		$scope.viewService.selectArchive(archive.id);
+	};
+	
+	$scope.collapseArchivedItems = function($event) {
+		$scope.archivedItems.collapsed = true;
+		$event.stopPropagation();
+	};
+	
+	$scope.uncollapseArchivedItems = function($event) {
+		$scope.archivedItems.collapsed = false;
+		$event.stopPropagation();
 	};
 	
 }]);

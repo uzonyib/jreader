@@ -21,7 +21,7 @@ angular.module("jReaderApp").controller("EntriesCtrl", function ($scope, $elemen
 		$scope.filter.subscriptionGroupId = $scope.viewService.getSubscriptionGroupId();
 		$scope.filter.subscriptionId = $scope.viewService.getSubscriptionId();
 
-		$scope.active = !$scope.viewService.isHomeSelected() && !$scope.viewService.isSettingsSelected();
+		$scope.active = $scope.viewService.isEntriesSelected();
 		if ($scope.active) {
 			$scope.refreshEntries();
 		}

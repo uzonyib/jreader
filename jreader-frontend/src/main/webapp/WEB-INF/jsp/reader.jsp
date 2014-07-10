@@ -26,6 +26,9 @@
 			<div id="items-contents" ng-controller="EntriesCtrl" ng-show="active">
 				<jsp:include page="entries.jsp" />
 			</div>
+			<div id="archive-contents" ng-controller="ArchivesCtrl" ng-show="active">
+				<jsp:include page="archives.jsp" />
+			</div>
 		</div>
 	</body>
 </html>

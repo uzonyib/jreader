@@ -32,7 +32,7 @@
 <div id="feed-entries-container"
 	infinite-scroll="loadMoreEntries()"
 	infinite-scroll-distance="1"
-	infinite-scroll-disabled="ajaxService.loadingEntries || !ajaxService.moreEntriesAvailable"
+	infinite-scroll-disabled="!active || ajaxService.loadingEntries || !ajaxService.moreEntriesAvailable"
 	infinite-scroll-immediate-check="false">
 	<table id="feed-entries">
 		<tbody ng-repeat="entry in entries" class="feed-entry" ng-class="{unread: !entry.read}">

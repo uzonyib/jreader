@@ -42,3 +42,23 @@
 		</div>
 	</div>
 </div>
+
+<div id="archives-menu-item" class="menu-item"
+	ng-class="{selected: archivedItems.selected, collapsed: archivedItems.collapsed}"
+	ng-show="archives.length > 0"
+	ng-click="selectArchivedItems()">
+	<span class="icon collapsed-icon" ng-click="uncollapseArchivedItems($event)"></span>
+	<span class="icon uncollapsed-icon" ng-click="collapseArchivedItems($event)"></span>
+	<span class="title">Archives</span>
+</div>
+
+<div id="archive-menu" ng-show="!archivedItems.collapsed">
+	<div ng-repeat="archive in archives"
+		class="menu-group">
+		<div class="menu-item feed-item"
+			ng-class="{selected: archive.selected}"
+			ng-click="selectArchive(archive)">
+			<span class="title">{{archive.title}}</span>
+		</div>
+	</div>
+</div>

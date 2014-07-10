@@ -16,6 +16,7 @@
 				<bean class="jreader.converter.FeedEntryDtoConverter" />
 				<bean class="jreader.converter.SubscriptionGroupConverter" />
 				<bean class="jreader.converter.SubscriptionConverter" />
+				<bean class="jreader.converter.ArchiveConverter" />
 			</list>
 		</property>
 	</bean>
@@ -47,6 +48,15 @@
 		<property name="subscriptionDao" ref="subscriptionDao" />
 		<property name="feedEntryDao" ref="feedEntryDao" />
 		<property name="conversionService" ref="conversionService" />
+	</bean>
+	
+	<bean class="jreader.services.impl.ArchiveServiceImpl" id="archiveService">
+		<property name="userDao" ref="userDao" />
+		<property name="subscriptionGroupDao" ref="subscriptionGroupDao" />
+		<property name="subscriptionDao" ref="subscriptionDao" />
+		<property name="archiveDao" ref="archiveDao" />
+		<property name="conversionService" ref="conversionService" />
+		<property name="entityFactory" ref="entityFactory"></property>
 	</bean>
 	
 </beans>

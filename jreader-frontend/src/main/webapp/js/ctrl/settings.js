@@ -4,12 +4,15 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "$http", "aja
 	
 	$scope.active = false;
 	$scope.subscriptionGroups = [];
+	$scope.archives = [];
 	
 	$scope.newGroupTitle = "";
 	
 	$scope.newSubscription = {};
 	$scope.newSubscription.group = {};
 	$scope.newSubscription.url = "";
+	
+	$scope.newArchiveTitle = "";
 	
 	$scope.exportImportJson = "";
 	$scope.importLog = "";
@@ -33,9 +36,78 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "$http", "aja
 		});
 	});
 	
+	$scope.$watch("ajaxService.archives", function(archives) {
+		$scope.archives = angular.copy(archives);
+		angular.forEach($scope.archives, function(archive) {
+			archive.editingTitle = false;
+			archive.newTitle = archive.title;
+		});
+	});
+	
 	$scope.createGroup = function() {
 		$scope.ajaxService.createGroup($scope.newGroupTitle);
 		$scope.newGroupTitle = "";
+	};
+	
+	$scope.deleteGroup = function(subscriptionGroupId) {
+		$scope.ajaxService.deleteGroup(subscriptionGroupId);
+	};
+	
+	$scope.moveGroupUp = function(subscriptionGroupId) {
+		$scope.ajaxService.moveGroupUp(subscriptionGroupId);
+	};
+	
+	$scope.moveGroupDown = function(subscriptionGroupId) {
+		$scope.ajaxService.moveGroupDown(subscriptionGroupId);
+	};
+	
+	$scope.moveSubscriptionUp = function(subscriptionGroupId, subscriptionId) {
+		$scope.ajaxService.moveSubscriptionUp(subscriptionGroupId, subscriptionId);
+	};
+	
+	$scope.moveSubscriptionDown = function(subscriptionGroupId, subscriptionId) {
+		$scope.ajaxService.moveSubscriptionDown(subscriptionGroupId, subscriptionId);
+	};
+	
+	$scope.subscribe = function() {
+		$scope.ajaxService.subscribe($scope.newSubscription.group.id, $scope.newSubscription.url);
+	};
+	
+	$scope.unsubscribe = function(subscriptionGroupId, subscriptionId) {
+		$scope.ajaxService.unsubscribe(subscriptionGroupId, subscriptionId);
+	};
+	
+	$scope.editTitle = function(groupOrSubscription) {
+		groupOrSubscription.editingTitle = true;
+	};
+	
+	$scope.entitleGroup = function(group) {
+		$scope.ajaxService.entitleGroup(group.id, group.newTitle);
+	};
+	
+	$scope.entitleSubscription = function(group, subscription) {
+		$scope.ajaxService.entitleSubscription(group.id, subscription.id, subscription.newTitle);
+	};
+	
+	$scope.createArchive = function() {
+		$scope.ajaxService.createArchive($scope.newArchiveTitle);
+		$scope.newArchiveTitle = "";
+	};
+	
+	$scope.deleteArchive = function(archiveId) {
+		$scope.ajaxService.deleteArchive(archiveId);
+	};
+	
+	$scope.moveArchiveUp = function(archiveId) {
+		$scope.ajaxService.moveArchiveUp(archiveId);
+	};
+	
+	$scope.moveArchiveDown = function(archiveId) {
+		$scope.ajaxService.moveArchiveDown(archiveId);
+	};
+	
+	$scope.entitleArchive = function(archive) {
+		$scope.ajaxService.entitleArchive(archive.id, archive.newTitle);
 	};
 	
 	$scope.exportSubscriptions = function() {
@@ -175,43 +247,4 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "$http", "aja
         process(jobQueue.pop());
 	};
 	
-	$scope.deleteGroup = function(subscriptionGroupId) {
-		$scope.ajaxService.deleteGroup(subscriptionGroupId);
-	};
-	
-	$scope.moveGroupUp = function(subscriptionGroupId) {
-		$scope.ajaxService.moveGroupUp(subscriptionGroupId);
-	};
-	
-	$scope.moveGroupDown = function(subscriptionGroupId) {
-		$scope.ajaxService.moveGroupDown(subscriptionGroupId);
-	};
-	
-	$scope.moveSubscriptionUp = function(subscriptionGroupId, subscriptionId) {
-		$scope.ajaxService.moveSubscriptionUp(subscriptionGroupId, subscriptionId);
-	};
-	
-	$scope.moveSubscriptionDown = function(subscriptionGroupId, subscriptionId) {
-		$scope.ajaxService.moveSubscriptionDown(subscriptionGroupId, subscriptionId);
-	};
-	
-	$scope.subscribe = function() {
-		$scope.ajaxService.subscribe($scope.newSubscription.group.id, $scope.newSubscription.url);
-	};
-	
-	$scope.unsubscribe = function(subscriptionGroupId, subscriptionId) {
-		$scope.ajaxService.unsubscribe(subscriptionGroupId, subscriptionId);
-	};
-	
-	$scope.editTitle = function(groupOrSubscription) {
-		groupOrSubscription.editingTitle = true;
-	};
-	
-	$scope.entitleGroup = function(group) {
-		$scope.ajaxService.entitleGroup(group.id, group.newTitle);
-	};
-	
-	$scope.entitleSubscription = function(group, subscription) {
-		$scope.ajaxService.entitleSubscription(group.id, subscription.id, subscription.newTitle);
-	};
 }]);

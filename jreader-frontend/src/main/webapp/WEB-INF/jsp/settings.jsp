@@ -1,5 +1,3 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <div class="add-subscription">
 	<form ng-submit="createGroup()">
 		<span>Add group</span><input ng-model="newGroupTitle"
@@ -63,6 +61,43 @@
 			</td>
 			<td class="action">
 				<form ng-if="!$last" ng-submit="moveSubscriptionDown(group.id, subscription.id)">
+					<input type="image" src="/images/move_down_black.png" title="Move down" />
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<div class="add-archive">
+	<form ng-submit="createArchive()">
+		<span>Add archive</span><input ng-model="newArchiveTitle"
+			type="text" name="title" placeholder="archive name" /><input
+			type="image" src="/images/tick_black.png" title="Create archive" />
+	</form>
+</div>
+
+<table id="archive-settings">
+	<tbody class="settings-archive" ng-repeat="archive in archives">
+		<tr class="group-title">
+			<td>
+				<span class="title" ng-show="!archive.editingTitle" ng-click="editTitle(archive)">{{archive.title}}</span>
+				<form class="set-group-title" ng-show="archive.editingTitle" ng-click="entitleArchive(archive)">
+					<input type="text" placeholder="name" ng-model="archive.newTitle" />
+					<input type="image" src="/images/tick_black.png" title="Change" />
+				</form>
+			</td>
+			<td class="action">
+				<form ng-submit="deleteArchive(archive.id)">
+					<input type="image" src="/images/cross_black.png" title="Delete" />
+				</form>
+			</td>
+			<td class="action">
+				<form ng-if="!$first" ng-submit="moveArchiveUp(archive.id)">
+					<input type="image" src="/images/move_up_black.png" title="Move up" />
+				</form>
+			</td>
+			<td class="action">
+				<form ng-if="!$last" ng-submit="moveArchiveDown(archive.id)">
 					<input type="image" src="/images/move_down_black.png" title="Move down" />
 				</form>
 			</td>

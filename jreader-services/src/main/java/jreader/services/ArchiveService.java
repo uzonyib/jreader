@@ -1,0 +1,21 @@
+package jreader.services;
+
+import java.util.List;
+
+import jreader.dto.ArchiveDto;
+
+public interface ArchiveService {
+	
+	ArchiveDto createArchive(String username, String title);
+	
+	void deleteArchive(String username, Long archiveId);
+	
+	void moveUp(String username, Long archiveId);
+	
+	void moveDown(String username, Long archiveId);
+	
+	List<ArchiveDto> list(String username);
+	
+	void entitle(String username, Long archiveId, String title);
+
+}

@@ -1,5 +1,6 @@
 package jreader.dao.impl;
 
+import jreader.domain.Archive;
 import jreader.domain.Feed;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
@@ -25,6 +26,14 @@ public class EntityFactory {
 		subscription.setUpdatedDate(updatedDate);
 		subscription.setRefreshDate(refreshDate);
 		return subscription;
+	}
+	
+	public Archive createArchive(User user, String title, int order) {
+		Archive archive = new Archive();
+		archive.setUser(user);
+		archive.setTitle(title);
+		archive.setOrder(order);
+		return archive;
 	}
 
 }

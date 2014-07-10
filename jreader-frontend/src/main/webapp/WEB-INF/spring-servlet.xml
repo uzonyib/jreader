@@ -39,6 +39,10 @@
 		<property name="feedEntryService" ref="feedEntryService" />
 	</bean>
 	
+	<bean class="jreader.web.controller.ajax.ArchiveController">
+		<property name="archiveService" ref="archiveService" />
+	</bean>
+	
 	<bean class="jreader.web.controller.ajax.GlobalExceptionHandler" />
 
 </beans>

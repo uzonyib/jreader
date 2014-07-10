@@ -2,14 +2,16 @@ angular.module("jReaderApp").service("viewService", function () {
 	this.activeView = {
 		type: "home",
 		subscriptionGroupId: null,
-		subscriptionId: null
+		subscriptionId: null,
+		archiveId: null
 	};
 	
 	this.selectHome = function() {
 		var view = {
 			type: "home",
 			subscriptionGroupId: null,
-			subscriptionId: null
+			subscriptionId: null,
+			archiveId: null
 		};
 		if (!angular.equals(this.activeView, view)) {
 			this.activeView = view;
@@ -20,7 +22,8 @@ angular.module("jReaderApp").service("viewService", function () {
 		var view = {
 			type: "settings",
 			subscriptionGroupId: null,
-			subscriptionId: null
+			subscriptionId: null,
+			archiveId: null
 		};
 		if (!angular.equals(this.activeView, view)) {
 			this.activeView = view;
@@ -31,7 +34,8 @@ angular.module("jReaderApp").service("viewService", function () {
 		var view = {
 			type: "allItems",
 			subscriptionGroupId: null,
-			subscriptionId: null
+			subscriptionId: null,
+			archiveId: null
 		};
 		if (!angular.equals(this.activeView, view)) {
 			this.activeView = view;
@@ -42,7 +46,8 @@ angular.module("jReaderApp").service("viewService", function () {
 		var view = {
 			type: "group",
 			subscriptionGroupId: groupId,
-			subscriptionId: null
+			subscriptionId: null,
+			archiveId: null
 		};
 		if (!angular.equals(this.activeView, view)) {
 			this.activeView = view;
@@ -53,7 +58,32 @@ angular.module("jReaderApp").service("viewService", function () {
 		var view = {
 			type: "subscription",
 			subscriptionGroupId: groupId,
-			subscriptionId: subscriptionId
+			subscriptionId: subscriptionId,
+			archiveId: null
+		};
+		if (!angular.equals(this.activeView, view)) {
+			this.activeView = view;
+		}
+	};
+	
+	this.selectArchivedItems = function() {
+		var view = {
+			type: "archivedItems",
+			subscriptionGroupId: null,
+			subscriptionId: null,
+			archiveId: null
+		};
+		if (!angular.equals(this.activeView, view)) {
+			this.activeView = view;
+		}
+	};
+	
+	this.selectArchive = function(archiveId) {
+		var view = {
+			type: "archive",
+			subscriptionGroupId: null,
+			subscriptionId: null,
+			archiveId: archiveId
 		};
 		if (!angular.equals(this.activeView, view)) {
 			this.activeView = view;
@@ -76,7 +106,8 @@ angular.module("jReaderApp").service("viewService", function () {
 		var view = {
 			type: "group",
 			subscriptionGroupId: groupId,
-			subscriptionId: null
+			subscriptionId: null,
+			archiveId: null
 		};
 		return angular.equals(this.activeView, view);
 	};
@@ -85,9 +116,32 @@ angular.module("jReaderApp").service("viewService", function () {
 		var view = {
 			type: "subscription",
 			subscriptionGroupId: groupId,
-			subscriptionId: subscriptionId
+			subscriptionId: subscriptionId,
+			archiveId: null
 		};
 		return angular.equals(this.activeView, view);
+	};
+	
+	this.isArchivedItemsSelected = function() {
+		return angular.equals(this.activeView.type, "archivedItems");
+	};
+	
+	this.isArchiveSelected = function(archiveId) {
+		var view = {
+			type: "archive",
+			subscriptionGroupId: null,
+			subscriptionId: null,
+			archiveId: archiveId
+		};
+		return angular.equals(this.activeView, view);
+	};
+	
+	this.isEntriesSelected = function() {
+		return angular.equals(this.activeView.type, "allItems") || angular.equals(this.activeView.type, "group") || angular.equals(this.activeView.type, "subscription");
+	};
+	
+	this.isArchivesSelected = function() {
+		return angular.equals(this.activeView.type, "archivedItems") || angular.equals(this.activeView.type, "archive");
 	};
 	
 	this.getSubscriptionGroupId = function() {
