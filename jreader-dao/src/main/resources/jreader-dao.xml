@@ -28,5 +28,9 @@
 	<bean class="jreader.dao.impl.ArchiveDaoImpl" id="archiveDao">
 		<constructor-arg ref="objectifyFactory" />
 	</bean>
+	
+	<bean class="jreader.dao.impl.ArchivedEntryDaoImpl" id="archivedEntryDao">
+		<constructor-arg ref="objectifyFactory" />
+	</bean>
 
 </beans>

@@ -11,9 +11,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import jreader.dao.ArchiveDao;
+import jreader.dao.ArchivedEntryDao;
+import jreader.dao.FeedEntryDao;
+import jreader.dao.SubscriptionDao;
+import jreader.dao.SubscriptionGroupDao;
 import jreader.dao.UserDao;
 import jreader.dao.impl.EntityFactory;
 import jreader.domain.Archive;
+import jreader.domain.ArchivedEntry;
+import jreader.domain.FeedEntry;
+import jreader.domain.Subscription;
+import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
 import jreader.services.ServiceException;
@@ -30,6 +38,9 @@ import org.testng.annotations.Test;
 public class ArchiveServiceImplTest {
 	
 	private static final String USERNAME = "user";
+	private static final Long GROUP_ID = 1L;
+	private static final Long SUBSCRIPTION_ID = 11L;
+	private static final Long ENTRY_ID = 21L;
 	private static final String ARCHIVE_TITLE = "archive_title";
 	private static final int ARCHIVE_ORDER = 10;
 	private static final long ARCHIVE_ID = 123;
@@ -40,7 +51,15 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private UserDao userDao;
 	@Mock
+	private SubscriptionGroupDao subscriptionGroupDao;
+	@Mock
+	private SubscriptionDao subscriptionDao;
+	@Mock
+	private FeedEntryDao feedEntryDao;
+	@Mock
 	private ArchiveDao archiveDao;
+	@Mock
+	private ArchivedEntryDao archivedEntryDao;
 	@Mock
 	private ConversionService conversionService;
 	@Mock
@@ -49,11 +68,19 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private User user;
 	@Mock
+	private SubscriptionGroup group;
+	@Mock
+	private Subscription subscription;
+	@Mock
+	private FeedEntry entry;
+	@Mock
 	private Archive archive;
 	@Mock
 	private Archive archive1;
 	@Mock
 	private Archive archive2;
+	@Mock
+	private ArchivedEntry archivedEntry;
 	
 	@Mock
 	private ArchiveDto archiveDto;
@@ -179,6 +206,22 @@ public class ArchiveServiceImplTest {
 		
 		List<ArchiveDto> result = service.list(USERNAME);
 		Assert.assertEquals(result, Arrays.asList(archiveDto, archiveDto1, archiveDto2));
+	}
+	
+	@Test
+	public void archive() {
+		when(userDao.find(USERNAME)).thenReturn(user);
+		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(subscriptionDao.find(group, SUBSCRIPTION_ID)).thenReturn(subscription);
+		when(feedEntryDao.find(subscription, ENTRY_ID)).thenReturn(entry);
+		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);
+		when(conversionService.convert(entry, ArchivedEntry.class)).thenReturn(archivedEntry);
+		
+		service.archive(USERNAME, GROUP_ID, SUBSCRIPTION_ID, ENTRY_ID, ARCHIVE_ID);
+		
+		verify(conversionService).convert(entry, ArchivedEntry.class);
+		verify(archivedEntry).setArchive(archive);
+		verify(archivedEntryDao).save(archivedEntry);
 	}
 
 }

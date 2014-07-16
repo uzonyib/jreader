@@ -4,6 +4,7 @@ angular.module("jReaderApp").controller("EntriesCtrl", function ($scope, $elemen
 	
 	$scope.active = false;
 	$scope.subscriptionGroups = [];
+	$scope.archives = [];
 	$scope.entries = [];
 	
 	$scope.filter = {};
@@ -31,8 +32,16 @@ angular.module("jReaderApp").controller("EntriesCtrl", function ($scope, $elemen
 		$scope.subscriptionGroups = angular.copy(subscriptionGroups);
 	});
 	
+	$scope.$watch("ajaxService.archives", function(archives) {
+		$scope.archives = angular.copy(archives);
+	});
+	
 	$scope.$watch("ajaxService.entries", function(entries) {
 		$scope.entries = angular.copy(entries);
+		angular.forEach($scope.entries, function(entry) {
+			entry.archived = false;
+			entry.archive = $scope.archives[0];
+		});
 	});
 	
 	$scope.$watch("ajaxService.loadingEntries", function(loadingEntries) {
@@ -97,6 +106,12 @@ angular.module("jReaderApp").controller("EntriesCtrl", function ($scope, $elemen
 	$scope.unstar = function(entry) {
 		entry.starred = false;
 		$scope.ajaxService.unstar(entry);
+	};
+	
+	$scope.archive = function(entry) {
+		console.log(entry.archive.title);
+		entry.archived = true;
+		$scope.ajaxService.archive(entry, entry.archive);
 	};
 	
 });

@@ -5,7 +5,7 @@ import jreader.dto.ArchiveDto;
 
 import org.springframework.core.convert.converter.Converter;
 
-public class ArchiveConverter implements Converter<Archive, ArchiveDto> {
+public class ArchiveDtoConverter implements Converter<Archive, ArchiveDto> {
 
 	@Override
 	public ArchiveDto convert(Archive entity) {

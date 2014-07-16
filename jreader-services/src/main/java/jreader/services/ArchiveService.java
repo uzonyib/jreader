@@ -18,4 +18,6 @@ public interface ArchiveService {
 	
 	void entitle(String username, Long archiveId, String title);
 
+	void archive(String username, Long groupId, Long subscriptionId, Long entryId, Long archiveId);
+
 }

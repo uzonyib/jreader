@@ -43,6 +43,10 @@
 		<property name="archiveService" ref="archiveService" />
 	</bean>
 	
+	<bean class="jreader.web.controller.ajax.ArchivedEntryController">
+		<property name="archiveService" ref="archiveService" />
+	</bean>
+	
 	<bean class="jreader.web.controller.ajax.GlobalExceptionHandler" />
 
 </beans>

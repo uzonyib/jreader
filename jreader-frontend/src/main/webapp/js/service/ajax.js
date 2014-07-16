@@ -290,6 +290,19 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 	this.unstar = function(entry) {
 		service.setStarred(entry, false);
 	};
+	
+	this.archive = function(entry, archive) {
+		$http({
+			method: "POST",
+			url: "/reader/archives/" + archive.id + "/entries",
+            params: {
+            	"groupId": entry.subscriptionGroupId,
+            	"subscriptionId": entry.subscriptionId,
+            	"entryId": entry.id,
+            },
+            headers: { "Content-Type": "application/json" }
+        });
+	};
     
     $interval(this.refreshSubscriptions, 1000 * 60 * 5);
     this.refreshSubscriptions();

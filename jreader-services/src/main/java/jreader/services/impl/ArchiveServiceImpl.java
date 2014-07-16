@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jreader.dao.ArchiveDao;
+import jreader.dao.ArchivedEntryDao;
+import jreader.dao.FeedEntryDao;
 import jreader.dao.impl.EntityFactory;
 import jreader.domain.Archive;
+import jreader.domain.ArchivedEntry;
+import jreader.domain.FeedEntry;
+import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
@@ -17,7 +22,9 @@ import org.springframework.core.convert.ConversionService;
 
 public class ArchiveServiceImpl extends AbstractService implements ArchiveService {
 
+	private FeedEntryDao feedEntryDao;
 	private ArchiveDao archiveDao;
+	private ArchivedEntryDao archivedEntryDao;
 	
 	private ConversionService conversionService;
 	
@@ -116,6 +123,29 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 		archive.setTitle(title);
 		archiveDao.save(archive);
 	}
+	
+	@Override
+	public void archive(String username, Long groupId, Long subscriptionId,
+			Long entryId, Long archiveId) {
+		User user = this.getUser(username);
+		SubscriptionGroup group = this.getGroup(user, groupId);
+		Subscription subscription = this.getSubscription(group, subscriptionId);
+		
+		FeedEntry feedEntry = feedEntryDao.find(subscription, entryId);
+		Archive archive = this.getArchive(user, archiveId);
+		
+		ArchivedEntry entity = conversionService.convert(feedEntry, ArchivedEntry.class);
+		entity.setArchive(archive);
+		archivedEntryDao.save(entity);
+	}
+
+	public FeedEntryDao getFeedEntryDao() {
+		return feedEntryDao;
+	}
+
+	public void setFeedEntryDao(FeedEntryDao feedEntryDao) {
+		this.feedEntryDao = feedEntryDao;
+	}
 
 	public ArchiveDao getArchiveDao() {
 		return archiveDao;
@@ -123,6 +153,14 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
 	public void setArchiveDao(ArchiveDao archiveDao) {
 		this.archiveDao = archiveDao;
+	}
+
+	public ArchivedEntryDao getArchivedEntryDao() {
+		return archivedEntryDao;
+	}
+
+	public void setArchivedEntryDao(ArchivedEntryDao archivedEntryDao) {
+		this.archivedEntryDao = archivedEntryDao;
 	}
 
 	public ConversionService getConversionService() {
