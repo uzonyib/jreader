@@ -1,29 +1,15 @@
 package jreader.dao;
 
-public class FeedEntryFilter {
+public class ArchivedEntryFilter {
 	
-	public static enum Selection {
-		ALL, UNREAD, STARRED;
-	}
-	
-	protected Selection selection;
 	protected boolean ascending;
 	protected int offset;
 	protected int count;
 
-	public FeedEntryFilter(Selection selection, boolean ascending, int offset, int count) {
-		this.selection = selection;
+	public ArchivedEntryFilter(boolean ascending, int offset, int count) {
 		this.ascending = ascending;
 		this.offset = offset;
 		this.count = count;
-	}
-
-	public Selection getSelection() {
-		return selection;
-	}
-
-	public void setSelection(Selection selection) {
-		this.selection = selection;
 	}
 
 	public boolean isAscending() {

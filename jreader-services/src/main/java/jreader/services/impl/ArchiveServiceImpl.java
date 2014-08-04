@@ -14,7 +14,9 @@ import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
+import jreader.dto.ArchivedEntryDto;
 import jreader.services.ArchiveService;
+import jreader.services.ArchivedEntryFilterData;
 import jreader.services.ServiceException;
 import jreader.services.ServiceStatus;
 
@@ -137,6 +139,23 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 		ArchivedEntry entity = conversionService.convert(feedEntry, ArchivedEntry.class);
 		entity.setArchive(archive);
 		archivedEntryDao.save(entity);
+	}
+	
+	@Override
+	public List<ArchivedEntryDto> listEntries(ArchivedEntryFilterData filterData) {
+		User user = this.getUser(filterData.getUsername());
+		List<ArchivedEntry> entries;
+		if (filterData.getArchiveId() == null) {
+			entries = archivedEntryDao.list(user, filterData);
+		} else {
+			Archive archive = this.getArchive(user, filterData.getArchiveId());
+			entries = archivedEntryDao.list(archive, filterData);
+		}
+		List<ArchivedEntryDto> dtos = new ArrayList<ArchivedEntryDto>();
+		for (ArchivedEntry entry : entries) {
+			dtos.add(conversionService.convert(entry, ArchivedEntryDto.class));
+		}
+		return dtos;
 	}
 
 	public FeedEntryDao getFeedEntryDao() {

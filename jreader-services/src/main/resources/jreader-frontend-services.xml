@@ -18,6 +18,7 @@
 				<bean class="jreader.converter.SubscriptionConverter" />
 				<bean class="jreader.converter.ArchiveDtoConverter" />
 				<bean class="jreader.converter.ArchivedEntryConverter" />
+				<bean class="jreader.converter.ArchivedEntryDtoConverter" />
 			</list>
 		</property>
 	</bean>

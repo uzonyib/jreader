@@ -24,6 +24,8 @@ import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
+import jreader.dto.ArchivedEntryDto;
+import jreader.services.ArchivedEntryFilterData;
 import jreader.services.ServiceException;
 import jreader.services.ServiceStatus;
 
@@ -81,6 +83,10 @@ public class ArchiveServiceImplTest {
 	private Archive archive2;
 	@Mock
 	private ArchivedEntry archivedEntry;
+	@Mock
+	private ArchivedEntry archivedEntry1;
+	@Mock
+	private ArchivedEntry archivedEntry2;
 	
 	@Mock
 	private ArchiveDto archiveDto;
@@ -88,6 +94,12 @@ public class ArchiveServiceImplTest {
 	private ArchiveDto archiveDto1;
 	@Mock
 	private ArchiveDto archiveDto2;
+	@Mock
+	private ArchivedEntryDto archivedEntryDto1;
+	@Mock
+	private ArchivedEntryDto archivedEntryDto2;
+	@Mock
+	private ArchivedEntryFilterData filter;
 	
 	@BeforeMethod
 	public void setup() {
@@ -222,6 +234,37 @@ public class ArchiveServiceImplTest {
 		verify(conversionService).convert(entry, ArchivedEntry.class);
 		verify(archivedEntry).setArchive(archive);
 		verify(archivedEntryDao).save(archivedEntry);
+	}
+	
+	@Test
+	public void listEntriesForUser() {
+		when(filter.getArchiveId()).thenReturn(null);
+		when(filter.getUsername()).thenReturn(USERNAME);
+		when(userDao.find(USERNAME)).thenReturn(user);
+		when(archivedEntryDao.list(user, filter)).thenReturn(Arrays.asList(archivedEntry1, archivedEntry2));
+		when(conversionService.convert(archivedEntry1, ArchivedEntryDto.class)).thenReturn(archivedEntryDto1);
+		when(conversionService.convert(archivedEntry2, ArchivedEntryDto.class)).thenReturn(archivedEntryDto2);
+		
+		List<ArchivedEntryDto> result = service.listEntries(filter);
+		
+		verify(archivedEntryDao).list(user, filter);
+		Assert.assertEquals(result, Arrays.asList(archivedEntryDto1, archivedEntryDto2));
+	}
+	
+	@Test
+	public void listEntriesForArchive() {
+		when(filter.getArchiveId()).thenReturn(ARCHIVE_ID);
+		when(filter.getUsername()).thenReturn(USERNAME);
+		when(userDao.find(USERNAME)).thenReturn(user);
+		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);
+		when(archivedEntryDao.list(archive, filter)).thenReturn(Arrays.asList(archivedEntry1, archivedEntry2));
+		when(conversionService.convert(archivedEntry1, ArchivedEntryDto.class)).thenReturn(archivedEntryDto1);
+		when(conversionService.convert(archivedEntry2, ArchivedEntryDto.class)).thenReturn(archivedEntryDto2);
+		
+		List<ArchivedEntryDto> result = service.listEntries(filter);
+		
+		verify(archivedEntryDao).list(archive, filter);
+		Assert.assertEquals(result, Arrays.asList(archivedEntryDto1, archivedEntryDto2));
 	}
 
 }

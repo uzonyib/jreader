@@ -4,10 +4,13 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 	this.subscriptionGroups = [];
 	this.entries = [];
 	this.archives = [];
+	this.archivedEntries = [];
 	this.unreadCount = 0;
 	
 	this.loadingEntries = false;
 	this.moreEntriesAvailable = true;
+	this.loadingArchivedEntries = false;
+	this.moreArchivedEntriesAvailable = true;
 	
 	this.setSubscriptionGroups = function(groups) {
 		if (!angular.equals(this.subscriptionGroups, groups)) {
@@ -32,9 +35,20 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 		}
 	};
 	
+	this.setArchivedEntries = function(newEntries) {
+		if (!angular.equals(this.archivedEntries, newEntries)) {
+			this.archivedEntries = newEntries;
+		}
+	};
+	
 	this.resetEntries = function() {
 		this.entries = [];
 		this.moreEntriesAvailable = true;
+	};
+	
+	this.resetArchivedEntries = function() {
+		this.archivedEntries = [];
+		this.moreArchivedEntriesAvailable = true;
 	};
 	
 	this.refreshSubscriptions = function() {
@@ -82,6 +96,38 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
     		service.moreEntriesAvailable = data.length === count;
     		service.loadingEntries = false;
         	service.setEntries(service.entries.concat(data));
+        });
+    };
+    
+    this.loadArchivedEntries = function(filter) {
+    	if (this.loadingArchivedEntries) {
+    		return;
+    	}
+    	this.loadingArchivedEntries = true;
+    	if (filter.pageIndex === 0) {
+    		this.resetArchivedEntries();
+    	}
+    	
+    	var items = "";
+    	if (filter.archiveId != null) {
+    		items = "/" + filter.archiveId;
+    	}
+    	
+    	var offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
+    	var count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
+    	
+    	$http({
+    		method: "GET",
+    		url: "/reader/archives" + items + "/entries",
+    		params: {
+    			"offset": offset,
+    			"count": count,
+    			"ascending": filter.ascendingOrder
+    		}
+    	}).success(function(data) {
+    		service.moreArchivedEntriesAvailable = data.length === count;
+    		service.loadingArchivedEntries = false;
+        	service.setArchivedEntries(service.archivedEntries.concat(data));
         });
     };
     

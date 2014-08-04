@@ -1,4 +1,4 @@
-angular.module("jReaderApp").controller("EntriesCtrl", function ($scope, $element, $window, ajaxService, viewService) {
+angular.module("jReaderApp").controller("EntriesCtrl", ["$scope", "$window", "ajaxService", "viewService", function ($scope, $window, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 	
@@ -114,4 +114,4 @@ angular.module("jReaderApp").controller("EntriesCtrl", function ($scope, $elemen
 		$scope.ajaxService.archive(entry, entry.archive);
 	};
 	
-});
+}]);

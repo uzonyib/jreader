@@ -151,4 +151,9 @@ angular.module("jReaderApp").service("viewService", function () {
 	this.getSubscriptionId = function() {
 		return this.activeView.subscriptionId;
 	};
+	
+	this.getArchiveId = function() {
+		return this.activeView.archiveId;
+	};
+	
 });
