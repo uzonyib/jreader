@@ -308,6 +308,28 @@ body {
 	}
 }
 
+.delete-button {
+	border: 1px solid @clr-bg-hard-1;
+	@selected-border-color: #aaa;
+	@img-size: 20px;
+	@img-padding: 1px;
+	margin: 0px;
+	padding: 2px;
+	background-color: @clr-bg-soft;
+	cursor: pointer;
+	&:hover {
+		background-color: @clr-bg-hard-1;
+	}
+	&.selected {
+		background-color: @clr-bg-hard-2;
+	}
+	img {
+		width: @img-size;
+		height: @img-size;
+		padding: @img-padding;
+	}
+}
+
 textarea#export-import,
 textarea#import-log {
 	width: 95%;

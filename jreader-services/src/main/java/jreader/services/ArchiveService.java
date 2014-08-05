@@ -23,4 +23,6 @@ public interface ArchiveService {
 	
 	List<ArchivedEntryDto> listEntries(ArchivedEntryFilterData filterData);
 	
+	void deleteEntry(String username, Long archiveId, Long entryId);
+	
 }

@@ -8,6 +8,7 @@ import jreader.domain.Archive;
 import jreader.domain.ArchivedEntry;
 import jreader.domain.User;
 
+import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.cmd.Query;
 
@@ -15,6 +16,12 @@ public class ArchivedEntryDaoImpl extends AbstractOfyDao<ArchivedEntry> implemen
 
 	public ArchivedEntryDaoImpl(ObjectifyFactory objectifyFactory) {
 		super(objectifyFactory);
+	}
+	
+	@Override
+	public ArchivedEntry find(Archive archive, Long id) {
+		Objectify ofy = getOfy();
+		return ofy.load().type(ArchivedEntry.class).parent(archive).id(id).now();
 	}
 
 	@Override

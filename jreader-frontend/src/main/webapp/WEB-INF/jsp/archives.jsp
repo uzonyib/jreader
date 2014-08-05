@@ -31,20 +31,14 @@
 				<td colspan="4">
 					<div class="link">
 						<a target=_blank href="{{entry.link}}">Open</a>
+						<button class="delete-button" title="Delete" ng-click="deleteEntry(entry)">
+							<img src="/images/cross_black.png">
+						</button>
 					</div>
 					<div class="author" ng-if="entry.author">
 						Author: {{entry.author}}
 					</div>
 					<div class="description" ng-bind-html="entry.description"></div>
-					<div ng-if="archives.length > 0">
-						<form ng-if="!entry.archived"
-							ng-submit="archive(entry)"><span>Move to archive</span><select
-								ng-model="entry.archive"
-								ng-options="archive.title for archive in archives"></select><input
-								type="image" src="/images/tick_black.png" title="Archive" />
-						</form>
-						<span ng-if="entry.archived">Archived to {{entry.archive.title}}</span>
-					</div>
 				</td>
 			</tr>
 		</tbody>

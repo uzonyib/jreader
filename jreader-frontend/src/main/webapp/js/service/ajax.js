@@ -349,6 +349,13 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
             headers: { "Content-Type": "application/json" }
         });
 	};
+	
+	this.deleteArchivedEntry = function(archiveId, entryId) {
+		return $http({
+			method: "DELETE",
+			url: "/reader/archives/" + archiveId + "/entries/" + entryId
+        });
+	};
     
     $interval(this.refreshSubscriptions, 1000 * 60 * 5);
     this.refreshSubscriptions();

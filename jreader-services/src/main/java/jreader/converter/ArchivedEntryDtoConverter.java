@@ -17,8 +17,8 @@ public class ArchivedEntryDtoConverter implements Converter<ArchivedEntry, Archi
 		dto.setLink(entity.getLink());
 		dto.setPublishedDate(entity.getPublishedDate());
 		if (entity.getArchive() != null) {
-			dto.setArchiveId(String.valueOf(entity.getId()));
-			dto.setArchiveTitle(entity.getTitle());
+			dto.setArchiveId(String.valueOf(entity.getArchive().getId()));
+			dto.setArchiveTitle(entity.getArchive().getTitle());
 		}
 		return dto;
 	}

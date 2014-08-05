@@ -46,6 +46,7 @@ public class ArchiveServiceImplTest {
 	private static final String ARCHIVE_TITLE = "archive_title";
 	private static final int ARCHIVE_ORDER = 10;
 	private static final long ARCHIVE_ID = 123;
+	private static final long ARCHIVED_ENTRY_ID = 456;
 	
 	@InjectMocks
 	private ArchiveServiceImpl service;
@@ -265,6 +266,17 @@ public class ArchiveServiceImplTest {
 		
 		verify(archivedEntryDao).list(archive, filter);
 		Assert.assertEquals(result, Arrays.asList(archivedEntryDto1, archivedEntryDto2));
+	}
+	
+	@Test
+	public void unsubscribe() {
+		when(userDao.find(USERNAME)).thenReturn(user);
+		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);
+		when(archivedEntryDao.find(archive, ARCHIVED_ENTRY_ID)).thenReturn(archivedEntry);
+		
+		service.deleteEntry(USERNAME, ARCHIVE_ID, ARCHIVED_ENTRY_ID);
+		
+		verify(archivedEntryDao).delete(archivedEntry);
 	}
 
 }

@@ -157,6 +157,14 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 		}
 		return dtos;
 	}
+	
+	@Override
+	public void deleteEntry(String username, Long archiveId, Long entryId) {
+		User user = this.getUser(username);		
+		Archive archive = this.getArchive(user, archiveId);
+		ArchivedEntry entry = archivedEntryDao.find(archive, entryId);
+		archivedEntryDao.delete(entry);
+	}
 
 	public FeedEntryDao getFeedEntryDao() {
 		return feedEntryDao;
