@@ -11,101 +11,101 @@ import com.googlecode.objectify.annotation.Parent;
 @Entity
 @Cache
 public class FeedEntry {
-	
-	@Id
-	private Long id;
-	@Load
-	@Parent
-	private Ref<Subscription> subscriptionRef;
-	private String link;
-	private String title;
-	private String description;
-	private String author;
-	@Index
-	private Long publishedDate;
-	@Index
-	private boolean read;
-	@Index
-	private boolean starred;
 
-	public Long getId() {
-		return id;
-	}
+    @Id
+    private Long id;
+    @Load
+    @Parent
+    private Ref<Subscription> subscriptionRef;
+    private String link;
+    private String title;
+    private String description;
+    private String author;
+    @Index
+    private Long publishedDate;
+    @Index
+    private boolean read;
+    @Index
+    private boolean starred;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public Ref<Subscription> getSubscriptionRef() {
-		return subscriptionRef;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setSubscriptionRef(Ref<Subscription> subscriptionRef) {
-		this.subscriptionRef = subscriptionRef;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getLink() {
-		return link;
-	}
+    public Ref<Subscription> getSubscriptionRef() {
+        return subscriptionRef;
+    }
 
-	public void setLink(String link) {
-		this.link = link;
-	}
+    public void setSubscriptionRef(Ref<Subscription> subscriptionRef) {
+        this.subscriptionRef = subscriptionRef;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getLink() {
+        return link;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setLink(String link) {
+        this.link = link;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getAuthor() {
-		return author;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Long getPublishedDate() {
-		return publishedDate;
-	}
+    public String getAuthor() {
+        return author;
+    }
 
-	public void setPublishedDate(Long publishedDate) {
-		this.publishedDate = publishedDate;
-	}
-	
-	public boolean isRead() {
-		return read;
-	}
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-	public void setRead(boolean read) {
-		this.read = read;
-	}
+    public Long getPublishedDate() {
+        return publishedDate;
+    }
 
-	public boolean isStarred() {
-		return starred;
-	}
+    public void setPublishedDate(Long publishedDate) {
+        this.publishedDate = publishedDate;
+    }
 
-	public void setStarred(boolean starred) {
-		this.starred = starred;
-	}
-	
-	public Subscription getSubscription() {
-		return subscriptionRef == null ? null : subscriptionRef.get();
-	}
-	
-	public void setSubscription(Subscription subscription) {
-		this.subscriptionRef = subscription == null ? null : Ref.create(subscription);
-	}
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
+
+    public Subscription getSubscription() {
+        return subscriptionRef == null ? null : subscriptionRef.get();
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscriptionRef = subscription == null ? null : Ref.create(subscription);
+    }
 
 }

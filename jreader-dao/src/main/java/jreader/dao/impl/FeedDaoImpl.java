@@ -7,31 +7,27 @@ import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 
 public class FeedDaoImpl extends AbstractOfyDao<Feed> implements FeedDao {
-	
-	public FeedDaoImpl(ObjectifyFactory objectifyFactory) {
-		super(objectifyFactory);
-	}
 
-	@Override
-	public Feed find(String url) {
-		Objectify ofy = getOfy();
-		return ofy.load().type(Feed.class).id(url).now();
-	}
+    @Override
+    public Feed find(String url) {
+        Objectify ofy = getOfy();
+        return ofy.load().type(Feed.class).id(url).now();
+    }
 
-	@Override
-	public List<Feed> listAll() {
-		Objectify ofy = getOfy();
-		return ofy.load().type(Feed.class).list();
-	}
+    @Override
+    public List<Feed> listAll() {
+        Objectify ofy = getOfy();
+        return ofy.load().type(Feed.class).list();
+    }
 
-	@Override
-	public Long getLastUpdatedDate(Feed feed) {
-		Objectify ofy = getOfy();
-		FeedEntry last = ofy.load().type(FeedEntry.class).filter("feedRef =", feed).order("-publishedDate").first().now();
-		return last == null ? null : last.getPublishedDate();
-	}
+    @Override
+    public Long getLastUpdatedDate(Feed feed) {
+        Objectify ofy = getOfy();
+        FeedEntry last = ofy.load().type(FeedEntry.class).filter("feedRef =", feed)
+                .order("-publishedDate").first().now();
+        return last == null ? null : last.getPublishedDate();
+    }
 
 }

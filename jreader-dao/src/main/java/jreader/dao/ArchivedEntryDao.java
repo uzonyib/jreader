@@ -7,11 +7,11 @@ import jreader.domain.ArchivedEntry;
 import jreader.domain.User;
 
 public interface ArchivedEntryDao extends OfyDao<ArchivedEntry> {
-	
-	ArchivedEntry find(Archive archive, Long id);
-	
-	List<ArchivedEntry> list(User user, ArchivedEntryFilter filter);
-	
-	List<ArchivedEntry> list(Archive archive, ArchivedEntryFilter filter);
-	
+
+    ArchivedEntry find(Archive archive, Long id);
+
+    List<ArchivedEntry> list(User user, ArchivedEntryFilter filter);
+
+    List<ArchivedEntry> list(Archive archive, ArchivedEntryFilter filter);
+
 }

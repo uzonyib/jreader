@@ -3,34 +3,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<bean id="objectifyFactory" class="jreader.dao.impl.OfyService" factory-method="factory" />
-	
-	<bean class="jreader.dao.impl.UserDaoImpl" id="userDao">
-		<constructor-arg ref="objectifyFactory" />
-	</bean>
-	
-	<bean class="jreader.dao.impl.SubscriptionGroupDaoImpl" id="subscriptionGroupDao">
-		<constructor-arg ref="objectifyFactory" />
-	</bean>
-	
-	<bean class="jreader.dao.impl.SubscriptionDaoImpl" id="subscriptionDao">
-		<constructor-arg ref="objectifyFactory" />
-	</bean>
-	
-	<bean class="jreader.dao.impl.FeedDaoImpl" id="feedDao">
-		<constructor-arg ref="objectifyFactory" />
-	</bean>
-	
-	<bean class="jreader.dao.impl.FeedEntryDaoImpl" id="feedEntryDao">
-		<constructor-arg ref="objectifyFactory" />
-	</bean>
-	
-	<bean class="jreader.dao.impl.ArchiveDaoImpl" id="archiveDao">
-		<constructor-arg ref="objectifyFactory" />
-	</bean>
-	
-	<bean class="jreader.dao.impl.ArchivedEntryDaoImpl" id="archivedEntryDao">
-		<constructor-arg ref="objectifyFactory" />
-	</bean>
+	<bean class="jreader.dao.impl.UserDaoImpl" id="userDao" />
+	<bean class="jreader.dao.impl.SubscriptionGroupDaoImpl" id="subscriptionGroupDao" />
+	<bean class="jreader.dao.impl.SubscriptionDaoImpl" id="subscriptionDao" />
+	<bean class="jreader.dao.impl.FeedDaoImpl" id="feedDao" />
+	<bean class="jreader.dao.impl.FeedEntryDaoImpl" id="feedEntryDao" />
+	<bean class="jreader.dao.impl.ArchiveDaoImpl" id="archiveDao" />
+	<bean class="jreader.dao.impl.ArchivedEntryDaoImpl" id="archivedEntryDao" />
 
 </beans>

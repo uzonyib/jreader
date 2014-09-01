@@ -7,52 +7,52 @@ import com.googlecode.objectify.annotation.Id;
 @Entity
 @Cache
 public class Feed {
-	
-	@Id
-	private String url;
-	private String title;
-	private String description;
-	private String feedType;
-	private Long publishedDate;
 
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    @Id
+    private String url;
+    private String title;
+    private String description;
+    private String feedType;
+    private Long publishedDate;
 
-	public String getTitle() {
-		return title;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getFeedType() {
-		return feedType;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setFeedType(String feedType) {
-		this.feedType = feedType;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Long getPublishedDate() {
-		return publishedDate;
-	}
+    public String getFeedType() {
+        return feedType;
+    }
 
-	public void setPublishedDate(Long publishedDate) {
-		this.publishedDate = publishedDate;
-	}
-	
+    public void setFeedType(String feedType) {
+        this.feedType = feedType;
+    }
+
+    public Long getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(Long publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
 }

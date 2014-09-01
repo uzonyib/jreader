@@ -8,17 +8,19 @@ import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
 public interface SubscriptionDao extends OfyDao<Subscription> {
-	
-	Subscription find(User user, Feed feed);
-	
-	Subscription find(SubscriptionGroup subscriptionGroup, Long id);
-	
-	List<Subscription> listSubscriptions(Feed feed);
-	
-	List<Subscription> list(SubscriptionGroup group);
-	
-	int countSubscribers(Feed feed);
-	
-	int getMaxOrder(SubscriptionGroup group);
-	
+
+    Subscription find(User user, Feed feed);
+
+    Subscription find(SubscriptionGroup subscriptionGroup, Long id);
+
+    List<Subscription> listSubscriptions(Feed feed);
+
+    List<Subscription> list(SubscriptionGroup group);
+
+    int countSubscriptions(SubscriptionGroup group);
+
+    int countSubscribers(Feed feed);
+
+    int getMaxOrder(SubscriptionGroup group);
+
 }

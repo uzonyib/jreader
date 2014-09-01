@@ -7,16 +7,16 @@ import com.googlecode.objectify.annotation.Id;
 @Entity
 @Cache
 public class User {
-	
-	@Id
-	private String username;
 
-	public String getUsername() {
-		return username;
-	}
+    @Id
+    private String username;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
 }

@@ -12,54 +12,54 @@ import com.googlecode.objectify.annotation.Parent;
 @Cache
 public class Archive {
 
-	@Id
-	private Long id;
-	@Load
-	@Parent
-	private Ref<User> userRef;
-	@Index
-	private String title;
-	@Index
-	private int order;
+    @Id
+    private Long id;
+    @Load
+    @Parent
+    private Ref<User> userRef;
+    @Index
+    private String title;
+    @Index
+    private int order;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Ref<User> getUserRef() {
-		return userRef;
-	}
+    public Ref<User> getUserRef() {
+        return userRef;
+    }
 
-	public void setUserRef(Ref<User> userRef) {
-		this.userRef = userRef;
-	}
+    public void setUserRef(Ref<User> userRef) {
+        this.userRef = userRef;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public User getUser() {
-		return userRef == null ? null : userRef.get();
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setUser(User user) {
-		this.userRef = user == null ? null : Ref.create(user);
-	}
+    public User getUser() {
+        return getUserRef() == null ? null : getUserRef().get();
+    }
 
-	public int getOrder() {
-		return order;
-	}
+    public void setUser(User user) {
+        this.setUserRef(user == null ? null : Ref.create(user));
+    }
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
 }

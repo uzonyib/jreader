@@ -11,91 +11,91 @@ import com.googlecode.objectify.annotation.Parent;
 @Entity
 @Cache
 public class Subscription {
-	
-	@Id
-	private Long id;
-	@Load
-	@Parent
-	private Ref<SubscriptionGroup> groupRef;
-	@Load
-	@Index
-	private Ref<Feed> feedRef;
-	private String title;
-	@Index
-	private int order;
-	private Long updatedDate;
-	private Long refreshDate;
 
-	public Long getId() {
-		return id;
-	}
+    @Id
+    private Long id;
+    @Load
+    @Parent
+    private Ref<SubscriptionGroup> groupRef;
+    @Load
+    @Index
+    private Ref<Feed> feedRef;
+    private String title;
+    @Index
+    private int order;
+    private Long updatedDate;
+    private Long refreshDate;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public Ref<SubscriptionGroup> getGroupRef() {
-		return groupRef;
-	}
-	
-	public void setGroupRef(Ref<SubscriptionGroup> groupRef) {
-		this.groupRef = groupRef;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Ref<Feed> getFeedRef() {
-		return feedRef;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setFeedRef(Ref<Feed> feedRef) {
-		this.feedRef = feedRef;
-	}
+    public Ref<SubscriptionGroup> getGroupRef() {
+        return groupRef;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setGroupRef(Ref<SubscriptionGroup> groupRef) {
+        this.groupRef = groupRef;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public SubscriptionGroup getGroup() {
-		return groupRef == null ? null : groupRef.get();
-	}
-	
-	public void setGroup(SubscriptionGroup group) {
-		this.groupRef = group == null ? null : Ref.create(group);
-	}
-	
-	public Feed getFeed() {
-		return feedRef == null ? null : feedRef.get();
-	}
+    public Ref<Feed> getFeedRef() {
+        return feedRef;
+    }
 
-	public void setFeed(Feed feed) {
-		this.feedRef = feed == null ? null : Ref.create(feed);
-	}
+    public void setFeedRef(Ref<Feed> feedRef) {
+        this.feedRef = feedRef;
+    }
 
-	public int getOrder() {
-		return order;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public Long getUpdatedDate() {
-		return updatedDate;
-	}
+    public SubscriptionGroup getGroup() {
+        return groupRef == null ? null : groupRef.get();
+    }
 
-	public void setUpdatedDate(Long updatedDate) {
-		this.updatedDate = updatedDate;
-	}
+    public void setGroup(SubscriptionGroup group) {
+        this.groupRef = group == null ? null : Ref.create(group);
+    }
 
-	public Long getRefreshDate() {
-		return refreshDate;
-	}
+    public Feed getFeed() {
+        return feedRef == null ? null : feedRef.get();
+    }
 
-	public void setRefreshDate(Long refreshDate) {
-		this.refreshDate = refreshDate;
-	}
+    public void setFeed(Feed feed) {
+        this.feedRef = feed == null ? null : Ref.create(feed);
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public Long getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Long updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public Long getRefreshDate() {
+        return refreshDate;
+    }
+
+    public void setRefreshDate(Long refreshDate) {
+        this.refreshDate = refreshDate;
+    }
 
 }

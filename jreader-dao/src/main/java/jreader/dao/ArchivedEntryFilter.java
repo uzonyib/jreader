@@ -1,39 +1,39 @@
 package jreader.dao;
 
 public class ArchivedEntryFilter {
-	
-	protected boolean ascending;
-	protected int offset;
-	protected int count;
 
-	public ArchivedEntryFilter(boolean ascending, int offset, int count) {
-		this.ascending = ascending;
-		this.offset = offset;
-		this.count = count;
-	}
+    protected boolean ascending;
+    protected int offset;
+    protected int count;
 
-	public boolean isAscending() {
-		return ascending;
-	}
+    public ArchivedEntryFilter(boolean ascending, int offset, int count) {
+        this.ascending = ascending;
+        this.offset = offset;
+        this.count = count;
+    }
 
-	public void setAscending(boolean ascending) {
-		this.ascending = ascending;
-	}
+    public boolean isAscending() {
+        return ascending;
+    }
 
-	public int getOffset() {
-		return offset;
-	}
+    public void setAscending(boolean ascending) {
+        this.ascending = ascending;
+    }
 
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
+    public int getOffset() {
+        return offset;
+    }
 
-	public int getCount() {
-		return count;
-	}
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
 
-	public void setCount(int count) {
-		this.count = count;
-	}
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
 }
