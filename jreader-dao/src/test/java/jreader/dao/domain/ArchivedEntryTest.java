@@ -2,6 +2,8 @@ package jreader.dao.domain;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import jreader.dao.ArchiveDao;
+import jreader.dao.UserDao;
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.ArchiveDaoImpl;
 import jreader.dao.impl.UserDaoImpl;
@@ -21,14 +23,14 @@ public class ArchivedEntryTest extends AbstractDaoTest {
     public void init() {
         User user = new User();
         user.setUsername("username");
-        UserDaoImpl userDao = new UserDaoImpl();
+        UserDao userDao = new UserDaoImpl();
         savedUser = userDao.save(user);
         
         Archive archive = new Archive();
         archive.setUser(savedUser);
         archive.setTitle("title");
         archive.setOrder(1);
-        ArchiveDaoImpl archiveDao = new ArchiveDaoImpl();
+        ArchiveDao archiveDao = new ArchiveDaoImpl();
         savedArchive = archiveDao.save(archive);
     }
     

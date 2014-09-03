@@ -101,11 +101,11 @@ public class FeedEntry {
     }
 
     public Subscription getSubscription() {
-        return subscriptionRef == null ? null : subscriptionRef.get();
+        return getSubscriptionRef() == null ? null : getSubscriptionRef().get();
     }
 
     public void setSubscription(Subscription subscription) {
-        this.subscriptionRef = subscription == null ? null : Ref.create(subscription);
+        this.setSubscriptionRef(subscription == null ? null : Ref.create(subscription));
     }
 
 }

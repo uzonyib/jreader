@@ -2,6 +2,7 @@ package jreader.dao.domain;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import jreader.dao.UserDao;
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.UserDaoImpl;
 import jreader.domain.SubscriptionGroup;
@@ -18,7 +19,7 @@ public class SubscriptionGroupTest extends AbstractDaoTest {
     public void init() {
         User user = new User();
         user.setUsername("username");
-        UserDaoImpl userDao = new UserDaoImpl();
+        UserDao userDao = new UserDaoImpl();
         savedUser = userDao.save(user);
     }
     

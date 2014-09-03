@@ -59,19 +59,19 @@ public class Subscription {
     }
 
     public SubscriptionGroup getGroup() {
-        return groupRef == null ? null : groupRef.get();
+        return getGroupRef() == null ? null : getGroupRef().get();
     }
 
     public void setGroup(SubscriptionGroup group) {
-        this.groupRef = group == null ? null : Ref.create(group);
+        this.setGroupRef(group == null ? null : Ref.create(group));
     }
 
     public Feed getFeed() {
-        return feedRef == null ? null : feedRef.get();
+        return getFeedRef() == null ? null : getFeedRef().get();
     }
 
     public void setFeed(Feed feed) {
-        this.feedRef = feed == null ? null : Ref.create(feed);
+        this.setFeedRef(feed == null ? null : Ref.create(feed));
     }
 
     public int getOrder() {
