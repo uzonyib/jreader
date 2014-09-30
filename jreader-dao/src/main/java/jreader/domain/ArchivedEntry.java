@@ -28,7 +28,7 @@ public class ArchivedEntry {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -36,7 +36,7 @@ public class ArchivedEntry {
         return archiveRef;
     }
 
-    public void setArchiveRef(Ref<Archive> archiveRef) {
+    public void setArchiveRef(final Ref<Archive> archiveRef) {
         this.archiveRef = archiveRef;
     }
 
@@ -44,7 +44,7 @@ public class ArchivedEntry {
         return link;
     }
 
-    public void setLink(String link) {
+    public void setLink(final String link) {
         this.link = link;
     }
 
@@ -52,7 +52,7 @@ public class ArchivedEntry {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -60,7 +60,7 @@ public class ArchivedEntry {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -68,7 +68,7 @@ public class ArchivedEntry {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(final String author) {
         this.author = author;
     }
 
@@ -76,7 +76,7 @@ public class ArchivedEntry {
         return publishedDate;
     }
 
-    public void setPublishedDate(Long publishedDate) {
+    public void setPublishedDate(final Long publishedDate) {
         this.publishedDate = publishedDate;
     }
 
@@ -84,7 +84,7 @@ public class ArchivedEntry {
         return getArchiveRef() == null ? null : getArchiveRef().get();
     }
 
-    public void setArchive(Archive archive) {
+    public void setArchive(final Archive archive) {
         this.setArchiveRef(archive == null ? null : Ref.create(archive));
     }
 

@@ -11,42 +11,42 @@ public class FeedEntryFilter {
     protected int offset;
     protected int count;
 
-    public FeedEntryFilter(Selection selection, boolean ascending, int offset, int count) {
+    public FeedEntryFilter(final Selection selection, final boolean ascending, final int offset, final int count) {
         this.selection = selection;
         this.ascending = ascending;
         this.offset = offset;
         this.count = count;
     }
 
-    public Selection getSelection() {
+    public final Selection getSelection() {
         return selection;
     }
 
-    public void setSelection(Selection selection) {
+    public final void setSelection(final Selection selection) {
         this.selection = selection;
     }
 
-    public boolean isAscending() {
+    public final boolean isAscending() {
         return ascending;
     }
 
-    public void setAscending(boolean ascending) {
+    public final void setAscending(final boolean ascending) {
         this.ascending = ascending;
     }
 
-    public int getOffset() {
+    public final int getOffset() {
         return offset;
     }
 
-    public void setOffset(int offset) {
+    public final void setOffset(final int offset) {
         this.offset = offset;
     }
 
-    public int getCount() {
+    public final int getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public final void setCount(final int count) {
         this.count = count;
     }
 

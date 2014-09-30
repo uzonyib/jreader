@@ -32,7 +32,7 @@ public class FeedEntry {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -40,7 +40,7 @@ public class FeedEntry {
         return subscriptionRef;
     }
 
-    public void setSubscriptionRef(Ref<Subscription> subscriptionRef) {
+    public void setSubscriptionRef(final Ref<Subscription> subscriptionRef) {
         this.subscriptionRef = subscriptionRef;
     }
 
@@ -48,7 +48,7 @@ public class FeedEntry {
         return link;
     }
 
-    public void setLink(String link) {
+    public void setLink(final String link) {
         this.link = link;
     }
 
@@ -56,7 +56,7 @@ public class FeedEntry {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -64,7 +64,7 @@ public class FeedEntry {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -72,7 +72,7 @@ public class FeedEntry {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(final String author) {
         this.author = author;
     }
 
@@ -80,7 +80,7 @@ public class FeedEntry {
         return publishedDate;
     }
 
-    public void setPublishedDate(Long publishedDate) {
+    public void setPublishedDate(final Long publishedDate) {
         this.publishedDate = publishedDate;
     }
 
@@ -88,7 +88,7 @@ public class FeedEntry {
         return read;
     }
 
-    public void setRead(boolean read) {
+    public void setRead(final boolean read) {
         this.read = read;
     }
 
@@ -96,7 +96,7 @@ public class FeedEntry {
         return starred;
     }
 
-    public void setStarred(boolean starred) {
+    public void setStarred(final boolean starred) {
         this.starred = starred;
     }
 
@@ -104,7 +104,7 @@ public class FeedEntry {
         return getSubscriptionRef() == null ? null : getSubscriptionRef().get();
     }
 
-    public void setSubscription(Subscription subscription) {
+    public void setSubscription(final Subscription subscription) {
         this.setSubscriptionRef(subscription == null ? null : Ref.create(subscription));
     }
 

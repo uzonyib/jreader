@@ -19,7 +19,7 @@ public class Feed {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(final String url) {
         this.url = url;
     }
 
@@ -27,7 +27,7 @@ public class Feed {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -35,7 +35,7 @@ public class Feed {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -43,7 +43,7 @@ public class Feed {
         return feedType;
     }
 
-    public void setFeedType(String feedType) {
+    public void setFeedType(final String feedType) {
         this.feedType = feedType;
     }
 
@@ -51,7 +51,7 @@ public class Feed {
         return publishedDate;
     }
 
-    public void setPublishedDate(Long publishedDate) {
+    public void setPublishedDate(final Long publishedDate) {
         this.publishedDate = publishedDate;
     }
 

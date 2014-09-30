@@ -8,17 +8,17 @@ import jreader.domain.User;
 
 public class EntityFactory {
 
-    public SubscriptionGroup createGroup(User user, String title, int order) {
-        SubscriptionGroup subscriptionGroup = new SubscriptionGroup();
+    public SubscriptionGroup createGroup(final User user, final String title, final int order) {
+        final SubscriptionGroup subscriptionGroup = new SubscriptionGroup();
         subscriptionGroup.setUser(user);
         subscriptionGroup.setTitle(title);
         subscriptionGroup.setOrder(order);
         return subscriptionGroup;
     }
 
-    public Subscription createSubscription(SubscriptionGroup group, Feed feed, String title, int order,
-            Long updatedDate, Long refreshDate) {
-        Subscription subscription = new Subscription();
+    public Subscription createSubscription(final SubscriptionGroup group, final Feed feed,
+            final String title, final int order, final Long updatedDate, final Long refreshDate) {
+        final Subscription subscription = new Subscription();
         subscription.setGroup(group);
         subscription.setFeed(feed);
         subscription.setTitle(title);
@@ -28,8 +28,8 @@ public class EntityFactory {
         return subscription;
     }
 
-    public Archive createArchive(User user, String title, int order) {
-        Archive archive = new Archive();
+    public Archive createArchive(final User user, final String title, final int order) {
+        final Archive archive = new Archive();
         archive.setUser(user);
         archive.setTitle(title);
         archive.setOrder(order);

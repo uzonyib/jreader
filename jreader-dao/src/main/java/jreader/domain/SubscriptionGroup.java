@@ -26,7 +26,7 @@ public class SubscriptionGroup {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -34,7 +34,7 @@ public class SubscriptionGroup {
         return userRef;
     }
 
-    public void setUserRef(Ref<User> userRef) {
+    public void setUserRef(final Ref<User> userRef) {
         this.userRef = userRef;
     }
 
@@ -42,7 +42,7 @@ public class SubscriptionGroup {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -50,7 +50,7 @@ public class SubscriptionGroup {
         return getUserRef() == null ? null : getUserRef().get();
     }
 
-    public void setUser(User user) {
+    public void setUser(final User user) {
         this.setUserRef(user == null ? null : Ref.create(user));
     }
 
@@ -58,7 +58,7 @@ public class SubscriptionGroup {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(final int order) {
         this.order = order;
     }
 

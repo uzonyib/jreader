@@ -8,50 +8,42 @@ import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 
-import com.googlecode.objectify.Objectify;
-
 public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements SubscriptionDao {
 
     @Override
-    public Subscription find(User user, Feed feed) {
-        Objectify ofy = getOfy();
-        return ofy.load().type(Subscription.class).ancestor(user).filter("feedRef =", feed).first().now();
+    public Subscription find(final User user, final Feed feed) {
+        return getOfy().load().type(Subscription.class).ancestor(user).filter("feedRef =", feed).first().now();
     }
 
     @Override
-    public Subscription find(SubscriptionGroup subscriptionGroup, Long id) {
-        Objectify ofy = getOfy();
-        return ofy.load().type(Subscription.class).parent(subscriptionGroup).id(id).now();
+    public Subscription find(final SubscriptionGroup subscriptionGroup, final Long id) {
+        return getOfy().load().type(Subscription.class).parent(subscriptionGroup).id(id).now();
     }
 
     @Override
-    public List<Subscription> listSubscriptions(Feed feed) {
-        Objectify ofy = getOfy();
-        return ofy.load().type(Subscription.class).filter("feedRef =", feed).list();
+    public List<Subscription> listSubscriptions(final Feed feed) {
+        return getOfy().load().type(Subscription.class).filter("feedRef =", feed).list();
     }
 
     @Override
-    public List<Subscription> list(SubscriptionGroup group) {
-        Objectify ofy = getOfy();
-        return ofy.load().type(Subscription.class).ancestor(group).order("order").list();
+    public List<Subscription> list(final SubscriptionGroup group) {
+        return getOfy().load().type(Subscription.class).ancestor(group).order("order").list();
     }
 
     @Override
-    public int countSubscriptions(SubscriptionGroup group) {
-        Objectify ofy = getOfy();
-        return ofy.load().type(Subscription.class).ancestor(group.getUser()).filter("groupRef =", group).count();
+    public int countSubscriptions(final SubscriptionGroup group) {
+        return getOfy().load().type(Subscription.class).ancestor(group.getUser()).filter("groupRef =", group).count();
     }
 
     @Override
-    public int countSubscribers(Feed feed) {
-        Objectify ofy = getOfy();
-        return ofy.load().type(Subscription.class).filter("feedRef =", feed).count();
+    public int countSubscribers(final Feed feed) {
+        return getOfy().load().type(Subscription.class).filter("feedRef =", feed).count();
     }
 
     @Override
-    public int getMaxOrder(SubscriptionGroup group) {
-        Objectify ofy = getOfy();
-        Subscription subscription = ofy.load().type(Subscription.class).ancestor(group).order("-order").first().now();
+    public int getMaxOrder(final SubscriptionGroup group) {
+        final Subscription subscription = getOfy().load().type(Subscription.class)
+                .ancestor(group).order("-order").first().now();
         return subscription == null ? -1 : subscription.getOrder();
     }
 

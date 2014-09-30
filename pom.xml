@@ -166,7 +166,7 @@
             	<artifactId>maven-checkstyle-plugin</artifactId>
           		<version>2.12.1</version>
           		<configuration>
-          			<configLocation>config/maven_checks.xml</configLocation>
+          			<configLocation>config/jreader_checks.xml</configLocation>
           		</configuration>
           		<reportSets>
             		<reportSet>

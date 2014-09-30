@@ -8,30 +8,26 @@ import jreader.domain.Archive;
 import jreader.domain.ArchivedEntry;
 import jreader.domain.User;
 
-import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.cmd.Query;
-
 public class ArchivedEntryDaoImpl extends AbstractOfyDao<ArchivedEntry> implements ArchivedEntryDao {
 
     @Override
-    public ArchivedEntry find(Archive archive, Long id) {
-        Objectify ofy = getOfy();
-        return ofy.load().type(ArchivedEntry.class).parent(archive).id(id).now();
+    public ArchivedEntry find(final Archive archive, final Long id) {
+        return getOfy().load().type(ArchivedEntry.class).parent(archive).id(id).now();
     }
 
     @Override
-    public List<ArchivedEntry> list(User user, ArchivedEntryFilter filter) {
+    public List<ArchivedEntry> list(final User user, final ArchivedEntryFilter filter) {
         return listForAncestor(user, filter);
     }
 
     @Override
-    public List<ArchivedEntry> list(Archive archive, ArchivedEntryFilter filter) {
+    public List<ArchivedEntry> list(final Archive archive, final ArchivedEntryFilter filter) {
         return listForAncestor(archive, filter);
     }
 
-    private List<ArchivedEntry> listForAncestor(Object ancestor, ArchivedEntryFilter filter) {
-        Query<ArchivedEntry> query = getOfy().load().type(ArchivedEntry.class).ancestor(ancestor);
-        return query.order(filter.isAscending() ? "publishedDate" : "-publishedDate")
+    private List<ArchivedEntry> listForAncestor(final Object ancestor, final ArchivedEntryFilter filter) {
+        return getOfy().load().type(ArchivedEntry.class).ancestor(ancestor)
+                .order(filter.isAscending() ? "publishedDate" : "-publishedDate")
                 .offset(filter.getOffset()).limit(filter.getCount()).list();
     }
 

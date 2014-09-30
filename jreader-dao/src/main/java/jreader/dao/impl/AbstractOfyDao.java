@@ -21,7 +21,7 @@ import com.googlecode.objectify.Work;
 abstract class AbstractOfyDao<EntityType> implements OfyDao<EntityType> {
 
     static {
-        ObjectifyFactory factory = factory();
+        final ObjectifyFactory factory = factory();
         factory.register(User.class);
         factory.register(SubscriptionGroup.class);
         factory.register(Subscription.class);
@@ -45,7 +45,7 @@ abstract class AbstractOfyDao<EntityType> implements OfyDao<EntityType> {
         return ofy.transact(new Work<EntityType>() {
             @Override
             public EntityType run() {
-                Key<EntityType> key = ofy.save().entity(entity).now();
+                final Key<EntityType> key = ofy.save().entity(entity).now();
                 return ofy.load().key(key).now();
             }
         });

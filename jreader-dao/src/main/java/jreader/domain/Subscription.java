@@ -30,7 +30,7 @@ public class Subscription {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -38,7 +38,7 @@ public class Subscription {
         return groupRef;
     }
 
-    public void setGroupRef(Ref<SubscriptionGroup> groupRef) {
+    public void setGroupRef(final Ref<SubscriptionGroup> groupRef) {
         this.groupRef = groupRef;
     }
 
@@ -46,7 +46,7 @@ public class Subscription {
         return feedRef;
     }
 
-    public void setFeedRef(Ref<Feed> feedRef) {
+    public void setFeedRef(final Ref<Feed> feedRef) {
         this.feedRef = feedRef;
     }
 
@@ -54,7 +54,7 @@ public class Subscription {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -62,7 +62,7 @@ public class Subscription {
         return getGroupRef() == null ? null : getGroupRef().get();
     }
 
-    public void setGroup(SubscriptionGroup group) {
+    public void setGroup(final SubscriptionGroup group) {
         this.setGroupRef(group == null ? null : Ref.create(group));
     }
 
@@ -70,7 +70,7 @@ public class Subscription {
         return getFeedRef() == null ? null : getFeedRef().get();
     }
 
-    public void setFeed(Feed feed) {
+    public void setFeed(final Feed feed) {
         this.setFeedRef(feed == null ? null : Ref.create(feed));
     }
 
@@ -78,7 +78,7 @@ public class Subscription {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(final int order) {
         this.order = order;
     }
 
@@ -86,7 +86,7 @@ public class Subscription {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Long updatedDate) {
+    public void setUpdatedDate(final Long updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -94,7 +94,7 @@ public class Subscription {
         return refreshDate;
     }
 
-    public void setRefreshDate(Long refreshDate) {
+    public void setRefreshDate(final Long refreshDate) {
         this.refreshDate = refreshDate;
     }
 

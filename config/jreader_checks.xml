@@ -31,7 +31,7 @@ under the License.
 
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
-    <!-- module name="NewlineAtEndOfFile"/ -->
+    <module name="NewlineAtEndOfFile"/>
 
     <!-- Checks that property files contain the same keys.         -->
     <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
@@ -110,7 +110,11 @@ under the License.
         <module name="IllegalImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
-
+<!-- 		<module name="ImportOrder"> -->
+<!-- 			<property name="groups" value="java,javax" /> -->
+<!-- 			<property name="ordered" value="true" /> -->
+<!-- 			<property name="separated" value="true" /> -->
+<!-- 		</module> -->
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
@@ -123,15 +127,18 @@ under the License.
         <module name="EmptyForIteratorPad">
           <property name="option" value="space"/>
         </module>
-        <!-- module name="NoWhitespaceAfter"/ -->
-        <!-- module name="NoWhitespaceBefore"/ -->
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
         <module name="OperatorWrap"/>
         <module name="ParenPad">
           <property name="option" value="nospace"/>
         </module>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
-        <!-- module name="MethodParamPad"/ -->
+        <module name="MethodParamPad"/>
+        <module name="TypecastParenPad">
+        	<property name="option" value="nospace"/>
+        </module>
 
 
         <!-- Modifier Checks                                    -->
@@ -169,12 +176,13 @@ under the License.
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!-- module name="DesignForExtension"/ -->
-        <!-- module name="FinalClass"/ -->
-        <!-- module name="HideUtilityClassConstructor"/ -->
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier">
           <property name="protectedAllowed" value="true"/>
@@ -183,12 +191,29 @@ under the License.
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
-        <!-- module name="ArrayTypeStyle"/ -->
-        <!-- module name="FinalParameters"/ -->
+        <module name="ArrayTypeStyle"/>
+        <module name="FinalParameters"/>
         <!-- Let todo plugin handle this.
         <module name="TodoComment"/>
           -->
         <module name="UpperEll"/>
+        
+        <module name="DeclarationOrder"/>
+        <module name="ParameterAssignment"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="MutableException"/>
+        <module name="ClassFanOutComplexity"/>
+        <module name="CyclomaticComplexity">
+        	<property name="max" value="20"/>
+        </module>
+        <module name="NPathComplexity"/>
+        <module name="TodoComment">
+        	<property name="format" value="TODO"/>
+        </module>
+        <module name="TrailingComment"/>
+        <module name="FinalLocalVariable">
+		    <property name="tokens" value="VARIABLE_DEF,PARAMETER_DEF"/>
+		</module>
 
     </module>
 
