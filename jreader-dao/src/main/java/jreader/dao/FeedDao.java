@@ -10,6 +10,4 @@ public interface FeedDao extends OfyDao<Feed> {
 
     List<Feed> listAll();
 
-    Long getLastUpdatedDate(Feed feed);
-
 }
