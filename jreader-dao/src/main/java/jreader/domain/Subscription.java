@@ -25,6 +25,20 @@ public class Subscription {
     private int order;
     private Long updatedDate;
     private Long refreshDate;
+    
+    public Subscription() {
+        
+    }
+
+    private Subscription(final Builder builder) {
+        this.setId(builder.id);
+        this.setGroup(builder.group);
+        this.setFeed(builder.feed);
+        this.setTitle(builder.title);
+        this.setOrder(builder.order);
+        this.setUpdatedDate(builder.updatedDate);
+        this.setRefreshDate(builder.refreshDate);
+    }
 
     public Long getId() {
         return id;
@@ -96,6 +110,57 @@ public class Subscription {
 
     public void setRefreshDate(final Long refreshDate) {
         this.refreshDate = refreshDate;
+    }
+
+    public static class Builder {
+
+        private Long id;
+        private SubscriptionGroup group;
+        private Feed feed;
+        private String title;
+        private int order;
+        private Long updatedDate;
+        private Long refreshDate;
+
+        public Builder id(final Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder group(final SubscriptionGroup group) {
+            this.group = group;
+            return this;
+        }
+
+        public Builder feed(final Feed feed) {
+            this.feed = feed;
+            return this;
+        }
+
+        public Builder title(final String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder order(final int order) {
+            this.order = order;
+            return this;
+        }
+
+        public Builder updatedDate(final Long updatedDate) {
+            this.updatedDate = updatedDate;
+            return this;
+        }
+
+        public Builder refreshDate(final Long refreshDate) {
+            this.refreshDate = refreshDate;
+            return this;
+        }
+        
+        public Subscription build() {
+            return new Subscription(this);
+        }
+
     }
 
 }

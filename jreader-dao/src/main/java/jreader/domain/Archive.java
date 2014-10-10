@@ -21,6 +21,17 @@ public class Archive {
     private String title;
     @Index
     private int order;
+    
+    public Archive() {
+        
+    }
+
+    public Archive(final Builder builder) {
+        this.setId(builder.id);
+        this.setUser(builder.user);
+        this.setTitle(builder.title);
+        this.setOrder(builder.order);
+    }
 
     public Long getId() {
         return id;
@@ -60,6 +71,39 @@ public class Archive {
 
     public void setOrder(final int order) {
         this.order = order;
+    }
+
+    public static class Builder {
+
+        private Long id;
+        private User user;
+        private String title;
+        private int order;
+
+        public Builder id(final Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder user(final User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder title(final String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder order(final int order) {
+            this.order = order;
+            return this;
+        }
+        
+        public Archive build() {
+            return new Archive(this);
+        }
+
     }
 
 }

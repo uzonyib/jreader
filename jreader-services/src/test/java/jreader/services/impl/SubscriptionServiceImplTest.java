@@ -2,7 +2,6 @@ package jreader.services.impl;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,7 +17,7 @@ import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.SubscriptionGroupDao;
 import jreader.dao.UserDao;
-import jreader.dao.impl.EntityFactory;
+import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
@@ -69,7 +68,11 @@ public class SubscriptionServiceImplTest {
 	@Mock
 	private ConversionService conversionService;
 	@Mock
-	private EntityFactory entityFactory;
+	private BuilderFactory builderFactory;
+	@Mock
+	private SubscriptionGroup.Builder groupBuilder;
+	@Mock
+    private Subscription.Builder subscriptionBuilder;
 	
 	@Mock
 	private User user;
@@ -117,7 +120,11 @@ public class SubscriptionServiceImplTest {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(subscriptionGroupDao.find(user, GROUP_TITLE)).thenReturn(null);
 		when(subscriptionGroupDao.getMaxOrder(user)).thenReturn(GROUP_ORDER - 1);
-		when(entityFactory.createGroup(user, GROUP_TITLE, GROUP_ORDER)).thenReturn(group);
+		when(builderFactory.createGroupBuilder()).thenReturn(groupBuilder);
+		when(groupBuilder.user(user)).thenReturn(groupBuilder);
+		when(groupBuilder.title(GROUP_TITLE)).thenReturn(groupBuilder);
+		when(groupBuilder.order(GROUP_ORDER)).thenReturn(groupBuilder);
+		when(groupBuilder.build()).thenReturn(group);
 		when(subscriptionGroupDao.save(group)).thenReturn(group);
 		when(conversionService.convert(group, SubscriptionGroupDto.class)).thenReturn(groupDto);
 		
@@ -185,8 +192,14 @@ public class SubscriptionServiceImplTest {
 		when(feedDao.save(feed)).thenReturn(feed);
 		when(subscriptionDao.find(user, feed)).thenReturn(null);
 		when(subscriptionDao.getMaxOrder(group)).thenReturn(SUBSCRIPTION_ORDER - 1);
-		when(entityFactory.createSubscription(eq(group), eq(feed), eq(FEED_TITLE),
-				eq(SUBSCRIPTION_ORDER), eq(2000L), anyLong())).thenReturn(subscription);
+		when(builderFactory.createSubscriptionBuilder()).thenReturn(subscriptionBuilder);
+		when(subscriptionBuilder.group(group)).thenReturn(subscriptionBuilder);
+		when(subscriptionBuilder.feed(feed)).thenReturn(subscriptionBuilder);
+		when(subscriptionBuilder.title(FEED_TITLE)).thenReturn(subscriptionBuilder);
+		when(subscriptionBuilder.order(SUBSCRIPTION_ORDER)).thenReturn(subscriptionBuilder);
+		when(subscriptionBuilder.updatedDate(2000L)).thenReturn(subscriptionBuilder);
+		when(subscriptionBuilder.refreshDate(anyLong())).thenReturn(subscriptionBuilder);
+		when(subscriptionBuilder.build()).thenReturn(subscription);
 		when(subscriptionDao.save(subscription)).thenReturn(subscription);
 		when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
 		
@@ -218,8 +231,15 @@ public class SubscriptionServiceImplTest {
 		when(feedDao.find(URL)).thenReturn(feed);
 		when(subscriptionDao.find(user, feed)).thenReturn(null);
 		when(subscriptionDao.getMaxOrder(group)).thenReturn(SUBSCRIPTION_ORDER - 1);
-		when(entityFactory.createSubscription(eq(group), eq(feed), eq(FEED_TITLE),
-				eq(SUBSCRIPTION_ORDER), eq(2000L), anyLong())).thenReturn(subscription);
+		when(builderFactory.createSubscriptionBuilder()).thenReturn(subscriptionBuilder);
+        when(subscriptionBuilder.group(group)).thenReturn(subscriptionBuilder);
+        when(subscriptionBuilder.feed(feed)).thenReturn(subscriptionBuilder);
+        when(subscriptionBuilder.title(FEED_TITLE)).thenReturn(subscriptionBuilder);
+        when(subscriptionBuilder.order(SUBSCRIPTION_ORDER)).thenReturn(subscriptionBuilder);
+        when(subscriptionBuilder.updatedDate(2000L)).thenReturn(subscriptionBuilder);
+        when(subscriptionBuilder.refreshDate(anyLong())).thenReturn(subscriptionBuilder);
+        when(subscriptionBuilder.build()).thenReturn(subscription);
+        when(subscriptionDao.save(subscription)).thenReturn(subscription);
 		
 		service.subscribe(USERNAME, GROUP_ID, URL);
 		

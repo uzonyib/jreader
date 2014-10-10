@@ -5,7 +5,7 @@ import java.util.List;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
-import jreader.dao.impl.EntityFactory;
+import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
@@ -30,7 +30,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 	
 	private ConversionService conversionService;
 	
-	private EntityFactory entityFactory;
+	private BuilderFactory builderFactory;
 	
 	@Override
 	public SubscriptionGroupDto createGroup(String username, String title) {
@@ -38,14 +38,15 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 		if (subscriptionGroupDao.find(user, title) != null) {
 			throw new ServiceException("Group already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
 		}
-		SubscriptionGroup group = subscriptionGroupDao.save(entityFactory.createGroup(user, title, subscriptionGroupDao.getMaxOrder(user) + 1));
+		SubscriptionGroup group = subscriptionGroupDao.save(builderFactory.createGroupBuilder()
+		        .user(user).title(title).order(subscriptionGroupDao.getMaxOrder(user) + 1).build());
 		return conversionService.convert(group, SubscriptionGroupDto.class);
 	}
 	
 	@Override
 	public SubscriptionDto subscribe(String username, Long subscriptionGroupId, String url) {
 		User user = this.getUser(username);
-		SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
+		SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
 		
 		RssFetchResult rssFetchResult = rssService.fetch(url);
 		if (rssFetchResult == null) {
@@ -69,8 +70,9 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 			}
 		}
 
-		subscription = entityFactory.createSubscription(subscriptionGroup, feed, feed.getTitle(),
-				subscriptionDao.getMaxOrder(subscriptionGroup) + 1, updatedDate, refreshDate);
+		subscription = builderFactory.createSubscriptionBuilder().group(group).feed(feed)
+		        .title(feed.getTitle()).order(subscriptionDao.getMaxOrder(group) + 1)
+		        .updatedDate(updatedDate).refreshDate(refreshDate).build();
 		subscription = subscriptionDao.save(subscription);
 		
 		for (FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
@@ -276,12 +278,12 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 		this.conversionService = conversionService;
 	}
 
-	public EntityFactory getEntityFactory() {
-		return entityFactory;
+	public BuilderFactory getBuilderFactory() {
+		return builderFactory;
 	}
 
-	public void setEntityFactory(EntityFactory entityFactory) {
-		this.entityFactory = entityFactory;
+	public void setBuilderFactory(BuilderFactory builderFactory) {
+		this.builderFactory = builderFactory;
 	}
 
 }

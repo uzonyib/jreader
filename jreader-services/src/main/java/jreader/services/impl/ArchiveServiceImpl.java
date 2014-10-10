@@ -6,9 +6,9 @@ import java.util.List;
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedEntryDao;
 import jreader.dao.FeedEntryDao;
-import jreader.dao.impl.EntityFactory;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedEntry;
+import jreader.domain.BuilderFactory;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
@@ -30,7 +30,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 	
 	private ConversionService conversionService;
 	
-	private EntityFactory entityFactory;
+	private BuilderFactory builderFactory;
 	
 	private Archive getArchive(User user, Long id) {
 		Archive archive = archiveDao.find(user, id);
@@ -46,7 +46,8 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 		if (archiveDao.find(user, title) != null) {
 			throw new ServiceException("Archive already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
 		}
-		Archive archive = archiveDao.save(entityFactory.createArchive(user, title, archiveDao.getMaxOrder(user) + 1));
+		Archive archive = archiveDao.save(builderFactory.createArchiveBuilder()
+		        .user(user).title(title).order(archiveDao.getMaxOrder(user) + 1).build());
 		return conversionService.convert(archive, ArchiveDto.class);
 	}
 
@@ -198,12 +199,12 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 		this.conversionService = conversionService;
 	}
 
-	public EntityFactory getEntityFactory() {
-		return entityFactory;
+	public BuilderFactory getBuilderFactory() {
+		return builderFactory;
 	}
 
-	public void setEntityFactory(EntityFactory entityFactory) {
-		this.entityFactory = entityFactory;
+	public void setBuilderFactory(BuilderFactory builderFactory) {
+		this.builderFactory = builderFactory;
 	}
 
 }

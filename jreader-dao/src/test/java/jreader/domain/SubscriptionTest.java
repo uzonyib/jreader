@@ -1,4 +1,4 @@
-package jreader.dao.domain;
+package jreader.domain;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;

@@ -1,17 +1,17 @@
-package jreader.dao.domain;
+package jreader.domain;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import jreader.dao.UserDao;
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.UserDaoImpl;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Archive;
 import jreader.domain.User;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class SubscriptionGroupTest extends AbstractDaoTest {
+public class ArchiveTest extends AbstractDaoTest {
     
     private User savedUser;
     
@@ -25,22 +25,22 @@ public class SubscriptionGroupTest extends AbstractDaoTest {
     
     @Test
     public void setUser_IfUserIsNull_RefShouldBeNull() {
-        SubscriptionGroup group = new SubscriptionGroup();
+        Archive archive = new Archive();
         
-        group.setUser(null);
+        archive.setUser(null);
         
-        assertNull(group.getUserRef());
-        assertNull(group.getUser());
+        assertNull(archive.getUserRef());
+        assertNull(archive.getUser());
     }
     
     @Test
     public void setUser_IfUserIsNotNull_RefShouldNotBeNull() {
-        SubscriptionGroup group = new SubscriptionGroup();
+        Archive archive = new Archive();
         
-        group.setUser(savedUser);
+        archive.setUser(savedUser);
         
-        assertNotNull(group.getUserRef());
-        assertNotNull(group.getUser());
+        assertNotNull(archive.getUserRef());
+        assertNotNull(archive.getUser());
     }
 
 }

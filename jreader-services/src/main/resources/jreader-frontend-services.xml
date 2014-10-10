@@ -23,7 +23,7 @@
 		</property>
 	</bean>
 	
-	<bean class="jreader.dao.impl.EntityFactory" id="entityFactory" />
+	<bean class="jreader.domain.BuilderFactory" id="builderFactory" />
 	
 	<bean class="jreader.services.impl.SubscriptionServiceImpl" id="subscriptionService">
 		<property name="userDao" ref="userDao" />
@@ -41,7 +41,7 @@
 			</bean>
 		</property>
 		<property name="conversionService" ref="conversionService" />
-		<property name="entityFactory" ref="entityFactory"></property>
+		<property name="builderFactory" ref="builderFactory" />
 	</bean>
 	
 	<bean class="jreader.services.impl.FeedEntryServiceImpl" id="feedEntryService">
@@ -60,7 +60,7 @@
 		<property name="archiveDao" ref="archiveDao" />
 		<property name="archivedEntryDao" ref="archivedEntryDao" />
 		<property name="conversionService" ref="conversionService" />
-		<property name="entityFactory" ref="entityFactory"></property>
+		<property name="builderFactory" ref="builderFactory" />
 	</bean>
 	
 </beans>

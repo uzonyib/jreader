@@ -161,11 +161,7 @@ under the License.
         <!-- module name="AvoidInlineConditionals"/ -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField">
-          <property name="severity" value="warning"/>
-          <property name="ignoreSetter" value="true"/>
-          <property name="ignoreConstructorParameter" value="true"/>
-        </module>
+        <!-- module name="HiddenField"/ -->
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber">

@@ -16,9 +16,9 @@ import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.SubscriptionGroupDao;
 import jreader.dao.UserDao;
-import jreader.dao.impl.EntityFactory;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedEntry;
+import jreader.domain.BuilderFactory;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
@@ -66,7 +66,7 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private ConversionService conversionService;
 	@Mock
-	private EntityFactory entityFactory;
+	private BuilderFactory builderFactory;
 	
 	@Mock
 	private User user;
@@ -88,6 +88,8 @@ public class ArchiveServiceImplTest {
 	private ArchivedEntry archivedEntry1;
 	@Mock
 	private ArchivedEntry archivedEntry2;
+	@Mock
+	private Archive.Builder archiveBuilder;
 	
 	@Mock
 	private ArchiveDto archiveDto;
@@ -112,7 +114,11 @@ public class ArchiveServiceImplTest {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(archiveDao.find(user, ARCHIVE_TITLE)).thenReturn(null);
 		when(archiveDao.getMaxOrder(user)).thenReturn(ARCHIVE_ORDER - 1);
-		when(entityFactory.createArchive(user, ARCHIVE_TITLE, ARCHIVE_ORDER)).thenReturn(archive);
+		when(builderFactory.createArchiveBuilder()).thenReturn(archiveBuilder);
+		when(archiveBuilder.user(user)).thenReturn(archiveBuilder);
+		when(archiveBuilder.title(ARCHIVE_TITLE)).thenReturn(archiveBuilder);
+		when(archiveBuilder.order(ARCHIVE_ORDER)).thenReturn(archiveBuilder);
+		when(archiveBuilder.build()).thenReturn(archive);
 		when(archiveDao.save(archive)).thenReturn(archive);
 		when(conversionService.convert(archive, ArchiveDto.class)).thenReturn(archiveDto);
 		
