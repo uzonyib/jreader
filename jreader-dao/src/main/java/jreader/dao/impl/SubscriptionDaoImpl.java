@@ -31,11 +31,6 @@ public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements
     }
 
     @Override
-    public int countSubscriptions(final SubscriptionGroup group) {
-        return getOfy().load().type(Subscription.class).ancestor(group.getUser()).filter("groupRef =", group).count();
-    }
-
-    @Override
     public int countSubscribers(final Feed feed) {
         return getOfy().load().type(Subscription.class).filter("feedRef =", feed).count();
     }

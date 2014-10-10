@@ -17,8 +17,6 @@ public interface SubscriptionDao extends OfyDao<Subscription> {
 
     List<Subscription> list(SubscriptionGroup group);
 
-    int countSubscriptions(SubscriptionGroup group);
-
     int countSubscribers(Feed feed);
 
     int getMaxOrder(SubscriptionGroup group);
