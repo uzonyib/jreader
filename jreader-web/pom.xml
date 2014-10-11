@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <packaging>war</packaging>
-    <artifactId>jreader-frontend</artifactId>
+    <artifactId>jreader-web</artifactId>
 
     <dependencies>
         <dependency>

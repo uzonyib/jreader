@@ -19,8 +19,7 @@
 	<modules>
 		<module>jreader-dao</module>
 		<module>jreader-services</module>
-		<module>jreader-frontend</module>
-		<module>jreader-backend</module>
+		<module>jreader-web</module>
 		<module>jreader-ear</module>
 	</modules>
 	
@@ -38,13 +37,7 @@
 	        </dependency>
 	        <dependency>
 				<groupId>jreader</groupId>
-				<artifactId>jreader-frontend</artifactId>
-				<version>${project.version}</version>
-				<type>war</type>
-			</dependency>
-			<dependency>
-				<groupId>jreader</groupId>
-				<artifactId>jreader-backend</artifactId>
+				<artifactId>jreader-web</artifactId>
 				<version>${project.version}</version>
 				<type>war</type>
 			</dependency>

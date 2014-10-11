@@ -63,4 +63,19 @@
 		<property name="builderFactory" ref="builderFactory" />
 	</bean>
 	
+	<bean class="jreader.services.impl.RssServiceImpl" id="rssService">
+		<constructor-arg>
+			<bean class="jreader.services.impl.RomeFeedReader">
+				<constructor-arg ref="conversionService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<bean class="jreader.services.impl.CronServiceImpl" id="cronService">
+		<property name="subscriptionDao" ref="subscriptionDao" />
+		<property name="feedDao" ref="feedDao" />
+		<property name="feedEntryDao" ref="feedEntryDao" />
+		<property name="rssService" ref="rssService" />
+	</bean>
+	
 </beans>
