@@ -13,8 +13,8 @@ target
 .springBeans
 eclipse-launch-profiles
 appengine
-jreader-frontend/src/main/webapp/css/reader.css
-jreader-frontend/src/main/webapp/css/reader-all.css
-jreader-frontend/src/main/webapp/js/reader-all.js
+jreader-web/src/main/webapp/css/reader.css
+jreader-web/src/main/webapp/css/reader-all.css
+jreader-web/src/main/webapp/js/reader-all.js
 test-output
 
