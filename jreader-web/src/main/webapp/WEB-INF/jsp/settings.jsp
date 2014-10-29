@@ -1,5 +1,5 @@
 <div class="add-subscription">
-	<form ng-submit="createGroup()">
+	<form id="group-form" ng-submit="createGroup()">
 		<span>Add group</span><input ng-model="newGroupTitle"
 			type="text" name="title" placeholder="group name" /><input
 			type="image" src="/images/tick_black.png" title="Create group" />
@@ -24,18 +24,18 @@
 					<input type="image" src="/images/tick_black.png" title="Change" />
 				</form>
 			</td>
-			<td class="action">
+			<td class="action delete">
 				<form ng-if="group.subscriptions.length <= 0"
 					ng-submit="deleteGroup(group.id)">
 					<input type="image" src="/images/cross_black.png" title="Delete" />
 				</form>
 			</td>
-			<td class="action">
+			<td class="action move-up">
 				<form ng-if="!$first" ng-submit="moveGroupUp(group.id)">
 					<input type="image" src="/images/move_up_black.png" title="Move up" />
 				</form>
 			</td>
-			<td class="action">
+			<td class="action move-down">
 				<form ng-if="!$last" ng-submit="moveGroupDown(group.id)">
 					<input type="image" src="/images/move_down_black.png" title="Move down" />
 				</form>

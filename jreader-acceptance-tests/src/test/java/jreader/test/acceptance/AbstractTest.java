@@ -7,12 +7,12 @@ public class AbstractTest {
     
     @BeforeClass
     public static void beforeScenario() {
-        WebDriverManager.init();
+        BrowserManager.init();
     }
     
     @AfterClass
     public static void afterScenario() {
-        WebDriverManager.close();
+        BrowserManager.close();
     }
 
 }

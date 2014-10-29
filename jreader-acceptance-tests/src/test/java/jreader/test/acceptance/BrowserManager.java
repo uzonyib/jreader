@@ -3,11 +3,11 @@ package jreader.test.acceptance;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-public final class WebDriverManager {
+public final class BrowserManager {
     
     private static WebDriver browser;
     
-    private WebDriverManager() {
+    private BrowserManager() {
         
     }
     
@@ -23,6 +23,7 @@ public final class WebDriverManager {
             throw new IllegalStateException("Browser not initialized yet.");
         }
         browser.close();
+        browser = null;
     }
     
     public static WebDriver getBrowser() {
