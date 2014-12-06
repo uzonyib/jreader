@@ -1,9 +1,12 @@
-package jreader.test.acceptance.page;
+package jreader.test.acceptance.page.element;
 
 import java.util.List;
 
 import jreader.test.acceptance.Constants;
+import jreader.test.acceptance.page.HomePage;
+import jreader.test.acceptance.page.SettingsPage;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
@@ -15,6 +18,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Menu {
     
     private WebDriver browser;
+    
+    private HomePage homePage;
+    private SettingsPage settingsPage;
+    
+    @FindBy(id = "menu")
+    @CacheLookup
+    private WebElement mainContent;
     
     @FindBy(id = "logout-menu-item")
     @CacheLookup
@@ -41,20 +51,26 @@ public class Menu {
     
     public Menu(WebDriver browser) {
         this.browser = browser;
+        this.homePage = new HomePage(browser);
+        settingsPage = new SettingsPage(browser);
         PageFactory.initElements(browser, this);
+    }
+    
+    public boolean isDisplayed() {
+        return mainContent != null && mainContent.isDisplayed();
     }
     
     public void logout() {
         logoutLink.click();
     }
     
-    public void openHomePage(HomePage homePage) {
+    public void openHomePage() {
         homeMenuItem.click();
         new WebDriverWait(browser, Constants.WAIT_TIMEOUT)
             .until(ExpectedConditions.visibilityOf(homePage.getMainContent()));
     }
     
-    public void openSettingsPage(SettingsPage settingsPage) {
+    public void openSettingsPage() {
         settingsMenuItem.click();
         new WebDriverWait(browser, Constants.WAIT_TIMEOUT)
             .until(ExpectedConditions.visibilityOf(settingsPage.getMainContent()));
@@ -78,6 +94,12 @@ public class Menu {
     
     public List<WebElement> getGroupMenuItems() {
         return groupMenuItems;
+    }
+    
+    public WebElement getGroupUnreadCount(String title) {
+        return browser.findElement(By.xpath("//*[@id='subscription-menu']"
+                + "//*[contains(@class, 'group-item') and //span[contains(@class, 'title') and .='" + title + "']]"
+                + "//*[contains(@class, 'unread-count')]"));
     }
 
 }

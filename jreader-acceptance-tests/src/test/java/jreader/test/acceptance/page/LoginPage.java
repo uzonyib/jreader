@@ -17,7 +17,6 @@ public class LoginPage {
     private WebDriver browser;
     
     @FindBy(id = "email")
-    @CacheLookup
     private WebElement emailField;
     
     @FindBy(id = "isAdmin")
@@ -58,6 +57,10 @@ public class LoginPage {
         enterEmail(email);
         checkAdmin(isAdmin);
         clickLogin();
+    }
+    
+    public boolean isDisplayed() {
+        return emailField != null && emailField.isDisplayed();
     }
 
 }

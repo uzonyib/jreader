@@ -4,7 +4,7 @@
 			type="text" name="title" placeholder="group name" /><input
 			type="image" src="/images/tick_black.png" title="Create group" />
 	</form>
-	<form ng-submit="subscribe()">
+	<form id="subscription-form" ng-submit="subscribe()">
 		<span>Add subscription to group</span><select
 			ng-model="newSubscription.group"
 			ng-options="group.title for group in subscriptionGroups">

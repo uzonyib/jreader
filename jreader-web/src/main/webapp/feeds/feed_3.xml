@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:media="http://search.yahoo.com/mrss/">
+	<channel>
+		<title>Feed 3</title>
+		<link>http://www.feed3.com/</link>
+		<description>description 3</description>
+		<language>en-US</language>
+		<copyright>copyright</copyright>
+		<pubDate>Tue, 30 Oct 2014 19:34:58 +0100</pubDate>
+		<image>
+			<url>http://www.feed3.com/rss/logo.png</url>
+			<title>Feed 3</title>
+			<link>http://www.feed3.com/</link>
+			<description>description 3</description>
+			<width>144</width>
+			<height>25</height>
+		</image>
+		<atom:link href="http://www.feed1.com/rss/" rel="self"
+			type="application/rss+xml" />
+		<item>
+			<title><![CDATA[title 31]]></title>
+			<link>http://www.feed3.com/item31.html</link>
+			<description><![CDATA[description of item 31]]></description>
+			<pubDate>Tue, 30 Oct 2014 18:23:00 +0100</pubDate>
+			<category>cat31</category>
+			<comments>http://www.feed3.com/item31.html#cmnlst</comments>
+			<author>author 31</author>
+			<guid>http://www.feed3.com/item31.html</guid>
+		</item>
+		<item>
+			<title><![CDATA[title 32]]></title>
+			<link>http://www.feed3.com/item32.html</link>
+			<description><![CDATA[description of item 32]]></description>
+			<pubDate>Tue, 30 Oct 2014 19:23:00 +0100</pubDate>
+			<category>cat32</category>
+			<comments>http://www.feed3.com/item32.html#cmnlst</comments>
+			<author>author 32</author>
+			<guid>http://www.feed3.com/item32.html</guid>
+		</item>
+		<item>
+			<title><![CDATA[title 33]]></title>
+			<link>http://www.feed3.com/item33.html</link>
+			<description><![CDATA[description of item 33]]></description>
+			<pubDate>Tue, 30 Oct 2014 20:23:00 +0100</pubDate>
+			<category>cat33</category>
+			<comments>http://www.feed3.com/item33.html#cmnlst</comments>
+			<author>author 33</author>
+			<guid>http://www.feed3.com/item33.html</guid>
+		</item>
+	</channel>
+</rss>

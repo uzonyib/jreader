@@ -10,6 +10,10 @@
     </parent>
     <packaging>war</packaging>
     <artifactId>jreader-web</artifactId>
+    
+    <properties>
+    	<excludeFiles>feeds/**</excludeFiles>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -44,6 +48,15 @@
             <version>1.2</version>
         </dependency>
     </dependencies>
+
+	<profiles>
+		<profile>
+			<id>acceptance</id>
+			<properties>
+				<excludeFiles></excludeFiles>
+			</properties>
+		</profile>
+	</profiles>
 
     <build>
         <plugins>
@@ -93,6 +106,7 @@
                 <version>2.3</version>
                 <configuration>
                     <archiveClasses>true</archiveClasses>
+                   	<warSourceExcludes>${excludeFiles}</warSourceExcludes>
                     <webResources>
                         <resource>
                             <directory>${basedir}/src/main/webapp/WEB-INF</directory>

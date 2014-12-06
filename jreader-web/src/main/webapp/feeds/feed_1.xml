@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:media="http://search.yahoo.com/mrss/">
+	<channel>
+		<title>Feed 1</title>
+		<link>http://www.feed1.com/</link>
+		<description>description 1</description>
+		<language>en-US</language>
+		<copyright>copyright</copyright>
+		<pubDate>Tue, 28 Oct 2014 19:34:58 +0100</pubDate>
+		<image>
+			<url>http://www.feed1.com/rss/logo.png</url>
+			<title>Feed 1</title>
+			<link>http://www.feed1.com/</link>
+			<description>description 1</description>
+			<width>144</width>
+			<height>25</height>
+		</image>
+		<atom:link href="http://www.feed1.com/rss/" rel="self"
+			type="application/rss+xml" />
+		<item>
+			<title><![CDATA[title 11]]></title>
+			<link>http://www.feed1.com/item11.html</link>
+			<description><![CDATA[description of item 11]]></description>
+			<pubDate>Tue, 28 Oct 2014 18:23:00 +0100</pubDate>
+			<category>cat11</category>
+			<comments>http://www.feed1.com/item11.html#cmnlst</comments>
+			<author>author 11</author>
+			<guid>http://www.feed1.com/item11.html</guid>
+		</item>
+		<item>
+			<title><![CDATA[title 12]]></title>
+			<link>http://www.feed1.com/item12.html</link>
+			<description><![CDATA[description of item 12]]></description>
+			<pubDate>Tue, 28 Oct 2014 19:23:00 +0100</pubDate>
+			<category>cat12</category>
+			<comments>http://www.feed1.com/item12.html#cmnlst</comments>
+			<author>author 12</author>
+			<guid>http://www.feed1.com/item12.html</guid>
+		</item>
+		<item>
+			<title><![CDATA[title 13]]></title>
+			<link>http://www.feed1.com/item13.html</link>
+			<description><![CDATA[description of item 13]]></description>
+			<pubDate>Tue, 28 Oct 2014 20:23:00 +0100</pubDate>
+			<category>cat13</category>
+			<comments>http://www.feed1.com/item13.html#cmnlst</comments>
+			<author>author 13</author>
+			<guid>http://www.feed1.com/item13.html</guid>
+		</item>
+	</channel>
+</rss>

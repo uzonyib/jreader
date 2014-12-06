@@ -1,103 +1,139 @@
 package jreader.test.acceptance.step;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 
 import jreader.test.acceptance.BrowserManager;
 import jreader.test.acceptance.page.HomePage;
-import jreader.test.acceptance.page.Menu;
-import jreader.test.acceptance.page.SettingsPage;
+import jreader.test.acceptance.page.element.GroupForm;
+import jreader.test.acceptance.page.element.Menu;
+import jreader.test.acceptance.page.element.SubscriptionForm;
+import jreader.test.acceptance.page.element.SubscriptionSettingsForm;
 
-import org.assertj.core.api.Assertions;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class CreateGroupStepsDef {
     
+    private static final String GROUP_TITLE = "Test group";
+    private static final String[] GROUP_TITLES = { "Test group 1", "Test group 2", "Test group 3" };
+    
     private WebDriver browser = BrowserManager.getBrowser();
     
     private Menu menu = new Menu(browser);
     private HomePage homePage = new HomePage(browser);
-    private SettingsPage settingsPage = new SettingsPage(browser);
+    private GroupForm groupForm = new GroupForm(browser);
+    private SubscriptionForm subscriptionForm = new SubscriptionForm(browser);
+    private SubscriptionSettingsForm subscriptionSettingsForm = new SubscriptionSettingsForm(browser);
     
-    private String newGroupTitle;
-    private List<String> newGroupTitles;
+//    private String newGroupTitle;
     
     @When("^I navigate to the settings page$")
     public void i_navigate_to_the_settings_page() {
-        menu.openSettingsPage(settingsPage);
+        menu.openSettingsPage();
     }
 
-    @Then("^I should see a form for creating a new group$")
-    public void i_should_see_a_form_for_creating_a_new_group() {
-        Assertions.assertThat(settingsPage.getGroupTitleField().isDisplayed()).isTrue();
-        Assertions.assertThat(settingsPage.getCreateGroupButton().isDisplayed()).isTrue();
+    @Then("^the group title field should be displayed$")
+    public void the_group_title_field_should_be_displayed() {
+        assertThat(groupForm.getTitleField().isDisplayed()).isTrue();
     }
     
-    @When("^I enter \"(.*?)\" as the group title")
-    public void i_enter_as_the_group_title(String title) {
-        this.newGroupTitle = title;
-        settingsPage.enterGroupTitle(newGroupTitle);
+    @Then("^the create group button should be displayed$")
+    public void the_create_group_button_should_be_displayed() {
+        assertThat(groupForm.getCreateButton().isDisplayed()).isTrue();
+    }
+    
+    @When("^I enter the group title$")
+    public void i_enter_the_group_title() {
+        groupForm.enterTitle(GROUP_TITLE);
     }
 
     @When("^I click the create group button$")
     public void i_click_the_create_group_button() {
-        settingsPage.clickCreateGroup();
-        settingsPage.waitForGroupToBeCreated(newGroupTitle);
+        groupForm.clickCreateButton();
+        groupForm.waitForGroupToBeCreated(GROUP_TITLE);
     }
 
-    @Then("^I should see the new group in the menu$")
-    public void i_should_see_the_new_group_in_the_menu() {
+    @Then("^the new group should be displayed in the menu$")
+    public void the_new_group_should_be_displayed_in_the_menu() {
         int groupMenuItemCount = menu.getGroupMenuItems().size();
-        Assertions.assertThat(groupMenuItemCount).isGreaterThanOrEqualTo(1);
-        Assertions.assertThat(menu.getGroupMenuItems().get(groupMenuItemCount - 1).getText()).isEqualTo(newGroupTitle);
+        assertThat(groupMenuItemCount).isGreaterThanOrEqualTo(1);
+        assertThat(menu.getGroupMenuItems().get(groupMenuItemCount - 1).getText()).isEqualTo(GROUP_TITLE);
     }
 
-    @Then("^I should see the new group on the settings page$")
-    public void i_should_see_the_new_group_on_the_settings_page() {
-        int groupItemCount = settingsPage.getGroupItems().size();
-        Assertions.assertThat(groupItemCount).isGreaterThanOrEqualTo(1);
-        Assertions.assertThat(settingsPage.getGroupItems().get(groupItemCount - 1).getText()).isEqualTo(newGroupTitle);
+    @Then("^the new group should be displayed in the subscription settings$")
+    public void the_new_group_should_be_displayed_in_the_subscription_settings() {
+        int groupItemCount = subscriptionSettingsForm.getGroupItems().size();
+        assertThat(groupItemCount).isGreaterThanOrEqualTo(1);
+        assertThat(subscriptionSettingsForm.getGroupItems().get(groupItemCount - 1).getText()).isEqualTo(GROUP_TITLE);
     }
     
-    @Then("^I should see the new group on the home page$")
-    public void i_should_see_the_new_group_on_the_home_page() {
-        menu.openHomePage(homePage);
+    @Then("^the new group should be displayed in the group field of the new subscription form$")
+    public void the_new_group_should_be_displayed_in_the_group_field_of_the_new_subscription_form() {
+        List<WebElement> options = subscriptionForm.getGroupField().getOptions();
+        assertThat(options.size()).isGreaterThanOrEqualTo(1);
+        assertThat(options.get(options.size() -1).getText()).isEqualTo(GROUP_TITLE);
+    }
+    
+    @Given("^I created a group$")
+    public void i_created_a_group() {
+        menu.openSettingsPage();
+        groupForm.createGroup(GROUP_TITLE);
+    }
+    
+    @When("^I navigate to the home page$")
+    public void i_navigate_to_the_home_page() {
+        menu.openHomePage();
+    }
+    
+    @Then("^the group should be displayed on the home page$")
+    public void the_group_should_be_displayed_on_the_home_page() {
         int groupItemCount = homePage.getGroupItems().size();
-        Assertions.assertThat(groupItemCount).isGreaterThanOrEqualTo(1);
-        Assertions.assertThat(homePage.getGroupItems().get(groupItemCount - 1).getText()).isEqualTo(newGroupTitle);
+        assertThat(groupItemCount).isGreaterThanOrEqualTo(1);
+        assertThat(homePage.getGroupItems().get(groupItemCount - 1).getText()).isEqualTo(GROUP_TITLE);
     }
     
-    @When("^I create groups \"(.*?)\"$")
-    public void i_create_groups(List<String> titles) {
-        this.newGroupTitles = titles;
-        menu.openSettingsPage(settingsPage);
-        settingsPage.createGroups(titles);
+    @When("^I create multiple groups$")
+    public void i_create_multiple_groups() {
+        menu.openSettingsPage();
+        groupForm.createGroups(GROUP_TITLES);
     }
 
-    @Then("^I should see the groups in the menu in creation order$")
-    public void i_should_see_the_groups_in_the_menu_in_creation_order() {
-        Assertions.assertThat(menu.getGroupMenuItems()).hasSameSizeAs(newGroupTitles);
-        for (int i = 0; i < newGroupTitles.size(); ++i) {
-            Assertions.assertThat(menu.getGroupMenuItems().get(i).getText()).isEqualTo(newGroupTitles.get(i));
+    @Then("^the groups should be displayed in the menu in creation order$")
+    public void the_groups_should_be_displayed_in_the_menu_in_creation_order() {
+        assertThat(menu.getGroupMenuItems()).hasSameSizeAs(GROUP_TITLES);
+        for (int i = 0; i < GROUP_TITLES.length; ++i) {
+            assertThat(menu.getGroupMenuItems().get(i).getText()).isEqualTo(GROUP_TITLES[i]);
         }
     }
 
-    @Then("^I should see the groups on the settings page in creation order$")
-    public void i_should_see_the_groups_on_the_settings_page_in_creation_order() {
-        Assertions.assertThat(settingsPage.getGroupItems()).hasSameSizeAs(newGroupTitles);
-        for (int i = 0; i < newGroupTitles.size(); ++i) {
-            Assertions.assertThat(settingsPage.getGroupItems().get(i).getText()).isEqualTo(newGroupTitles.get(i));
+    @Then("^the groups should be displayed in the subscription settings in creation order$")
+    public void the_groups_should_be_displayed_in_the_subscription_settings_in_creation_order() {
+        assertThat(subscriptionSettingsForm.getGroupItems()).hasSameSizeAs(GROUP_TITLES);
+        for (int i = 0; i < GROUP_TITLES.length; ++i) {
+            assertThat(subscriptionSettingsForm.getGroupItems().get(i).getText()).isEqualTo(GROUP_TITLES[i]);
+        }
+    }
+    
+    @Then("^the groups should be displayed in the group field of the new subscription form in creation order$")
+    public void the_groups_should_be_displayed_in_the_group_field_of_the_new_subscription_form_in_creation_order() {
+        List<WebElement> options = subscriptionForm.getGroupField().getOptions();
+        assertThat(options).hasSameSizeAs(GROUP_TITLES);
+        for (int i = 0; i < GROUP_TITLES.length; ++i) {
+            assertThat(options.get(i).getText()).isEqualTo(GROUP_TITLES[i]);
         }
     }
 
-    @Then("^I should see the groups on the home page in creation order$")
-    public void i_should_see_the_groups_on_the_home_page_in_creation_order() {
-        menu.openHomePage(homePage);
-        Assertions.assertThat(homePage.getGroupItems()).hasSameSizeAs(newGroupTitles);
-        for (int i = 0; i < newGroupTitles.size(); ++i) {
-            Assertions.assertThat(homePage.getGroupItems().get(i).getText()).isEqualTo(newGroupTitles.get(i));
+    @Then("^the groups should be displayed in creation order$")
+    public void the_groups_should_be_displayed_in_creation_order() {
+        assertThat(homePage.getGroupItems()).hasSameSizeAs(GROUP_TITLES);
+        for (int i = 0; i < GROUP_TITLES.length; ++i) {
+            assertThat(homePage.getGroupItems().get(i).getText()).isEqualTo(GROUP_TITLES[i]);
         }
     }
 
