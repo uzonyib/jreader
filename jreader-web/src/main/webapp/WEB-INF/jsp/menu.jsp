@@ -7,7 +7,7 @@
 <div id="home-menu-item" class="menu-item"
 	ng-class="{selected: home.selected}"
 	ng-click="selectHome()">
-	<span class="icon"></span><span class="title">Home</span>
+	<span class="glyphicon glyphicon-home"></span><span class="title">Home</span>
 </div>
 
 <div id="settings-menu-item" class="menu-item"
@@ -19,7 +19,9 @@
 <div id="all-items-menu-item" class="menu-item"
 	ng-class="{selected: allItems.selected}"
 	ng-click="selectAllItems()">
-	<span class="icon"></span><span class="title">All feeds</span><span class="unread-count" ng-if="unreadCount">({{unreadCount}})</span>
+	<span class="icon"></span>
+	<span class="title">All feeds</span>
+	<span class="unread-count badge" ng-if="unreadCount">{{unreadCount}}</span>
 </div>
 
 <div id="subscription-menu">
@@ -31,14 +33,14 @@
 			<span class="icon collapsed-icon" ng-click="uncollapse(group.id, $event)"></span>
 			<span class="icon uncollapsed-icon" ng-click="collapse(group.id, $event)"></span>
 			<span class="title">{{group.title}}</span>
-			<span ng-if="group.unreadCount > 0" class="unread-count">({{group.unreadCount}})</span>
+			<span ng-if="group.unreadCount > 0" class="unread-count badge">{{group.unreadCount}}</span>
 		</div>
 		<div ng-repeat="subscription in group.subscriptions"
 			class="menu-item feed-item"
 			ng-class="{selected: subscription.selected}"
 			ng-click="selectSubscription(group, subscription)">
 			<span class="title">{{subscription.title}}</span>
-			<span ng-if="subscription.unreadCount > 0" class="unread-count">({{subscription.unreadCount}})</span>
+			<span ng-if="subscription.unreadCount > 0" class="unread-count badge">{{subscription.unreadCount}}</span>
 		</div>
 	</div>
 </div>

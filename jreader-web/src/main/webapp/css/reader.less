@@ -5,7 +5,6 @@
 
 @clr-default: #000;
 
-@menu-width: 200px;
 @menu-icon-width: 16px;
 
 .bg-img(@img-name) {
@@ -33,10 +32,8 @@ body {
 }
 
 #menu {
-	position: fixed;
-	width: @menu-width;
-	float: left;
-	margin: 0px 0px 0px 5px;
+	padding-left: 5px;
+	padding-right: 5px;
 	.menu-group {
 		.menu-item.group-item {
 			.icon {
@@ -110,10 +107,6 @@ body {
 		&.feed-item .title {
 			padding-left: 24px;
 		}
-		.unread-count {
-			vertical-align: middle;
-			padding-left: 3px;
-		}
 	}
 	#logout-menu-item {
 		a {
@@ -142,8 +135,8 @@ body {
 }
 
 #main-area {
-	padding-left: (@menu-width + 10px);
-	margin-right: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 #footer {
