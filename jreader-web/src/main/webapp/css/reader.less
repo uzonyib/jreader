@@ -5,8 +5,6 @@
 
 @clr-default: #000;
 
-@menu-icon-width: 16px;
-
 .bg-img(@img-name) {
 	background-image: url('/images/@{img-name}.png');
 }
@@ -16,52 +14,22 @@ button::-moz-focus-inner {
 } 
 
 body {
-	font-family: Helvetica;
 	background-color: @clr-bg-default;
 	color: @clr-default;
-	font-size: 110%;
-}
-
-.menu-icon {
-	background-repeat: no-repeat;
-	background-size: @menu-icon-width @menu-icon-width;
-	width: @menu-icon-width;
-	height: @menu-icon-width;
-	display: inline-block;
-	vertical-align: middle;
+	font-size: 120%;
 }
 
 #menu {
 	padding-left: 5px;
 	padding-right: 5px;
+	.badge {
+		vertical-align: text-top;
+	}
 	.menu-group {
-		.menu-item.group-item {
-			.icon {
-				.menu-icon;
-			}
-			.collapsed-icon {
-				.bg-img('arrow_right_black');
-				display: none;
-			}
-			.uncollapsed-icon {
-				.bg-img('arrow_down_black');
-				display: inline-block;
-			}
-		}
 		&.collapsed {
 			.menu-item {
 				&.feed-item {
 					display: none;
-				}
-				&.group-item {
-					.collapsed-icon {
-						.bg-img('arrow_right_black');
-						display: inline-block;
-					}
-					.uncollapsed-icon {
-						.bg-img('arrow_down_black');
-						display: none;
-					}
 				}
 			}
 		}
@@ -76,32 +44,12 @@ body {
 		&.selected {
 			background-color: @clr-bg-hard-2;
 		}
-		.icon {
-			.menu-icon;
-		}
-		.collapsed-icon {
-			.bg-img('arrow_right_black');
-			display: none;
-		}
-		.uncollapsed-icon {
-			.bg-img('arrow_down_black');
-			display: inline-block;
-		}
 		&.collapsed {
 			&.feed-item {
 				display: none;
 			}
-			.collapsed-icon {
-				.bg-img('arrow_right_black');
-				display: inline-block;
-			}
-			.uncollapsed-icon {
-				.bg-img('arrow_down_black');
-				display: none;
-			}
 		}
 		.title {
-			vertical-align: middle;
 			padding-left: 8px;
 		}
 		&.feed-item .title {
@@ -112,24 +60,10 @@ body {
 		a {
 			text-decoration: none;
 			color: @clr-default;
-		}
-		.icon {
-			.bg-img('logout_black');
-		}
-	}
-	#home-menu-item {
-		.icon {
-			.bg-img('home_black');
-		}
-	}
-	#all-items-menu-item {
-		.icon {
-			.bg-img('list_black');
-		}
-	}
-	#settings-menu-item {
-		.icon {
-			.bg-img('gear_black');
+			padding: 0px 0px;
+			&:hover {
+				background-color: @clr-bg-soft;
+			}
 		}
 	}
 }

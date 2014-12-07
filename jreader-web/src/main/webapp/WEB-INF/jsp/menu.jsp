@@ -1,66 +1,64 @@
-<div class="menu-item" id="logout-menu-item">
-	<a href="${ logoutUrl }">
-		<span class="icon"></span><span class="title">Logout</span>
-	</a>
-</div>
-
-<div id="home-menu-item" class="menu-item"
-	ng-class="{selected: home.selected}"
-	ng-click="selectHome()">
-	<span class="glyphicon glyphicon-home"></span><span class="title">Home</span>
-</div>
-
-<div id="settings-menu-item" class="menu-item"
-	ng-class="{selected: settings.selected}"
-	ng-click="selectSettings()">
-	<span class="icon"></span><span class="title">Settings</span>
-</div>
-
-<div id="all-items-menu-item" class="menu-item"
-	ng-class="{selected: allItems.selected}"
-	ng-click="selectAllItems()">
-	<span class="icon"></span>
-	<span class="title">All feeds</span>
-	<span class="unread-count badge" ng-if="unreadCount">{{unreadCount}}</span>
-</div>
+<ul class="nav nav-pills nav-stacked">
+	<li class="menu-item" id="logout-menu-item">
+		<a href="${ logoutUrl }">
+			<span class="glyphicon glyphicon-log-out"></span><span class="title">Logout</span>
+		</a>
+	</li>
+	
+	<li id="home-menu-item" class="menu-item"
+		data-ng-class="{selected: home.selected}"
+		data-ng-click="selectHome()">
+		<span class="glyphicon glyphicon-home"></span><span class="title">Home</span>
+	</li>
+	
+	<li id="settings-menu-item" class="menu-item"
+		data-ng-class="{selected: settings.selected}"
+		data-ng-click="selectSettings()">
+		<span class="glyphicon glyphicon-cog"></span><span class="title">Settings</span>
+	</li>
+	
+	<li id="all-items-menu-item" class="menu-item"
+		data-ng-class="{selected: allItems.selected}"
+		data-ng-click="selectAllItems()">
+		<span class="glyphicon glyphicon-th-list"></span>
+		<span class="title">All feeds</span>
+		<span class="unread-count badge" data-ng-show="unreadCount">{{unreadCount}}</span>
+	</li>
+</ul>
 
 <div id="subscription-menu">
-	<div ng-repeat="group in subscriptionGroups"
-		class="menu-group" ng-class="{collapsed: group.collapsed}">
-		<div class="menu-item group-item"
-			ng-class="{selected: group.selected}"
-			ng-click="selectSubscriptionGroup(group)">
-			<span class="icon collapsed-icon" ng-click="uncollapse(group.id, $event)"></span>
-			<span class="icon uncollapsed-icon" ng-click="collapse(group.id, $event)"></span>
+	<ul data-ng-repeat="group in subscriptionGroups"
+		class="menu-group nav nav-pills nav-stacked" data-ng-class="{collapsed: group.collapsed}">
+		<li class="menu-item group-item"
+			data-ng-class="{selected: group.selected}"
+			data-ng-click="selectSubscriptionGroup(group)">
+			<span class="glyphicon glyphicon-chevron-right" data-ng-show="group.collapsed" data-ng-click="uncollapse(group.id, $event)"></span>
+			<span class="glyphicon glyphicon-chevron-down" data-ng-show="!group.collapsed" data-ng-click="collapse(group.id, $event)"></span>
 			<span class="title">{{group.title}}</span>
-			<span ng-if="group.unreadCount > 0" class="unread-count badge">{{group.unreadCount}}</span>
-		</div>
-		<div ng-repeat="subscription in group.subscriptions"
+			<span data-ng-show="group.unreadCount > 0" class="unread-count badge">{{group.unreadCount}}</span>
+		</li>
+		<li data-ng-repeat="subscription in group.subscriptions"
 			class="menu-item feed-item"
-			ng-class="{selected: subscription.selected}"
-			ng-click="selectSubscription(group, subscription)">
+			data-ng-class="{selected: subscription.selected}"
+			data-ng-click="selectSubscription(group, subscription)">
 			<span class="title">{{subscription.title}}</span>
-			<span ng-if="subscription.unreadCount > 0" class="unread-count badge">{{subscription.unreadCount}}</span>
-		</div>
-	</div>
+			<span data-ng-show="subscription.unreadCount > 0" class="unread-count badge">{{subscription.unreadCount}}</span>
+		</li>
+	</ul>
 </div>
-
-<div id="archives-menu-item" class="menu-item"
-	ng-class="{selected: archivedItems.selected, collapsed: archivedItems.collapsed}"
-	ng-show="archives.length > 0"
-	ng-click="selectArchivedItems()">
-	<span class="icon collapsed-icon" ng-click="uncollapseArchivedItems($event)"></span>
-	<span class="icon uncollapsed-icon" ng-click="collapseArchivedItems($event)"></span>
-	<span class="title">Archives</span>
-</div>
-
-<div id="archive-menu" ng-show="!archivedItems.collapsed">
-	<div ng-repeat="archive in archives"
-		class="menu-group">
-		<div class="menu-item feed-item"
-			ng-class="{selected: archive.selected}"
-			ng-click="selectArchive(archive)">
-			<span class="title">{{archive.title}}</span>
-		</div>
-	</div>
+	
+<div id="archives-menu">
+	<ul class="nav nav-pills nav-stacked">
+		<li class="menu-item"
+			data-ng-class="{selected: archivedItems.selected, collapsed: archivedItems.collapsed}"
+			data-ng-show="archives.length > 0"
+			data-ng-click="selectArchivedItems()">
+			<span class="glyphicon glyphicon-chevron-right" data-ng-show="archivedItems.collapsed" data-ng-click="uncollapseArchivedItems($event)"></span>
+			<span class="glyphicon glyphicon-chevron-down" data-ng-show="!archivedItems.collapsed" data-ng-click="collapseArchivedItems($event)"></span>
+			<span class="title">Archives</span>
+		</li>
+		<li data-ng-show="!archivedItems.collapsed" data-ng-repeat="archive in archives" class="menu-item feed-item" data-ng-class="{selected: archive.selected}">
+			<span class="title" data-ng-click="selectArchive(archive)">{{archive.title}}</span>
+		</li>
+	</ul>
 </div>
