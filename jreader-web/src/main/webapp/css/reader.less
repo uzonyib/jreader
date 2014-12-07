@@ -77,87 +77,77 @@ body {
 	clear: both;
 }
 
-#nav-bar {
+#items-contents .btn-toolbar {
 	position: fixed;
 	width: 100%;
 	background-color: @clr-bg-default;
 	padding: 5px 0px;
-	span {
-		margin-right: 10px;
-	}
 	button {
 		border: 1px solid @clr-bg-hard-1;
 		@selected-border-color: #aaa;
-		@img-size: 20px;
-		@img-padding: 1px;
-		margin: 0px;
-		padding: 2px;
+		padding: 0px 6px;
 		background-color: @clr-bg-soft;
-		cursor: pointer;
+		font-size: 100%;
 		&:hover {
 			background-color: @clr-bg-hard-1;
 		}
 		&.selected {
 			background-color: @clr-bg-hard-2;
 		}
-		img {
-			width: @img-size;
-			height: @img-size;
-			padding: @img-padding;
+	}
+	.status {
+		margin-top: 5px;
+		span {
+			margin-left: 10px;
 		}
 	}
 }
 
 #feed-entries-container {
 	overflow-y: auto;
-	padding-top: 38px;
+	padding-top: 40px;
 }
 
 #feed-entries {
-	width: 100%;
 	.feed-entry {
-		.breadcrumb {
+		border-top: 1px solid #333;
+		.article-breadcrumb {
 			.title {
-				width: 100%;
-				max-width: 700px;
 				padding-left: 10px;
 				padding-right: 10px;
 				overflow: hidden;
+				max-width: 680px;
+				text-overflow: ellipsis;
 			}
 			td {
 				cursor: pointer;
-				border-top: 1px solid #333;
+				padding: 1px;
 				white-space: nowrap;
-				padding: 3px 3px;
-				vertical-align: middle;
+				border-top: 1px solid #333;
 			}
 			&:hover td {
 				background-color: @clr-bg-hard-2;
 			}
 			.star-buttons button {
-				@button-size: 22px;
-				cursor: pointer;
 				border: none;
 				background: none;
-				background-size: @button-size @button-size;
-				width: @button-size;
-				height: @button-size;
-				padding: 3px 0px;
+				font-size: 100%;
+				padding: 0px 6px;
 				&.star {
-					.bg-img('star_grey');
+					color: #a3b1b2;
 					&:hover {
-						.bg-img('star_light');
+						color: #f2ca27;
 					}
 				}
 				&.unstar {
-					.bg-img('star_yellow');
+					color: #f4a62a;
 					&:hover {
-						.bg-img('star_light');
+						color: #f2ca27;
 					}
 				}
 			}
 		}
-		&.unread .breadcrumb {
+		&.unread .article-breadcrumb {
 			td {
 				background-color: @clr-bg-soft;
 			}
@@ -165,8 +155,14 @@ body {
 				background-color: @clr-bg-hard-2;
 			}
 		}
-		tr.detail td {
+		tr.article-detail td {
 			padding: 5px 30px;
+			.title {
+				font-weight: bolder;
+			}
+			.description {
+				padding: 15px 0px;
+			}
 		}
 	}
 }
@@ -294,6 +290,18 @@ input[type='text'] {
 select {
     height: 24px;
     border-width: 0px;
+}
+
+button {
+	&.btn.btn-default {
+		background-color: @clr-bg-soft;
+		font-size: 100%;
+		padding: 0px 6px;
+		border: 1px solid @clr-bg-hard-1;
+		&:hover {
+			background-color: @clr-bg-hard-1;
+		}
+	}
 }
 
 #subscription-form {
