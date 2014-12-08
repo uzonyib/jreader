@@ -22,9 +22,6 @@ body {
 #menu {
 	padding-left: 5px;
 	padding-right: 5px;
-	.badge {
-		vertical-align: text-top;
-	}
 	.menu-group {
 		&.collapsed {
 			.menu-item {
@@ -85,7 +82,7 @@ body {
 	button {
 		border: 1px solid @clr-bg-hard-1;
 		@selected-border-color: #aaa;
-		padding: 0px 6px;
+		padding: 2px 6px 0px 6px;
 		background-color: @clr-bg-soft;
 		font-size: 100%;
 		&:hover {
@@ -97,7 +94,7 @@ body {
 	}
 	.status {
 		margin-top: 5px;
-		span {
+		> span {
 			margin-left: 10px;
 		}
 	}
@@ -105,7 +102,7 @@ body {
 
 #feed-entries-container {
 	overflow-y: auto;
-	padding-top: 40px;
+	padding-top: 42px;
 }
 
 #feed-entries {
@@ -118,6 +115,7 @@ body {
 				overflow: hidden;
 				max-width: 680px;
 				text-overflow: ellipsis;
+				width: 100%;
 			}
 			td {
 				cursor: pointer;
@@ -296,7 +294,7 @@ button {
 	&.btn.btn-default {
 		background-color: @clr-bg-soft;
 		font-size: 100%;
-		padding: 0px 6px;
+		padding: 2px 6px 0px 6px;
 		border: 1px solid @clr-bg-hard-1;
 		&:hover {
 			background-color: @clr-bg-hard-1;

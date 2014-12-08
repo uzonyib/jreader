@@ -57,8 +57,10 @@
 			<tr class="article-detail" ng-show="entry.uncollapsed">
 				<td colspan="4">
 					<div class="link">
-						<a target=_blank href="{{entry.link}}" title="Open"><span class="glyphicon glyphicon-new-window"></span></a>
-						<span class="title">{{entry.title}}</span>
+						<a target=_blank href="{{entry.link}}" title="Open">
+							<span class="glyphicon glyphicon-new-window"></span>
+							<span class="title">{{entry.title}}</span>
+						</a>
 					</div>
 					<div class="author" ng-if="entry.author">
 						Author: {{entry.author}}
