@@ -29,8 +29,8 @@
 		</button>
 	</div>
 	<div class="status">
-		<span id="status-bar-count" data-ng-show="!loading">Items displayed:&nbsp;<span id="entry-count">{{entries.length}}</span></span>
-		<span id="status-bar-loading" data-ng-show="loading">Loading...</span>
+		<span data-ng-show="!loading">Items displayed:&nbsp;<span>{{entries.length}}</span></span>
+		<span data-ng-show="loading">Loading...</span>
 	</div>
 </div>
 
@@ -40,34 +40,36 @@
 	infinite-scroll-disabled="!active || ajaxService.loadingEntries || !ajaxService.moreEntriesAvailable"
 	infinite-scroll-immediate-check="false">
 	<table id="feed-entries" class="table">
-		<tbody ng-repeat="entry in entries" class="feed-entry" ng-class="{unread: !entry.read}">
+		<tbody data-ng-repeat="entry in entries" class="feed-entry" data-ng-class="{unread: !entry.read}">
 			<tr class="article-breadcrumb">
-				<td class="star-buttons">
-					<button class="btn btn-default star" ng-show="!entry.starred" ng-click="star(entry)">
+				<td class="action-buttons">
+					<button class="btn btn-default star" title="Star" data-ng-show="!entry.starred" data-ng-click="star(entry)">
 						<span class="glyphicon glyphicon-star"></span>
 					</button>
-					<button class="btn btn-default unstar" ng-show="entry.starred" ng-click="unstar(entry)">
+					<button class="btn btn-default unstar" title="Unstar" data-ng-show="entry.starred" data-ng-click="unstar(entry)">
 						<span class="glyphicon glyphicon-star"></span>
 					</button>
 				</td>
-				<td class="feed-title" ng-click="toggleCollapsion(entry)">{{entry.subscriptionTitle}}</td>
-				<td class="title" ng-click="toggleCollapsion(entry)">{{entry.title}}</td>
-				<td class="date" ng-click="toggleCollapsion(entry)">{{entry.publishedDate | moment}}</td>
+				<td class="feed-title" data-ng-click="toggleCollapsion(entry)">{{entry.subscriptionTitle}}</td>
+				<td class="title" data-ng-click="toggleCollapsion(entry)">{{entry.title}}</td>
+				<td class="date" data-ng-click="toggleCollapsion(entry)">{{entry.publishedDate | moment}}</td>
 			</tr>
-			<tr class="article-detail" ng-show="entry.uncollapsed">
+			<tr class="article-detail" data-ng-show="entry.uncollapsed">
 				<td colspan="4">
-					<div class="link">
-						<a target=_blank href="{{entry.link}}" title="Open">
-							<span class="glyphicon glyphicon-new-window"></span>
-							<span class="title">{{entry.title}}</span>
-						</a>
+					<div class="header">
+						<div class="link">
+							<a target=_blank href="{{entry.link}}" title="Open">
+								<span class="glyphicon glyphicon-new-window"></span>
+								<span class="title">{{entry.title}}</span>
+							</a>
+						</div>
+						<div class="author" data-ng-if="entry.author">
+							Author: {{entry.author}}
+						</div>
 					</div>
-					<div class="author" ng-if="entry.author">
-						Author: {{entry.author}}
-					</div>
-					<div class="description" ng-bind-html="entry.description"></div>
-					<div ng-if="archives.length > 0">
-						<form class="form-inline" ng-if="!entry.archived" ng-submit="archive(entry)">
+					<div class="description" data-ng-bind-html="entry.description"></div>
+					<div class="footer" data-ng-if="archives.length > 0">
+						<form class="form-inline" data-ng-if="!entry.archived" data-ng-submit="archive(entry)">
 							<span>Archive to</span>
 							<div class="form-group">
 								<div class="dropdown">
@@ -75,7 +77,7 @@
 										{{entry.archive.title}} <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu">
-										<li ng-repeat="archive in archives" ng-click="entry.archive=archive">
+										<li data-ng-repeat="archive in archives" data-ng-click="entry.archive=archive">
 											<a tabindex="-1" href="">{{archive.title}}</a>
 										</li>
 									</ul>
@@ -85,7 +87,7 @@
 								<span class="glyphicon glyphicon-ok"></span>
 							</button>
 						</form>
-						<span ng-if="entry.archived">Archived to {{entry.archive.title}}</span>
+						<span data-ng-if="entry.archived">Archived to {{entry.archive.title}}</span>
 					</div>
 				</td>
 			</tr>

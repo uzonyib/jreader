@@ -74,32 +74,6 @@ body {
 	clear: both;
 }
 
-#items-contents .btn-toolbar {
-	position: fixed;
-	width: 100%;
-	background-color: @clr-bg-default;
-	padding: 5px 0px;
-	button {
-		border: 1px solid @clr-bg-hard-1;
-		@selected-border-color: #aaa;
-		padding: 2px 6px 0px 6px;
-		background-color: @clr-bg-soft;
-		font-size: 100%;
-		&:hover {
-			background-color: @clr-bg-hard-1;
-		}
-		&.selected {
-			background-color: @clr-bg-hard-2;
-		}
-	}
-	.status {
-		margin-top: 5px;
-		> span {
-			margin-left: 10px;
-		}
-	}
-}
-
 #feed-entries-container {
 	overflow-y: auto;
 	padding-top: 42px;
@@ -126,7 +100,7 @@ body {
 			&:hover td {
 				background-color: @clr-bg-hard-2;
 			}
-			.star-buttons button {
+			.action-buttons button {
 				border: none;
 				background: none;
 				font-size: 100%;
@@ -141,6 +115,12 @@ body {
 					color: #f4a62a;
 					&:hover {
 						color: #f2ca27;
+					}
+				}
+				&.delete {
+					color: #a3b1b2;
+					&:hover {
+						color: #d14233;
 					}
 				}
 			}
@@ -158,8 +138,8 @@ body {
 			.title {
 				font-weight: bolder;
 			}
-			.description {
-				padding: 15px 0px;
+			.header, .description, .footer {
+				padding: 5px 0px 5px 0px;
 			}
 		}
 	}
@@ -290,15 +270,30 @@ select {
     border-width: 0px;
 }
 
-button {
-	&.btn.btn-default {
-		background-color: @clr-bg-soft;
-		font-size: 100%;
-		padding: 2px 6px 0px 6px;
-		border: 1px solid @clr-bg-hard-1;
-		&:hover {
-			background-color: @clr-bg-hard-1;
+.btn-toolbar {
+	position: fixed;
+	width: 100%;
+	background-color: @clr-bg-default;
+	padding: 5px 0px;
+	.status {
+		margin-top: 5px;
+		> span {
+			margin-left: 10px;
 		}
+	}
+}
+
+button.btn.btn-default {
+	border: 1px solid @clr-bg-hard-1;
+	@selected-border-color: #aaa;
+	padding: 2px 6px 0px 6px;
+	background-color: @clr-bg-soft;
+	font-size: 100%;
+	&:hover {
+		background-color: @clr-bg-hard-1;
+	}
+	&.selected {
+		background-color: @clr-bg-hard-2;
 	}
 }
 

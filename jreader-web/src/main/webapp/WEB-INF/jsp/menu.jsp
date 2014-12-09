@@ -57,8 +57,12 @@
 			<span class="glyphicon glyphicon-chevron-down" data-ng-show="!archivedItems.collapsed" data-ng-click="collapseArchivedItems($event)"></span>
 			<span class="title">Archives</span>
 		</li>
-		<li data-ng-show="!archivedItems.collapsed" data-ng-repeat="archive in archives" class="menu-item feed-item" data-ng-class="{selected: archive.selected}">
-			<span class="title" data-ng-click="selectArchive(archive)">{{archive.title}}</span>
+		<li data-ng-show="!archivedItems.collapsed"
+			data-ng-repeat="archive in archives"
+			class="menu-item feed-item"
+			data-ng-class="{selected: archive.selected}"
+			data-ng-click="selectArchive(archive)">
+			<span class="title">{{archive.title}}</span>
 		</li>
 	</ul>
 </div>
