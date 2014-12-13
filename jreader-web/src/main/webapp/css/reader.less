@@ -177,88 +177,20 @@ body {
 		font-size: 120%;
 		font-weight: bold;
 		text-align: center;
-		padding: 10px 0px;
 		span {
 			cursor: pointer;
 		}
 	}
 	.settings-item {
-	    padding: 0px 10px 10px 10px;
 	    text-align: center;
 	    .title {
 	    	cursor: pointer;
 	    }
 	}
-	tr {
-		height: 30px;
-	}
-	td {
-		width: 500px;
-	}
-	td.action {
-		width: 32px;
-	}
 }
 
-.delete-button {
-	border: 1px solid @clr-bg-hard-1;
-	@selected-border-color: #aaa;
-	@img-size: 20px;
-	@img-padding: 1px;
-	margin: 0px;
-	padding: 2px;
-	background-color: @clr-bg-soft;
-	cursor: pointer;
-	&:hover {
-		background-color: @clr-bg-hard-1;
-	}
-	&.selected {
-		background-color: @clr-bg-hard-2;
-	}
-	img {
-		width: @img-size;
-		height: @img-size;
-		padding: @img-padding;
-	}
-}
-
-textarea#export-import,
-textarea#import-log {
-	width: 95%;
-	height: 300px;
-	margin: 5px 0px;
-}
-
-input {
-    margin: 0px 3px;
-}
-
-input[type='submit'],
-input[type='image'] {
-	vertical-align: middle;
-	padding : 2px;
-	background-color: @clr-bg-soft;
-	border: 1px solid @clr-bg-hard-1;
-	cursor: pointer;
-	&:hover {
-		background-color: @clr-bg-hard-1;
-	}
-}
-
-input[type='image'] {
-	width: 20px;
-	height: 20px;
-}
-
-input[type='text'] {
-    border-width: 0px;
-    height: 24px;
-    padding: 1px 2px;
-}
-
-select {
-    height: 24px;
-    border-width: 0px;
+#settings-contents textarea {
+	font-family: monospace;
 }
 
 .btn-toolbar {
@@ -288,6 +220,10 @@ button.btn.btn-default {
 	}
 }
 
-#subscription-form {
-	padding: 10px 0px;
+.form-inline {
+	padding: 5px 0px;
+}
+
+.table td.title {
+	width: 100%;
 }

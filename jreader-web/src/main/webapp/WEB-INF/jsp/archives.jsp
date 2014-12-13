@@ -37,7 +37,7 @@
 			<tr class="article-detail" data-ng-show="entry.uncollapsed">
 				<td colspan="4">
 					<div class="header">
-						<div class="link">
+						<div>
 							<a target=_blank href="{{entry.link}}" title="Open">
 								<span class="glyphicon glyphicon-new-window"></span>
 								<span class="title">{{entry.title}}</span>
