@@ -7,14 +7,13 @@
 		<span class="glyphicon glyphicon-ok"></span>
 	</button>
 </form>
+
 <form class="form-inline" data-ng-submit="subscribe()">
 	<div class="form-group">
 		<label for="new-subscription-url">Subscribe to</label>
 		<input id="new-subscription-url" type="text" placeholder="URL" class="form-control" data-ng-model="newSubscription.url" />
 	</div>
-	<div class="form-group">
-		<span>in group</span>
-	</div>
+	<p class="form-control-static">in group</p>
 	<div class="form-group">
 		<div class="dropdown">
 			<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
