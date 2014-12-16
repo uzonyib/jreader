@@ -1,9 +1,4 @@
 <ul class="nav nav-pills nav-stacked">
-	<li class="menu-item" id="logout-menu-item">
-		<a href="${ logoutUrl }">
-			<span class="glyphicon glyphicon-log-out"></span><span class="title">Logout</span>
-		</a>
-	</li>
 	<li id="home-menu-item" class="menu-item"
 		data-ng-class="{selected: home.selected}"
 		data-ng-click="selectHome()">
