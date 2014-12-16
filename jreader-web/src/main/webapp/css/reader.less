@@ -1,9 +1,7 @@
-@clr-bg-default: #ecf0f1;
-@clr-bg-soft: #bdc3c7;
-@clr-bg-hard-1: #95a5a6;
-@clr-bg-hard-2: #16a085;
-
 @clr-default: #000;
+
+@clr-soft: #ececec;
+@clr-main: #d2d7d3;
 
 .btn::-moz-focus-inner {
 	border: 0;
@@ -11,6 +9,7 @@
 
 body {
 	font-size: 120%;
+	padding-top: 50px;
 }
 
 #menu {
@@ -20,10 +19,10 @@ body {
 		padding: 3px 5px;
 		cursor: pointer;
 		&:hover {
-			background-color: @clr-bg-soft;
+			background-color: @clr-main;
 		}
 		&.selected {
-			background-color: @clr-bg-hard-2;
+			background-color: @clr-main;
 		}
 		.title {
 			padding-left: 8px;
@@ -47,12 +46,14 @@ body {
 	padding-right: 5px;
 }
 
-#feed-entries-container {
-	padding-top: 50px;
-}
-
 #feed-entries {
-	.article-breadcrumb {
+	tr.article-breadcrumb {
+		&.info td {
+			background-color: @clr-soft;
+		}
+		&:hover td {
+			background-color: @clr-main;
+		}
 		.title {
 			padding-left: 10px;
 			padding-right: 10px;
@@ -151,10 +152,6 @@ body {
 }
 
 nav.navbar.navbar-default.navbar-fixed-top {
-	left: auto;
-	right: auto;
-	width: 100%;
-	margin-bottom: 0px;
 	.btn-group {
 		margin-left: 5px;
 	}

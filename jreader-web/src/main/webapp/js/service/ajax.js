@@ -360,4 +360,5 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
     $interval(this.refreshSubscriptions, 1000 * 60 * 5);
     this.refreshSubscriptions();
     this.refreshArchives();
+    
 }]);

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html ng-app="jReaderApp">
-	<head ng-controller="HeadCtrl">
+<html data-ng-app="jReaderApp">
+	<head data-ng-controller="HeadCtrl">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title ng-bind="title">jReader</title>
+		<title data-ng-bind="title">jReader</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="/css/reader-all.css">
 		<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
@@ -16,20 +16,23 @@
 	</head>
 	<body class="container-fluid">
 		<div class="row">
-			<div id="menu" class="col-lg-2 col-md-2" ng-controller="MenuCtrl">
+			<div id="navbar">
+				<jsp:include page="navbar.jsp" />
+			</div>
+			<div id="menu" class="col-lg-2 col-md-2" data-ng-controller="MenuCtrl">
 				<jsp:include page="menu.jsp" />
 			</div>
 			<div id="main-area" class="col-lg-10 col-md-10">
-				<div id="home-contents" ng-controller="HomeCtrl" ng-show="active">
+				<div id="home-contents" data-ng-controller="HomeCtrl" data-ng-show="active">
 					<jsp:include page="home.jsp" />
 				</div>
-				<div id="settings-contents" ng-controller="SettingsCtrl" ng-show="active">
+				<div id="settings-contents" data-ng-controller="SettingsCtrl" data-ng-show="active">
 					<jsp:include page="settings.jsp" />
 				</div>
-				<div id="items-contents" ng-controller="EntriesCtrl" ng-show="active">
+				<div id="items-contents" data-ng-controller="EntriesCtrl" data-ng-show="active">
 					<jsp:include page="entries.jsp" />
 				</div>
-				<div id="archive-contents" ng-controller="ArchivesCtrl" ng-show="active">
+				<div id="archive-contents" data-ng-controller="ArchivesCtrl" data-ng-show="active">
 					<jsp:include page="archives.jsp" />
 				</div>
 			</div>

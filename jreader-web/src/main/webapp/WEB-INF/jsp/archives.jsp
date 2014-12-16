@@ -1,35 +1,9 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="collapse navbar-collapse">
-    	<ul class="nav navbar-nav">
-			<li class="btn-group">
-				<button type="button" class="btn btn-default navbar-btn" title="Refresh" data-ng-click="refreshEntries()">
-					<span class="glyphicon glyphicon-refresh"></span>
-				</button>
-			</li>
-			<li class="btn-group" data-toggle="buttons">
-				<label class="btn btn-default navbar-btn" title="Ascending" data-ng-click="setAscendingOrder(true)" data-ng-class="{active: filter.ascendingOrder}">
-		    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-chevron-down"></span>
-		  		</label>
-		  		<label class="btn btn-default navbar-btn" title="Descending" data-ng-click="setAscendingOrder(false)" data-ng-class="{active: !filter.ascendingOrder}">
-		    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-chevron-up"></span>
-		  		</label>
-			</li>
-			<li data-ng-show="!loading">
-				<p class="navbar-text">Items displayed:&nbsp;<span>{{entries.length}}</span></p>
-			</li>
-			<li data-ng-show="loading">
-				<p class="navbar-text">Loading...</p>
-			</li>
-		</ul>
-	</div>
-</nav>
-
 <div id="feed-entries-container"
 	data-infinite-scroll="loadMoreEntries()"
 	data-infinite-scroll-distance="1"
 	data-infinite-scroll-disabled="!active || ajaxService.loadingEntries || !ajaxService.moreEntriesAvailable"
 	data-infinite-scroll-immediate-check="false">
-	<table id="feed-entries" class="table table-hover">
+	<table id="feed-entries" class="table">
 		<tr class="article-breadcrumb"
 			data-ng-repeat-start="entry in entries">
 			<td class="action-buttons">

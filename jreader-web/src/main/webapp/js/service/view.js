@@ -1,4 +1,6 @@
-angular.module("jReaderApp").service("viewService", function () {
+angular.module("jReaderApp").service("viewService", ["$window", function ($window) {
+	var service = this;
+	
 	this.activeView = {
 		type: "home",
 		subscriptionGroupId: null,
@@ -156,4 +158,49 @@ angular.module("jReaderApp").service("viewService", function () {
 		return this.activeView.archiveId;
 	};
 	
-});
+	this.entryFilter = {
+		selection: "unread",
+		pageIndex: 0,
+		ascendingOrder: true,
+		pageSize: Math.ceil($window.innerHeight / 29 / 10) * 10,
+		initialPagesToLoad: 2,
+		
+	};
+	
+	this.entryFilter.get = function() {
+		var filter = angular.copy(this);
+		filter.subscriptionGroupId = service.activeView.subscriptionGroupId;
+		filter.subscriptionId = service.activeView.subscriptionId;
+		return filter;
+	};
+	
+	this.entryFilter.resetPageIndex = function() {
+		this.pageIndex = 0;
+	};
+	
+	this.entryFilter.incrementPageIndex = function() {
+		++this.pageIndex;
+	};
+	
+	this.archiveFilter = {
+		pageIndex: 0,
+		ascendingOrder: true,
+		pageSize: Math.ceil($window.innerHeight / 29 / 10) * 10,
+		initialPagesToLoad: 2
+	};
+	
+	this.archiveFilter.get = function() {
+		var filter = angular.copy(this);
+		filter.archiveId = service.activeView.archiveId;
+		return filter;
+	};
+	
+	this.archiveFilter.resetPageIndex = function() {
+		this.pageIndex = 0;
+	};
+	
+	this.archiveFilter.incrementPageIndex = function() {
+		++this.pageIndex;
+	};
+	
+}]);
