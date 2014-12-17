@@ -2,22 +2,8 @@
 <cronentries>
 	<cron>
 		<url>/cron/refresh</url>
-		<description>Refresh all feeds</description>
-		<schedule>every 60 mins from 07:00 to 08:00</schedule>
-		<timezone>Europe/Budapest</timezone>
-		<target>default</target>
-	</cron>
-	<cron>
-		<url>/cron/refresh</url>
-		<description>Refresh all feeds</description>
-		<schedule>every 30 mins from 09:00 to 20:00</schedule>
-		<timezone>Europe/Budapest</timezone>
-		<target>default</target>
-	</cron>
-	<cron>
-		<url>/cron/refresh</url>
-		<description>Refresh all feeds</description>
-		<schedule>every 60 mins from 21:00 to 23:00</schedule>
+		<description>Refresh feeds</description>
+		<schedule>every 15 mins</schedule>
 		<timezone>Europe/Budapest</timezone>
 		<target>default</target>
 	</cron>
