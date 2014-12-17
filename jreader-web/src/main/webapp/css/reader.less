@@ -3,7 +3,10 @@
 @clr-soft: #ececec;
 @clr-main: #d2d7d3;
 
-.btn::-moz-focus-inner {
+:focus {
+	outline: none !important;
+}
+::-moz-focus-inner {
 	border: 0;
 } 
 
@@ -72,6 +75,9 @@ body {
 			background: none;
 			font-size: 100%;
 			padding: 0px 6px;
+			&:active {
+				box-shadow: none;
+			}
 			&.star {
 				color: #a3b1b2;
 				&:hover {
