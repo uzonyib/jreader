@@ -3,7 +3,7 @@
 	<cron>
 		<url>/cron/refresh</url>
 		<description>Refresh feeds</description>
-		<schedule>every 15 mins</schedule>
+		<schedule>every 15 mins from 00:00 to 23:45</schedule>
 		<timezone>Europe/Budapest</timezone>
 		<target>default</target>
 	</cron>
