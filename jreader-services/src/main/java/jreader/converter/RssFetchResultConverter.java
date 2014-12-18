@@ -9,12 +9,11 @@ import jreader.dto.RssFetchResult;
 
 import org.springframework.core.convert.converter.Converter;
 
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
+import com.rometools.rome.feed.synd.SyndEntry;
+import com.rometools.rome.feed.synd.SyndFeed;
 
 public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResult> {
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public RssFetchResult convert(SyndFeed syndFeed) {
 		RssFetchResult result = new RssFetchResult();
