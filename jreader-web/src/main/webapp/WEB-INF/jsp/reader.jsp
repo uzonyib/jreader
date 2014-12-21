@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-ng-app="jReaderApp">
+<html data-ng-app="jReaderApp" data-ng-controller="ReaderCtrl">
 	<head data-ng-controller="HeadCtrl">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title data-ng-bind="title">jReader</title>
@@ -19,6 +19,8 @@
 			<div id="navbar">
 				<jsp:include page="navbar.jsp" />
 			</div>
+		</div>
+		<div class="row">
 			<div id="menu" class="col-lg-2 col-md-2" data-ng-controller="MenuCtrl">
 				<jsp:include page="menu.jsp" />
 			</div>

@@ -1,11 +1,11 @@
 <div id="feed-entries-container"
-	data-infinite-scroll="loadMoreEntries()"
+	data-infinite-scroll="loadMoreArchivedEntries()"
 	data-infinite-scroll-distance="1"
 	data-infinite-scroll-disabled="!active || ajaxService.loadingEntries || !ajaxService.moreEntriesAvailable"
 	data-infinite-scroll-immediate-check="false">
 	<table id="feed-entries" class="table">
 		<tr class="article-breadcrumb"
-			data-ng-repeat-start="entry in entries">
+			data-ng-repeat-start="entry in archivedEntries">
 			<td class="action-buttons">
 				<button class="btn btn-default delete" title="Delete" data-ng-click="deleteEntry(entry)">
 					<span class="glyphicon glyphicon-remove"></span>

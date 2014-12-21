@@ -3,23 +3,9 @@ angular.module("jReaderApp").controller("EntriesCtrl", ["$scope", "ajaxService",
 	$scope.viewService = viewService;
 	
 	$scope.active = false;
-	$scope.archives = [];
-	$scope.entries = [];
 	
 	$scope.$watch("viewService.activeView", function() {
 		$scope.active = $scope.viewService.isEntriesSelected();
-	});
-	
-	$scope.$watch("ajaxService.archives", function(archives) {
-		$scope.archives = angular.copy(archives);
-	});
-	
-	$scope.$watch("ajaxService.entries", function(entries) {
-		$scope.entries = angular.copy(entries);
-		angular.forEach($scope.entries, function(entry) {
-			entry.archived = false;
-			entry.archive = $scope.archives[0];
-		});
 	});
 	
 	$scope.toggleCollapsion = function(entry) {
@@ -27,13 +13,6 @@ angular.module("jReaderApp").controller("EntriesCtrl", ["$scope", "ajaxService",
 		if (!entry.read) {
 			entry.read = true;
 			$scope.ajaxService.markRead(entry);
-		}
-	};
-	
-	$scope.loadMoreEntries = function() {
-		if ($scope.ajaxService.moreEntriesAvailable) {
-			$scope.viewService.entryFilter.incrementPageIndex();
-			$scope.ajaxService.loadEntries($scope.viewService.entryFilter.get());
 		}
 	};
 	

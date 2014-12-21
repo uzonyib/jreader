@@ -1,12 +1,12 @@
 <div id="feed-entries-container"
-	data-infinite-scroll="loadMoreEntries()"
+	data-infinite-scroll="loadMoreFeedEntries()"
 	data-infinite-scroll-distance="1"
 	data-infinite-scroll-disabled="!active || ajaxService.loadingEntries || !ajaxService.moreEntriesAvailable"
 	data-infinite-scroll-immediate-check="false">
 	<table id="feed-entries" class="table">
 		<tr class="article-breadcrumb"
 			data-ng-class="{info: !entry.read}"
-			data-ng-repeat-start="entry in entries">
+			data-ng-repeat-start="entry in feedEntries">
 			<td class="action-buttons">
 				<button class="btn btn-default star" title="Star" data-ng-show="!entry.starred" data-ng-click="star(entry)">
 					<span class="glyphicon glyphicon-star-empty"></span>
