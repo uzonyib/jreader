@@ -4,7 +4,6 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "$http", "aja
 	
 	$scope.active = false;
 	$scope.subscriptionGroups = [];
-	$scope.archives = [];
 	
 	$scope.newGroupTitle = "";
 	
@@ -33,14 +32,6 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "$http", "aja
 				subscription.editingTitle = false;
 				subscription.newTitle = subscription.title;
 			});
-		});
-	});
-	
-	$scope.$watch("ajaxService.archives", function(archives) {
-		$scope.archives = angular.copy(archives);
-		angular.forEach($scope.archives, function(archive) {
-			archive.editingTitle = false;
-			archive.newTitle = archive.title;
 		});
 	});
 	
@@ -90,24 +81,24 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "$http", "aja
 	};
 	
 	$scope.createArchive = function() {
-		$scope.ajaxService.createArchive($scope.newArchiveTitle);
+		$scope.ajaxService.createArchive($scope.newArchiveTitle).success($scope.setArchives);
 		$scope.newArchiveTitle = "";
 	};
 	
 	$scope.deleteArchive = function(archiveId) {
-		$scope.ajaxService.deleteArchive(archiveId);
+		$scope.ajaxService.deleteArchive(archiveId).success($scope.setArchives);
 	};
 	
 	$scope.moveArchiveUp = function(archiveId) {
-		$scope.ajaxService.moveArchiveUp(archiveId);
+		$scope.ajaxService.moveArchiveUp(archiveId).success($scope.setArchives);
 	};
 	
 	$scope.moveArchiveDown = function(archiveId) {
-		$scope.ajaxService.moveArchiveDown(archiveId);
+		$scope.ajaxService.moveArchiveDown(archiveId).success($scope.setArchives);
 	};
 	
 	$scope.entitleArchive = function(archive) {
-		$scope.ajaxService.entitleArchive(archive.id, archive.newTitle);
+		$scope.ajaxService.entitleArchive(archive.id, archive.newTitle).success($scope.setArchives);
 	};
 	
 	$scope.exportSubscriptions = function() {

@@ -17,7 +17,6 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 	
 	$scope.subscriptionGroups = [];
 	$scope.unreadCount = 0;
-	$scope.archives = [];
 	
 	$scope.$watch("viewService.activeView", function() {
 		$scope.refreshSelection();
@@ -33,9 +32,6 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 		$scope.unreadCount = count;
 	});
 	
-	$scope.$watch("ajaxService.archives", function(archives) {
-		$scope.archives = angular.copy(archives);
-	});
 	
 	$scope.refreshSelection = function() {
 		$scope.home.selected = $scope.viewService.isHomeSelected();
@@ -48,10 +44,6 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 			angular.forEach(group.subscriptions, function(subscription) {
 				subscription.selected = $scope.viewService.isSubscriptionSelected(group.id, subscription.id);
 			});
-		});
-		
-		angular.forEach($scope.archives, function(archive) {
-			archive.selected = $scope.viewService.isArchiveSelected(archive.id);
 		});
 	};
 	

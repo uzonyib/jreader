@@ -3,14 +3,9 @@ angular.module("jReaderApp").controller("EntriesNavbarCtrl", ["$scope", "$window
 	$scope.viewService = viewService;
 	
 	$scope.active = false;
-	$scope.loading = false;
 	
 	$scope.$watch("viewService.activeView", function() {
 		$scope.active = $scope.viewService.isEntriesSelected();
-	});
-	
-	$scope.$watch("ajaxService.loadingEntries", function(loadingEntries) {
-		$scope.loading = loadingEntries;
 	});
 	
 }]);

@@ -10,10 +10,6 @@ angular.module("jReaderApp").controller("EntriesCtrl", ["$scope", "ajaxService",
 	
 	$scope.toggleCollapsion = function(entry) {
 		entry.uncollapsed = !entry.uncollapsed;
-		if (!entry.read) {
-			entry.read = true;
-			$scope.ajaxService.markRead(entry);
-		}
 	};
 	
 	$scope.star = function(entry) {

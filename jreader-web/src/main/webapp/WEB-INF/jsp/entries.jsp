@@ -1,12 +1,12 @@
 <div id="feed-entries-container"
-	data-infinite-scroll="loadMoreFeedEntries()"
+	data-infinite-scroll="feedEntries.loadMore()"
 	data-infinite-scroll-distance="1"
-	data-infinite-scroll-disabled="!active || ajaxService.loadingEntries || !ajaxService.moreEntriesAvailable"
+	data-infinite-scroll-disabled="!feedEntries.visible || feedEntries.loading || !feedEntries.moreItemsAvailable"
 	data-infinite-scroll-immediate-check="false">
 	<table id="feed-entries" class="table">
 		<tr class="article-breadcrumb"
 			data-ng-class="{info: !entry.read}"
-			data-ng-repeat-start="entry in feedEntries">
+			data-ng-repeat-start="entry in feedEntries.items">
 			<td class="action-buttons">
 				<button class="btn btn-default star" title="Star" data-ng-show="!entry.starred" data-ng-click="star(entry)">
 					<span class="glyphicon glyphicon-star-empty"></span>
@@ -15,9 +15,9 @@
 					<span class="glyphicon glyphicon-star"></span>
 				</button>
 			</td>
-			<td class="feed-title" data-ng-click="toggleCollapsion(entry)">{{entry.subscriptionTitle}}</td>
-			<td class="title" data-ng-click="toggleCollapsion(entry)">{{entry.title}}</td>
-			<td class="date" data-ng-click="toggleCollapsion(entry)">{{entry.publishedDate | moment}}</td>
+			<td class="feed-title" data-ng-click="toggleCollapsion(entry);feedEntries.markRead(entry);">{{entry.subscriptionTitle}}</td>
+			<td class="title" data-ng-click="toggleCollapsion(entry);feedEntries.markRead(entry);">{{entry.title}}</td>
+			<td class="date" data-ng-click="toggleCollapsion(entry);feedEntries.markRead(entry);">{{entry.publishedDate | moment}}</td>
 		</tr>
 		<tr class="article-detail"
 			data-ng-show="entry.uncollapsed"

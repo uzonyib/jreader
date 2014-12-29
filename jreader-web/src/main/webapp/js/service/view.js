@@ -162,9 +162,8 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 		selection: "unread",
 		pageIndex: 0,
 		ascendingOrder: true,
-		pageSize: Math.ceil($window.innerHeight / 29 / 10) * 10,
-		initialPagesToLoad: 2,
-		
+		pageSize: Math.ceil($window.innerHeight / 34 / 10) * 10,
+		initialPagesToLoad: 2
 	};
 	
 	this.entryFilter.get = function() {
@@ -185,7 +184,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.archiveFilter = {
 		pageIndex: 0,
 		ascendingOrder: true,
-		pageSize: Math.ceil($window.innerHeight / 29 / 10) * 10,
+		pageSize: Math.ceil($window.innerHeight / 34 / 10) * 10,
 		initialPagesToLoad: 2
 	};
 	
