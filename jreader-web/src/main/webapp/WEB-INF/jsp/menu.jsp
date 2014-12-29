@@ -14,12 +14,12 @@
 		data-ng-click="selectAllItems()">
 		<span class="glyphicon glyphicon-th-list"></span>
 		<span class="title">All feeds</span>
-		<span class="unread-count badge" data-ng-show="unreadCount">{{unreadCount}}</span>
+		<span class="unread-count badge" data-ng-show="subscriptionGroups.unreadCount">{{subscriptionGroups.unreadCount}}</span>
 	</li>
 </ul>
 
 <div id="subscription-menu">
-	<ul data-ng-repeat="group in subscriptionGroups"
+	<ul data-ng-repeat="group in subscriptionGroups.items"
 		class="menu-group nav nav-pills nav-stacked">
 		<li class="menu-item"
 			data-ng-class="{selected: group.selected}"

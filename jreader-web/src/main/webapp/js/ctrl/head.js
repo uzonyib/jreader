@@ -4,7 +4,7 @@ angular.module("jReaderApp").controller("HeadCtrl", ["$scope", "ajaxService", fu
 	$scope.titlePrefix = "jReader";
 	$scope.title = $scope.titlePrefix;
 	
-	$scope.$watch("ajaxService.unreadCount", function(count) {
+	$scope.$watch("subscriptionGroups.unreadCount", function(count) {
 		if (count > 0) {
 			$scope.title = $scope.titlePrefix + " (" + count + ")";
 		} else {

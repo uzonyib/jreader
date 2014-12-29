@@ -1,24 +1,8 @@
-angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", function ($http, $interval) {
+angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	var service = this;
 
-	this.subscriptionGroups = [];
-	this.unreadCount = 0;
-	
-	this.setSubscriptionGroups = function(groups) {
-		if (!angular.equals(this.subscriptionGroups, groups)) {
-			service.subscriptionGroups = groups;
-			var count = 0;
-			angular.forEach(service.subscriptionGroups, function(group) {
-				count += group.unreadCount;
-			});
-			service.unreadCount = count;
-		}
-	};
-	
 	this.refreshSubscriptions = function() {
-    	$http.get("/reader/groups").success(function(data) {
-        	service.setSubscriptionGroups(data);
-        });
+    	return $http.get("/reader/groups");
     };
     
     this.refreshArchives = function() {
@@ -64,97 +48,81 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
     };
     
     this.createGroup = function(title) {
-    	$http({
+    	return $http({
 			method: "POST",
 			url: "/reader/groups",
             params: { "title": title }
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
 	this.deleteGroup = function(id) {
-		$http({
+		return $http({
 			method: "DELETE",
 			url: "/reader/groups/" + id
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
 	this.entitleGroup = function(groupId, title) {
-		$http({
+		return $http({
 			method: "PUT",
 			url: "/reader/groups/" + groupId + "/title",
             params: { "value": title }
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
 	this.moveGroup = function(id, up) {
-		$http({
+		return $http({
 			method: "PUT",
 			url: "/reader/groups/" + id + "/order",
             params: { "up": up }
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
 	this.moveGroupUp = function(id) {
-		service.moveGroup(id, true);
+		return service.moveGroup(id, true);
 	};
 	
 	this.moveGroupDown = function(id) {
-		service.moveGroup(id, false);
+		return service.moveGroup(id, false);
 	};
 	
 	this.subscribe = function(groupId, url) {
-		$http({
+		return $http({
 			method: "POST",
 			url: "/reader/groups/" + groupId + "/subscriptions",
             params: { "url": url }
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
 	this.unsubscribe = function(groupId, subscriptionId) {
-		$http({
+		return $http({
 			method: "DELETE",
 			url: "/reader/groups/" + groupId + "/subscriptions/" + subscriptionId
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
 	this.entitleSubscription = function(groupId, subscriptionId, title) {
-		$http({
+		return $http({
 			method: "PUT",
 			url: "/reader/groups/" + groupId + "/subscriptions/" + subscriptionId + "/title",
             params: { "value": title }
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
 	this.moveSubscription = function(groupId, subscriptionId, up) {
-		$http({
+		return $http({
 			method: "PUT",
 			url: "/reader/groups/" + groupId + "/subscriptions/" + subscriptionId + "/order",
             params: { "up": up }
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
 	this.moveSubscriptionUp = function(groupId, subscriptionId) {
-		service.moveSubscription(groupId, subscriptionId, true);
+		return service.moveSubscription(groupId, subscriptionId, true);
 	};
 	
 	this.moveSubscriptionDown = function(groupId, subscriptionId) {
-		service.moveSubscription(groupId, subscriptionId, false);
+		return service.moveSubscription(groupId, subscriptionId, false);
 	};
 	
 	this.createArchive = function(title) {
@@ -201,13 +169,11 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 		map[entry.subscriptionGroupId] = {};
 		map[entry.subscriptionGroupId][entry.subscriptionId] = [entry.id];
 		
-		$http({
+		return $http({
 			method: "POST",
 			url: "/reader/entries",
             data: map,
             headers: { "Content-Type": "application/json" }
-        }).success(function(response) {
-        	service.setSubscriptionGroups(response);
         });
 	};
 	
@@ -226,16 +192,12 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 			map[entry.subscriptionGroupId][entry.subscriptionId].push(entry.id);
 		});
 
-		var promise = $http({
+		return promise = $http({
 			method: "POST",
 			url: "/reader/entries",
             data: map,
             headers: { "Content-Type": "application/json" }
         });
-		promise.success(function(response) {
-        	service.setSubscriptionGroups(response);
-        });
-		return promise;
 	};
 	
 	this.setStarred = function(entry, starred) {
@@ -273,8 +235,5 @@ angular.module("jReaderApp").service("ajaxService", ["$http", "$interval", funct
 			url: "/reader/archives/" + archiveId + "/entries/" + entryId
         });
 	};
-    
-    $interval(this.refreshSubscriptions, 1000 * 60 * 5);
-    this.refreshSubscriptions();
     
 }]);

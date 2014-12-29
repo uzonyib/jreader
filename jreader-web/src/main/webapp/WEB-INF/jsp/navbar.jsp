@@ -41,7 +41,7 @@
 					  		</label>
 						</li>
 						<li data-ng-show="!feedEntries.loading">
-							<p class="navbar-text">Items displayed: {{feedEntries.length}}</p>
+							<p class="navbar-text">Items displayed: {{feedEntries.items.length}}</p>
 						</li>
 						<li data-ng-show="feedEntries.loading">
 							<p class="navbar-text">Loading...</p>
@@ -62,7 +62,7 @@
 					  		</label>
 						</li>
 						<li data-ng-show="!archivedEntries.loading">
-							<p class="navbar-text">Items displayed: {{archivedEntries.length}}</p>
+							<p class="navbar-text">Items displayed: {{archivedEntries.items.length}}</p>
 						</li>
 						<li data-ng-show="archivedEntries.loading">
 							<p class="navbar-text">Loading...</p>

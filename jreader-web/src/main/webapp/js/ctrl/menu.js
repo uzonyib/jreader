@@ -15,23 +15,14 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 	$scope.archivedItems.selected = false;
 	$scope.archivedItems.collapsed = true;
 	
-	$scope.subscriptionGroups = [];
-	$scope.unreadCount = 0;
-	
 	$scope.$watch("viewService.activeView", function() {
 		$scope.refreshSelection();
 	});
 	
-	$scope.$watch("ajaxService.subscriptionGroups", function(subscriptionGroups) {
-		$scope.subscriptionGroups = angular.copy(subscriptionGroups);
+	$scope.$watch("subscriptionGroups.items", function() {
 		$scope.refreshSelection();
 		$scope.refreshCollapsion();
 	});
-	
-	$scope.$watch("ajaxService.unreadCount", function(count) {
-		$scope.unreadCount = count;
-	});
-	
 	
 	$scope.refreshSelection = function() {
 		$scope.home.selected = $scope.viewService.isHomeSelected();
@@ -39,7 +30,7 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 		$scope.allItems.selected = $scope.viewService.isAllItemsSelected();
 		$scope.archivedItems.selected = $scope.viewService.isArchivedItemsSelected();
 		
-		angular.forEach($scope.subscriptionGroups, function(group) {
+		angular.forEach($scope.subscriptionGroups.items, function(group) {
 			group.selected = $scope.viewService.isSubscriptionGroupSelected(group.id);
 			angular.forEach(group.subscriptions, function(subscription) {
 				subscription.selected = $scope.viewService.isSubscriptionSelected(group.id, subscription.id);
@@ -48,7 +39,7 @@ angular.module("jReaderApp").controller("MenuCtrl", ["$scope", "ajaxService", "v
 	};
 	
 	$scope.refreshCollapsion = function() {
-		angular.forEach($scope.subscriptionGroups, function(group) {
+		angular.forEach($scope.subscriptionGroups.items, function(group) {
 			group.collapsed = $scope.uncollapsedItems.indexOf(group.id) < 0;
 		});
 	};

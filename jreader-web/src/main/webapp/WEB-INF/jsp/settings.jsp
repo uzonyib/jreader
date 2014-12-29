@@ -20,7 +20,7 @@
 				{{newSubscription.group.title}}<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li data-ng-repeat="group in subscriptionGroups" data-ng-click="newSubscription.group=group">
+				<li data-ng-repeat="group in subscriptionGroups.items" data-ng-click="newSubscription.group=group">
 					<a tabindex="-1" href="">{{group.title}}</a>
 				</li>
 			</ul>
@@ -34,11 +34,11 @@
 </form>
 
 <table class="table">
-	<tbody class="settings-group" data-ng-repeat="group in subscriptionGroups">
+	<tbody class="settings-group" data-ng-repeat="group in subscriptionGroups.items">
 		<tr class="group-title">
 			<td>
 				<span class="title" data-ng-show="!group.editingTitle" data-ng-click="editTitle(group)">{{group.title}}</span>
-				<form class="form-inline" data-ng-show="group.editingTitle" data-ng-click="entitleGroup(group)">
+				<form class="form-inline" data-ng-show="group.editingTitle" data-ng-submit="entitleGroup(group)">
 					<input class="form-control" type="text" placeholder="title" data-ng-model="group.newTitle" />
 					<button type="submit" class="btn btn-default" title="Update">
 						<span class="glyphicon glyphicon-ok"></span>
@@ -70,7 +70,7 @@
 		<tr class="settings-item" data-ng-repeat="subscription in group.subscriptions">
 			<td class="title">
 				<span data-ng-show="!subscription.editingTitle" data-ng-click="editTitle(subscription)">{{subscription.title}}</span>
-				<form class="form-inline set-item-title" data-ng-show="subscription.editingTitle" data-ng-click="entitleSubscription(group, subscription)">
+				<form class="form-inline set-item-title" data-ng-show="subscription.editingTitle" data-ng-submit="entitleSubscription(group, subscription)">
 					<input class="form-control" type="text" placeholder="name" data-ng-model="subscription.newTitle" />
 					<button type="submit" class="btn btn-default" title="Update">
 						<span class="glyphicon glyphicon-ok"></span>
