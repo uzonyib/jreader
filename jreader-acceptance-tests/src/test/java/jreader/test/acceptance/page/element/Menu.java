@@ -26,13 +26,9 @@ public class Menu {
     @CacheLookup
     private WebElement mainContent;
     
-    @FindBy(id = "logout-menu-item")
+    @FindBy(css = "#logout-button")
     @CacheLookup
-    private WebElement logoutMenuItem;
-    
-    @FindBy(css = "#logout-menu-item a")
-    @CacheLookup
-    private WebElement logoutLink;
+    private WebElement logoutButton;
     
     @FindBy(id = "home-menu-item")
     @CacheLookup
@@ -61,7 +57,7 @@ public class Menu {
     }
     
     public void logout() {
-        logoutLink.click();
+        logoutButton.click();
     }
     
     public void openHomePage() {
@@ -76,8 +72,8 @@ public class Menu {
             .until(ExpectedConditions.visibilityOf(settingsPage.getMainContent()));
     }
 
-    public WebElement getLogoutMenuItem() {
-        return logoutMenuItem;
+    public WebElement getLogoutButton() {
+        return logoutButton;
     }
 
     public WebElement getHomeMenuItem() {

@@ -35,7 +35,7 @@ public class MenuNavigationStepsDef {
     
     @Then("^the logout menu item should be displayed$")
     public void the_logout_menu_item_should_be_displayed() {
-        assertThat(menu.getLogoutMenuItem().isDisplayed()).isTrue();
+        assertThat(menu.getLogoutButton().isDisplayed()).isTrue();
     }
 
     @Then("^the home menu item should be displayed$")

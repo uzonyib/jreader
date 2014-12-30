@@ -21,7 +21,7 @@
 <div id="subscription-menu">
 	<ul data-ng-repeat="group in subscriptionGroups.items"
 		class="menu-group nav nav-pills nav-stacked">
-		<li class="menu-item"
+		<li class="menu-item group-item"
 			data-ng-class="{selected: group.selected}"
 			data-ng-click="selectSubscriptionGroup(group)">
 			<span class="glyphicon glyphicon-chevron-right" data-ng-show="group.collapsed" data-ng-click="uncollapse(group.id, $event)"></span>

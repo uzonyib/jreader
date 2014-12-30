@@ -70,7 +70,7 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li>
-							<a href="${logoutUrl}" title="Logout">
+							<a id="logout-button" href="${logoutUrl}" title="Logout">
 								<span class="glyphicon glyphicon-log-out"></span>
 							</a>
 						</li>

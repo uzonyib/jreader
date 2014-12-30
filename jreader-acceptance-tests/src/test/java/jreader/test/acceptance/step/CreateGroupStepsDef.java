@@ -31,8 +31,6 @@ public class CreateGroupStepsDef {
     private SubscriptionForm subscriptionForm = new SubscriptionForm(browser);
     private SubscriptionSettingsForm subscriptionSettingsForm = new SubscriptionSettingsForm(browser);
     
-//    private String newGroupTitle;
-    
     @When("^I navigate to the settings page$")
     public void i_navigate_to_the_settings_page() {
         menu.openSettingsPage();
@@ -75,9 +73,10 @@ public class CreateGroupStepsDef {
     
     @Then("^the new group should be displayed in the group field of the new subscription form$")
     public void the_new_group_should_be_displayed_in_the_group_field_of_the_new_subscription_form() {
-        List<WebElement> options = subscriptionForm.getGroupField().getOptions();
+        subscriptionForm.openGroupDropdown();
+        List<WebElement> options = subscriptionForm.getGroupOptions();
         assertThat(options.size()).isGreaterThanOrEqualTo(1);
-        assertThat(options.get(options.size() -1).getText()).isEqualTo(GROUP_TITLE);
+        assertThat(options.get(options.size() - 1).getText()).isEqualTo(GROUP_TITLE);
     }
     
     @Given("^I created a group$")
@@ -122,7 +121,8 @@ public class CreateGroupStepsDef {
     
     @Then("^the groups should be displayed in the group field of the new subscription form in creation order$")
     public void the_groups_should_be_displayed_in_the_group_field_of_the_new_subscription_form_in_creation_order() {
-        List<WebElement> options = subscriptionForm.getGroupField().getOptions();
+        subscriptionForm.openGroupDropdown();
+        List<WebElement> options = subscriptionForm.getGroupOptions();
         assertThat(options).hasSameSizeAs(GROUP_TITLES);
         for (int i = 0; i < GROUP_TITLES.length; ++i) {
             assertThat(options.get(i).getText()).isEqualTo(GROUP_TITLES[i]);

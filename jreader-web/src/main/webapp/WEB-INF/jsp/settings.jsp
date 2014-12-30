@@ -1,4 +1,4 @@
-<form class="form-inline" data-ng-submit="createGroup()">
+<form id="group-form" class="form-inline" data-ng-submit="createGroup()">
 	<div class="form-group">
 		<label for="new-group-title">Create group entitled</label>
 		<input id="new-group-title" class="form-control" data-ng-model="newGroupTitle" type="text" name="title" placeholder="title" />
@@ -8,7 +8,7 @@
 	</button>
 </form>
 
-<form class="form-inline" data-ng-submit="subscribe()">
+<form id="subscription-form" class="form-inline" data-ng-submit="subscribe()">
 	<div class="form-group">
 		<label for="new-subscription-url">Subscribe to</label>
 		<input id="new-subscription-url" type="text" placeholder="URL" class="form-control" data-ng-model="newSubscription.url" />
@@ -17,7 +17,7 @@
 	<div class="form-group">
 		<div class="dropdown">
 			<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-				{{newSubscription.group.title}}<span class="caret"></span>
+				<span class="title">{{newSubscription.group.title}}</span><span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
 				<li data-ng-repeat="group in subscriptionGroups.items" data-ng-click="newSubscription.group=group">
@@ -33,7 +33,7 @@
 	</div>
 </form>
 
-<table class="table">
+<table id="subscription-settings" class="table">
 	<tbody class="settings-group" data-ng-repeat="group in subscriptionGroups.items">
 		<tr class="group-title">
 			<td>

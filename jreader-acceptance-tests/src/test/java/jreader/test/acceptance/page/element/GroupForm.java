@@ -19,7 +19,7 @@ public class GroupForm {
     @CacheLookup
     private WebElement titleField;
     
-    @FindBy(css = "#group-form input[type='image']")
+    @FindBy(css = "#group-form button[type='submit']")
     @CacheLookup
     private WebElement createButton;
     

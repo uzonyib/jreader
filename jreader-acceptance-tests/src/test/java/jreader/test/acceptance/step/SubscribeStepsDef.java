@@ -31,22 +31,20 @@ private WebDriver browser = BrowserManager.getBrowser();
     @Given("^I have groups \"(.*?)\"$")
     public void i_have_groups(List<String> titles) {
         menu.openSettingsPage();
-//        groupForm.createGroups(titles);
     }
     
     @Then("^I should see a form for subscribing to a feed$")
     public void i_should_see_a_form_for_subscribing_to_a_feed() {
-        assertThat(subscriptionForm.getGroupField().getFirstSelectedOption().isDisplayed()).isTrue();
-        assertThat(subscriptionForm.getGroupField().isMultiple()).isFalse();
+        assertThat(subscriptionForm.getGroupDropdown().isDisplayed()).isTrue();
         assertThat(subscriptionForm.getUrlField().isDisplayed()).isTrue();
         assertThat(subscriptionForm.getSubscribeButton().isDisplayed()).isTrue();
     }
 
     @Then("^I can select \"(.*?)\" for group$")
     public void i_can_select_for_group(List<String> titles) {
-        assertThat(subscriptionForm.getGroupField().getOptions()).hasSameSizeAs(titles);
+        assertThat(subscriptionForm.getGroupOptions()).hasSameSizeAs(titles);
         for (int i = 0; i < titles.size(); ++i) {
-            assertThat(subscriptionForm.getGroupField().getOptions().get(i).getText()).isEqualTo(titles.get(i));
+            assertThat(subscriptionForm.getGroupOptions().get(i).getText()).isEqualTo(titles.get(i));
         }
     }
 
