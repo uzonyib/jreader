@@ -2,6 +2,10 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 	
+	$scope.head = {};
+	$scope.head.titlePrefix = "jReader";
+	$scope.head.title = $scope.titlePrefix;
+	
 	$scope.subscriptionGroups = {};
 	$scope.subscriptionGroups.items = [];
 	$scope.subscriptionGroups.unreadCount = 0;
@@ -18,7 +22,13 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 				subscription.newTitle = subscription.title;
 			});
 		});
+		
 		$scope.subscriptionGroups.unreadCount = count;
+		if (count > 0) {
+			$scope.head.title = $scope.head.titlePrefix + " (" + count + ")";
+		} else {
+			$scope.head.title = $scope.head.titlePrefix;
+		}
 		
 		$scope.menu.refreshSelection();
 		$scope.menu.refreshCollapsion();

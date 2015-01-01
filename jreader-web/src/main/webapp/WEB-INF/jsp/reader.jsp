@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html data-ng-app="jReaderApp" data-ng-controller="ReaderCtrl">
-	<head data-ng-controller="HeadCtrl">
+	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title data-ng-bind="title">jReader</title>
+		<title data-ng-bind="head.title">jReader</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="/css/reader-all.css">
 		<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />

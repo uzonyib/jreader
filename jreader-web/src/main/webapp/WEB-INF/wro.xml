@@ -7,7 +7,6 @@
     <js>/js/service/view.js</js>
     <js>/js/service/ajax.js</js>
     <js>/js/ctrl/reader.js</js>
-    <js>/js/ctrl/head.js</js>
     <js>/js/ctrl/entries-navbar.js</js>
     <js>/js/ctrl/archives-navbar.js</js>
     <js>/js/ctrl/home.js</js>
