@@ -7,20 +7,21 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	$scope.subscriptionGroups.unreadCount = 0;
 	
 	$scope.subscriptionGroups.setItems = function(groups) {
-		if (!angular.equals($scope.subscriptionGroups.items, groups)) {
-			$scope.subscriptionGroups.items = groups;
-			var count = 0;
-			angular.forEach($scope.subscriptionGroups.items, function(group) {
-				count += group.unreadCount;
-				group.editingTitle = false;
-				group.newTitle = group.title;
-				angular.forEach(group.subscriptions, function(subscription) {
-					subscription.editingTitle = false;
-					subscription.newTitle = subscription.title;
-				});
+		$scope.subscriptionGroups.items = groups;
+		var count = 0;
+		angular.forEach($scope.subscriptionGroups.items, function(group) {
+			count += group.unreadCount;
+			group.editingTitle = false;
+			group.newTitle = group.title;
+			angular.forEach(group.subscriptions, function(subscription) {
+				subscription.editingTitle = false;
+				subscription.newTitle = subscription.title;
 			});
-			$scope.subscriptionGroups.unreadCount = count;
-		}
+		});
+		$scope.subscriptionGroups.unreadCount = count;
+		
+		$scope.menu.refreshSelection();
+		$scope.menu.refreshCollapsion();
 	};
 	
 	$scope.subscriptionGroups.refresh = function() {
@@ -51,6 +52,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 			$scope.feedEntries.visible = false;
 			$scope.archivedEntries.visible = false;
 		}
+		$scope.menu.refreshSelection();
 	});
 	
 	$scope.feedEntries.append = function(entries) {
@@ -220,5 +222,61 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
     };
 	
     $scope.refreshArchives();
+    
+    $scope.menu = {};
+    $scope.menu.uncollapsedItems = [];
+	$scope.menu.homeSelected = true;
+	$scope.menu.settingsSelected = false;
+	$scope.menu.allItemsSelected = false;
+	$scope.menu.archivedItemsSelected = false;
+	$scope.menu.archivedItemsCollapsed = true;
+	
+	$scope.menu.refreshSelection = function() {
+		$scope.menu.homeSelected = $scope.viewService.isHomeSelected();
+		$scope.menu.settingsSelected = $scope.viewService.isSettingsSelected();
+		$scope.menu.allItemsSelected = $scope.viewService.isAllItemsSelected();
+		$scope.menu.archivedItemsSelected = $scope.viewService.isArchivedItemsSelected();
+		
+		angular.forEach($scope.subscriptionGroups.items, function(group) {
+			group.selected = $scope.viewService.isSubscriptionGroupSelected(group.id);
+			angular.forEach(group.subscriptions, function(subscription) {
+				subscription.selected = $scope.viewService.isSubscriptionSelected(group.id, subscription.id);
+			});
+		});
+	};
+	
+	$scope.menu.refreshCollapsion = function() {
+		angular.forEach($scope.subscriptionGroups.items, function(group) {
+			group.collapsed = $scope.menu.uncollapsedItems.indexOf(group.id) < 0;
+		});
+	};
+	
+	$scope.menu.collapse = function(groupId, $event) {
+		var index = $scope.menu.uncollapsedItems.indexOf(groupId);
+		if (index >= 0) {
+			$scope.menu.uncollapsedItems.splice(index, 1);
+		}
+		$scope.menu.refreshCollapsion();
+		$event.stopPropagation();
+	};
+	
+	$scope.menu.uncollapse = function(groupId, $event) {
+		var index = $scope.menu.uncollapsedItems.indexOf(groupId);
+		if (index < 0) {
+			$scope.menu.uncollapsedItems.push(groupId);
+		}
+		$scope.menu.refreshCollapsion();
+		$event.stopPropagation();
+	};
+	
+	$scope.menu.collapseArchivedItems = function($event) {
+		$scope.menu.archivedItemsCollapsed = true;
+		$event.stopPropagation();
+	};
+	
+	$scope.menu.uncollapseArchivedItems = function($event) {
+		$scope.menu.archivedItemsCollapsed = false;
+		$event.stopPropagation();
+	};
     
 }]);
