@@ -15,9 +15,12 @@ body {
 	padding-top: 53px;
 }
 
-.reader-menu {
+#menu, #main-area, #nav-brand, #nav-main {
 	padding-left: 5px;
 	padding-right: 5px;
+}
+
+.reader-menu {
 	.menu-item {
 		padding: 3px 5px;
 		cursor: pointer;
@@ -44,58 +47,58 @@ body {
 	}
 }
 
-#main-area {
-	padding-left: 5px;
-	padding-right: 5px;
-}
-
 #feed-entries {
+	table-layout: fixed;
 	tr.article-breadcrumb {
+		td {
+			cursor: pointer;
+			padding: 2px 3px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 		&.info td {
 			background-color: @clr-soft;
 		}
 		&:hover td {
 			background-color: @clr-main;
 		}
-		.title {
-			padding-left: 10px;
-			padding-right: 10px;
-			overflow: hidden;
-			max-width: 680px;
-			text-overflow: ellipsis;
-			width: 100%;
+		.action-buttons {
+			width: 32px;
+			button {
+				border: none;
+				background: none;
+				font-size: 100%;
+				padding: 0px 3px;
+				&:active {
+					box-shadow: none;
+				}
+				&.star {
+					color: #a3b1b2;
+					&:hover {
+						color: #f2ca27;
+					}
+				}
+				&.unstar {
+					color: #f4a62a;
+					&:hover {
+						color: #f2ca27;
+					}
+				}
+				&.delete {
+					color: #a3b1b2;
+					&:hover {
+						color: #d14233;
+					}
+				}
+			}
 		}
-		td {
-			cursor: pointer;
-			padding: 2px 0px;
-			white-space: nowrap;
+		.feed-title {
+			width: 150px;
 		}
-		.action-buttons button {
-			border: none;
-			background: none;
-			font-size: 100%;
-			padding: 0px 6px;
-			&:active {
-				box-shadow: none;
-			}
-			&.star {
-				color: #a3b1b2;
-				&:hover {
-					color: #f2ca27;
-				}
-			}
-			&.unstar {
-				color: #f4a62a;
-				&:hover {
-					color: #f2ca27;
-				}
-			}
-			&.delete {
-				color: #a3b1b2;
-				&:hover {
-					color: #d14233;
-				}
-			}
+		.title {}
+		.date {
+			width: 150px;
 		}
 	}
 	tr.article-detail td {
@@ -181,7 +184,7 @@ nav.navbar.navbar-default.navbar-fixed-top {
 	}
 }
 
-.navbar-toggle {
+.navbar-toggle, .navbar-btn {
 	z-index: 1;
 }
 

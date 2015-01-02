@@ -10,7 +10,7 @@
 		<span class="glyphicon glyphicon-cog"></span><span class="title">Settings</span>
 	</li>
 	<li id="all-items-menu-item" class="menu-item"
-		data-ng-class="{selected: allItemsSelected}"
+		data-ng-class="{selected: menu.allItemsSelected}"
 		data-ng-click="viewService.selectAllItems()">
 		<span class="glyphicon glyphicon-th-list"></span>
 		<span class="title">All feeds</span>
