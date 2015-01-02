@@ -160,7 +160,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	};
 	
 	$scope.archivedEntries.loadMore = function() {
-		if ($scope.ajaxService.moreArchivedEntriesAvailable) {
+		if ($scope.archivedEntries.moreItemsAvailable) {
 			$scope.viewService.archiveFilter.incrementPageIndex();
 			$scope.archivedEntries.load();
 		}
