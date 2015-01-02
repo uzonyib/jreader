@@ -253,6 +253,10 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 				subscription.selected = $scope.viewService.isSubscriptionSelected(group.id, subscription.id);
 			});
 		});
+		
+		angular.forEach($scope.archives, function(archive) {
+			archive.selected = $scope.viewService.isArchiveSelected(archive.id);
+		});
 	};
 	
 	$scope.menu.refreshCollapsion = function() {

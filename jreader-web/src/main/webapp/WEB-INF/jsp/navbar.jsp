@@ -91,17 +91,17 @@
 				</div>
 				<div id="navbar-collapse" class="reader-menu collapse navbar-collapse">
 					<ul class="nav navbar-nav hidden-lg hidden-md hidden-sm">
-						<li id="home-menu-item" class="menu-item"
+						<li class="menu-item"
 							data-ng-class="{selected: menu.homeSelected}"
 							data-ng-click="viewService.selectHome()">
 							<span class="glyphicon glyphicon-home"></span><span class="title">Home</span>
 						</li>
-						<li id="settings-menu-item" class="menu-item"
+						<li class="menu-item"
 							data-ng-class="{selected: menu.settingsSelected}"
 							data-ng-click="viewService.selectSettings()">
 							<span class="glyphicon glyphicon-cog"></span><span class="title">Settings</span>
 						</li>
-						<li id="all-items-menu-item" class="menu-item"
+						<li class="menu-item"
 							data-ng-class="{selected: menu.allItemsSelected}"
 							data-ng-click="viewService.selectAllItems()">
 							<span class="glyphicon glyphicon-th-list"></span>

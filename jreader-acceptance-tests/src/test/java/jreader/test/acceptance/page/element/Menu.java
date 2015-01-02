@@ -26,7 +26,7 @@ public class Menu {
     @CacheLookup
     private WebElement mainContent;
     
-    @FindBy(css = "#logout-button")
+    @FindBy(id = "logout-button")
     @CacheLookup
     private WebElement logoutButton;
     
@@ -42,7 +42,7 @@ public class Menu {
     @CacheLookup
     private WebElement allItemsMenuItem;
     
-    @FindBy(css = "#subscription-menu .group-item .title")
+    @FindBy(css = "#menu .group-item .title")
     private List<WebElement> groupMenuItems;
     
     public Menu(WebDriver browser) {
@@ -93,7 +93,7 @@ public class Menu {
     }
     
     public WebElement getGroupUnreadCount(String title) {
-        return browser.findElement(By.xpath("//*[@id='subscription-menu']"
+        return browser.findElement(By.xpath("//*[@id='menu']"
                 + "//*[contains(@class, 'group-item') and //span[contains(@class, 'title') and .='" + title + "']]"
                 + "//*[contains(@class, 'unread-count')]"));
     }
