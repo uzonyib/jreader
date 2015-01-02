@@ -23,7 +23,7 @@
 				<div id="menu" class="reader-menu col-lg-2 col-md-2 col-sm-3 hidden-xs">
 					<jsp:include page="menu.jsp" />
 				</div>
-				<div id="main-area" class="col-lg-10 col-md-10 col-sm-9 col-xs-12">
+				<div id="main-area" class="col-lg-10 col-md-10 col-sm-9 col-xs-12 col-lg-offset-2 col-md-offset-2 col-sm-offset-3">
 					<div id="home-contents" data-ng-controller="HomeCtrl" data-ng-show="active">
 						<jsp:include page="home.jsp" />
 					</div>

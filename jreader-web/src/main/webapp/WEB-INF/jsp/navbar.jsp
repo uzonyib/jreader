@@ -8,7 +8,7 @@
 					</a>
 				</div>
 			</div>
-			<div id="nav-main" class="col-lg-10 col-md-10 col-sm-9 col-xs-12">
+			<div id="nav-main" class="col-lg-10 col-md-10 col-sm-9 col-xs-12 col-lg-offset-2 col-md-offset-2 col-sm-offset-3">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
 						<span class="sr-only">Toggle navigation</span>
