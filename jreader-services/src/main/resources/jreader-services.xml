@@ -9,13 +9,14 @@
 		<property name="userDao" ref="userDao" />
 	</bean>
 	
-	<bean class="org.springframework.context.support.ConversionServiceFactoryBean" id="conversionService">
+	<bean class="jreader.converter.ReaderConversionService" id="conversionService">
 		<property name="converters">
 			<list>
 				<bean class="jreader.converter.RssFetchResultConverter" />
+				<bean class="jreader.converter.FeedDtoConverter" />
 				<bean class="jreader.converter.FeedEntryDtoConverter" />
-				<bean class="jreader.converter.SubscriptionGroupConverter" />
-				<bean class="jreader.converter.SubscriptionConverter" />
+				<bean class="jreader.converter.SubscriptionGroupDtoConverter" />
+				<bean class="jreader.converter.SubscriptionDtoConverter" />
 				<bean class="jreader.converter.ArchiveDtoConverter" />
 				<bean class="jreader.converter.ArchivedEntryConverter" />
 				<bean class="jreader.converter.ArchivedEntryDtoConverter" />
@@ -67,6 +68,7 @@
 		<property name="feedDao" ref="feedDao" />
 		<property name="feedEntryDao" ref="feedEntryDao" />
 		<property name="rssService" ref="rssService" />
+		<property name="conversionService" ref="conversionService" />
 	</bean>
 	
 </beans>

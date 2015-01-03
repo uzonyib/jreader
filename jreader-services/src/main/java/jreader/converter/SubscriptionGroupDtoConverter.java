@@ -5,7 +5,7 @@ import jreader.dto.SubscriptionGroupDto;
 
 import org.springframework.core.convert.converter.Converter;
 
-public class SubscriptionGroupConverter implements Converter<SubscriptionGroup, SubscriptionGroupDto> {
+public class SubscriptionGroupDtoConverter implements Converter<SubscriptionGroup, SubscriptionGroupDto> {
 
 	@Override
 	public SubscriptionGroupDto convert(SubscriptionGroup entity) {

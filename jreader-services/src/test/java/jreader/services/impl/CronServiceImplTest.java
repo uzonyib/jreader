@@ -3,11 +3,14 @@ package jreader.services.impl;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.List;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
@@ -17,6 +20,7 @@ import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
+import jreader.dto.FeedDto;
 import jreader.dto.RssFetchResult;
 import jreader.services.RssService;
 
@@ -25,13 +29,15 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.convert.ConversionService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class CronServiceImplTest {
 	
-	private static final String URL_1 = "url1";
-	private static final String URL_2 = "url2";
+    private static final String USERNAME = "username";
+	private static final String FEED_URL = "url";
+	private static final String FEED_TITLE = "title";
 
 	@InjectMocks
 	private CronServiceImpl service;
@@ -45,6 +51,8 @@ public class CronServiceImplTest {
 	
 	@Mock
 	private RssService rssService;
+	@Mock
+    private ConversionService conversionService;
 	
 	@Mock
 	private Feed feed1;
@@ -53,8 +61,6 @@ public class CronServiceImplTest {
 	
 	@Mock
 	private RssFetchResult fetchResult1;
-	@Mock
-	private RssFetchResult fetchResult2;
 	
 	@Mock
 	private Subscription subscription1;
@@ -76,6 +82,11 @@ public class CronServiceImplTest {
 	@Mock
 	private User user;
 	
+    @Mock
+    private FeedDto dto1;
+    @Mock
+    private FeedDto dto2;
+	
 	@Captor
 	private ArgumentCaptor<Long> dateCaptor;
 	
@@ -85,56 +96,61 @@ public class CronServiceImplTest {
 	}
 	
 	@Test
+    public void listFeeds() {
+        when(feedDao.listAll()).thenReturn(Arrays.asList(feed1, feed2));
+        when(conversionService.convert(feed1, FeedDto.class)).thenReturn(dto1);
+        when(conversionService.convert(feed2, FeedDto.class)).thenReturn(dto2);
+        
+        List<FeedDto> dtos = service.listAll();
+        
+        verify(feedDao).listAll();
+        
+        verify(conversionService).convert(feed1, FeedDto.class);
+        verify(conversionService).convert(feed2, FeedDto.class);
+        
+        assertEquals(dtos.size(), 2);
+        assertEquals(dtos.get(0), dto1);
+        assertEquals(dtos.get(1), dto2);
+    }
+	
+	@Test
 	public void refreshFeeds() {
-		when(feed1.getUrl()).thenReturn(URL_1);
-		when(feed2.getUrl()).thenReturn(URL_2);
+	    when(feedDao.find(FEED_URL)).thenReturn(feed1);
+		when(feed1.getUrl()).thenReturn(FEED_URL);
+		when(feed1.getTitle()).thenReturn(FEED_TITLE);
 		
-		when(feedDao.listAll()).thenReturn(Arrays.asList(feed1, feed2));
+		when(rssService.fetch(FEED_URL)).thenReturn(fetchResult1);
 		
-		when(rssService.fetch(URL_1)).thenReturn(fetchResult1);
-		when(rssService.fetch(URL_2)).thenReturn(fetchResult2);
-		
-		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1));
-		when(subscriptionDao.listSubscriptions(feed2)).thenReturn(Arrays.asList(subscription2));
+		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
 		
 		when(fetchResult1.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12));
-		when(fetchResult2.getFeedEntries()).thenReturn(Arrays.asList(entry21, entry22));
 		
 		when(subscription1.getUpdatedDate()).thenReturn(10L);
 		when(subscription2.getUpdatedDate()).thenReturn(10L);
 		
 		when(entry11.getPublishedDate()).thenReturn(9L);
 		when(entry12.getPublishedDate()).thenReturn(11L);
-		when(entry21.getPublishedDate()).thenReturn(10L);
-		when(entry22.getPublishedDate()).thenReturn(20L);
 		
 		when(subscription1.getGroup()).thenReturn(group);
 		when(subscription2.getGroup()).thenReturn(group);
 		when(group.getUser()).thenReturn(user);
+		when(user.getUsername()).thenReturn(USERNAME);
 		
-		service.refreshFeeds();
+		service.refreshFeed(FEED_URL);
 		
-		verify(feedDao).listAll();
-		
-		verify(rssService).fetch(URL_1);
-		verify(rssService).fetch(URL_2);
+		verify(rssService).fetch(FEED_URL);
 		
 		verify(subscriptionDao).listSubscriptions(feed1);
-		verify(subscriptionDao).listSubscriptions(feed2);
 		
 		verify(feedEntryDao, never()).save(entry11);
 		verify(entry12).setSubscription(subscription1);
-		verify(feedEntryDao).save(entry12);
-		
-		verify(feedEntryDao, never()).save(entry21);
-		verify(entry22).setSubscription(subscription2);
-		verify(feedEntryDao).save(entry22);
+		verify(entry12).setSubscription(subscription2);
+		verify(feedEntryDao, times(2)).save(entry12);
 		
 		verify(subscription1).setUpdatedDate(11L);
 		verify(subscriptionDao).save(subscription1);
-		
-		verify(subscription2).setUpdatedDate(20L);
-		verify(subscriptionDao).save(subscription2);
+		verify(subscription2).setUpdatedDate(11L);
+        verify(subscriptionDao).save(subscription2);
 	}
 	
 	@Test
