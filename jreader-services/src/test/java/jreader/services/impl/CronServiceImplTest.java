@@ -101,7 +101,7 @@ public class CronServiceImplTest {
         when(conversionService.convert(feed1, FeedDto.class)).thenReturn(dto1);
         when(conversionService.convert(feed2, FeedDto.class)).thenReturn(dto2);
         
-        List<FeedDto> dtos = service.listAll();
+        List<FeedDto> dtos = service.listFeeds();
         
         verify(feedDao).listAll();
         
@@ -136,7 +136,7 @@ public class CronServiceImplTest {
 		when(group.getUser()).thenReturn(user);
 		when(user.getUsername()).thenReturn(USERNAME);
 		
-		service.refreshFeed(FEED_URL);
+		service.refresh(FEED_URL);
 		
 		verify(rssService).fetch(FEED_URL);
 		
@@ -155,10 +155,9 @@ public class CronServiceImplTest {
 	
 	@Test
 	public void cleanUp() {
-		when(feedDao.listAll()).thenReturn(Arrays.asList(feed1, feed2));
+		when(feedDao.find(FEED_URL)).thenReturn(feed1);
 		
-		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1));
-		when(subscriptionDao.listSubscriptions(feed2)).thenReturn(Arrays.asList(subscription2));
+		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
 		
 		when(feedEntryDao.find(subscription1, 1)).thenReturn(entry11);
 		when(feedEntryDao.find(subscription2, 1)).thenReturn(entry21);
@@ -176,13 +175,12 @@ public class CronServiceImplTest {
 		when(subscription2.getGroup()).thenReturn(group);
 		when(group.getUser()).thenReturn(user);
 		
-		service.cleanup(1, 1);
+		service.cleanup(FEED_URL, 1, 1);
 		long end = System.currentTimeMillis();
 		
-		verify(feedDao).listAll();
+		verify(feedDao).find(FEED_URL);
 		
 		verify(subscriptionDao).listSubscriptions(feed1);
-		verify(subscriptionDao).listSubscriptions(feed2);
 		
 		verify(feedEntryDao).find(subscription1, 1);
 		verify(feedEntryDao).find(subscription2, 1);

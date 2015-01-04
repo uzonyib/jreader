@@ -9,7 +9,7 @@
 		<property name="userDao" ref="userDao" />
 	</bean>
 	
-	<bean class="jreader.converter.ReaderConversionService" id="conversionService">
+	<bean class="jreader.converter.ConversionFactory" id="conversionService">
 		<property name="converters">
 			<list>
 				<bean class="jreader.converter.RssFetchResultConverter" />

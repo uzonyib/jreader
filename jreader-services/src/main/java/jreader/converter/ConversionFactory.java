@@ -9,7 +9,7 @@ import org.springframework.core.convert.support.ConversionServiceFactory;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 
-public class ReaderConversionService implements FactoryBean<ConversionService>, InitializingBean {
+public class ConversionFactory implements FactoryBean<ConversionService>, InitializingBean {
     
     private Set<?> converters;
 

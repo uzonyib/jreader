@@ -30,7 +30,7 @@ public class CronServiceImpl implements CronService {
 	private ConversionService conversionService;
 	
 	@Override
-    public List<FeedDto> listAll() {
+    public List<FeedDto> listFeeds() {
         List<Feed> feeds = feedDao.listAll();
         List<FeedDto> dtos = new ArrayList<FeedDto>();
         for (Feed feed : feeds) {
@@ -40,7 +40,7 @@ public class CronServiceImpl implements CronService {
     }
 	
 	@Override
-	public void refreshFeed(String url) {
+	public void refresh(String url) {
 	    Feed feed = feedDao.find(url);
 	    RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
         if (rssFetchResult == null) {
@@ -70,27 +70,25 @@ public class CronServiceImpl implements CronService {
             subscription.setUpdatedDate(updatedDate);
             subscription.setRefreshDate(refreshDate);
             subscriptionDao.save(subscription);
-            LOG.info(feed.getTitle() + " new items for user " + subscription.getGroup().getUser().getUsername() + ": " + counter);
+            LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);
         }
 	}
 	
 	@Override
-	public void cleanup(int olderThanDays, int keptCount) {
-		List<Feed> feeds = feedDao.listAll();
+	public void cleanup(String url, int olderThanDays, int keptCount) {
 		long date = System.currentTimeMillis() - 1000 * 60 * 60 * 24 * olderThanDays;
-		for (Feed feed : feeds) {
-			for (Subscription subscription : subscriptionDao.listSubscriptions(feed)) {
-				int count = 0;
-				FeedEntry e = feedEntryDao.find(subscription, keptCount);
-				if (e != null) {
-					long threshold = Math.min(date, e.getPublishedDate());
-					List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
-					for (FeedEntry feedEntry : feedEntries) {
-						feedEntryDao.delete(feedEntry);
-						++count;
-					}
-					LOG.info(feed.getTitle() + "(" + subscription.getGroup().getUser().getUsername() + ") deleted items older than " + new Date(threshold) + ": " + count);
+		Feed feed = feedDao.find(url);
+		for (Subscription subscription : subscriptionDao.listSubscriptions(feed)) {
+			int count = 0;
+			FeedEntry e = feedEntryDao.find(subscription, keptCount);
+			if (e != null) {
+				long threshold = Math.min(date, e.getPublishedDate());
+				List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
+				for (FeedEntry feedEntry : feedEntries) {
+					feedEntryDao.delete(feedEntry);
+					++count;
 				}
+				LOG.info("Deleted items older than " + new Date(threshold) + " (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + count);
 			}
 		}
 	}

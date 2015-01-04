@@ -6,10 +6,10 @@ import jreader.dto.FeedDto;
 
 public interface CronService {
     
-    List<FeedDto> listAll();
+    List<FeedDto> listFeeds();
 	
-	void refreshFeed(String url);
+	void refresh(String url);
 	
-	void cleanup(int olderThanDays, int keptCount);
+	void cleanup(String url, int olderThanDays, int keptCount);
 
 }

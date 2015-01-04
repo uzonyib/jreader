@@ -5,7 +5,6 @@ import java.util.List;
 
 import jreader.dto.ArchivedEntryDto;
 import jreader.dto.StatusDto;
-import jreader.dto.SubscriptionGroupDto;
 import jreader.services.ArchiveService;
 import jreader.services.ArchivedEntryFilterData;
 

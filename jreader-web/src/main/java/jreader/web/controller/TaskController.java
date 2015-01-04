@@ -34,7 +34,7 @@ public class TaskController {
 	public StatusDto refreshFeeds(HttpServletRequest request, Principal principal) {
 		StatusDto result;
 		if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
-		    List<FeedDto> feeds = cronService.listAll();
+		    List<FeedDto> feeds = cronService.listFeeds();
 		    Queue queue = QueueFactory.getDefaultQueue();
 		    for (FeedDto feed : feeds) {
 		        queue.add(TaskOptions.Builder.withUrl("/tasks/refresh/feed").param("url", feed.getUrl()));
@@ -51,7 +51,7 @@ public class TaskController {
     public StatusDto refreshFeed(HttpServletRequest request, Principal principal, @RequestParam String url) {
         StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
-            cronService.refreshFeed(url);
+            cronService.refresh(url);
             result = new StatusDto(0);
         } else {
             result = new StatusDto(1);
@@ -64,9 +64,25 @@ public class TaskController {
     public StatusDto cleanup(HttpServletRequest request, Principal principal) {
         StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
-            cronService.cleanup(minAgeToDelete, minCountToKeep);
+            List<FeedDto> feeds = cronService.listFeeds();
+            Queue queue = QueueFactory.getDefaultQueue();
+            for (FeedDto feed : feeds) {
+                queue.add(TaskOptions.Builder.withUrl("/tasks/cleanup/feed").param("url", feed.getUrl()));
+            }
             result = new StatusDto(0);
-            LOG.info("Cleanup completed.");
+        } else {
+            result = new StatusDto(1);
+            LOG.warning("Cleanup prevented.");
+        }
+        return result;
+    }
+	
+	@RequestMapping(value = "/cleanup/feed", method = RequestMethod.POST)
+    public StatusDto cleanup(HttpServletRequest request, Principal principal, @RequestParam String url) {
+        StatusDto result;
+        if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
+            cronService.cleanup(url, minAgeToDelete, minCountToKeep);
+            result = new StatusDto(0);
         } else {
             result = new StatusDto(1);
             LOG.warning("Cleanup prevented.");
