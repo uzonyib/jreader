@@ -10,6 +10,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import jreader.dao.FeedDao;
@@ -195,5 +196,17 @@ public class CronServiceImplTest {
 		assertTrue(dateCaptor.getValue() <= end - 1000 * 60 * 60 * 27);
 		verify(feedEntryDao).delete(entry22);
 	}
+	
+	@Test
+    public void cleanUpFeedWithoutSubscription() {
+        when(feedDao.find(FEED_URL)).thenReturn(feed1);
+        when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Collections.<Subscription>emptyList());
+        
+        service.cleanup(FEED_URL, 1, 1);
+        
+        verify(feedDao).find(FEED_URL);
+        verify(subscriptionDao).listSubscriptions(feed1);
+        verify(feedDao).delete(feed1);
+    }
 
 }
