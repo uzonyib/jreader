@@ -4,7 +4,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	
 	$scope.head = {};
 	$scope.head.titlePrefix = "jReader";
-	$scope.head.title = $scope.titlePrefix;
+	$scope.head.title = $scope.head.titlePrefix;
 	
 	$scope.subscriptionGroups = {};
 	$scope.subscriptionGroups.items = [];
