@@ -178,9 +178,6 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	};
 	
 	this.markAllRead = function(entries, filter) {
-		if (!angular.isDefined(entries) || !angular.isArray(entries) || entries.length == 0) {
-			return;
-		}
 		var map = {};
 		angular.forEach(entries, function(entry) {
 			if (!angular.isDefined(map[entry.subscriptionGroupId])) {
@@ -192,7 +189,7 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 			map[entry.subscriptionGroupId][entry.subscriptionId].push(entry.id);
 		});
 
-		return promise = $http({
+		return $http({
 			method: "POST",
 			url: "/reader/entries",
             data: map,

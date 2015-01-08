@@ -121,13 +121,15 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 				unreads.push(entry);
 			}
 		});
-		$scope.feedEntries.loading = true;
-		$scope.viewService.entryFilter.resetPageIndex();
-		$scope.ajaxService.markAllRead(unreads, $scope.viewService.entryFilter.get()).success(function(response) {
-			$scope.subscriptionGroups.setItems(response);
-			$scope.feedEntries.loading = false;
-			$scope.feedEntries.load();
-        });
+		if (unreads.length > 0) {
+			$scope.feedEntries.loading = true;
+			$scope.viewService.entryFilter.resetPageIndex();
+			$scope.ajaxService.markAllRead(unreads, $scope.viewService.entryFilter.get()).success(function(response) {
+				$scope.subscriptionGroups.setItems(response);
+				$scope.feedEntries.loading = false;
+				$scope.feedEntries.load();
+	        });
+		}
 	};
 	
 	$scope.feedEntries.refresh = function() {
