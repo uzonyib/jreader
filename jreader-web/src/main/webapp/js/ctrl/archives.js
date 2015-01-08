@@ -13,9 +13,7 @@ angular.module("jReaderApp").controller("ArchivesCtrl", ["$scope", "ajaxService"
 	};
 	
 	$scope.deleteEntry = function(entry) {
-		$scope.ajaxService.deleteArchivedEntry(entry.archiveId, entry.id).success(function() {
-			$scope.refreshArchivedEntries();
-		});
+		$scope.ajaxService.deleteArchivedEntry(entry.archiveId, entry.id).success($scope.archivedEntries.refresh);
 	};
 	
 }]);
