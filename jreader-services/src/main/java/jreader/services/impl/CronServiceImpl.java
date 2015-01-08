@@ -29,6 +29,15 @@ public class CronServiceImpl implements CronService {
 	private RssService rssService;
 	private ConversionService conversionService;
 	
+	public CronServiceImpl(SubscriptionDao subscriptionDao, FeedDao feedDao, FeedEntryDao feedEntryDao,
+			RssService rssService, ConversionService conversionService) {
+		this.subscriptionDao = subscriptionDao;
+		this.feedDao = feedDao;
+		this.feedEntryDao = feedEntryDao;
+		this.rssService = rssService;
+		this.conversionService = conversionService;
+	}
+
 	@Override
     public List<FeedDto> listFeeds() {
         List<Feed> feeds = feedDao.listAll();
@@ -97,45 +106,5 @@ public class CronServiceImpl implements CronService {
 			}
 		}
 	}
-
-	public SubscriptionDao getSubscriptionDao() {
-		return subscriptionDao;
-	}
-
-	public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
-		this.subscriptionDao = subscriptionDao;
-	}
-
-	public FeedDao getFeedDao() {
-		return feedDao;
-	}
-
-	public void setFeedDao(FeedDao feedDao) {
-		this.feedDao = feedDao;
-	}
-
-	public FeedEntryDao getFeedEntryDao() {
-		return feedEntryDao;
-	}
-
-	public void setFeedEntryDao(FeedEntryDao feedEntryDao) {
-		this.feedEntryDao = feedEntryDao;
-	}
-
-	public RssService getRssService() {
-		return rssService;
-	}
-
-	public void setRssService(RssService rssService) {
-		this.rssService = rssService;
-	}
-
-    public ConversionService getConversionService() {
-        return conversionService;
-    }
-
-    public void setConversionService(ConversionService conversionService) {
-        this.conversionService = conversionService;
-    }
 
 }

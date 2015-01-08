@@ -26,6 +26,11 @@ public class EntryController {
 	private SubscriptionService subscriptionService;
 	private FeedEntryService feedEntryService;
 	
+	public EntryController(SubscriptionService subscriptionService, FeedEntryService feedEntryService) {
+		this.subscriptionService = subscriptionService;
+		this.feedEntryService = feedEntryService;
+	}
+
 	@RequestMapping(value = "/entries/{selection}", method = RequestMethod.GET)
 	public List<FeedEntryDto> getEntries(Principal principal, @PathVariable String selection, @RequestParam int offset, @RequestParam int count, @RequestParam boolean ascending) {
 		return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending, offset, count));
@@ -63,22 +68,6 @@ public class EntryController {
 		} catch (Exception e) {
 			return Selection.ALL;
 		}
-	}
-
-	public SubscriptionService getSubscriptionService() {
-		return subscriptionService;
-	}
-
-	public void setSubscriptionService(SubscriptionService subscriptionService) {
-		this.subscriptionService = subscriptionService;
-	}
-
-	public FeedEntryService getFeedEntryService() {
-		return feedEntryService;
-	}
-
-	public void setFeedEntryService(FeedEntryService feedEntryService) {
-		this.feedEntryService = feedEntryService;
 	}
 	
 }

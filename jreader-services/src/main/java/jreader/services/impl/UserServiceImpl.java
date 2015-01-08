@@ -10,6 +10,10 @@ public class UserServiceImpl implements UserService {
 	
 	private UserDao userDao;
 
+	public UserServiceImpl(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
 	@Override
 	public void register(String username) {
 		if (userDao.find(username) != null) {
@@ -18,14 +22,6 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 		user.setUsername(username);
 		userDao.save(user);
-	}
-
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
 	}
 
 }

@@ -20,6 +20,10 @@ public class ArchivedEntryController {
 	
 	private ArchiveService archiveService;
 	
+	public ArchivedEntryController(ArchiveService archiveService) {
+		this.archiveService = archiveService;
+	}
+
 	@RequestMapping(value = "/{archiveId}/entries", method = RequestMethod.POST)
 	public StatusDto archive(Principal principal, @PathVariable Long archiveId, @RequestParam Long groupId, @RequestParam Long subscriptionId, @RequestParam Long entryId) {
 		archiveService.archive(principal.getName(), groupId, subscriptionId, entryId, archiveId);
@@ -40,14 +44,6 @@ public class ArchivedEntryController {
 	public StatusDto delete(Principal principal, @PathVariable Long archiveId, @PathVariable Long entryId) {
 		archiveService.deleteEntry(principal.getName(), archiveId, entryId);
 		return new StatusDto(0);
-	}
-
-	public ArchiveService getArchiveService() {
-		return archiveService;
-	}
-
-	public void setArchiveService(ArchiveService archiveService) {
-		this.archiveService = archiveService;
 	}
 	
 }

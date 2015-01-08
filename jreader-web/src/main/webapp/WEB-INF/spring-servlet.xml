@@ -24,37 +24,37 @@
 		class="com.google.appengine.api.users.UserServiceFactory" factory-method="getUserService" />
 	
 	<bean class="jreader.web.controller.PageController">
-		<property name="userService" ref="userService" />
-		<property name="googleUserService" ref="googleUserService" />
+		<constructor-arg ref="userService" />
+		<constructor-arg ref="googleUserService" />
 	</bean>
 	
 	<bean class="jreader.web.controller.CronJobController" />
 	
 	<bean class="jreader.web.controller.TaskController">
-		<property name="minAgeToDelete" value="#{cronProps.minAgeToDelete}" />
-		<property name="minCountToKeep" value="#{cronProps.minCountToKeep}" />
-		<property name="cronService" ref="cronService" />
+		<constructor-arg ref="cronService" />
+		<constructor-arg value="#{cronProps.minAgeToDelete}" />
+		<constructor-arg value="#{cronProps.minCountToKeep}" />
 	</bean>
 	
 	<bean class="jreader.web.controller.ajax.GroupController">
-		<property name="subscriptionService" ref="subscriptionService" />
+		<constructor-arg ref="subscriptionService" />
 	</bean>
 	
 	<bean class="jreader.web.controller.ajax.SubscriptionController">
-		<property name="subscriptionService" ref="subscriptionService" />
+		<constructor-arg ref="subscriptionService" />
 	</bean>
 	
 	<bean class="jreader.web.controller.ajax.EntryController">
-		<property name="subscriptionService" ref="subscriptionService" />
-		<property name="feedEntryService" ref="feedEntryService" />
+		<constructor-arg ref="subscriptionService" />
+		<constructor-arg ref="feedEntryService" />
 	</bean>
 	
 	<bean class="jreader.web.controller.ajax.ArchiveController">
-		<property name="archiveService" ref="archiveService" />
+		<constructor-arg ref="archiveService" />
 	</bean>
 	
 	<bean class="jreader.web.controller.ajax.ArchivedEntryController">
-		<property name="archiveService" ref="archiveService" />
+		<constructor-arg ref="archiveService" />
 	</bean>
 	
 	<bean class="jreader.web.controller.ajax.GlobalExceptionHandler" />

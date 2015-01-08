@@ -18,6 +18,10 @@ public class ArchiveController {
 	
 	private ArchiveService archiveService;
 	
+	public ArchiveController(ArchiveService archiveService) {
+		this.archiveService = archiveService;
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	public List<ArchiveDto> getArchives(Principal principal) {
 		return archiveService.list(principal.getName());
@@ -53,14 +57,6 @@ public class ArchiveController {
 		}
 		
 		return archiveService.list(principal.getName());
-	}
-	
-	public ArchiveService getArchiveService() {
-		return archiveService;
-	}
-
-	public void setArchiveService(ArchiveService archiveService) {
-		this.archiveService = archiveService;
 	}
 
 }

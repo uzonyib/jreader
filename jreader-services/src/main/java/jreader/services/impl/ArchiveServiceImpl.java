@@ -6,6 +6,9 @@ import java.util.List;
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedEntryDao;
 import jreader.dao.FeedEntryDao;
+import jreader.dao.SubscriptionDao;
+import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.UserDao;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedEntry;
 import jreader.domain.BuilderFactory;
@@ -32,6 +35,17 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 	
 	private BuilderFactory builderFactory;
 	
+	public ArchiveServiceImpl(UserDao userDao, SubscriptionGroupDao subscriptionGroupDao,
+			SubscriptionDao subscriptionDao, FeedEntryDao feedEntryDao, ArchiveDao archiveDao,
+			ArchivedEntryDao archivedEntryDao, ConversionService conversionService, BuilderFactory builderFactory) {
+		super(userDao, subscriptionGroupDao, subscriptionDao);
+		this.feedEntryDao = feedEntryDao;
+		this.archiveDao = archiveDao;
+		this.archivedEntryDao = archivedEntryDao;
+		this.conversionService = conversionService;
+		this.builderFactory = builderFactory;
+	}
+
 	private Archive getArchive(User user, Long id) {
 		Archive archive = archiveDao.find(user, id);
 		if (archive == null) {
@@ -165,46 +179,6 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 		Archive archive = this.getArchive(user, archiveId);
 		ArchivedEntry entry = archivedEntryDao.find(archive, entryId);
 		archivedEntryDao.delete(entry);
-	}
-
-	public FeedEntryDao getFeedEntryDao() {
-		return feedEntryDao;
-	}
-
-	public void setFeedEntryDao(FeedEntryDao feedEntryDao) {
-		this.feedEntryDao = feedEntryDao;
-	}
-
-	public ArchiveDao getArchiveDao() {
-		return archiveDao;
-	}
-
-	public void setArchiveDao(ArchiveDao archiveDao) {
-		this.archiveDao = archiveDao;
-	}
-
-	public ArchivedEntryDao getArchivedEntryDao() {
-		return archivedEntryDao;
-	}
-
-	public void setArchivedEntryDao(ArchivedEntryDao archivedEntryDao) {
-		this.archivedEntryDao = archivedEntryDao;
-	}
-
-	public ConversionService getConversionService() {
-		return conversionService;
-	}
-
-	public void setConversionService(ConversionService conversionService) {
-		this.conversionService = conversionService;
-	}
-
-	public BuilderFactory getBuilderFactory() {
-		return builderFactory;
-	}
-
-	public void setBuilderFactory(BuilderFactory builderFactory) {
-		this.builderFactory = builderFactory;
 	}
 
 }

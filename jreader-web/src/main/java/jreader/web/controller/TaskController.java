@@ -25,11 +25,17 @@ public class TaskController {
 	
 	private static final Logger LOG = Logger.getLogger(TaskController.class.getName());
 	
+	private CronService cronService;
+	
 	private int minAgeToDelete;
     private int minCountToKeep;
 	
-	private CronService cronService;
-	
+	public TaskController(CronService cronService, int minAgeToDelete, int minCountToKeep) {
+		this.cronService = cronService;
+		this.minAgeToDelete = minAgeToDelete;
+		this.minCountToKeep = minCountToKeep;
+	}
+
 	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
 	public StatusDto refreshFeeds(HttpServletRequest request, Principal principal) {
 		StatusDto result;
@@ -89,29 +95,5 @@ public class TaskController {
         }
         return result;
     }
-	
-	public int getMinAgeToDelete() {
-        return minAgeToDelete;
-    }
-
-    public void setMinAgeToDelete(int minAgeToDelete) {
-        this.minAgeToDelete = minAgeToDelete;
-    }
-
-    public int getMinCountToKeep() {
-        return minCountToKeep;
-    }
-
-    public void setMinCountToKeep(int minCountToKeep) {
-        this.minCountToKeep = minCountToKeep;
-    }
-
-	public CronService getCronService() {
-		return cronService;
-	}
-
-	public void setCronService(CronService cronService) {
-		this.cronService = cronService;
-	}
 
 }

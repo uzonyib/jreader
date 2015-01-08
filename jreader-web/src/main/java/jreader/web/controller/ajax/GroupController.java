@@ -18,6 +18,10 @@ public class GroupController {
 	
 	private SubscriptionService subscriptionService;
 	
+	public GroupController(SubscriptionService subscriptionService) {
+		this.subscriptionService = subscriptionService;
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	public List<SubscriptionGroupDto> getSubscriptions(Principal principal) {
 		return subscriptionService.list(principal.getName());
@@ -53,14 +57,6 @@ public class GroupController {
 		}
 		
 		return subscriptionService.list(principal.getName());
-	}
-	
-	public SubscriptionService getSubscriptionService() {
-		return subscriptionService;
-	}
-
-	public void setSubscriptionService(SubscriptionService subscriptionService) {
-		this.subscriptionService = subscriptionService;
 	}
 
 }

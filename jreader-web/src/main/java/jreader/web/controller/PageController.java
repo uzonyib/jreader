@@ -22,6 +22,11 @@ public class PageController {
 	private UserService userService;
 	private com.google.appengine.api.users.UserService googleUserService;
 	
+	public PageController(UserService userService, com.google.appengine.api.users.UserService googleUserService) {
+		this.userService = userService;
+		this.googleUserService = googleUserService;
+	}
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public void getMainPage(HttpServletResponse response) throws IOException {
 		response.sendRedirect("reader");
@@ -38,23 +43,6 @@ public class PageController {
 		ModelAndView modelAndView = new ModelAndView("reader");
 		modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
 		return modelAndView;
-	}
-
-	public UserService getUserService() {
-		return userService;
-	}
-
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	public com.google.appengine.api.users.UserService getGoogleUserService() {
-		return googleUserService;
-	}
-
-	public void setGoogleUserService(
-			com.google.appengine.api.users.UserService googleUserService) {
-		this.googleUserService = googleUserService;
 	}
 	
 }

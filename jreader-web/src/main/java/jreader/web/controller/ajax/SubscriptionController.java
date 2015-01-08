@@ -18,6 +18,10 @@ public class SubscriptionController {
 	
 	private SubscriptionService subscriptionService;
 	
+	public SubscriptionController(SubscriptionService subscriptionService) {
+		this.subscriptionService = subscriptionService;
+	}
+
 	@RequestMapping(method = RequestMethod.POST)
 	public List<SubscriptionGroupDto> create(Principal principal, @PathVariable Long groupId, @RequestParam String url) {
 		subscriptionService.subscribe(principal.getName(), groupId, url);
@@ -48,14 +52,6 @@ public class SubscriptionController {
 		}
 		
 		return subscriptionService.list(principal.getName());
-	}
-
-	public SubscriptionService getSubscriptionService() {
-		return subscriptionService;
-	}
-
-	public void setSubscriptionService(SubscriptionService subscriptionService) {
-		this.subscriptionService = subscriptionService;
 	}
 
 }

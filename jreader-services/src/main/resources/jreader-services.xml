@@ -5,10 +5,6 @@
 	
 	<import resource="classpath:/jreader-dao.xml" />
 	
-	<bean class="jreader.services.impl.UserServiceImpl" id="userService">
-		<property name="userDao" ref="userDao" />
-	</bean>
-	
 	<bean class="jreader.converter.ConversionFactory" id="conversionService">
 		<property name="converters">
 			<list>
@@ -26,34 +22,38 @@
 	
 	<bean class="jreader.domain.BuilderFactory" id="builderFactory" />
 	
+	<bean class="jreader.services.impl.UserServiceImpl" id="userService">
+		<constructor-arg ref="userDao" />
+	</bean>
+	
 	<bean class="jreader.services.impl.SubscriptionServiceImpl" id="subscriptionService">
-		<property name="userDao" ref="userDao" />
-		<property name="subscriptionGroupDao" ref="subscriptionGroupDao" />
-		<property name="subscriptionDao" ref="subscriptionDao" />
-		<property name="feedDao" ref="feedDao" />
-		<property name="feedEntryDao" ref="feedEntryDao" />
-		<property name="rssService" ref="rssService" />
-		<property name="conversionService" ref="conversionService" />
-		<property name="builderFactory" ref="builderFactory" />
+		<constructor-arg ref="userDao" />
+		<constructor-arg ref="subscriptionGroupDao" />
+		<constructor-arg ref="subscriptionDao" />
+		<constructor-arg ref="feedDao" />
+		<constructor-arg ref="feedEntryDao" />
+		<constructor-arg ref="rssService" />
+		<constructor-arg ref="conversionService" />
+		<constructor-arg ref="builderFactory" />
 	</bean>
 	
 	<bean class="jreader.services.impl.FeedEntryServiceImpl" id="feedEntryService">
-		<property name="userDao" ref="userDao" />
-		<property name="subscriptionGroupDao" ref="subscriptionGroupDao" />
-		<property name="subscriptionDao" ref="subscriptionDao" />
-		<property name="feedEntryDao" ref="feedEntryDao" />
-		<property name="conversionService" ref="conversionService" />
+		<constructor-arg ref="userDao" />
+		<constructor-arg ref="subscriptionGroupDao" />
+		<constructor-arg ref="subscriptionDao" />
+		<constructor-arg ref="feedEntryDao" />
+		<constructor-arg ref="conversionService" />
 	</bean>
 	
 	<bean class="jreader.services.impl.ArchiveServiceImpl" id="archiveService">
-		<property name="userDao" ref="userDao" />
-		<property name="subscriptionGroupDao" ref="subscriptionGroupDao" />
-		<property name="subscriptionDao" ref="subscriptionDao" />
-		<property name="feedEntryDao" ref="feedEntryDao" />
-		<property name="archiveDao" ref="archiveDao" />
-		<property name="archivedEntryDao" ref="archivedEntryDao" />
-		<property name="conversionService" ref="conversionService" />
-		<property name="builderFactory" ref="builderFactory" />
+		<constructor-arg ref="userDao" />
+		<constructor-arg ref="subscriptionGroupDao" />
+		<constructor-arg ref="subscriptionDao" />
+		<constructor-arg ref="feedEntryDao" />
+		<constructor-arg ref="archiveDao" />
+		<constructor-arg ref="archivedEntryDao" />
+		<constructor-arg ref="conversionService" />
+		<constructor-arg ref="builderFactory" />
 	</bean>
 	
 	<bean class="jreader.services.impl.RssServiceImpl" id="rssService">
@@ -64,11 +64,11 @@
 	</bean>
 	
 	<bean class="jreader.services.impl.CronServiceImpl" id="cronService">
-		<property name="subscriptionDao" ref="subscriptionDao" />
-		<property name="feedDao" ref="feedDao" />
-		<property name="feedEntryDao" ref="feedEntryDao" />
-		<property name="rssService" ref="rssService" />
-		<property name="conversionService" ref="conversionService" />
+		<constructor-arg ref="subscriptionDao" />
+		<constructor-arg ref="feedDao" />
+		<constructor-arg ref="feedEntryDao" />
+		<constructor-arg ref="rssService" />
+		<constructor-arg ref="conversionService" />
 	</bean>
 	
 </beans>

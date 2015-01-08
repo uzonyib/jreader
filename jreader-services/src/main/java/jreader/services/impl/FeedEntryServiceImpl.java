@@ -6,6 +6,9 @@ import java.util.Map;
 
 import jreader.dao.FeedEntryDao;
 import jreader.dao.FeedEntryFilter;
+import jreader.dao.SubscriptionDao;
+import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.UserDao;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
@@ -21,6 +24,13 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
 	private FeedEntryDao feedEntryDao;
 	
 	private ConversionService conversionService;
+
+	public FeedEntryServiceImpl(UserDao userDao, SubscriptionGroupDao subscriptionGroupDao,
+			SubscriptionDao subscriptionDao, FeedEntryDao feedEntryDao, ConversionService conversionService) {
+		super(userDao, subscriptionGroupDao, subscriptionDao);
+		this.feedEntryDao = feedEntryDao;
+		this.conversionService = conversionService;
+	}
 
 	@Override
 	public void markRead(String username, Map<Long, Map<Long, List<Long>>> ids) {
@@ -109,22 +119,6 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
 			dtos.add(conversionService.convert(feedEntry, FeedEntryDto.class));
 		}
 		return dtos;
-	}
-
-	public FeedEntryDao getFeedEntryDao() {
-		return feedEntryDao;
-	}
-
-	public void setFeedEntryDao(FeedEntryDao feedEntryDao) {
-		this.feedEntryDao = feedEntryDao;
-	}
-
-	public ConversionService getConversionService() {
-		return conversionService;
-	}
-
-	public void setConversionService(ConversionService conversionService) {
-		this.conversionService = conversionService;
 	}
 
 }

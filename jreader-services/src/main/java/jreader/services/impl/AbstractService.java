@@ -15,6 +15,12 @@ abstract class AbstractService {
 	protected SubscriptionGroupDao subscriptionGroupDao;
 	protected SubscriptionDao subscriptionDao;
 	
+	public AbstractService(UserDao userDao, SubscriptionGroupDao subscriptionGroupDao, SubscriptionDao subscriptionDao) {
+		this.userDao = userDao;
+		this.subscriptionGroupDao = subscriptionGroupDao;
+		this.subscriptionDao = subscriptionDao;
+	}
+
 	protected User getUser(String username) {
 		User user = userDao.find(username);
 		if (user == null) {
@@ -37,30 +43,6 @@ abstract class AbstractService {
 			throw new ServiceException("Subscription not found, ID: " + subscriptionId, ServiceStatus.RESOURCE_NOT_FOUND);
 		}
 		return subscription;
-	}
-	
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-
-	public SubscriptionGroupDao getSubscriptionGroupDao() {
-		return subscriptionGroupDao;
-	}
-
-	public void setSubscriptionGroupDao(SubscriptionGroupDao subscriptionGroupDao) {
-		this.subscriptionGroupDao = subscriptionGroupDao;
-	}
-
-	public SubscriptionDao getSubscriptionDao() {
-		return subscriptionDao;
-	}
-
-	public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
-		this.subscriptionDao = subscriptionDao;
 	}
 
 }

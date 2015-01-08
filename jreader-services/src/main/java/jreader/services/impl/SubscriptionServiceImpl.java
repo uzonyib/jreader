@@ -5,6 +5,9 @@ import java.util.List;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
+import jreader.dao.SubscriptionDao;
+import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
@@ -31,7 +34,18 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 	private ConversionService conversionService;
 	
 	private BuilderFactory builderFactory;
-	
+
+	public SubscriptionServiceImpl(UserDao userDao, SubscriptionGroupDao subscriptionGroupDao, SubscriptionDao subscriptionDao,
+			FeedDao feedDao, FeedEntryDao feedEntryDao, RssService rssService, ConversionService conversionService,
+			BuilderFactory builderFactory) {
+		super(userDao, subscriptionGroupDao, subscriptionDao);
+		this.feedDao = feedDao;
+		this.feedEntryDao = feedEntryDao;
+		this.rssService = rssService;
+		this.conversionService = conversionService;
+		this.builderFactory = builderFactory;
+	}
+
 	@Override
 	public SubscriptionGroupDto createGroup(String username, String title) {
 		User user = this.getUser(username);
@@ -244,46 +258,6 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 		
 		subscriptionGroup.setTitle(title);
 		subscriptionGroupDao.save(subscriptionGroup);
-	}
-
-	public FeedDao getFeedDao() {
-		return feedDao;
-	}
-
-	public void setFeedDao(FeedDao feedDao) {
-		this.feedDao = feedDao;
-	}
-
-	public FeedEntryDao getFeedEntryDao() {
-		return feedEntryDao;
-	}
-
-	public void setFeedEntryDao(FeedEntryDao feedEntryDao) {
-		this.feedEntryDao = feedEntryDao;
-	}
-
-	public RssService getRssService() {
-		return rssService;
-	}
-
-	public void setRssService(RssService rssService) {
-		this.rssService = rssService;
-	}
-
-	public ConversionService getConversionService() {
-		return conversionService;
-	}
-
-	public void setConversionService(ConversionService conversionService) {
-		this.conversionService = conversionService;
-	}
-
-	public BuilderFactory getBuilderFactory() {
-		return builderFactory;
-	}
-
-	public void setBuilderFactory(BuilderFactory builderFactory) {
-		this.builderFactory = builderFactory;
 	}
 
 }
