@@ -153,6 +153,9 @@
 		        <configuration>
 		        	<threshold>Low</threshold>
 		        	<effort>Max</effort>
+		        	<findbugsXmlOutput>true</findbugsXmlOutput>
+					<findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+					<xmlOutput>true</xmlOutput>
 		        </configuration>
 		    </plugin>
 		    <plugin>
