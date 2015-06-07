@@ -85,7 +85,7 @@ public class CronServiceImpl implements CronService {
 	
 	@Override
 	public void cleanup(String url, int olderThanDays, int keptCount) {
-		long date = System.currentTimeMillis() - 1000 * 60 * 60 * 24 * olderThanDays;
+		long date = System.currentTimeMillis() - 1000 * 60 * 60 * 24 * (long) olderThanDays;
 		Feed feed = feedDao.find(url);
 		List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
 		if (subscriptions.isEmpty()) {

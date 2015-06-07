@@ -3,6 +3,7 @@ package jreader.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import jreader.dao.FeedEntryDao;
 import jreader.dao.FeedEntryFilter;
@@ -41,11 +42,11 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
 		User user = this.getUser(username);
 
 		List<FeedEntry> entriesToSave = new ArrayList<FeedEntry>();
-		for (Long groupId : ids.keySet()) {
-			SubscriptionGroup group = this.getGroup(user, groupId);
-			for (Long subscriptionId : ids.get(groupId).keySet()) {
-				Subscription subscription = this.getSubscription(group, subscriptionId);
-				for (Long entryId : ids.get(groupId).get(subscriptionId)) {
+		for (Entry<Long, Map<Long, List<Long>>> groupEntry : ids.entrySet()) {
+			SubscriptionGroup group = this.getGroup(user, groupEntry.getKey());
+			for (Entry<Long, List<Long>> subscriptionEntry : groupEntry.getValue().entrySet()) {
+				Subscription subscription = this.getSubscription(group, subscriptionEntry.getKey());
+				for (Long entryId : subscriptionEntry.getValue()) {
 					FeedEntry entry = feedEntryDao.find(subscription, entryId);
 					if (entry != null && !entry.isRead()) {
 						entry.setRead(true);

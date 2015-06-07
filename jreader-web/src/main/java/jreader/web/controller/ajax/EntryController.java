@@ -2,6 +2,7 @@ package jreader.web.controller.ajax;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import jreader.dao.FeedEntryFilter.Selection;
@@ -64,7 +65,7 @@ public class EntryController {
 
 	private Selection parseSelection(String selection) {
 		try {
-			return Selection.valueOf(Selection.class, selection.toUpperCase());
+			return Selection.valueOf(Selection.class, selection.toUpperCase(Locale.ENGLISH));
 		} catch (Exception e) {
 			return Selection.ALL;
 		}

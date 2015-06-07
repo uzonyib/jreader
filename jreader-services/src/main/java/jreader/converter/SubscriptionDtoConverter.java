@@ -19,7 +19,9 @@ public class SubscriptionDtoConverter implements Converter<Subscription, Subscri
 		dto.setUpdatedDate(entity.getUpdatedDate());
 		dto.setRefreshDate(entity.getRefreshDate());
 		dto.setOrder(entity.getOrder());
-		dto.setFeed(conversionService.convert(entity.getFeed(), FeedDto.class));
+		if (conversionService != null) {
+			dto.setFeed(conversionService.convert(entity.getFeed(), FeedDto.class));
+		}
 		return dto;
 	}
 

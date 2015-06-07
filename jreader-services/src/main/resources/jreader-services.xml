@@ -6,7 +6,7 @@
 	<import resource="classpath:/jreader-dao.xml" />
 	
 	<bean class="jreader.converter.ConversionFactory" id="conversionService">
-		<property name="converters">
+		<constructor-arg>
 			<list>
 				<bean class="jreader.converter.RssFetchResultConverter" />
 				<bean class="jreader.converter.FeedDtoConverter" />
@@ -17,7 +17,7 @@
 				<bean class="jreader.converter.ArchivedEntryConverter" />
 				<bean class="jreader.converter.ArchivedEntryDtoConverter" />
 			</list>
-		</property>
+		</constructor-arg>
 	</bean>
 	
 	<bean class="jreader.domain.BuilderFactory" id="builderFactory" />

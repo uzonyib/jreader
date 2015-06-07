@@ -14,10 +14,10 @@ public class ConversionFactory implements FactoryBean<ConversionService>, Initia
     private Set<?> converters;
 
     private GenericConversionService conversionService;
-
-    public void setConverters(Set<?> converters) {
-        this.converters = converters;
-    }
+    
+    public ConversionFactory(Set<?> converters) {
+    	this.converters = converters;
+	}
 
     @Override
     public void afterPropertiesSet() {
