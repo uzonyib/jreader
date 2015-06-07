@@ -24,6 +24,10 @@
 		<module>jreader-ear</module>
 	</modules>
 	
+	<scm>
+		<developerConnection>scm:git:https://github.com/uzonyib/jreader.git</developerConnection>
+	</scm>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -130,6 +134,11 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.2</version>
+			</plugin>
 		</plugins>
 	</build>
 	
