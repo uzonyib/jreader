@@ -10,8 +10,8 @@
 	<artifactId>jreader-acceptance-tests</artifactId>
 	
 	<properties>
-		<cucumber.version>1.1.8</cucumber.version>
-		<selenium.version>2.43.1</selenium.version>
+		<cucumber.version>1.2.2</cucumber.version>
+		<selenium.version>2.46.0</selenium.version>
 		<skipTests>true</skipTests>
 	</properties>
 	
