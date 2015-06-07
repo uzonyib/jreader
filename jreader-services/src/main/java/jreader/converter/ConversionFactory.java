@@ -10,14 +10,14 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 
 public class ConversionFactory implements FactoryBean<ConversionService>, InitializingBean {
-    
+
     private Set<?> converters;
 
     private GenericConversionService conversionService;
-    
+
     public ConversionFactory(Set<?> converters) {
-    	this.converters = converters;
-	}
+        this.converters = converters;
+    }
 
     @Override
     public void afterPropertiesSet() {

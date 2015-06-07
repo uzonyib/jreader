@@ -16,36 +16,36 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class PageController {
-	
-	private static final Logger LOG = Logger.getLogger(PageController.class.getName());
-	
-	private UserService userService;
-	private com.google.appengine.api.users.UserService googleUserService;
-	private String appVersion;
-	
-	public PageController(UserService userService, com.google.appengine.api.users.UserService googleUserService, String appVersion) {
-		this.userService = userService;
-		this.googleUserService = googleUserService;
-		this.appVersion = appVersion;
-	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public void getMainPage(HttpServletResponse response) throws IOException {
-		response.sendRedirect("reader");
-	}
-	
-	@RequestMapping(value = "/reader", method = RequestMethod.GET)
-	public ModelAndView getHomePage(HttpServletResponse response, Principal principal) throws IOException {
-		try {
-			userService.register(principal.getName());
-			LOG.info("User registered: " + principal.getName());
-		} catch(ServiceException e) {
-			LOG.info("User found: " + principal.getName());
-		}
-		ModelAndView modelAndView = new ModelAndView("reader");
-		modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
-		modelAndView.addObject("appVersion", appVersion);
-		return modelAndView;
-	}
-	
+    private static final Logger LOG = Logger.getLogger(PageController.class.getName());
+
+    private UserService userService;
+    private com.google.appengine.api.users.UserService googleUserService;
+    private String appVersion;
+
+    public PageController(UserService userService, com.google.appengine.api.users.UserService googleUserService, String appVersion) {
+        this.userService = userService;
+        this.googleUserService = googleUserService;
+        this.appVersion = appVersion;
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public void getMainPage(HttpServletResponse response) throws IOException {
+        response.sendRedirect("reader");
+    }
+
+    @RequestMapping(value = "/reader", method = RequestMethod.GET)
+    public ModelAndView getHomePage(HttpServletResponse response, Principal principal) throws IOException {
+        try {
+            userService.register(principal.getName());
+            LOG.info("User registered: " + principal.getName());
+        } catch (ServiceException e) {
+            LOG.info("User found: " + principal.getName());
+        }
+        ModelAndView modelAndView = new ModelAndView("reader");
+        modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
+        modelAndView.addObject("appVersion", appVersion);
+        return modelAndView;
+    }
+
 }

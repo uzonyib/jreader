@@ -4,66 +4,66 @@ import jreader.dao.FeedEntryFilter;
 
 public class FeedEntryFilterData extends FeedEntryFilter {
 
-	public static enum Group {
-		ALL, SUBSCRIPTION_GROUP, SUBSCRIPTION;
-	}
-	
-	private String username;
-	private Group group;
-	private Long subscriptionGroupId;
-	private Long subscriptionId;
-	
-	public FeedEntryFilterData(String username, Selection selection, boolean ascending, int offset, int count) {
-		super(selection, ascending, offset, count);
-		this.username = username;
-		this.group = Group.ALL;
-	}
+    public static enum Group {
+        ALL, SUBSCRIPTION_GROUP, SUBSCRIPTION;
+    }
 
-	public FeedEntryFilterData(String username, Long subscriptionGroupId, Selection selection, boolean ascending, int offset, int count) {
-		super(selection, ascending, offset, count);
-		this.username = username;
-		this.subscriptionGroupId = subscriptionGroupId;
-		this.group = Group.SUBSCRIPTION_GROUP;
-	}
+    private String username;
+    private Group group;
+    private Long subscriptionGroupId;
+    private Long subscriptionId;
 
-	public FeedEntryFilterData(String username, Long subscriptionGroupId, Long subscriptionId, Selection selection, boolean ascending, int offset, int count) {
-		super(selection, ascending, offset, count);
-		this.username = username;
-		this.subscriptionGroupId = subscriptionGroupId;
-		this.subscriptionId = subscriptionId;
-		this.group = Group.SUBSCRIPTION;
-	}
+    public FeedEntryFilterData(String username, Selection selection, boolean ascending, int offset, int count) {
+        super(selection, ascending, offset, count);
+        this.username = username;
+        this.group = Group.ALL;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public FeedEntryFilterData(String username, Long subscriptionGroupId, Selection selection, boolean ascending, int offset, int count) {
+        super(selection, ascending, offset, count);
+        this.username = username;
+        this.subscriptionGroupId = subscriptionGroupId;
+        this.group = Group.SUBSCRIPTION_GROUP;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public FeedEntryFilterData(String username, Long subscriptionGroupId, Long subscriptionId, Selection selection, boolean ascending, int offset, int count) {
+        super(selection, ascending, offset, count);
+        this.username = username;
+        this.subscriptionGroupId = subscriptionGroupId;
+        this.subscriptionId = subscriptionId;
+        this.group = Group.SUBSCRIPTION;
+    }
 
-	public Group getGroup() {
-		return group;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setGroup(Group group) {
-		this.group = group;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public Long getSubscriptionGroupId() {
-		return subscriptionGroupId;
-	}
+    public Group getGroup() {
+        return group;
+    }
 
-	public void setSubscriptionGroupId(Long subscriptionGroupId) {
-		this.subscriptionGroupId = subscriptionGroupId;
-	}
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 
-	public Long getSubscriptionId() {
-		return subscriptionId;
-	}
+    public Long getSubscriptionGroupId() {
+        return subscriptionGroupId;
+    }
 
-	public void setSubscriptionId(Long subscriptionId) {
-		this.subscriptionId = subscriptionId;
-	}
+    public void setSubscriptionGroupId(Long subscriptionGroupId) {
+        this.subscriptionGroupId = subscriptionGroupId;
+    }
+
+    public Long getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    public void setSubscriptionId(Long subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
 
 }

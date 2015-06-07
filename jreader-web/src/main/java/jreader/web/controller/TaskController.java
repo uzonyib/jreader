@@ -22,38 +22,38 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 @RestController
 @RequestMapping(value = "/tasks")
 public class TaskController {
-	
-	private static final Logger LOG = Logger.getLogger(TaskController.class.getName());
-	
-	private CronService cronService;
-	
-	private int minAgeToDelete;
-    private int minCountToKeep;
-	
-	public TaskController(CronService cronService, int minAgeToDelete, int minCountToKeep) {
-		this.cronService = cronService;
-		this.minAgeToDelete = minAgeToDelete;
-		this.minCountToKeep = minCountToKeep;
-	}
 
-	@RequestMapping(value = "/refresh", method = RequestMethod.POST)
-	public StatusDto refreshFeeds(HttpServletRequest request, Principal principal) {
-		StatusDto result;
-		if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
-		    List<FeedDto> feeds = cronService.listFeeds();
-		    Queue queue = QueueFactory.getDefaultQueue();
-		    for (FeedDto feed : feeds) {
-		        queue.add(TaskOptions.Builder.withUrl("/tasks/refresh/feed").param("url", feed.getUrl()));
-		    }
-			result = new StatusDto(0);
-		} else {
-			result = new StatusDto(1);
-			LOG.warning("Feed refresh prevented.");
-		}
-		return result;
-	}
-	
-	@RequestMapping(value = "/refresh/feed", method = RequestMethod.POST)
+    private static final Logger LOG = Logger.getLogger(TaskController.class.getName());
+
+    private CronService cronService;
+
+    private int minAgeToDelete;
+    private int minCountToKeep;
+
+    public TaskController(CronService cronService, int minAgeToDelete, int minCountToKeep) {
+        this.cronService = cronService;
+        this.minAgeToDelete = minAgeToDelete;
+        this.minCountToKeep = minCountToKeep;
+    }
+
+    @RequestMapping(value = "/refresh", method = RequestMethod.POST)
+    public StatusDto refreshFeeds(HttpServletRequest request, Principal principal) {
+        StatusDto result;
+        if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
+            List<FeedDto> feeds = cronService.listFeeds();
+            Queue queue = QueueFactory.getDefaultQueue();
+            for (FeedDto feed : feeds) {
+                queue.add(TaskOptions.Builder.withUrl("/tasks/refresh/feed").param("url", feed.getUrl()));
+            }
+            result = new StatusDto(0);
+        } else {
+            result = new StatusDto(1);
+            LOG.warning("Feed refresh prevented.");
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/refresh/feed", method = RequestMethod.POST)
     public StatusDto refreshFeed(HttpServletRequest request, Principal principal, @RequestParam String url) {
         StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
@@ -65,8 +65,8 @@ public class TaskController {
         }
         return result;
     }
-	
-	@RequestMapping(value = "/cleanup", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/cleanup", method = RequestMethod.POST)
     public StatusDto cleanup(HttpServletRequest request, Principal principal) {
         StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
@@ -82,8 +82,8 @@ public class TaskController {
         }
         return result;
     }
-	
-	@RequestMapping(value = "/cleanup/feed", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/cleanup/feed", method = RequestMethod.POST)
     public StatusDto cleanup(HttpServletRequest request, Principal principal, @RequestParam String url) {
         StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {

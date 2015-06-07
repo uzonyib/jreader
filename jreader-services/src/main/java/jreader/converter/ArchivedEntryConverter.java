@@ -7,15 +7,15 @@ import org.springframework.core.convert.converter.Converter;
 
 public class ArchivedEntryConverter implements Converter<FeedEntry, ArchivedEntry> {
 
-	@Override
-	public ArchivedEntry convert(FeedEntry entity) {
-		ArchivedEntry archivedEntity = new ArchivedEntry();
-		archivedEntity.setTitle(entity.getTitle());
-		archivedEntity.setDescription(entity.getDescription());
-		archivedEntity.setAuthor(entity.getAuthor());
-		archivedEntity.setLink(entity.getLink());
-		archivedEntity.setPublishedDate(entity.getPublishedDate());
-		return archivedEntity;
-	}
+    @Override
+    public ArchivedEntry convert(FeedEntry entity) {
+        ArchivedEntry archivedEntity = new ArchivedEntry();
+        archivedEntity.setTitle(entity.getTitle());
+        archivedEntity.setDescription(entity.getDescription());
+        archivedEntity.setAuthor(entity.getAuthor());
+        archivedEntity.setLink(entity.getLink());
+        archivedEntity.setPublishedDate(entity.getPublishedDate());
+        return archivedEntity;
+    }
 
 }

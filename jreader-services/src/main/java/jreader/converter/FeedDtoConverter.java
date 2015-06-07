@@ -7,8 +7,8 @@ import org.springframework.core.convert.converter.Converter;
 
 public class FeedDtoConverter implements Converter<Feed, FeedDto> {
 
-	@Override
-	public FeedDto convert(Feed entity) {
+    @Override
+    public FeedDto convert(Feed entity) {
         FeedDto dto = new FeedDto();
         dto.setTitle(entity.getTitle());
         dto.setUrl(entity.getUrl());

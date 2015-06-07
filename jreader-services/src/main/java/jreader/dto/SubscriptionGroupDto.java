@@ -3,51 +3,51 @@ package jreader.dto;
 import java.util.List;
 
 public class SubscriptionGroupDto {
-	
-	private String id;
-	private String title;
-	private List<SubscriptionDto> subscriptions;
-	private int unreadCount;
-	private int order;
 
-	public String getId() {
-		return id;
-	}
+    private String id;
+    private String title;
+    private List<SubscriptionDto> subscriptions;
+    private int unreadCount;
+    private int order;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public List<SubscriptionDto> getSubscriptions() {
-		return subscriptions;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setSubscriptions(List<SubscriptionDto> subscriptions) {
-		this.subscriptions = subscriptions;
-	}
+    public List<SubscriptionDto> getSubscriptions() {
+        return subscriptions;
+    }
 
-	public int getUnreadCount() {
-		return unreadCount;
-	}
+    public void setSubscriptions(List<SubscriptionDto> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
 
-	public void setUnreadCount(int unreadCount) {
-		this.unreadCount = unreadCount;
-	}
+    public int getUnreadCount() {
+        return unreadCount;
+    }
 
-	public int getOrder() {
-		return order;
-	}
+    public void setUnreadCount(int unreadCount) {
+        this.unreadCount = unreadCount;
+    }
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
 }

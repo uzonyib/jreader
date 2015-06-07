@@ -1,105 +1,105 @@
 package jreader.dto;
 
 public class FeedEntryDto {
-	
-	private String id;
-	private String subscriptionId;
-	private String subscriptionGroupId;
-	private String subscriptionTitle;
-	private String link;
-	private String title;
-	private String description;
-	private String author;
-	private Long publishedDate;
-	private boolean read;
-	private boolean starred;
 
-	public String getId() {
-		return id;
-	}
+    private String id;
+    private String subscriptionId;
+    private String subscriptionGroupId;
+    private String subscriptionTitle;
+    private String link;
+    private String title;
+    private String description;
+    private String author;
+    private Long publishedDate;
+    private boolean read;
+    private boolean starred;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getSubscriptionId() {
-		return subscriptionId;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setSubscriptionId(String subscriptionId) {
-		this.subscriptionId = subscriptionId;
-	}
+    public String getSubscriptionId() {
+        return subscriptionId;
+    }
 
-	public String getSubscriptionGroupId() {
-		return subscriptionGroupId;
-	}
+    public void setSubscriptionId(String subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
 
-	public void setSubscriptionGroupId(String subscriptionGroupId) {
-		this.subscriptionGroupId = subscriptionGroupId;
-	}
+    public String getSubscriptionGroupId() {
+        return subscriptionGroupId;
+    }
 
-	public String getSubscriptionTitle() {
-		return subscriptionTitle;
-	}
+    public void setSubscriptionGroupId(String subscriptionGroupId) {
+        this.subscriptionGroupId = subscriptionGroupId;
+    }
 
-	public void setSubscriptionTitle(String subscriptionTitle) {
-		this.subscriptionTitle = subscriptionTitle;
-	}
+    public String getSubscriptionTitle() {
+        return subscriptionTitle;
+    }
 
-	public String getLink() {
-		return link;
-	}
+    public void setSubscriptionTitle(String subscriptionTitle) {
+        this.subscriptionTitle = subscriptionTitle;
+    }
 
-	public void setLink(String link) {
-		this.link = link;
-	}
+    public String getLink() {
+        return link;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setLink(String link) {
+        this.link = link;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getAuthor() {
-		return author;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+    public String getAuthor() {
+        return author;
+    }
 
-	public Long getPublishedDate() {
-		return publishedDate;
-	}
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-	public void setPublishedDate(Long publishedDate) {
-		this.publishedDate = publishedDate;
-	}
+    public Long getPublishedDate() {
+        return publishedDate;
+    }
 
-	public boolean isRead() {
-		return read;
-	}
+    public void setPublishedDate(Long publishedDate) {
+        this.publishedDate = publishedDate;
+    }
 
-	public void setRead(boolean read) {
-		this.read = read;
-	}
+    public boolean isRead() {
+        return read;
+    }
 
-	public boolean isStarred() {
-		return starred;
-	}
+    public void setRead(boolean read) {
+        this.read = read;
+    }
 
-	public void setStarred(boolean starred) {
-		this.starred = starred;
-	}
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
 
 }

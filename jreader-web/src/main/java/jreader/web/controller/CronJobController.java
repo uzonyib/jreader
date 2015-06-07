@@ -18,37 +18,37 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 @RestController
 @RequestMapping(value = "/cron")
 public class CronJobController {
-	
-	private static final Logger LOG = Logger.getLogger(CronJobController.class.getName());
-	
-	@RequestMapping(value = "/refresh", method = RequestMethod.GET)
-	public StatusDto refreshFeeds(HttpServletRequest request, Principal principal) {
-		StatusDto result;
-		if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
-		    Queue queue = QueueFactory.getDefaultQueue();
-	        queue.add(TaskOptions.Builder.withUrl("/tasks/refresh"));
-			result = new StatusDto(0);
-			LOG.info("Refresh job added to queue.");
-		} else {
-			result = new StatusDto(1);
-			LOG.warning("Refresh job skipped.");
-		}
-		return result;
-	}
 
-	@RequestMapping(value = "/cleanup", method = RequestMethod.GET)
-	public StatusDto cleanup(HttpServletRequest request, Principal principal) {
-		StatusDto result;
-		if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
-		    Queue queue = QueueFactory.getDefaultQueue();
+    private static final Logger LOG = Logger.getLogger(CronJobController.class.getName());
+
+    @RequestMapping(value = "/refresh", method = RequestMethod.GET)
+    public StatusDto refreshFeeds(HttpServletRequest request, Principal principal) {
+        StatusDto result;
+        if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
+            Queue queue = QueueFactory.getDefaultQueue();
+            queue.add(TaskOptions.Builder.withUrl("/tasks/refresh"));
+            result = new StatusDto(0);
+            LOG.info("Refresh job added to queue.");
+        } else {
+            result = new StatusDto(1);
+            LOG.warning("Refresh job skipped.");
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/cleanup", method = RequestMethod.GET)
+    public StatusDto cleanup(HttpServletRequest request, Principal principal) {
+        StatusDto result;
+        if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
+            Queue queue = QueueFactory.getDefaultQueue();
             queue.add(TaskOptions.Builder.withUrl("/tasks/cleanup"));
-			result = new StatusDto(0);
-			LOG.info("Cleanup job added to queue.");
-		} else {
-			result = new StatusDto(1);
-			LOG.warning("Cleanup job skipped.");
-		}
-		return result;
-	}
+            result = new StatusDto(0);
+            LOG.info("Cleanup job added to queue.");
+        } else {
+            result = new StatusDto(1);
+            LOG.warning("Cleanup job skipped.");
+        }
+        return result;
+    }
 
 }

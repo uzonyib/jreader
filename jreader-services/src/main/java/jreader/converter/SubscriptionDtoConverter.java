@@ -10,20 +10,20 @@ import jreader.dto.SubscriptionDto;
 public class SubscriptionDtoConverter implements Converter<Subscription, SubscriptionDto>, ConversionServiceAware {
 
     private ConversionService conversionService;
-    
+
     @Override
-	public SubscriptionDto convert(Subscription entity) {
-		SubscriptionDto dto = new SubscriptionDto();
-		dto.setId(String.valueOf(entity.getId()));
-		dto.setTitle(entity.getTitle());
-		dto.setUpdatedDate(entity.getUpdatedDate());
-		dto.setRefreshDate(entity.getRefreshDate());
-		dto.setOrder(entity.getOrder());
-		if (conversionService != null) {
-			dto.setFeed(conversionService.convert(entity.getFeed(), FeedDto.class));
-		}
-		return dto;
-	}
+    public SubscriptionDto convert(Subscription entity) {
+        SubscriptionDto dto = new SubscriptionDto();
+        dto.setId(String.valueOf(entity.getId()));
+        dto.setTitle(entity.getTitle());
+        dto.setUpdatedDate(entity.getUpdatedDate());
+        dto.setRefreshDate(entity.getRefreshDate());
+        dto.setOrder(entity.getOrder());
+        if (conversionService != null) {
+            dto.setFeed(conversionService.convert(entity.getFeed(), FeedDto.class));
+        }
+        return dto;
+    }
 
     @Override
     public void setConversionService(ConversionService conversionService) {

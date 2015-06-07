@@ -1,51 +1,51 @@
 package jreader.dto;
 
 public class FeedDto {
-	
-	private String title;
-	private String url;
-	private String description;
-	private String feedType;
-	private Long publishedDate;
 
-	public String getTitle() {
-		return title;
-	}
+    private String title;
+    private String url;
+    private String description;
+    private String feedType;
+    private Long publishedDate;
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getFeedType() {
-		return feedType;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setFeedType(String feedType) {
-		this.feedType = feedType;
-	}
+    public String getFeedType() {
+        return feedType;
+    }
 
-	public Long getPublishedDate() {
-		return publishedDate;
-	}
+    public void setFeedType(String feedType) {
+        this.feedType = feedType;
+    }
 
-	public void setPublishedDate(Long publishedDate) {
-		this.publishedDate = publishedDate;
-	}
+    public Long getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(Long publishedDate) {
+        this.publishedDate = publishedDate;
+    }
 
 }

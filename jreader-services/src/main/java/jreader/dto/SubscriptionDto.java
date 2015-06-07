@@ -1,69 +1,69 @@
 package jreader.dto;
 
 public class SubscriptionDto {
-	
-	private String id;
-	private String title;
-	private FeedDto feed;
-	private int unreadCount;
-	private Long updatedDate;
-	private Long refreshDate;
-	private int order;
 
-	public String getId() {
-		return id;
-	}
+    private String id;
+    private String title;
+    private FeedDto feed;
+    private int unreadCount;
+    private Long updatedDate;
+    private Long refreshDate;
+    private int order;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public FeedDto getFeed() {
-		return feed;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setFeed(FeedDto feed) {
-		this.feed = feed;
-	}
+    public FeedDto getFeed() {
+        return feed;
+    }
 
-	public int getUnreadCount() {
-		return unreadCount;
-	}
+    public void setFeed(FeedDto feed) {
+        this.feed = feed;
+    }
 
-	public void setUnreadCount(int unreadCount) {
-		this.unreadCount = unreadCount;
-	}
+    public int getUnreadCount() {
+        return unreadCount;
+    }
 
-	public Long getUpdatedDate() {
-		return updatedDate;
-	}
+    public void setUnreadCount(int unreadCount) {
+        this.unreadCount = unreadCount;
+    }
 
-	public void setUpdatedDate(Long updatedDate) {
-		this.updatedDate = updatedDate;
-	}
+    public Long getUpdatedDate() {
+        return updatedDate;
+    }
 
-	public Long getRefreshDate() {
-		return refreshDate;
-	}
+    public void setUpdatedDate(Long updatedDate) {
+        this.updatedDate = updatedDate;
+    }
 
-	public void setRefreshDate(Long refreshDate) {
-		this.refreshDate = refreshDate;
-	}
+    public Long getRefreshDate() {
+        return refreshDate;
+    }
 
-	public int getOrder() {
-		return order;
-	}
+    public void setRefreshDate(Long refreshDate) {
+        this.refreshDate = refreshDate;
+    }
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
 }

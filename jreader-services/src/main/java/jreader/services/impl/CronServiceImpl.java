@@ -19,26 +19,26 @@ import jreader.services.CronService;
 import jreader.services.RssService;
 
 public class CronServiceImpl implements CronService {
-	
-	private static final Logger LOG = Logger.getLogger(CronServiceImpl.class.getName());
-	
-	private SubscriptionDao subscriptionDao;
-	private FeedDao feedDao;
-	private FeedEntryDao feedEntryDao;
-	
-	private RssService rssService;
-	private ConversionService conversionService;
-	
-	public CronServiceImpl(SubscriptionDao subscriptionDao, FeedDao feedDao, FeedEntryDao feedEntryDao,
-			RssService rssService, ConversionService conversionService) {
-		this.subscriptionDao = subscriptionDao;
-		this.feedDao = feedDao;
-		this.feedEntryDao = feedEntryDao;
-		this.rssService = rssService;
-		this.conversionService = conversionService;
-	}
 
-	@Override
+    private static final Logger LOG = Logger.getLogger(CronServiceImpl.class.getName());
+
+    private SubscriptionDao subscriptionDao;
+    private FeedDao feedDao;
+    private FeedEntryDao feedEntryDao;
+
+    private RssService rssService;
+    private ConversionService conversionService;
+
+    public CronServiceImpl(SubscriptionDao subscriptionDao, FeedDao feedDao, FeedEntryDao feedEntryDao, RssService rssService,
+            ConversionService conversionService) {
+        this.subscriptionDao = subscriptionDao;
+        this.feedDao = feedDao;
+        this.feedEntryDao = feedEntryDao;
+        this.rssService = rssService;
+        this.conversionService = conversionService;
+    }
+
+    @Override
     public List<FeedDto> listFeeds() {
         List<Feed> feeds = feedDao.listAll();
         List<FeedDto> dtos = new ArrayList<FeedDto>();
@@ -47,18 +47,18 @@ public class CronServiceImpl implements CronService {
         }
         return dtos;
     }
-	
-	@Override
-	public void refresh(String url) {
-	    Feed feed = feedDao.find(url);
-	    RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
+
+    @Override
+    public void refresh(String url) {
+        Feed feed = feedDao.find(url);
+        RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
         if (rssFetchResult == null) {
             return;
         }
-        
+
         long refreshDate = System.currentTimeMillis();
         List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
-        
+
         for (Subscription subscription : subscriptions) {
             int counter = 0;
             Long updatedDate = subscription.getUpdatedDate();
@@ -81,30 +81,31 @@ public class CronServiceImpl implements CronService {
             subscriptionDao.save(subscription);
             LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);
         }
-	}
-	
-	@Override
-	public void cleanup(String url, int olderThanDays, int keptCount) {
-		long date = System.currentTimeMillis() - 1000 * 60 * 60 * 24 * (long) olderThanDays;
-		Feed feed = feedDao.find(url);
-		List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
-		if (subscriptions.isEmpty()) {
-		    feedDao.delete(feed);
-		    LOG.info("Deleted feed with no subscription: " + feed.getUrl());
-		}
+    }
+
+    @Override
+    public void cleanup(String url, int olderThanDays, int keptCount) {
+        long date = System.currentTimeMillis() - 1000 * 60 * 60 * 24 * (long) olderThanDays;
+        Feed feed = feedDao.find(url);
+        List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
+        if (subscriptions.isEmpty()) {
+            feedDao.delete(feed);
+            LOG.info("Deleted feed with no subscription: " + feed.getUrl());
+        }
         for (Subscription subscription : subscriptions) {
-			int count = 0;
-			FeedEntry e = feedEntryDao.find(subscription, keptCount);
-			if (e != null) {
-				long threshold = Math.min(date, e.getPublishedDate());
-				List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
-				for (FeedEntry feedEntry : feedEntries) {
-					feedEntryDao.delete(feedEntry);
-					++count;
-				}
-				LOG.info("Deleted items older than " + new Date(threshold) + " (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + count);
-			}
-		}
-	}
+            int count = 0;
+            FeedEntry e = feedEntryDao.find(subscription, keptCount);
+            if (e != null) {
+                long threshold = Math.min(date, e.getPublishedDate());
+                List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
+                for (FeedEntry feedEntry : feedEntries) {
+                    feedEntryDao.delete(feedEntry);
+                    ++count;
+                }
+                LOG.info("Deleted items older than " + new Date(threshold) + " (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl()
+                        + "): " + count);
+            }
+        }
+    }
 
 }

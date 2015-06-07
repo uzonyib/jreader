@@ -13,31 +13,31 @@ import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
 
 public class RssServiceImpl implements RssService {
-	
-	private static final Logger LOG = Logger.getLogger(RssServiceImpl.class.getName());
 
-	private FeedFetcher feedFetcher;
+    private static final Logger LOG = Logger.getLogger(RssServiceImpl.class.getName());
+
+    private FeedFetcher feedFetcher;
     private ConversionService conversionService;
-	
-	public RssServiceImpl(FeedFetcher feedFetcher, ConversionService conversionService) {
-	    this.feedFetcher = feedFetcher;
-        this.conversionService = conversionService;
-	}
 
-	@Override
-	public RssFetchResult fetch(String url) {
-		try {
-			URL feedSource = new URL(url);
-			SyndFeed syndFeed = feedFetcher.retrieveFeed(feedSource);
-			RssFetchResult result = conversionService.convert(syndFeed, RssFetchResult.class);
-			if (result != null && result.getFeed() != null) {
-			    result.getFeed().setUrl(url);
-			}
-			return result;
-		} catch (Exception e) {
-			LOG.log(Level.WARNING, "Error while fetching feed: " + url, e);
-			return null;
-		}
-	}
-	
+    public RssServiceImpl(FeedFetcher feedFetcher, ConversionService conversionService) {
+        this.feedFetcher = feedFetcher;
+        this.conversionService = conversionService;
+    }
+
+    @Override
+    public RssFetchResult fetch(String url) {
+        try {
+            URL feedSource = new URL(url);
+            SyndFeed syndFeed = feedFetcher.retrieveFeed(feedSource);
+            RssFetchResult result = conversionService.convert(syndFeed, RssFetchResult.class);
+            if (result != null && result.getFeed() != null) {
+                result.getFeed().setUrl(url);
+            }
+            return result;
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "Error while fetching feed: " + url, e);
+            return null;
+        }
+    }
+
 }
