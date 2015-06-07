@@ -21,10 +21,12 @@ public class PageController {
 	
 	private UserService userService;
 	private com.google.appengine.api.users.UserService googleUserService;
+	private String appVersion;
 	
-	public PageController(UserService userService, com.google.appengine.api.users.UserService googleUserService) {
+	public PageController(UserService userService, com.google.appengine.api.users.UserService googleUserService, String appVersion) {
 		this.userService = userService;
 		this.googleUserService = googleUserService;
+		this.appVersion = appVersion;
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -42,6 +44,7 @@ public class PageController {
 		}
 		ModelAndView modelAndView = new ModelAndView("reader");
 		modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
+		modelAndView.addObject("appVersion", appVersion);
 		return modelAndView;
 	}
 	

@@ -25,8 +25,8 @@
 	
 	<scm>
 		<developerConnection>scm:git:https://github.com/uzonyib/jreader.git</developerConnection>
-	  <tag>jreader-1.0.1</tag>
-  </scm>
+		<tag>jreader-1.0.1</tag>
+	</scm>
 	
 	<dependencyManagement>
 		<dependencies>

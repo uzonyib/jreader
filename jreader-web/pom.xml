@@ -12,7 +12,8 @@
     <artifactId>jreader-web</artifactId>
     
     <properties>
-    	<excludeFiles>feeds/**</excludeFiles>
+    	<war.excludes>feeds/**</war.excludes>
+    	<app.version>${project.version}</app.version>
     </properties>
 
     <dependencies>
@@ -111,7 +112,7 @@
                 <version>2.3</version>
                 <configuration>
                     <archiveClasses>true</archiveClasses>
-                   	<warSourceExcludes>${excludeFiles}</warSourceExcludes>
+                   	<warSourceExcludes>${war.excludes}</warSourceExcludes>
                     <webResources>
                         <resource>
                             <directory>${basedir}/src/main/webapp/WEB-INF</directory>

@@ -13,6 +13,7 @@
 	<mvc:annotation-driven />
 	
 	<util:properties id="cronProps" location="/WEB-INF/cron.properties" />
+	<util:properties id="versionProps" location="/WEB-INF/application.properties" />
 
 	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
@@ -26,6 +27,7 @@
 	<bean class="jreader.web.controller.PageController">
 		<constructor-arg ref="userService" />
 		<constructor-arg ref="googleUserService" />
+		<constructor-arg value="#{versionProps.version}" />
 	</bean>
 	
 	<bean class="jreader.web.controller.CronJobController" />
