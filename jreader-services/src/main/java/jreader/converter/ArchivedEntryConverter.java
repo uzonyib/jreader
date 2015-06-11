@@ -9,7 +9,7 @@ public class ArchivedEntryConverter implements Converter<FeedEntry, ArchivedEntr
 
     @Override
     public ArchivedEntry convert(final FeedEntry entity) {
-        ArchivedEntry archivedEntity = new ArchivedEntry();
+        final ArchivedEntry archivedEntity = new ArchivedEntry();
         archivedEntity.setTitle(entity.getTitle());
         archivedEntity.setDescription(entity.getDescription());
         archivedEntity.setAuthor(entity.getAuthor());

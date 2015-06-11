@@ -16,26 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/reader/groups/{groupId}/subscriptions")
 public class SubscriptionController {
 
-    private SubscriptionService subscriptionService;
+    private final SubscriptionService subscriptionService;
 
-    public SubscriptionController(SubscriptionService subscriptionService) {
+    public SubscriptionController(final SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public List<SubscriptionGroupDto> create(Principal principal, @PathVariable Long groupId, @RequestParam String url) {
+    public List<SubscriptionGroupDto> create(final Principal principal, final @PathVariable Long groupId, final @RequestParam String url) {
         subscriptionService.subscribe(principal.getName(), groupId, url);
         return subscriptionService.list(principal.getName());
     }
 
     @RequestMapping(value = "/{subscriptionId}", method = RequestMethod.DELETE)
-    public List<SubscriptionGroupDto> delete(Principal principal, @PathVariable Long groupId, @PathVariable Long subscriptionId) {
+    public List<SubscriptionGroupDto> delete(final Principal principal, final @PathVariable Long groupId, final @PathVariable Long subscriptionId) {
         subscriptionService.unsubscribe(principal.getName(), groupId, subscriptionId);
         return subscriptionService.list(principal.getName());
     }
 
     @RequestMapping(value = "/{subscriptionId}/title", method = RequestMethod.PUT)
-    public List<SubscriptionGroupDto> entitle(Principal principal, @PathVariable Long groupId, @PathVariable Long subscriptionId, @RequestParam String value) {
+    public List<SubscriptionGroupDto> entitle(final Principal principal, final @PathVariable Long groupId, final @PathVariable Long subscriptionId,
+            final @RequestParam String value) {
         if (value != null && !"".equals(value)) {
             subscriptionService.entitle(principal.getName(), groupId, subscriptionId, value);
         }
@@ -44,7 +45,8 @@ public class SubscriptionController {
     }
 
     @RequestMapping(value = "/{subscriptionId}/order", method = RequestMethod.PUT)
-    public List<SubscriptionGroupDto> move(Principal principal, @PathVariable Long groupId, @PathVariable Long subscriptionId, @RequestParam boolean up) {
+    public List<SubscriptionGroupDto> move(final Principal principal, final @PathVariable Long groupId, final @PathVariable Long subscriptionId,
+            final @RequestParam boolean up) {
         if (up) {
             subscriptionService.moveUp(principal.getName(), groupId, subscriptionId);
         } else {

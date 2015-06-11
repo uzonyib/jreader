@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
         if (userDao.find(username) != null) {
             throw new ServiceException("User already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
         }
-        User user = new User();
+        final User user = new User();
         user.setUsername(username);
         userDao.save(user);
     }

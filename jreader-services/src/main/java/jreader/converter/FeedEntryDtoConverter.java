@@ -9,7 +9,7 @@ public class FeedEntryDtoConverter implements Converter<FeedEntry, FeedEntryDto>
 
     @Override
     public FeedEntryDto convert(final FeedEntry entity) {
-        FeedEntryDto dto = new FeedEntryDto();
+        final FeedEntryDto dto = new FeedEntryDto();
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setAuthor(entity.getAuthor());

@@ -9,7 +9,7 @@ public class ArchivedEntryDtoConverter implements Converter<ArchivedEntry, Archi
 
     @Override
     public ArchivedEntryDto convert(final ArchivedEntry entity) {
-        ArchivedEntryDto dto = new ArchivedEntryDto();
+        final ArchivedEntryDto dto = new ArchivedEntryDto();
         dto.setId(String.valueOf(entity.getId()));
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());

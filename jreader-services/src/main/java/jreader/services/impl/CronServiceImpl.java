@@ -41,9 +41,9 @@ public class CronServiceImpl implements CronService {
 
     @Override
     public List<FeedDto> listFeeds() {
-        List<Feed> feeds = feedDao.listAll();
-        List<FeedDto> dtos = new ArrayList<FeedDto>();
-        for (Feed feed : feeds) {
+        final List<Feed> feeds = feedDao.listAll();
+        final List<FeedDto> dtos = new ArrayList<FeedDto>();
+        for (final Feed feed : feeds) {
             dtos.add(conversionService.convert(feed, FeedDto.class));
         }
         return dtos;
@@ -51,19 +51,19 @@ public class CronServiceImpl implements CronService {
 
     @Override
     public void refresh(final String url) {
-        Feed feed = feedDao.find(url);
-        RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
+        final Feed feed = feedDao.find(url);
+        final RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
         if (rssFetchResult == null) {
             return;
         }
 
-        long refreshDate = System.currentTimeMillis();
-        List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
+        final long refreshDate = System.currentTimeMillis();
+        final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
 
-        for (Subscription subscription : subscriptions) {
+        for (final Subscription subscription : subscriptions) {
             int counter = 0;
             Long updatedDate = subscription.getUpdatedDate();
-            for (FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
+            for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
                 if (feedEntry.getPublishedDate() == null) {
                     LOG.warning("Publish date is null. Feed: " + feed.getTitle());
                     continue;
@@ -86,20 +86,20 @@ public class CronServiceImpl implements CronService {
 
     @Override
     public void cleanup(final String url, final int olderThanDays, final int keptCount) {
-        long date = System.currentTimeMillis() - MILLISECS_PER_DAY * (long) olderThanDays;
-        Feed feed = feedDao.find(url);
-        List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
+        final long date = System.currentTimeMillis() - MILLISECS_PER_DAY * (long) olderThanDays;
+        final Feed feed = feedDao.find(url);
+        final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
         if (subscriptions.isEmpty()) {
             feedDao.delete(feed);
             LOG.info("Deleted feed with no subscription: " + feed.getUrl());
         }
-        for (Subscription subscription : subscriptions) {
+        for (final Subscription subscription : subscriptions) {
             int count = 0;
-            FeedEntry e = feedEntryDao.find(subscription, keptCount);
+            final FeedEntry e = feedEntryDao.find(subscription, keptCount);
             if (e != null) {
-                long threshold = Math.min(date, e.getPublishedDate());
-                List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
-                for (FeedEntry feedEntry : feedEntries) {
+                final long threshold = Math.min(date, e.getPublishedDate());
+                final List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
+                for (final FeedEntry feedEntry : feedEntries) {
                     feedEntryDao.delete(feedEntry);
                     ++count;
                 }

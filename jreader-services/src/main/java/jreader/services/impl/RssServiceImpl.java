@@ -27,9 +27,9 @@ public class RssServiceImpl implements RssService {
     @Override
     public RssFetchResult fetch(final String url) {
         try {
-            URL feedSource = new URL(url);
-            SyndFeed syndFeed = feedFetcher.retrieveFeed(feedSource);
-            RssFetchResult result = conversionService.convert(syndFeed, RssFetchResult.class);
+            final URL feedSource = new URL(url);
+            final SyndFeed syndFeed = feedFetcher.retrieveFeed(feedSource);
+            final RssFetchResult result = conversionService.convert(syndFeed, RssFetchResult.class);
             if (result != null && result.getFeed() != null) {
                 result.getFeed().setUrl(url);
             }

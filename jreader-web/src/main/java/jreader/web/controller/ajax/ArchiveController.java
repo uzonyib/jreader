@@ -16,31 +16,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/reader/archives")
 public class ArchiveController {
 
-    private ArchiveService archiveService;
+    private final ArchiveService archiveService;
 
-    public ArchiveController(ArchiveService archiveService) {
+    public ArchiveController(final ArchiveService archiveService) {
         this.archiveService = archiveService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<ArchiveDto> getArchives(Principal principal) {
+    public List<ArchiveDto> getArchives(final Principal principal) {
         return archiveService.list(principal.getName());
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public List<ArchiveDto> create(Principal principal, @RequestParam String title) {
+    public List<ArchiveDto> create(final Principal principal, final @RequestParam String title) {
         archiveService.createArchive(principal.getName(), title);
         return archiveService.list(principal.getName());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public List<ArchiveDto> delete(Principal principal, @PathVariable Long id) {
+    public List<ArchiveDto> delete(final Principal principal, final @PathVariable Long id) {
         archiveService.deleteArchive(principal.getName(), id);
         return archiveService.list(principal.getName());
     }
 
     @RequestMapping(value = "/{id}/title", method = RequestMethod.PUT)
-    public List<ArchiveDto> entitle(Principal principal, @PathVariable Long id, @RequestParam String value) {
+    public List<ArchiveDto> entitle(final Principal principal, final @PathVariable Long id, final @RequestParam String value) {
         if (value != null && !"".equals(value)) {
             archiveService.entitle(principal.getName(), id, value);
         }
@@ -49,7 +49,7 @@ public class ArchiveController {
     }
 
     @RequestMapping(value = "/{id}/order", method = RequestMethod.PUT)
-    public List<ArchiveDto> move(Principal principal, @PathVariable Long id, @RequestParam boolean up) {
+    public List<ArchiveDto> move(final Principal principal, final @PathVariable Long id, final @RequestParam boolean up) {
         if (up) {
             archiveService.moveUp(principal.getName(), id);
         } else {

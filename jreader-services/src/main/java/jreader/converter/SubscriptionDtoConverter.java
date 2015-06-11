@@ -13,7 +13,7 @@ public class SubscriptionDtoConverter implements Converter<Subscription, Subscri
 
     @Override
     public SubscriptionDto convert(final Subscription entity) {
-        SubscriptionDto dto = new SubscriptionDto();
+        final SubscriptionDto dto = new SubscriptionDto();
         dto.setId(String.valueOf(entity.getId()));
         dto.setTitle(entity.getTitle());
         dto.setUpdatedDate(entity.getUpdatedDate());

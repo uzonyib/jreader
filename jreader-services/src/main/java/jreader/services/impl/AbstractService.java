@@ -22,7 +22,7 @@ abstract class AbstractService {
     }
 
     protected User getUser(final String username) {
-        User user = userDao.find(username);
+        final User user = userDao.find(username);
         if (user == null) {
             throw new ServiceException("User not found.", ServiceStatus.RESOURCE_NOT_FOUND);
         }
@@ -30,7 +30,7 @@ abstract class AbstractService {
     }
 
     protected SubscriptionGroup getGroup(final User user, final Long subscriptionGroupId) {
-        SubscriptionGroup group = subscriptionGroupDao.find(user, subscriptionGroupId);
+        final SubscriptionGroup group = subscriptionGroupDao.find(user, subscriptionGroupId);
         if (group == null) {
             throw new ServiceException("Group not found, ID " + subscriptionGroupId, ServiceStatus.RESOURCE_NOT_FOUND);
         }
@@ -38,7 +38,7 @@ abstract class AbstractService {
     }
 
     protected Subscription getSubscription(final SubscriptionGroup group, final Long subscriptionId) {
-        Subscription subscription = subscriptionDao.find(group, subscriptionId);
+        final Subscription subscription = subscriptionDao.find(group, subscriptionId);
         if (subscription == null) {
             throw new ServiceException("Subscription not found, ID: " + subscriptionId, ServiceStatus.RESOURCE_NOT_FOUND);
         }

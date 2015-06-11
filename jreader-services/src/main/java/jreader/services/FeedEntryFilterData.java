@@ -28,7 +28,7 @@ public class FeedEntryFilterData extends FeedEntryFilter {
     }
 
     public FeedEntryFilterData(final String username, final Long subscriptionGroupId, final Long subscriptionId, final Selection selection,
-            final boolean ascending, final int offset, int count) {
+            final boolean ascending, final int offset, final int count) {
         super(selection, ascending, offset, count);
         this.username = username;
         this.subscriptionGroupId = subscriptionGroupId;

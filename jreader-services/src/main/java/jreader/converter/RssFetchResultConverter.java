@@ -16,7 +16,7 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
 
     @Override
     public RssFetchResult convert(final SyndFeed syndFeed) {
-        RssFetchResult result = new RssFetchResult();
+        final RssFetchResult result = new RssFetchResult();
         result.setFeed(new Feed());
         result.setFeedEntries(new ArrayList<FeedEntry>());
 
@@ -35,7 +35,7 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
     }
 
     private static FeedEntry convert(final SyndEntry syndEntry) {
-        FeedEntry feedEntry = new FeedEntry();
+        final FeedEntry feedEntry = new FeedEntry();
         feedEntry.setTitle(syndEntry.getTitle());
         if (syndEntry.getDescription() != null) {
             feedEntry.setDescription(syndEntry.getDescription().getValue());

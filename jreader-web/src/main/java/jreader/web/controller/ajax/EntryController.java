@@ -24,42 +24,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/reader")
 public class EntryController {
 
-    private SubscriptionService subscriptionService;
-    private FeedEntryService feedEntryService;
+    private final SubscriptionService subscriptionService;
+    private final FeedEntryService feedEntryService;
 
-    public EntryController(SubscriptionService subscriptionService, FeedEntryService feedEntryService) {
+    public EntryController(final SubscriptionService subscriptionService, final FeedEntryService feedEntryService) {
         this.subscriptionService = subscriptionService;
         this.feedEntryService = feedEntryService;
     }
 
     @RequestMapping(value = "/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(Principal principal, @PathVariable String selection, @RequestParam int offset, @RequestParam int count,
-            @RequestParam boolean ascending) {
+    public List<FeedEntryDto> getEntries(final Principal principal, final @PathVariable String selection, final @RequestParam int offset,
+            final @RequestParam int count, final @RequestParam boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending, offset, count));
     }
 
     @RequestMapping(value = "/groups/{groupId}/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(Principal principal, @PathVariable Long groupId, @PathVariable String selection, @RequestParam int offset,
-            @RequestParam int count, @RequestParam boolean ascending) {
+    public List<FeedEntryDto> getEntries(final Principal principal, final @PathVariable Long groupId, final @PathVariable String selection,
+            final @RequestParam int offset, final @RequestParam int count, final @RequestParam boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, parseSelection(selection), ascending, offset, count));
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(Principal principal, @PathVariable Long groupId, @PathVariable Long subscriptionId, @PathVariable String selection,
-            @RequestParam int offset, @RequestParam int count, @RequestParam boolean ascending) {
+    public List<FeedEntryDto> getEntries(final Principal principal, final @PathVariable Long groupId, final @PathVariable Long subscriptionId,
+            final @PathVariable String selection, final @RequestParam int offset, final @RequestParam int count, final @RequestParam boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, subscriptionId, parseSelection(selection), ascending, offset,
                 count));
     }
 
     @RequestMapping(value = "/entries", method = RequestMethod.POST)
-    public List<SubscriptionGroupDto> readAll(Principal principal, @RequestBody Map<Long, Map<Long, List<Long>>> ids) {
+    public List<SubscriptionGroupDto> readAll(final Principal principal, final @RequestBody Map<Long, Map<Long, List<Long>>> ids) {
         feedEntryService.markRead(principal.getName(), ids);
         return subscriptionService.list(principal.getName());
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{id}/starred", method = RequestMethod.PUT)
-    public StatusDto setStarred(Principal principal, @PathVariable Long groupId, @PathVariable Long subscriptionId, @PathVariable Long id,
-            @RequestParam boolean value) {
+    public StatusDto setStarred(final Principal principal, final @PathVariable Long groupId, final @PathVariable Long subscriptionId,
+            final @PathVariable Long id, final @RequestParam boolean value) {
         if (value) {
             feedEntryService.star(principal.getName(), groupId, subscriptionId, id);
         } else {
@@ -68,7 +68,7 @@ public class EntryController {
         return new StatusDto(0);
     }
 
-    private Selection parseSelection(String selection) {
+    private Selection parseSelection(final String selection) {
         try {
             return Selection.valueOf(Selection.class, selection.toUpperCase(Locale.ENGLISH));
         } catch (Exception e) {

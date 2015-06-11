@@ -6,7 +6,7 @@ public class ServiceException extends RuntimeException {
 
     private final ServiceStatus status;
 
-    public ServiceException(String message, ServiceStatus status) {
+    public ServiceException(final String message, final ServiceStatus status) {
         super(message);
         this.status = status;
     }

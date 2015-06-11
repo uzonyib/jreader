@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
-    public StatusDto handleServiceException(ServiceException e, HttpServletResponse response) {
+    public StatusDto handleServiceException(final ServiceException e, final HttpServletResponse response) {
         response.setStatus(e.getStatus().getCode());
         return new StatusDto(1, e.getMessage());
     }

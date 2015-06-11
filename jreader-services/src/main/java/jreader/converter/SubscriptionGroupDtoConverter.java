@@ -9,7 +9,7 @@ public class SubscriptionGroupDtoConverter implements Converter<SubscriptionGrou
 
     @Override
     public SubscriptionGroupDto convert(final SubscriptionGroup entity) {
-        SubscriptionGroupDto dto = new SubscriptionGroupDto();
+        final SubscriptionGroupDto dto = new SubscriptionGroupDto();
         dto.setId(String.valueOf(entity.getId()));
         dto.setTitle(entity.getTitle());
         dto.setOrder(entity.getOrder());

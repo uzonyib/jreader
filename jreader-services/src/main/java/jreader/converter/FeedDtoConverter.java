@@ -9,7 +9,7 @@ public class FeedDtoConverter implements Converter<Feed, FeedDto> {
 
     @Override
     public FeedDto convert(final Feed entity) {
-        FeedDto dto = new FeedDto();
+        final FeedDto dto = new FeedDto();
         dto.setTitle(entity.getTitle());
         dto.setUrl(entity.getUrl());
         dto.setDescription(entity.getDescription());

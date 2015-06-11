@@ -48,25 +48,25 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     @Override
     public SubscriptionGroupDto createGroup(final String username, final String title) {
-        User user = this.getUser(username);
+        final User user = this.getUser(username);
         if (subscriptionGroupDao.find(user, title) != null) {
             throw new ServiceException("Group already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
         }
-        SubscriptionGroup group = subscriptionGroupDao.save(builderFactory.createGroupBuilder().user(user).title(title)
+        final SubscriptionGroup group = subscriptionGroupDao.save(builderFactory.createGroupBuilder().user(user).title(title)
                 .order(subscriptionGroupDao.getMaxOrder(user) + 1).build());
         return conversionService.convert(group, SubscriptionGroupDto.class);
     }
 
     @Override
     public SubscriptionDto subscribe(final String username, final Long subscriptionGroupId, final String url) {
-        User user = this.getUser(username);
-        SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+        final User user = this.getUser(username);
+        final SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
 
-        RssFetchResult rssFetchResult = rssService.fetch(url);
+        final RssFetchResult rssFetchResult = rssService.fetch(url);
         if (rssFetchResult == null) {
             throw new ServiceException("Cannot fetch RSS: " + url, ServiceStatus.OTHER_ERROR);
         }
-        long refreshDate = System.currentTimeMillis();
+        final long refreshDate = System.currentTimeMillis();
         Feed feed = feedDao.find(url);
         if (feed == null) {
             feed = feedDao.save(rssFetchResult.getFeed());
@@ -78,7 +78,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
         }
 
         Long updatedDate = null;
-        for (FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
+        for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
             if (updatedDate == null || feedEntry.getPublishedDate() > updatedDate) {
                 updatedDate = feedEntry.getPublishedDate();
             }
@@ -88,7 +88,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
                 .updatedDate(updatedDate).refreshDate(refreshDate).build();
         subscription = subscriptionDao.save(subscription);
 
-        for (FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
+        for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
             feedEntry.setSubscription(subscription);
             feedEntryDao.save(feedEntry);
         }

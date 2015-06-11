@@ -25,24 +25,24 @@ public class TaskController {
 
     private static final Logger LOG = Logger.getLogger(TaskController.class.getName());
 
-    private CronService cronService;
+    private final CronService cronService;
 
-    private int minAgeToDelete;
-    private int minCountToKeep;
+    private final int minAgeToDelete;
+    private final int minCountToKeep;
 
-    public TaskController(CronService cronService, int minAgeToDelete, int minCountToKeep) {
+    public TaskController(final CronService cronService, final int minAgeToDelete, final int minCountToKeep) {
         this.cronService = cronService;
         this.minAgeToDelete = minAgeToDelete;
         this.minCountToKeep = minCountToKeep;
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.POST)
-    public StatusDto refreshFeeds(HttpServletRequest request, Principal principal) {
-        StatusDto result;
+    public StatusDto refreshFeeds(final HttpServletRequest request, final Principal principal) {
+        final StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
-            List<FeedDto> feeds = cronService.listFeeds();
-            Queue queue = QueueFactory.getDefaultQueue();
-            for (FeedDto feed : feeds) {
+            final List<FeedDto> feeds = cronService.listFeeds();
+            final Queue queue = QueueFactory.getDefaultQueue();
+            for (final FeedDto feed : feeds) {
                 queue.add(TaskOptions.Builder.withUrl("/tasks/refresh/feed").param("url", feed.getUrl()));
             }
             result = new StatusDto(0);
@@ -54,8 +54,8 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/refresh/feed", method = RequestMethod.POST)
-    public StatusDto refreshFeed(HttpServletRequest request, Principal principal, @RequestParam String url) {
-        StatusDto result;
+    public StatusDto refreshFeed(final HttpServletRequest request, final Principal principal, final @RequestParam String url) {
+        final StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             cronService.refresh(url);
             result = new StatusDto(0);
@@ -67,11 +67,11 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/cleanup", method = RequestMethod.POST)
-    public StatusDto cleanup(HttpServletRequest request, Principal principal) {
-        StatusDto result;
+    public StatusDto cleanup(final HttpServletRequest request, final Principal principal) {
+        final StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
-            List<FeedDto> feeds = cronService.listFeeds();
-            Queue queue = QueueFactory.getDefaultQueue();
+            final List<FeedDto> feeds = cronService.listFeeds();
+            final Queue queue = QueueFactory.getDefaultQueue();
             for (FeedDto feed : feeds) {
                 queue.add(TaskOptions.Builder.withUrl("/tasks/cleanup/feed").param("url", feed.getUrl()));
             }
@@ -84,8 +84,8 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/cleanup/feed", method = RequestMethod.POST)
-    public StatusDto cleanup(HttpServletRequest request, Principal principal, @RequestParam String url) {
-        StatusDto result;
+    public StatusDto cleanup(final HttpServletRequest request, final Principal principal, final @RequestParam String url) {
+        final StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             cronService.cleanup(url, minAgeToDelete, minCountToKeep);
             result = new StatusDto(0);
