@@ -35,8 +35,9 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
     private BuilderFactory builderFactory;
 
-    public ArchiveServiceImpl(UserDao userDao, SubscriptionGroupDao subscriptionGroupDao, SubscriptionDao subscriptionDao, FeedEntryDao feedEntryDao,
-            ArchiveDao archiveDao, ArchivedEntryDao archivedEntryDao, ConversionService conversionService, BuilderFactory builderFactory) {
+    public ArchiveServiceImpl(final UserDao userDao, final SubscriptionGroupDao subscriptionGroupDao, final SubscriptionDao subscriptionDao,
+            final FeedEntryDao feedEntryDao, final ArchiveDao archiveDao, final ArchivedEntryDao archivedEntryDao, final ConversionService conversionService,
+            final BuilderFactory builderFactory) {
         super(userDao, subscriptionGroupDao, subscriptionDao);
         this.feedEntryDao = feedEntryDao;
         this.archiveDao = archiveDao;
@@ -45,7 +46,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
         this.builderFactory = builderFactory;
     }
 
-    private Archive getArchive(User user, Long id) {
+    private Archive getArchive(final User user, final Long id) {
         Archive archive = archiveDao.find(user, id);
         if (archive == null) {
             throw new ServiceException("Archive not found, ID " + id, ServiceStatus.RESOURCE_NOT_FOUND);
@@ -54,7 +55,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public ArchiveDto createArchive(String username, String title) {
+    public ArchiveDto createArchive(final String username, final String title) {
         User user = this.getUser(username);
         if (archiveDao.find(user, title) != null) {
             throw new ServiceException("Archive already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
@@ -64,14 +65,14 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public void deleteArchive(String username, Long archiveId) {
+    public void deleteArchive(final String username, final Long archiveId) {
         User user = this.getUser(username);
         Archive archive = this.getArchive(user, archiveId);
         archiveDao.delete(archive);
     }
 
     @Override
-    public void moveUp(String username, Long archiveId) {
+    public void moveUp(final String username, final Long archiveId) {
         User user = this.getUser(username);
 
         List<Archive> archives = archiveDao.list(user);
@@ -90,7 +91,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public void moveDown(String username, Long archiveId) {
+    public void moveDown(final String username, final Long archiveId) {
         User user = this.getUser(username);
 
         List<Archive> archives = archiveDao.list(user);
@@ -108,7 +109,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
         swap(archives.get(index), archives.get(index + 1));
     }
 
-    private void swap(Archive archive1, Archive archive2) {
+    private void swap(final Archive archive1, final Archive archive2) {
         int order = archive1.getOrder();
         archive1.setOrder(archive2.getOrder());
         archive2.setOrder(order);
@@ -121,7 +122,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public List<ArchiveDto> list(String username) {
+    public List<ArchiveDto> list(final String username) {
         User user = this.getUser(username);
         List<ArchiveDto> dtos = new ArrayList<ArchiveDto>();
         for (Archive archive : archiveDao.list(user)) {
@@ -131,7 +132,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public void entitle(String username, Long archiveId, String title) {
+    public void entitle(final String username, final Long archiveId, final String title) {
         User user = this.getUser(username);
         Archive archive = this.getArchive(user, archiveId);
 
@@ -140,7 +141,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public void archive(String username, Long groupId, Long subscriptionId, Long entryId, Long archiveId) {
+    public void archive(final String username, final Long groupId, final Long subscriptionId, final Long entryId, final Long archiveId) {
         User user = this.getUser(username);
         SubscriptionGroup group = this.getGroup(user, groupId);
         Subscription subscription = this.getSubscription(group, subscriptionId);
@@ -154,7 +155,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public List<ArchivedEntryDto> listEntries(ArchivedEntryFilterData filterData) {
+    public List<ArchivedEntryDto> listEntries(final ArchivedEntryFilterData filterData) {
         User user = this.getUser(filterData.getUsername());
         List<ArchivedEntry> entries;
         if (filterData.getArchiveId() == null) {
@@ -171,7 +172,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public void deleteEntry(String username, Long archiveId, Long entryId) {
+    public void deleteEntry(final String username, final Long archiveId, final Long entryId) {
         User user = this.getUser(username);
         Archive archive = this.getArchive(user, archiveId);
         ArchivedEntry entry = archivedEntryDao.find(archive, entryId);

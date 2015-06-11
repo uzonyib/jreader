@@ -13,20 +13,22 @@ public class FeedEntryFilterData extends FeedEntryFilter {
     private Long subscriptionGroupId;
     private Long subscriptionId;
 
-    public FeedEntryFilterData(String username, Selection selection, boolean ascending, int offset, int count) {
+    public FeedEntryFilterData(final String username, final Selection selection, final boolean ascending, final int offset, final int count) {
         super(selection, ascending, offset, count);
         this.username = username;
         this.group = Group.ALL;
     }
 
-    public FeedEntryFilterData(String username, Long subscriptionGroupId, Selection selection, boolean ascending, int offset, int count) {
+    public FeedEntryFilterData(final String username, final Long subscriptionGroupId, final Selection selection, final boolean ascending, final int offset,
+            final int count) {
         super(selection, ascending, offset, count);
         this.username = username;
         this.subscriptionGroupId = subscriptionGroupId;
         this.group = Group.SUBSCRIPTION_GROUP;
     }
 
-    public FeedEntryFilterData(String username, Long subscriptionGroupId, Long subscriptionId, Selection selection, boolean ascending, int offset, int count) {
+    public FeedEntryFilterData(final String username, final Long subscriptionGroupId, final Long subscriptionId, final Selection selection,
+            final boolean ascending, final int offset, int count) {
         super(selection, ascending, offset, count);
         this.username = username;
         this.subscriptionGroupId = subscriptionGroupId;
@@ -38,7 +40,7 @@ public class FeedEntryFilterData extends FeedEntryFilter {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -46,7 +48,7 @@ public class FeedEntryFilterData extends FeedEntryFilter {
         return group;
     }
 
-    public void setGroup(Group group) {
+    public void setGroup(final Group group) {
         this.group = group;
     }
 
@@ -54,7 +56,7 @@ public class FeedEntryFilterData extends FeedEntryFilter {
         return subscriptionGroupId;
     }
 
-    public void setSubscriptionGroupId(Long subscriptionGroupId) {
+    public void setSubscriptionGroupId(final Long subscriptionGroupId) {
         this.subscriptionGroupId = subscriptionGroupId;
     }
 
@@ -62,7 +64,7 @@ public class FeedEntryFilterData extends FeedEntryFilter {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(Long subscriptionId) {
+    public void setSubscriptionId(final Long subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
 

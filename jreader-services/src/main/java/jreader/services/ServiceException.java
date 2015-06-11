@@ -4,7 +4,7 @@ public class ServiceException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private ServiceStatus status;
+    private final ServiceStatus status;
 
     public ServiceException(String message, ServiceStatus status) {
         super(message);

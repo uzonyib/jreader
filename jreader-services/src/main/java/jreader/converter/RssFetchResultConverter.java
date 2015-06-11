@@ -15,7 +15,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResult> {
 
     @Override
-    public RssFetchResult convert(SyndFeed syndFeed) {
+    public RssFetchResult convert(final SyndFeed syndFeed) {
         RssFetchResult result = new RssFetchResult();
         result.setFeed(new Feed());
         result.setFeedEntries(new ArrayList<FeedEntry>());
@@ -34,7 +34,7 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
         return result;
     }
 
-    private static FeedEntry convert(SyndEntry syndEntry) {
+    private static FeedEntry convert(final SyndEntry syndEntry) {
         FeedEntry feedEntry = new FeedEntry();
         feedEntry.setTitle(syndEntry.getTitle());
         if (syndEntry.getDescription() != null) {

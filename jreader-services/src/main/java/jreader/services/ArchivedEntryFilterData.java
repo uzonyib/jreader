@@ -7,12 +7,12 @@ public class ArchivedEntryFilterData extends ArchivedEntryFilter {
     private String username;
     private Long archiveId;
 
-    public ArchivedEntryFilterData(String username, boolean ascending, int offset, int count) {
+    public ArchivedEntryFilterData(final String username, final boolean ascending, final int offset, final int count) {
         super(ascending, offset, count);
         this.username = username;
     }
 
-    public ArchivedEntryFilterData(String username, Long archiveId, boolean ascending, int offset, int count) {
+    public ArchivedEntryFilterData(final String username, final Long archiveId, final boolean ascending, final int offset, final int count) {
         super(ascending, offset, count);
         this.username = username;
         this.archiveId = archiveId;
@@ -22,7 +22,7 @@ public class ArchivedEntryFilterData extends ArchivedEntryFilter {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -30,7 +30,7 @@ public class ArchivedEntryFilterData extends ArchivedEntryFilter {
         return archiveId;
     }
 
-    public void setArchiveId(Long archiveId) {
+    public void setArchiveId(final Long archiveId) {
         this.archiveId = archiveId;
     }
 

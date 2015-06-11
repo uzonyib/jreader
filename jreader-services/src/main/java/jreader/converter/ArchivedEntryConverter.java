@@ -8,7 +8,7 @@ import org.springframework.core.convert.converter.Converter;
 public class ArchivedEntryConverter implements Converter<FeedEntry, ArchivedEntry> {
 
     @Override
-    public ArchivedEntry convert(FeedEntry entity) {
+    public ArchivedEntry convert(final FeedEntry entity) {
         ArchivedEntry archivedEntity = new ArchivedEntry();
         archivedEntity.setTitle(entity.getTitle());
         archivedEntity.setDescription(entity.getDescription());

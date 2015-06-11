@@ -19,13 +19,13 @@ public class RssServiceImpl implements RssService {
     private FeedFetcher feedFetcher;
     private ConversionService conversionService;
 
-    public RssServiceImpl(FeedFetcher feedFetcher, ConversionService conversionService) {
+    public RssServiceImpl(final FeedFetcher feedFetcher, final ConversionService conversionService) {
         this.feedFetcher = feedFetcher;
         this.conversionService = conversionService;
     }
 
     @Override
-    public RssFetchResult fetch(String url) {
+    public RssFetchResult fetch(final String url) {
         try {
             URL feedSource = new URL(url);
             SyndFeed syndFeed = feedFetcher.retrieveFeed(feedSource);

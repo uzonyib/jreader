@@ -6,7 +6,7 @@ public enum ServiceStatus {
 
     private int code;
 
-    private ServiceStatus(int code) {
+    private ServiceStatus(final int code) {
         this.code = code;
     }
 

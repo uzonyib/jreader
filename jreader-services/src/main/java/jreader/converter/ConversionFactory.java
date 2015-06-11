@@ -15,7 +15,7 @@ public class ConversionFactory implements FactoryBean<ConversionService>, Initia
 
     private GenericConversionService conversionService;
 
-    public ConversionFactory(Set<?> converters) {
+    public ConversionFactory(final Set<?> converters) {
         this.converters = converters;
     }
 

@@ -18,7 +18,7 @@ public class FeedEntryDto {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -26,7 +26,7 @@ public class FeedEntryDto {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(String subscriptionId) {
+    public void setSubscriptionId(final String subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
 
@@ -34,7 +34,7 @@ public class FeedEntryDto {
         return subscriptionGroupId;
     }
 
-    public void setSubscriptionGroupId(String subscriptionGroupId) {
+    public void setSubscriptionGroupId(final String subscriptionGroupId) {
         this.subscriptionGroupId = subscriptionGroupId;
     }
 
@@ -42,7 +42,7 @@ public class FeedEntryDto {
         return subscriptionTitle;
     }
 
-    public void setSubscriptionTitle(String subscriptionTitle) {
+    public void setSubscriptionTitle(final String subscriptionTitle) {
         this.subscriptionTitle = subscriptionTitle;
     }
 
@@ -50,7 +50,7 @@ public class FeedEntryDto {
         return link;
     }
 
-    public void setLink(String link) {
+    public void setLink(final String link) {
         this.link = link;
     }
 
@@ -58,7 +58,7 @@ public class FeedEntryDto {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -66,7 +66,7 @@ public class FeedEntryDto {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -74,7 +74,7 @@ public class FeedEntryDto {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(final String author) {
         this.author = author;
     }
 
@@ -82,7 +82,7 @@ public class FeedEntryDto {
         return publishedDate;
     }
 
-    public void setPublishedDate(Long publishedDate) {
+    public void setPublishedDate(final Long publishedDate) {
         this.publishedDate = publishedDate;
     }
 
@@ -90,7 +90,7 @@ public class FeedEntryDto {
         return read;
     }
 
-    public void setRead(boolean read) {
+    public void setRead(final boolean read) {
         this.read = read;
     }
 
@@ -98,7 +98,7 @@ public class FeedEntryDto {
         return starred;
     }
 
-    public void setStarred(boolean starred) {
+    public void setStarred(final boolean starred) {
         this.starred = starred;
     }
 

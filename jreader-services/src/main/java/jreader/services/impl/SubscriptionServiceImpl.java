@@ -35,8 +35,9 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     private BuilderFactory builderFactory;
 
-    public SubscriptionServiceImpl(UserDao userDao, SubscriptionGroupDao subscriptionGroupDao, SubscriptionDao subscriptionDao, FeedDao feedDao,
-            FeedEntryDao feedEntryDao, RssService rssService, ConversionService conversionService, BuilderFactory builderFactory) {
+    public SubscriptionServiceImpl(final UserDao userDao, final SubscriptionGroupDao subscriptionGroupDao, final SubscriptionDao subscriptionDao,
+            final FeedDao feedDao, final FeedEntryDao feedEntryDao, RssService rssService, final ConversionService conversionService,
+            final BuilderFactory builderFactory) {
         super(userDao, subscriptionGroupDao, subscriptionDao);
         this.feedDao = feedDao;
         this.feedEntryDao = feedEntryDao;
@@ -46,7 +47,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public SubscriptionGroupDto createGroup(String username, String title) {
+    public SubscriptionGroupDto createGroup(final String username, final String title) {
         User user = this.getUser(username);
         if (subscriptionGroupDao.find(user, title) != null) {
             throw new ServiceException("Group already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
@@ -57,7 +58,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public SubscriptionDto subscribe(String username, Long subscriptionGroupId, String url) {
+    public SubscriptionDto subscribe(final String username, final Long subscriptionGroupId, final String url) {
         User user = this.getUser(username);
         SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
 
@@ -98,7 +99,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void unsubscribe(String username, Long subscriptionGroupId, Long subscriptionId) {
+    public void unsubscribe(final String username, final Long subscriptionGroupId, final Long subscriptionId) {
         User user = this.getUser(username);
         SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
         Subscription subscription = this.getSubscription(group, subscriptionId);
@@ -109,14 +110,14 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void deleteGroup(String username, Long subscriptionGroupId) {
+    public void deleteGroup(final String username, final Long subscriptionGroupId) {
         User user = this.getUser(username);
         SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
         subscriptionGroupDao.delete(subscriptionGroup);
     }
 
     @Override
-    public void moveUp(String username, Long subscriptionGroupId) {
+    public void moveUp(final String username, final Long subscriptionGroupId) {
         User user = this.getUser(username);
 
         List<SubscriptionGroup> subscriptionGroups = subscriptionGroupDao.list(user);
@@ -135,7 +136,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void moveDown(String username, Long subscriptionGroupId) {
+    public void moveDown(final String username, final Long subscriptionGroupId) {
         User user = this.getUser(username);
 
         List<SubscriptionGroup> subscriptionGroups = subscriptionGroupDao.list(user);
@@ -153,7 +154,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
         swap(subscriptionGroups.get(groupIndex), subscriptionGroups.get(groupIndex + 1));
     }
 
-    private void swap(SubscriptionGroup group1, SubscriptionGroup group2) {
+    private void swap(final SubscriptionGroup group1, final SubscriptionGroup group2) {
         int order = group1.getOrder();
         group1.setOrder(group2.getOrder());
         group2.setOrder(order);
@@ -166,7 +167,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void moveUp(String username, Long subscriptionGroupId, Long subscriptionId) {
+    public void moveUp(final String username, final Long subscriptionGroupId, final Long subscriptionId) {
         User user = this.getUser(username);
         SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 
@@ -186,7 +187,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void moveDown(String username, Long subscriptionGroupId, Long subscriptionId) {
+    public void moveDown(final String username, final Long subscriptionGroupId, final Long subscriptionId) {
         User user = this.getUser(username);
         SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 
@@ -205,7 +206,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
         swap(subscriptions.get(subscriptionIndex), subscriptions.get(subscriptionIndex + 1));
     }
 
-    private void swap(Subscription subscription1, Subscription subscription2) {
+    private void swap(final Subscription subscription1, final Subscription subscription2) {
         int order = subscription1.getOrder();
         subscription1.setOrder(subscription2.getOrder());
         subscription2.setOrder(order);
@@ -218,7 +219,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public List<SubscriptionGroupDto> list(String username) {
+    public List<SubscriptionGroupDto> list(final String username) {
         User user = this.getUser(username);
         List<SubscriptionGroupDto> dtos = new ArrayList<SubscriptionGroupDto>();
         for (SubscriptionGroup subscriptionGroup : subscriptionGroupDao.list(user)) {
@@ -240,7 +241,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void entitle(String username, Long subscriptionGroupId, Long subscriptionId, String title) {
+    public void entitle(final String username, final Long subscriptionGroupId, final Long subscriptionId, final String title) {
         User user = this.getUser(username);
         SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
         Subscription subscription = this.getSubscription(group, subscriptionId);
@@ -250,7 +251,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void entitle(String username, Long subscriptionGroupId, String title) {
+    public void entitle(final String username, final Long subscriptionGroupId, final String title) {
         User user = this.getUser(username);
         SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 

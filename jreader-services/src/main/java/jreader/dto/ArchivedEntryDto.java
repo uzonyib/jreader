@@ -15,7 +15,7 @@ public class ArchivedEntryDto {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -23,7 +23,7 @@ public class ArchivedEntryDto {
         return archiveId;
     }
 
-    public void setArchiveId(String archiveId) {
+    public void setArchiveId(final String archiveId) {
         this.archiveId = archiveId;
     }
 
@@ -31,7 +31,7 @@ public class ArchivedEntryDto {
         return archiveTitle;
     }
 
-    public void setArchiveTitle(String archiveTitle) {
+    public void setArchiveTitle(final String archiveTitle) {
         this.archiveTitle = archiveTitle;
     }
 
@@ -39,7 +39,7 @@ public class ArchivedEntryDto {
         return link;
     }
 
-    public void setLink(String link) {
+    public void setLink(final String link) {
         this.link = link;
     }
 
@@ -47,7 +47,7 @@ public class ArchivedEntryDto {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -55,7 +55,7 @@ public class ArchivedEntryDto {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -63,7 +63,7 @@ public class ArchivedEntryDto {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(final String author) {
         this.author = author;
     }
 
@@ -71,7 +71,7 @@ public class ArchivedEntryDto {
         return publishedDate;
     }
 
-    public void setPublishedDate(Long publishedDate) {
+    public void setPublishedDate(final Long publishedDate) {
         this.publishedDate = publishedDate;
     }
 

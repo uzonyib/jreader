@@ -8,7 +8,7 @@ import org.springframework.core.convert.converter.Converter;
 public class ArchivedEntryDtoConverter implements Converter<ArchivedEntry, ArchivedEntryDto> {
 
     @Override
-    public ArchivedEntryDto convert(ArchivedEntry entity) {
+    public ArchivedEntryDto convert(final ArchivedEntry entity) {
         ArchivedEntryDto dto = new ArchivedEntryDto();
         dto.setId(String.valueOf(entity.getId()));
         dto.setTitle(entity.getTitle());

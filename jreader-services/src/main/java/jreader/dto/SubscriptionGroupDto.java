@@ -14,7 +14,7 @@ public class SubscriptionGroupDto {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class SubscriptionGroupDto {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -30,7 +30,7 @@ public class SubscriptionGroupDto {
         return subscriptions;
     }
 
-    public void setSubscriptions(List<SubscriptionDto> subscriptions) {
+    public void setSubscriptions(final List<SubscriptionDto> subscriptions) {
         this.subscriptions = subscriptions;
     }
 
@@ -38,7 +38,7 @@ public class SubscriptionGroupDto {
         return unreadCount;
     }
 
-    public void setUnreadCount(int unreadCount) {
+    public void setUnreadCount(final int unreadCount) {
         this.unreadCount = unreadCount;
     }
 
@@ -46,7 +46,7 @@ public class SubscriptionGroupDto {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(final int order) {
         this.order = order;
     }
 

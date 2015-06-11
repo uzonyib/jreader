@@ -12,7 +12,7 @@ public class SubscriptionDtoConverter implements Converter<Subscription, Subscri
     private ConversionService conversionService;
 
     @Override
-    public SubscriptionDto convert(Subscription entity) {
+    public SubscriptionDto convert(final Subscription entity) {
         SubscriptionDto dto = new SubscriptionDto();
         dto.setId(String.valueOf(entity.getId()));
         dto.setTitle(entity.getTitle());
@@ -26,7 +26,7 @@ public class SubscriptionDtoConverter implements Converter<Subscription, Subscri
     }
 
     @Override
-    public void setConversionService(ConversionService conversionService) {
+    public void setConversionService(final ConversionService conversionService) {
         this.conversionService = conversionService;
     }
 

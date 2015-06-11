@@ -26,15 +26,15 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
 
     private ConversionService conversionService;
 
-    public FeedEntryServiceImpl(UserDao userDao, SubscriptionGroupDao subscriptionGroupDao, SubscriptionDao subscriptionDao, FeedEntryDao feedEntryDao,
-            ConversionService conversionService) {
+    public FeedEntryServiceImpl(final UserDao userDao, final SubscriptionGroupDao subscriptionGroupDao, final SubscriptionDao subscriptionDao,
+            final FeedEntryDao feedEntryDao, final ConversionService conversionService) {
         super(userDao, subscriptionGroupDao, subscriptionDao);
         this.feedEntryDao = feedEntryDao;
         this.conversionService = conversionService;
     }
 
     @Override
-    public void markRead(String username, Map<Long, Map<Long, List<Long>>> ids) {
+    public void markRead(final String username, final Map<Long, Map<Long, List<Long>>> ids) {
         if (ids == null) {
             return;
         }
@@ -59,7 +59,7 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
     }
 
     @Override
-    public void star(String username, Long subscriptionGroupId, Long subscriptionId, Long feedEntryId) {
+    public void star(final String username, final Long subscriptionGroupId, final Long subscriptionId, final Long feedEntryId) {
         User user = this.getUser(username);
         SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
         Subscription subscription = this.getSubscription(group, subscriptionId);
@@ -72,7 +72,7 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
     }
 
     @Override
-    public void unstar(String username, Long subscriptionGroupId, Long subscriptionId, Long feedEntryId) {
+    public void unstar(final String username, final Long subscriptionGroupId, final Long subscriptionId, final Long feedEntryId) {
         User user = this.getUser(username);
         SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
         Subscription subscription = this.getSubscription(group, subscriptionId);
@@ -85,7 +85,7 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
     }
 
     @Override
-    public List<FeedEntryDto> listEntries(FeedEntryFilterData filterData) {
+    public List<FeedEntryDto> listEntries(final FeedEntryFilterData filterData) {
         switch (filterData.getGroup()) {
         case SUBSCRIPTION_GROUP:
             return listSubscriptionGroupEntries(filterData.getUsername(), filterData.getSubscriptionGroupId(), filterData);
@@ -96,25 +96,26 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
         }
     }
 
-    private List<FeedEntryDto> listAllEntries(String username, FeedEntryFilter filter) {
+    private List<FeedEntryDto> listAllEntries(final String username, final FeedEntryFilter filter) {
         User user = this.getUser(username);
         return convert(feedEntryDao.list(user, filter));
     }
 
-    private List<FeedEntryDto> listSubscriptionGroupEntries(String username, Long subscriptionGroupId, FeedEntryFilter filter) {
+    private List<FeedEntryDto> listSubscriptionGroupEntries(final String username, final Long subscriptionGroupId, final FeedEntryFilter filter) {
         User user = this.getUser(username);
         SubscriptionGroup subscriptionGroup = getGroup(user, subscriptionGroupId);
         return convert(feedEntryDao.list(subscriptionGroup, filter));
     }
 
-    private List<FeedEntryDto> listSubscriptionEntries(String username, Long subscriptionGroupId, Long subscriptionId, FeedEntryFilter filter) {
+    private List<FeedEntryDto> listSubscriptionEntries(final String username, final Long subscriptionGroupId, final Long subscriptionId,
+            final FeedEntryFilter filter) {
         User user = this.getUser(username);
         SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
         Subscription subscription = this.getSubscription(group, subscriptionId);
         return convert(feedEntryDao.list(subscription, filter));
     }
 
-    private List<FeedEntryDto> convert(List<FeedEntry> feedEntries) {
+    private List<FeedEntryDto> convert(final List<FeedEntry> feedEntries) {
         List<FeedEntryDto> dtos = new ArrayList<FeedEntryDto>();
         for (FeedEntry feedEntry : feedEntries) {
             dtos.add(conversionService.convert(feedEntry, FeedEntryDto.class));

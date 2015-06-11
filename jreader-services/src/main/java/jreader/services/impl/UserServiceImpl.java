@@ -10,12 +10,12 @@ public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
 
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(final UserDao userDao) {
         this.userDao = userDao;
     }
 
     @Override
-    public void register(String username) {
+    public void register(final String username) {
         if (userDao.find(username) != null) {
             throw new ServiceException("User already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
         }

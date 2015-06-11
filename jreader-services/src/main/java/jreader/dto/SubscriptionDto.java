@@ -14,7 +14,7 @@ public class SubscriptionDto {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class SubscriptionDto {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -30,7 +30,7 @@ public class SubscriptionDto {
         return feed;
     }
 
-    public void setFeed(FeedDto feed) {
+    public void setFeed(final FeedDto feed) {
         this.feed = feed;
     }
 
@@ -38,7 +38,7 @@ public class SubscriptionDto {
         return unreadCount;
     }
 
-    public void setUnreadCount(int unreadCount) {
+    public void setUnreadCount(final int unreadCount) {
         this.unreadCount = unreadCount;
     }
 
@@ -46,7 +46,7 @@ public class SubscriptionDto {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Long updatedDate) {
+    public void setUpdatedDate(final Long updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -54,7 +54,7 @@ public class SubscriptionDto {
         return refreshDate;
     }
 
-    public void setRefreshDate(Long refreshDate) {
+    public void setRefreshDate(final Long refreshDate) {
         this.refreshDate = refreshDate;
     }
 
@@ -62,7 +62,7 @@ public class SubscriptionDto {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(final int order) {
         this.order = order;
     }
 

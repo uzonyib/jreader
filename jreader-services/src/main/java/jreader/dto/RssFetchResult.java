@@ -14,7 +14,7 @@ public class RssFetchResult {
         return feed;
     }
 
-    public void setFeed(Feed feed) {
+    public void setFeed(final Feed feed) {
         this.feed = feed;
     }
 
@@ -22,7 +22,7 @@ public class RssFetchResult {
         return feedEntries;
     }
 
-    public void setFeedEntries(List<FeedEntry> feedEntries) {
+    public void setFeedEntries(final List<FeedEntry> feedEntries) {
         this.feedEntries = feedEntries;
     }
 
