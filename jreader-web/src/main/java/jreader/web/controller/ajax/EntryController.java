@@ -33,33 +33,33 @@ public class EntryController {
     }
 
     @RequestMapping(value = "/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(final Principal principal, final @PathVariable String selection, final @RequestParam int offset,
-            final @RequestParam int count, final @RequestParam boolean ascending) {
+    public List<FeedEntryDto> getEntries(final Principal principal, @PathVariable final String selection, @RequestParam final int offset,
+            @RequestParam final int count, @RequestParam final boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending, offset, count));
     }
 
     @RequestMapping(value = "/groups/{groupId}/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(final Principal principal, final @PathVariable Long groupId, final @PathVariable String selection,
-            final @RequestParam int offset, final @RequestParam int count, final @RequestParam boolean ascending) {
+    public List<FeedEntryDto> getEntries(final Principal principal, @PathVariable final Long groupId, @PathVariable final String selection,
+            @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, parseSelection(selection), ascending, offset, count));
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(final Principal principal, final @PathVariable Long groupId, final @PathVariable Long subscriptionId,
-            final @PathVariable String selection, final @RequestParam int offset, final @RequestParam int count, final @RequestParam boolean ascending) {
+    public List<FeedEntryDto> getEntries(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
+            @PathVariable final String selection, @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, subscriptionId, parseSelection(selection), ascending, offset,
                 count));
     }
 
     @RequestMapping(value = "/entries", method = RequestMethod.POST)
-    public List<SubscriptionGroupDto> readAll(final Principal principal, final @RequestBody Map<Long, Map<Long, List<Long>>> ids) {
+    public List<SubscriptionGroupDto> readAll(final Principal principal, @RequestBody final Map<Long, Map<Long, List<Long>>> ids) {
         feedEntryService.markRead(principal.getName(), ids);
         return subscriptionService.list(principal.getName());
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{id}/starred", method = RequestMethod.PUT)
-    public StatusDto setStarred(final Principal principal, final @PathVariable Long groupId, final @PathVariable Long subscriptionId,
-            final @PathVariable Long id, final @RequestParam boolean value) {
+    public StatusDto setStarred(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
+            @PathVariable final Long id, @RequestParam final boolean value) {
         if (value) {
             feedEntryService.star(principal.getName(), groupId, subscriptionId, id);
         } else {
@@ -71,7 +71,7 @@ public class EntryController {
     private Selection parseSelection(final String selection) {
         try {
             return Selection.valueOf(Selection.class, selection.toUpperCase(Locale.ENGLISH));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return Selection.ALL;
         }
     }

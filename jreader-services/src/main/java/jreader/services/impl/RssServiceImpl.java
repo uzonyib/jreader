@@ -34,7 +34,7 @@ public class RssServiceImpl implements RssService {
                 result.getFeed().setUrl(url);
             }
             return result;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.log(Level.WARNING, "Error while fetching feed: " + url, e);
             return null;
         }

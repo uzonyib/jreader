@@ -25,7 +25,7 @@ public class ConversionFactory implements FactoryBean<ConversionService>, Initia
         ConversionServiceFactory.registerConverters(converters, conversionService);
         for (Object converter : converters) {
             if (converter instanceof ConversionServiceAware) {
-                ConversionServiceAware c = (ConversionServiceAware) converter;
+                final ConversionServiceAware c = (ConversionServiceAware) converter;
                 c.setConversionService(conversionService);
             }
         }

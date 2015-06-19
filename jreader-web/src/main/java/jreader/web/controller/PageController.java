@@ -39,7 +39,7 @@ public class PageController {
         try {
             userService.register(principal.getName());
             LOG.info("User registered: " + principal.getName());
-        } catch (ServiceException e) {
+        } catch (final ServiceException e) {
             LOG.info("User found: " + principal.getName());
         }
         final ModelAndView modelAndView = new ModelAndView("reader");

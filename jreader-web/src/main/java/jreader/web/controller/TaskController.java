@@ -54,7 +54,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/refresh/feed", method = RequestMethod.POST)
-    public StatusDto refreshFeed(final HttpServletRequest request, final Principal principal, final @RequestParam String url) {
+    public StatusDto refreshFeed(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
         final StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             cronService.refresh(url);
@@ -84,7 +84,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/cleanup/feed", method = RequestMethod.POST)
-    public StatusDto cleanup(final HttpServletRequest request, final Principal principal, final @RequestParam String url) {
+    public StatusDto cleanup(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
         final StatusDto result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             cronService.cleanup(url, minAgeToDelete, minCountToKeep);

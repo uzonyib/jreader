@@ -28,19 +28,19 @@ public class GroupController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public List<SubscriptionGroupDto> create(final Principal principal, final @RequestParam String title) {
+    public List<SubscriptionGroupDto> create(final Principal principal, @RequestParam final String title) {
         subscriptionService.createGroup(principal.getName(), title);
         return subscriptionService.list(principal.getName());
     }
 
     @RequestMapping(value = "/{groupId}", method = RequestMethod.DELETE)
-    public List<SubscriptionGroupDto> delete(final Principal principal, final @PathVariable Long groupId) {
+    public List<SubscriptionGroupDto> delete(final Principal principal, @PathVariable final Long groupId) {
         subscriptionService.deleteGroup(principal.getName(), groupId);
         return subscriptionService.list(principal.getName());
     }
 
     @RequestMapping(value = "/{groupId}/title", method = RequestMethod.PUT)
-    public List<SubscriptionGroupDto> entitle(final Principal principal, final @PathVariable Long groupId, final @RequestParam String value) {
+    public List<SubscriptionGroupDto> entitle(final Principal principal, @PathVariable final Long groupId, @RequestParam final String value) {
         if (value != null && !"".equals(value)) {
             subscriptionService.entitle(principal.getName(), groupId, value);
         }
@@ -49,7 +49,7 @@ public class GroupController {
     }
 
     @RequestMapping(value = "/{groupId}/order", method = RequestMethod.PUT)
-    public List<SubscriptionGroupDto> move(final Principal principal, final @PathVariable Long groupId, final @RequestParam boolean up) {
+    public List<SubscriptionGroupDto> move(final Principal principal, @PathVariable final Long groupId, @RequestParam final boolean up) {
         if (up) {
             subscriptionService.moveUp(principal.getName(), groupId);
         } else {

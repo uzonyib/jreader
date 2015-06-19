@@ -25,26 +25,26 @@ public class ArchivedEntryController {
     }
 
     @RequestMapping(value = "/{archiveId}/entries", method = RequestMethod.POST)
-    public StatusDto archive(final Principal principal, final @PathVariable Long archiveId, final @RequestParam Long groupId,
-            final @RequestParam Long subscriptionId, final @RequestParam Long entryId) {
+    public StatusDto archive(final Principal principal, @PathVariable final Long archiveId, @RequestParam final Long groupId,
+            @RequestParam final Long subscriptionId, @RequestParam final Long entryId) {
         archiveService.archive(principal.getName(), groupId, subscriptionId, entryId, archiveId);
         return new StatusDto(0);
     }
 
     @RequestMapping(value = "/entries", method = RequestMethod.GET)
-    public List<ArchivedEntryDto> list(final Principal principal, final @RequestParam int offset, final @RequestParam int count,
-            final @RequestParam boolean ascending) {
+    public List<ArchivedEntryDto> list(final Principal principal, @RequestParam final int offset, @RequestParam final int count,
+            @RequestParam final boolean ascending) {
         return archiveService.listEntries(new ArchivedEntryFilterData(principal.getName(), ascending, offset, count));
     }
 
     @RequestMapping(value = "/{archiveId}/entries", method = RequestMethod.GET)
-    public List<ArchivedEntryDto> list(final Principal principal, final @PathVariable Long archiveId, final @RequestParam int offset,
-            final @RequestParam int count, final @RequestParam boolean ascending) {
+    public List<ArchivedEntryDto> list(final Principal principal, @PathVariable final Long archiveId, @RequestParam final int offset,
+            @RequestParam final int count, @RequestParam final boolean ascending) {
         return archiveService.listEntries(new ArchivedEntryFilterData(principal.getName(), archiveId, ascending, offset, count));
     }
 
     @RequestMapping(value = "/{archiveId}/entries/{entryId}", method = RequestMethod.DELETE)
-    public StatusDto delete(final Principal principal, final @PathVariable Long archiveId, final @PathVariable Long entryId) {
+    public StatusDto delete(final Principal principal, @PathVariable final Long archiveId, @PathVariable final Long entryId) {
         archiveService.deleteEntry(principal.getName(), archiveId, entryId);
         return new StatusDto(0);
     }

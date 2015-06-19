@@ -97,13 +97,13 @@ public class FeedEntryServiceImpl extends AbstractService implements FeedEntrySe
     }
 
     private List<FeedEntryDto> listAllEntries(final String username, final FeedEntryFilter filter) {
-        User user = this.getUser(username);
+        final User user = this.getUser(username);
         return convert(feedEntryDao.list(user, filter));
     }
 
     private List<FeedEntryDto> listSubscriptionGroupEntries(final String username, final Long subscriptionGroupId, final FeedEntryFilter filter) {
-        User user = this.getUser(username);
-        SubscriptionGroup subscriptionGroup = getGroup(user, subscriptionGroupId);
+        final User user = this.getUser(username);
+        final SubscriptionGroup subscriptionGroup = getGroup(user, subscriptionGroupId);
         return convert(feedEntryDao.list(subscriptionGroup, filter));
     }
 
