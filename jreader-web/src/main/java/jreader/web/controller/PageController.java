@@ -2,11 +2,9 @@ package jreader.web.controller;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
-import jreader.services.ServiceException;
 import jreader.services.UserService;
 
 import org.springframework.stereotype.Controller;
@@ -16,8 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class PageController {
-
-    private static final Logger LOG = Logger.getLogger(PageController.class.getName());
 
     private final UserService userService;
     private final com.google.appengine.api.users.UserService googleUserService;
@@ -35,13 +31,9 @@ public class PageController {
     }
 
     @RequestMapping(value = "/reader", method = RequestMethod.GET)
-    public ModelAndView getHomePage(final HttpServletResponse response, final Principal principal) throws IOException {
-        try {
-            userService.register(principal.getName());
-            LOG.info("User registered: " + principal.getName());
-        } catch (final ServiceException e) {
-            LOG.info("User found: " + principal.getName());
-        }
+    public ModelAndView getHomePage(final Principal principal) throws IOException {
+        userService.ensureIsRegistered(principal.getName());
+        
         final ModelAndView modelAndView = new ModelAndView("reader");
         modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
         modelAndView.addObject("appVersion", appVersion);

@@ -23,5 +23,12 @@ public class UserServiceImpl implements UserService {
         user.setUsername(username);
         userDao.save(user);
     }
+    
+    @Override
+    public void ensureIsRegistered(final String username) {
+        if (userDao.find(username) == null) {
+            this.register(username);
+        }
+    }
 
 }

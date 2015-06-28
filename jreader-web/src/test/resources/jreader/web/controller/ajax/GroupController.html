@@ -1,0 +1,15 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<body>
+	<p>
+		user1 is a new user without any groups.
+	</p>
+	<p>
+		The group size of <span concordion:set="#username">user1</span> is <span concordion:assertEquals="groupCountOf(#username)">0</span>.
+	</p>
+	<p>
+		When <span concordion:set="#username">user1</span> creates a new group with title group1,
+		then the group size is 1
+		and his group list contains group1.
+	</p>
+</body>
+</html>

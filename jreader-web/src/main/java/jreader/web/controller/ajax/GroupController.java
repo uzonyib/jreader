@@ -23,7 +23,7 @@ public class GroupController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<SubscriptionGroupDto> getSubscriptions(final Principal principal) {
+    public List<SubscriptionGroupDto> listAll(final Principal principal) {
         return subscriptionService.list(principal.getName());
     }
 

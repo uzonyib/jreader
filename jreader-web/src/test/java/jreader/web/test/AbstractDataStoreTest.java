@@ -1,21 +1,21 @@
-package jreader.dao.impl;
+package jreader.web.test;
 
 import jreader.test.util.TestDataStoreService;
 import jreader.test.util.impl.TestDataStoreServiceImpl;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.junit.After;
+import org.junit.Before;
 
-public abstract class AbstractDaoTest {
+public abstract class AbstractDataStoreTest {
     
     private TestDataStoreService dataStoreService = new TestDataStoreServiceImpl();
     
-    @BeforeMethod
+    @Before
     public void setUpHelper() {
         dataStoreService.open();
     }
 
-    @AfterMethod
+    @After
     public void tearDownHelper() {
         dataStoreService.close();
     }
