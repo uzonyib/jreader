@@ -24,7 +24,9 @@ public class TestDataStoreServiceImpl implements TestDataStoreService {
 
     @Override
     public void close() {
-        session.close();
+        if (session != null) {
+            session.close();
+        }
         helper.tearDown();
     }
 
