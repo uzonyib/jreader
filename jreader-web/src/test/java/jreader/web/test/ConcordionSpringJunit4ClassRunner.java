@@ -41,4 +41,5 @@ public class ConcordionSpringJunit4ClassRunner extends SpringJUnit4ClassRunner {
     protected Description describeChild(FrameworkMethod method) {
         return fixtureDescription;
     }
+
 }
