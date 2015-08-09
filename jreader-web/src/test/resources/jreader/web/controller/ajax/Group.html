@@ -1,0 +1,187 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+	<head>
+		<title>Group related tests</title>
+	</head>
+	<body>
+	
+		<h1>Group related tests</h1>
+		
+		<p>
+			When <span concordion:execute="initUser(#TEXT)">user1</span> is a new user
+			then the group count is <span concordion:assertEquals="getGroupCount()">0</span>.
+		</p>
+		
+		<p>
+			Given <span concordion:execute="initUser(#TEXT)">user2</span> is a new user<br/>
+			when he creates a new group with title <span concordion:execute="createGroup(#TEXT)">group1</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">1</span>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+	       	<tr><th concordion:echo="#group.id">ID</th><th concordion:assertEquals="#group.title">Title</th></tr>
+	       	<tr><td></td><td>group1</td></tr>
+	   	</table>
+	   	
+	   	<p>
+			Given <span concordion:execute="initUser(#TEXT)">user3</span> has the following groups:
+		</p>
+		<table concordion:execute="#groupId = createGroup(#title)">
+	       	<tr><th concordion:set="#title">Title</th><th concordion:echo="#groupId">ID</th></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	       	<tr><td>group2</td><td></td></tr>
+	       	<tr><td>group3</td><td></td></tr>
+	   	</table>
+		<p>
+			when he creates a new group with title <span concordion:execute="createGroup(#TEXT)">group4</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">4</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+	       	<tr><th concordion:assertEquals="#group.title">Title</th><th concordion:echo="#group.id">ID</th></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	       	<tr><td>group2</td><td></td></tr>
+	       	<tr><td>group3</td><td></td></tr>
+	       	<tr><td>group4</td><td></td></tr>
+	   	</table>
+	   	
+	   	<p>
+			Given <span concordion:execute="initUser(#TEXT)">user4</span> has the following groups:
+		</p>
+		<table concordion:execute="#groupId = createGroup(#TEXT)">
+	       	<tr><th>Title</th><th concordion:echo="#groupId">ID</th></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	   	</table>
+		<p>
+			when he deletes group #<span concordion:execute="deleteGroup(#groupId)"><span concordion:echo="#groupId"></span></span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">0</span>.
+		</p>
+	   	
+	   	<p>
+			Given <span concordion:execute="initUser(#TEXT)">user5</span> has the following groups:
+		</p>
+		<table>
+	       	<tr><th>Title</th><th>ID</th></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group1</td><td concordion:echo="#id"></td></tr>
+	       	<tr><td concordion:execute="#idToDelete = createGroup(#TEXT)">group2</td><td concordion:echo="#idToDelete"></td></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group3</td><td concordion:echo="#id"></td></tr>
+	   	</table>
+		<p>
+			when he deletes group #<span concordion:execute="deleteGroup(#idToDelete)"><span concordion:echo="#idToDelete"></span></span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">2</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+	       	<tr><th concordion:assertEquals="#group.title">Title</th><th concordion:echo="#group.id">ID</th></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	       	<tr><td>group3</td><td></td></tr>
+	   	</table>
+	   	
+	   	<p>
+			Given <span concordion:execute="initUser(#TEXT)">user6</span> has the following groups:
+		</p>
+		<table>
+	       	<tr><th>Title</th><th>ID</th></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group1</td><td concordion:echo="#id"></td></tr>
+	       	<tr><td concordion:execute="#idToUpdate = createGroup(#TEXT)">group2</td><td concordion:echo="#idToUpdate"></td></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group3</td><td concordion:echo="#id"></td></tr>
+	   	</table>
+		<p>
+			when he changes the title of group #<span concordion:echo="#idToUpdate"></span> to <span concordion:execute="entitleGroup(#idToUpdate, #TEXT)">test</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">3</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+	       	<tr><th concordion:assertEquals="#group.title">Title</th><th concordion:echo="#group.id">ID</th></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	       	<tr><td>test</td><td></td></tr>
+	       	<tr><td>group3</td><td></td></tr>
+	   	</table>
+	   	
+	   	<p>
+			Given <span concordion:execute="initUser(#TEXT)">user7</span> has the following groups:
+		</p>
+		<table>
+	       	<tr><th>Title</th><th>ID</th></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group1</td><td concordion:echo="#id"></td></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group2</td><td concordion:echo="#id"></td></tr>
+	       	<tr><td concordion:execute="#idToUpdate = createGroup(#TEXT)">group3</td><td concordion:echo="#idToUpdate"></td></tr>
+	   	</table>
+		<p>
+			when he moves group #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveGroup(#idToUpdate, #TEXT)">up</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">3</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+	       	<tr><th concordion:assertEquals="#group.title">Title</th><th concordion:echo="#group.id">ID</th></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	       	<tr><td>group3</td><td></td></tr>
+	       	<tr><td>group2</td><td></td></tr>
+	   	</table>
+	   	
+	   	<p>
+			Given <span concordion:execute="initUser(#TEXT)">user8</span> has the following groups:
+		</p>
+		<table>
+	       	<tr><th>Title</th><th>ID</th></tr>
+	       	<tr><td concordion:execute="#idToUpdate = createGroup(#TEXT)">group1</td><td concordion:echo="#idToUpdate"></td></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group2</td><td concordion:echo="#id"></td></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group3</td><td concordion:echo="#id"></td></tr>
+	   	</table>
+		<p>
+			when he moves group #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveGroup(#idToUpdate, #TEXT)">down</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">3</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+	       	<tr><th concordion:assertEquals="#group.title">Title</th><th concordion:echo="#group.id">ID</th></tr>
+	       	<tr><td>group2</td><td></td></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	       	<tr><td>group3</td><td></td></tr>
+	   	</table>
+	   	
+	   	<p>
+			Given <span concordion:execute="initUser(#TEXT)">user9</span> has the following groups:
+		</p>
+		<table>
+	       	<tr><th>Title</th><th>ID</th></tr>
+	       	<tr><td concordion:execute="#idToUpdate = createGroup(#TEXT)">group1</td><td concordion:echo="#idToUpdate"></td></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group2</td><td concordion:echo="#id"></td></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group3</td><td concordion:echo="#id"></td></tr>
+	   	</table>
+		<p>
+			when he moves group #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveGroup(#idToUpdate, #TEXT)">up</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">3</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+	       	<tr><th concordion:assertEquals="#group.title">Title</th><th concordion:echo="#group.id">ID</th></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	       	<tr><td>group2</td><td></td></tr>
+	       	<tr><td>group3</td><td></td></tr>
+	   	</table>
+	   	
+	   	<p>
+			Given <span concordion:execute="initUser(#TEXT)">user10</span> has the following groups:
+		</p>
+		<table>
+	       	<tr><th>Title</th><th>ID</th></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group1</td><td concordion:echo="#id"></td></tr>
+	       	<tr><td concordion:execute="#id = createGroup(#TEXT)">group2</td><td concordion:echo="#id"></td></tr>
+	       	<tr><td concordion:execute="#idToUpdate = createGroup(#TEXT)">group3</td><td concordion:echo="#idToUpdate"></td></tr>
+	   	</table>
+		<p>
+			when he moves group #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveGroup(#idToUpdate, #TEXT)">down</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">3</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+	       	<tr><th concordion:assertEquals="#group.title">Title</th><th concordion:echo="#group.id">ID</th></tr>
+	       	<tr><td>group1</td><td></td></tr>
+	       	<tr><td>group2</td><td></td></tr>
+	       	<tr><td>group3</td><td></td></tr>
+	   	</table>
+	   	
+	   	<p>What if a group with the same name already exists?</p>
+	   	
+	</body>
+</html>
