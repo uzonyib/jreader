@@ -23,7 +23,7 @@ public class ArchiveController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<ArchiveDto> getArchives(final Principal principal) {
+    public List<ArchiveDto> listAll(final Principal principal) {
         return archiveService.list(principal.getName());
     }
 

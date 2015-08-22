@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
 
+import jreader.dto.ArchiveDto;
 import jreader.dto.FeedEntryDto;
 import jreader.dto.SubscriptionDto;
 import jreader.dto.SubscriptionGroupDto;
@@ -38,6 +39,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private SubscriptionController subscriptionController;
     @Autowired
     private EntryController entryController;
+    @Autowired
+    private ArchiveController archiveController;
     
     @Autowired
     private UserService userService;
@@ -196,6 +199,31 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public void markStarred(Long groupId, Long subscriptionId, Long entryId, String starred) {
         entryController.setStarred(principal, groupId, subscriptionId, entryId, "starred".equals(starred));
+    }
+    
+    public int getArchiveCount() {
+        return getArchives().size();
+    }
+    
+    public List<ArchiveDto> getArchives() {
+        return archiveController.listAll(principal);
+    }
+    
+    public Long createArchive(String title) {
+        List<ArchiveDto> archives = archiveController.create(principal, title);
+        return Long.valueOf(archives.get(archives.size() - 1).getId());
+    }
+    
+    public void deleteArchive(Long id) {
+        archiveController.delete(principal, id);
+    }
+    
+    public void entitleArchive(Long id, String newTitle) {
+        archiveController.entitle(principal, id, newTitle);
+    }
+    
+    public void moveArchive(Long id, String direction) {
+        archiveController.move(principal, id, "up".equals(direction));
     }
 
 }
