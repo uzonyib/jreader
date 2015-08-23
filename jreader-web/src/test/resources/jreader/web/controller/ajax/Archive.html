@@ -7,178 +7,216 @@
 		<h1>Archive related tests</h1>
 		
 		<p>
-			When <span concordion:execute="initUser(#TEXT)">user1</span> is a new user
+			When <span concordion:execute="initUser(#TEXT)">archive_user</span> is a new user<br/>
 			then the archive count is <span concordion:assertEquals="getArchiveCount()">0</span>.
 		</p>
 		
 		<p>
-			Given <span concordion:execute="initUser(#TEXT)">user2</span> is a new user<br/>
-			when he creates a new archive with title <span concordion:execute="createArchive(#TEXT)">archive1</span><br/>
-			then the archive count is <span concordion:assertEquals="getArchiveCount()">1</span>
+			When the user creates a new archive with title <span concordion:execute="#archiveId1 = createArchive(#TEXT)">archive1</span><br/>
+			then the archive count is <span concordion:assertEquals="getArchiveCount()">1</span><br/>
 			and the archive list contains:
 		</p>
 		<table concordion:verifyRows="#archive : getArchives()">
-	       	<tr><th concordion:echo="#archive.id">ID</th><th concordion:assertEquals="#archive.title">Title</th></tr>
-	       	<tr><td></td><td>archive1</td></tr>
-	   	</table>
+			<tr>
+				<th concordion:echo="#archive.id">ID</th>
+				<th concordion:assertEquals="#archive.title">Title</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>archive1</td>
+			</tr>
+		</table>
 	   	
 	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user3</span> has the following archives:
+			When the user creates the following archives:
 		</p>
-		<table concordion:execute="#archiveId = createArchive(#title)">
-	       	<tr><th concordion:set="#title">Title</th><th concordion:echo="#archiveId">ID</th></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	       	<tr><td>archive2</td><td></td></tr>
-	       	<tr><td>archive3</td><td></td></tr>
-	   	</table>
+		<table>
+			<tr>
+				<th>Title</th>
+				<th>ID</th>
+			</tr>
+			<tr>
+				<td concordion:execute="#archiveId2 = createArchive(#TEXT)">archive2</td>
+				<td concordion:echo="#archiveId2"></td>
+			</tr>
+			<tr>
+				<td concordion:execute="#archiveId3 = createArchive(#TEXT)">archive3</td>
+				<td concordion:echo="#archiveId3"></td>
+			</tr>
+			<tr>
+				<td concordion:execute="#archiveId4 = createArchive(#TEXT)">archive4</td>
+				<td concordion:echo="#archiveId4"></td>
+			</tr>
+		</table>
 		<p>
-			when he creates a new archive with title <span concordion:execute="createArchive(#TEXT)">archive4</span><br/>
 			then the archive count is <span concordion:assertEquals="getArchiveCount()">4</span><br/>
 			and the archive list contains:
 		</p>
 		<table concordion:verifyRows="#archive : getArchives()">
-	       	<tr><th concordion:assertEquals="#archive.title">Title</th><th concordion:echo="#archive.id">ID</th></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	       	<tr><td>archive2</td><td></td></tr>
-	       	<tr><td>archive3</td><td></td></tr>
-	       	<tr><td>archive4</td><td></td></tr>
-	   	</table>
+			<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive2</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive3</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+		</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user4</span> has the following archives:
-		</p>
-		<table concordion:execute="#archiveId = createArchive(#TEXT)">
-	       	<tr><th>Title</th><th concordion:echo="#archiveId">ID</th></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	   	</table>
 		<p>
-			when he deletes archive #<span concordion:execute="deleteArchive(#archiveId)"><span concordion:echo="#archiveId"></span></span><br/>
-			then the archive count is <span concordion:assertEquals="getArchiveCount()">0</span>.
-		</p>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user5</span> has the following archives:
-		</p>
-		<table>
-	       	<tr><th>Title</th><th>ID</th></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive1</td><td concordion:echo="#id"></td></tr>
-	       	<tr><td concordion:execute="#idToDelete = createArchive(#TEXT)">archive2</td><td concordion:echo="#idToDelete"></td></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive3</td><td concordion:echo="#id"></td></tr>
-	   	</table>
-		<p>
-			when he deletes archive #<span concordion:execute="deleteArchive(#idToDelete)"><span concordion:echo="#idToDelete"></span></span><br/>
-			then the archive count is <span concordion:assertEquals="getArchiveCount()">2</span><br/>
-			and the archive list contains:
-		</p>
-		<table concordion:verifyRows="#archive : getArchives()">
-	       	<tr><th concordion:assertEquals="#archive.title">Title</th><th concordion:echo="#archive.id">ID</th></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	       	<tr><td>archive3</td><td></td></tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user6</span> has the following archives:
-		</p>
-		<table>
-	       	<tr><th>Title</th><th>ID</th></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive1</td><td concordion:echo="#id"></td></tr>
-	       	<tr><td concordion:execute="#idToUpdate = createArchive(#TEXT)">archive2</td><td concordion:echo="#idToUpdate"></td></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive3</td><td concordion:echo="#id"></td></tr>
-	   	</table>
-		<p>
-			when he changes the title of archive #<span concordion:echo="#idToUpdate"></span> to <span concordion:execute="entitleArchive(#idToUpdate, #TEXT)">test</span><br/>
+			When the user deletes archive #<span concordion:execute="deleteArchive(#archiveId3)"><span concordion:echo="#archiveId3"></span></span><br/>
 			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
 			and the archive list contains:
 		</p>
 		<table concordion:verifyRows="#archive : getArchives()">
-	       	<tr><th concordion:assertEquals="#archive.title">Title</th><th concordion:echo="#archive.id">ID</th></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	       	<tr><td>test</td><td></td></tr>
-	       	<tr><td>archive3</td><td></td></tr>
-	   	</table>
+			<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive2</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+		</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user7</span> has the following archives:
-		</p>
-		<table>
-	       	<tr><th>Title</th><th>ID</th></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive1</td><td concordion:echo="#id"></td></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive2</td><td concordion:echo="#id"></td></tr>
-	       	<tr><td concordion:execute="#idToUpdate = createArchive(#TEXT)">archive3</td><td concordion:echo="#idToUpdate"></td></tr>
-	   	</table>
 		<p>
-			when he moves archive #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveArchive(#idToUpdate, #TEXT)">up</span><br/>
+			When the user changes the title of archive #<span concordion:echo="#archiveId2"></span> to <span concordion:execute="entitleArchive(#archiveId2, #TEXT)">test</span><br/>
 			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
 			and the archive list contains:
 		</p>
 		<table concordion:verifyRows="#archive : getArchives()">
-	       	<tr><th concordion:assertEquals="#archive.title">Title</th><th concordion:echo="#archive.id">ID</th></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	       	<tr><td>archive3</td><td></td></tr>
-	       	<tr><td>archive2</td><td></td></tr>
-	   	</table>
+			<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+		</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user8</span> has the following archives:
-		</p>
-		<table>
-	       	<tr><th>Title</th><th>ID</th></tr>
-	       	<tr><td concordion:execute="#idToUpdate = createArchive(#TEXT)">archive1</td><td concordion:echo="#idToUpdate"></td></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive2</td><td concordion:echo="#id"></td></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive3</td><td concordion:echo="#id"></td></tr>
-	   	</table>
 		<p>
-			when he moves archive #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveArchive(#idToUpdate, #TEXT)">down</span><br/>
+			When the user moves archive #<span concordion:echo="#archiveId2"></span> <span concordion:execute="moveArchive(#archiveId2, #TEXT)">up</span><br/>
 			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
 			and the archive list contains:
 		</p>
 		<table concordion:verifyRows="#archive : getArchives()">
-	       	<tr><th concordion:assertEquals="#archive.title">Title</th><th concordion:echo="#archive.id">ID</th></tr>
-	       	<tr><td>archive2</td><td></td></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	       	<tr><td>archive3</td><td></td></tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user9</span> has the following archives:
-		</p>
-		<table>
-	       	<tr><th>Title</th><th>ID</th></tr>
-	       	<tr><td concordion:execute="#idToUpdate = createArchive(#TEXT)">archive1</td><td concordion:echo="#idToUpdate"></td></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive2</td><td concordion:echo="#id"></td></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive3</td><td concordion:echo="#id"></td></tr>
-	   	</table>
+			<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+		</table>
+
 		<p>
-			when he moves archive #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveArchive(#idToUpdate, #TEXT)">up</span><br/>
+			When the user moves archive #<span concordion:echo="#archiveId1"></span> <span concordion:execute="moveArchive(#archiveId1, #TEXT)">down</span><br/>
 			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
 			and the archive list contains:
 		</p>
 		<table concordion:verifyRows="#archive : getArchives()">
-	       	<tr><th concordion:assertEquals="#archive.title">Title</th><th concordion:echo="#archive.id">ID</th></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	       	<tr><td>archive2</td><td></td></tr>
-	       	<tr><td>archive3</td><td></td></tr>
-	   	</table>
+			<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
+		</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user10</span> has the following archives:
-		</p>
-		<table>
-	       	<tr><th>Title</th><th>ID</th></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive1</td><td concordion:echo="#id"></td></tr>
-	       	<tr><td concordion:execute="#id = createArchive(#TEXT)">archive2</td><td concordion:echo="#id"></td></tr>
-	       	<tr><td concordion:execute="#idToUpdate = createArchive(#TEXT)">archive3</td><td concordion:echo="#idToUpdate"></td></tr>
-	   	</table>
 		<p>
-			when he moves archive #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveArchive(#idToUpdate, #TEXT)">down</span><br/>
+			When the user moves archive #<span concordion:echo="#archiveId2"></span> <span concordion:execute="moveArchive(#archiveId2, #TEXT)">up</span><br/>
 			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
 			and the archive list contains:
 		</p>
 		<table concordion:verifyRows="#archive : getArchives()">
-	       	<tr><th concordion:assertEquals="#archive.title">Title</th><th concordion:echo="#archive.id">ID</th></tr>
-	       	<tr><td>archive1</td><td></td></tr>
-	       	<tr><td>archive2</td><td></td></tr>
-	       	<tr><td>archive3</td><td></td></tr>
+			<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
+		</table>
+	   	
+		<p>
+			When the user moves archive #<span concordion:echo="#archiveId1"></span> <span concordion:execute="moveArchive(#archiveId1, #TEXT)">down</span><br/>
+			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
+			and the archive list contains:
+		</p>
+		<table concordion:verifyRows="#archive : getArchives()">
+	       	<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
 	   	</table>
 	   	
 	   	<p>What if a archive with the same name already exists?</p>

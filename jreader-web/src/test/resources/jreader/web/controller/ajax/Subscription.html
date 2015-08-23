@@ -7,7 +7,7 @@
 		<h1>Subscription related tests</h1>
 		
 		<p>
-			Test feeds:
+			Given the feeds are the followings:
 		</p>
 		<table concordion:execute="createFeed(#title, #url)">
 			<tr>
@@ -33,26 +33,14 @@
 		</table>
 		
 		<p>
-			Given <span concordion:execute="initUser(#TEXT)">user1</span> is a new user<br/>
-			when he creates a new group with title <span concordion:execute="#groupId = createGroup(#TEXT)">group1</span><br/>
-			then the subscription size of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">0</span>.
+			Given <span concordion:execute="initUser(#TEXT)">subscription_user</span> is a new user<br/>
+			when he creates a new group with title <span concordion:execute="#groupId1 = createGroup(#TEXT)">group1</span><br/>
+			then the subscription size of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">0</span>.
 		</p>
 		
 		<p>
-			Given <span concordion:execute="initUser(#TEXT)">user2</span> has the following groups:
-		</p>
-		<table concordion:execute="#groupId = createGroup(#title)">
-	       	<tr>
-	       		<th concordion:set="#title">Title</th>
-	       		<th concordion:echo="#groupId">ID</th>
-	       	</tr>
-	       		<tr><td>group1</td>
-	       		<td></td>
-	       	</tr>
-	   	</table>
-		<p>
-			when he subscribes to <span concordion:set="#feed">feed1</span> under group #<span concordion:execute="subscribe(#feed, #groupId)"><span concordion:echo="#groupId"></span></span><br/>
-			then the subscription count of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">1</span><br/>
+			When the user subscribes to <span concordion:set="#feed">feed1</span> under group #<span concordion:execute="#subscriptionId1 = subscribe(#feed, #groupId1)"><span concordion:echo="#groupId1"></span></span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">1</span><br/>
 			and the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
@@ -71,7 +59,7 @@
 	   	</table>
 	   	
 	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user3</span> has the following subscriptions:
+			Given the user subscribed the following feeds:
 		</p>
 		<table>
 	       	<tr>
@@ -81,21 +69,27 @@
 	       		<th>Subscription ID</th>
 	       	</tr>
 	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
+	       		<td>group1</td>
+	       		<td concordion:echo="#groupId1"></td>
+	       		<td concordion:execute="#subscriptionId2 = subscribe(#TEXT, #groupId1)">feed2</td>
+	       		<td concordion:echo="#subscriptionId2"></td>
 	       	</tr>
 	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
+	       		<td concordion:execute="#groupId2 = createGroup(#TEXT)">group2</td>
+	       		<td concordion:echo="#groupId2"></td>
+	       		<td concordion:execute="#subscriptionId3 = subscribe(#TEXT, #groupId2)">feed3</td>
+	       		<td concordion:echo="#subscriptionId3"></td>
+	       	</tr>
+	       	<tr>
+	       		<td concordion:execute="#groupId3 = createGroup(#TEXT)">group3</td>
+	       		<td concordion:echo="#groupId3"></td>
+	       		<td concordion:execute="#subscriptionId4 = subscribe(#TEXT, #groupId3)">feed4</td>
+	       		<td concordion:echo="#subscriptionId4"></td>
 	       	</tr>
 	   	</table>
 		<p>
-			when he subscribes to <span concordion:set="#feed">feed3</span> under group #<span concordion:execute="subscribe(#feed, #groupId)"><span concordion:echo="#groupId"></span></span><br/>
-			then the subscription count of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">3</span><br/>
+			when he deletes subscription #<span concordion:execute="deleteSubscription(#groupId3, #subscriptionId4)"><span concordion:echo="#subscriptionId4"></span></span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId3"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId3)">0</span><br/>
 			and the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
@@ -118,45 +112,16 @@
 	       		<td></td>
 	       	</tr>
 	       	<tr>
-	       		<td>group1</td>
+	       		<td>group2</td>
 	       		<td></td>
 	       		<td>feed3</td>
 	       		<td></td>
 	       	</tr>
 	   	</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user4</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#idToDelete = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#idToDelete"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	   	</table>
 		<p>
-			when he deletes subscription #<span concordion:execute="deleteSubscription(#groupId, #idToDelete)"><span concordion:echo="#idToDelete"></span></span><br/>
-			then the subscription count of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">2</span><br/>
+			When the user entitles subscription #<span concordion:echo="#subscriptionId2"></span> as <span concordion:execute="entitleSubscription(#groupId1, #subscriptionId2, #TEXT)">test</span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">2</span><br/>
 			and the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
@@ -175,31 +140,21 @@
 	       	<tr>
 	       		<td>group1</td>
 	       		<td></td>
+	       		<td>test</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group2</td>
+	       		<td></td>
 	       		<td>feed3</td>
 	       		<td></td>
 	       	</tr>
 	   	</table>
 	   	
 	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user5</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	   	</table>
-		<p>
-			when he entitles subscription #<span concordion:echo="#subscriptionId"></span> as <span concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">test</span><br/>
-			then the subscription count of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">1</span><br/>
+			Given the user subscribed to <span concordion:set="#feed">feed4</span> under group #<span concordion:execute="#subscriptionId4 = subscribe(#feed, #groupId1)"><span concordion:echo="#groupId1"></span></span><br/>
+			when he moves subscription #<span concordion:echo="#subscriptionId2"></span> <span concordion:execute="moveSubscription(#groupId1, #subscriptionId2, #TEXT)">up</span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">3</span><br/>
 			and the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
@@ -215,55 +170,6 @@
 	       		<td>test</td>
 	       		<td></td>
 	       	</tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user6</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#idToUpdate = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	   	</table>
-		<p>
-			when he moves subscription #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveSubscription(#groupId, #idToUpdate, #TEXT)">up</span><br/>
-			then the subscription count of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">3</span><br/>
-			and the subscription list contains:
-		</p>
-		<table concordion:verifyRows="#subscription : getSubscriptions()">
-			<tr>
-	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
-	       		<th concordion:echo="#subscription.groupId">Group ID</th>
-	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
-	       		<th concordion:echo="#subscription.id">Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed2</td>
-	       		<td></td>
-	       	</tr>
 	       	<tr>
 	       		<td>group1</td>
 	       		<td></td>
@@ -273,231 +179,133 @@
 	       	<tr>
 	       		<td>group1</td>
 	       		<td></td>
-	       		<td>feed3</td>
+	       		<td>feed4</td>
 	       		<td></td>
-	       	</tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user7</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#idToUpdate = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	   	</table>
-		<p>
-			when he moves subscription #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveSubscription(#groupId, #idToUpdate, #TEXT)">down</span><br/>
-			then the subscription count of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">3</span><br/>
-			and the subscription list contains:
-		</p>
-		<table concordion:verifyRows="#subscription : getSubscriptions()">
-			<tr>
-	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
-	       		<th concordion:echo="#subscription.groupId">Group ID</th>
-	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
-	       		<th concordion:echo="#subscription.id">Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed1</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed3</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed2</td>
-	       		<td></td>
-	       	</tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user8</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#idToUpdate = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	   	</table>
-		<p>
-			when he moves subscription #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveSubscription(#groupId, #idToUpdate, #TEXT)">up</span><br/>
-			then the subscription count of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">3</span><br/>
-			and the subscription list contains:
-		</p>
-		<table concordion:verifyRows="#subscription : getSubscriptions()">
-			<tr>
-	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
-	       		<th concordion:echo="#subscription.groupId">Group ID</th>
-	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
-	       		<th concordion:echo="#subscription.id">Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed1</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed2</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed3</td>
-	       		<td></td>
-	       	</tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user9</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#idToUpdate = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       	</tr>
-	   	</table>
-		<p>
-			when he moves subscription #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveSubscription(#groupId, #idToUpdate, #TEXT)">down</span><br/>
-			then the subscription count of group #<span concordion:echo="#groupId"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId)">3</span><br/>
-			and the subscription list contains:
-		</p>
-		<table concordion:verifyRows="#subscription : getSubscriptions()">
-			<tr>
-	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
-	       		<th concordion:echo="#subscription.groupId">Group ID</th>
-	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
-	       		<th concordion:echo="#subscription.id">Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed1</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed2</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed3</td>
-	       		<td></td>
-	       	</tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user10</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#idToUpdate = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #idToUpdate)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
 	       	</tr>
 	       	<tr>
 	       		<td>group2</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #idToUpdate)">feed4</td>
-	       		<td concordion:echo="#subscriptionId"></td>
+	       		<td></td>
+	       		<td>feed3</td>
+	       		<td></td>
 	       	</tr>
 	   	</table>
+	   	
 		<p>
-			when he moves group #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveGroup(#idToUpdate, #TEXT)">up</span><br/>
+			When the user moves subscription #<span concordion:echo="#subscriptionId1"></span> <span concordion:execute="moveSubscription(#groupId1, #subscriptionId1, #TEXT)">down</span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">3</span><br/>
+			and the subscription list contains:
+		</p>
+		<table concordion:verifyRows="#subscription : getSubscriptions()">
+			<tr>
+	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
+	       		<th concordion:echo="#subscription.groupId">Group ID</th>
+	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
+	       		<th concordion:echo="#subscription.id">Subscription ID</th>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>test</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed4</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed1</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group2</td>
+	       		<td></td>
+	       		<td>feed3</td>
+	       		<td></td>
+	       	</tr>
+	   	</table>
+	   	
+		<p>
+			When the user moves subscription #<span concordion:echo="#subscriptionId2"></span> <span concordion:execute="moveSubscription(#groupId1, #subscriptionId2, #TEXT)">up</span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">3</span><br/>
+			and the subscription list contains:
+		</p>
+		<table concordion:verifyRows="#subscription : getSubscriptions()">
+			<tr>
+	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
+	       		<th concordion:echo="#subscription.groupId">Group ID</th>
+	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
+	       		<th concordion:echo="#subscription.id">Subscription ID</th>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>test</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed4</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed1</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group2</td>
+	       		<td></td>
+	       		<td>feed3</td>
+	       		<td></td>
+	       	</tr>
+	   	</table>
+	   	
+		<p>
+			When the user moves subscription #<span concordion:echo="#subscriptionId1"></span> <span concordion:execute="moveSubscription(#groupId1, #subscriptionId1, #TEXT)">down</span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">3</span><br/>
+			and the subscription list contains:
+		</p>
+		<table concordion:verifyRows="#subscription : getSubscriptions()">
+			<tr>
+	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
+	       		<th concordion:echo="#subscription.groupId">Group ID</th>
+	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
+	       		<th concordion:echo="#subscription.id">Subscription ID</th>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>test</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed4</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed1</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group2</td>
+	       		<td></td>
+	       		<td>feed3</td>
+	       		<td></td>
+	       	</tr>
+	   	</table>
+	   	
+		<p>
+			When the user moves group #<span concordion:echo="#groupId2"></span> <span concordion:execute="moveGroup(#groupId2, #TEXT)">up</span><br/>
 			then the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
@@ -514,7 +322,13 @@
 	       		<td></td>
 	       	</tr>
 	       	<tr>
-	       		<td>group2</td>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>test</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
 	       		<td></td>
 	       		<td>feed4</td>
 	       		<td></td>
@@ -525,123 +339,10 @@
 	       		<td>feed1</td>
 	       		<td></td>
 	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed2</td>
-	       		<td></td>
-	       	</tr>
 	   	</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user11</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#idToUpdate = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #idToUpdate)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #idToUpdate)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group2</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed4</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	   	</table>
 		<p>
-			when he moves group #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveGroup(#idToUpdate, #TEXT)">down</span><br/>
-			then the subscription list contains:
-		</p>
-		<table concordion:verifyRows="#subscription : getSubscriptions()">
-			<tr>
-	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
-	       		<th concordion:echo="#subscription.groupId">Group ID</th>
-	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
-	       		<th concordion:echo="#subscription.id">Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td>group2</td>
-	       		<td></td>
-	       		<td>feed3</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group2</td>
-	       		<td></td>
-	       		<td>feed4</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed1</td>
-	       		<td></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td></td>
-	       		<td>feed2</td>
-	       		<td></td>
-	       	</tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user12</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupIdToUpdate = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#groupIdToUpdate"></td>
-	       		<td concordion:execute="#idToUpdate = subscribe(#TEXT, #groupIdToUpdate)">feed3</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group2</td>
-	       		<td concordion:echo="#groupIdToUpdate"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupIdToUpdate)">feed4</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	   	</table>
-		<p>
-			when he moves subscription #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveSubscription(#groupIdToUpdate, #idToUpdate, #TEXT)">up</span><br/>
+			When the user moves group #<span concordion:echo="#groupId2"></span> <span concordion:execute="moveGroup(#groupId2, #TEXT)">down</span><br/>
 			then the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
@@ -654,13 +355,19 @@
 	       	<tr>
 	       		<td>group1</td>
 	       		<td></td>
-	       		<td>feed1</td>
+	       		<td>test</td>
 	       		<td></td>
 	       	</tr>
 	       	<tr>
 	       		<td>group1</td>
 	       		<td></td>
-	       		<td>feed2</td>
+	       		<td>feed4</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed1</td>
 	       		<td></td>
 	       	</tr>
 	       	<tr>
@@ -669,51 +376,10 @@
 	       		<td>feed3</td>
 	       		<td></td>
 	       	</tr>
-	       	<tr>
-	       		<td>group2</td>
-	       		<td></td>
-	       		<td>feed4</td>
-	       		<td></td>
-	       	</tr>
 	   	</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user13</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupIdToUpdate = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupIdToUpdate"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupIdToUpdate)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupIdToUpdate"></td>
-	       		<td concordion:execute="#idToUpdate = subscribe(#TEXT, #groupIdToUpdate)">feed2</td>
-	       		<td concordion:echo="#idToUpdate"></td>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	       	<tr>
-	       		<td>group2</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed4</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       	</tr>
-	   	</table>
 		<p>
-			when he moves subscription #<span concordion:echo="#idToUpdate"></span> <span concordion:execute="moveSubscription(#groupIdToUpdate, #idToUpdate, #TEXT)">down</span><br/>
+			When he moves subscription #<span concordion:echo="#subscriptionId3"></span> <span concordion:execute="moveSubscription(#groupId2, #subscriptionId3, #TEXT)">up</span><br/>
 			then the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
@@ -726,13 +392,19 @@
 	       	<tr>
 	       		<td>group1</td>
 	       		<td></td>
-	       		<td>feed1</td>
+	       		<td>test</td>
 	       		<td></td>
 	       	</tr>
 	       	<tr>
 	       		<td>group1</td>
 	       		<td></td>
-	       		<td>feed2</td>
+	       		<td>feed4</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed1</td>
 	       		<td></td>
 	       	</tr>
 	       	<tr>
@@ -741,10 +413,41 @@
 	       		<td>feed3</td>
 	       		<td></td>
 	       	</tr>
+	   	</table>
+	   	
+		<p>
+			When the user moves subscription #<span concordion:echo="#subscriptionId1"></span> <span concordion:execute="moveSubscription(#groupId1, #subscriptionId3, #TEXT)">down</span><br/>
+			then the subscription list contains:
+		</p>
+		<table concordion:verifyRows="#subscription : getSubscriptions()">
+			<tr>
+	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
+	       		<th concordion:echo="#subscription.groupId">Group ID</th>
+	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
+	       		<th concordion:echo="#subscription.id">Subscription ID</th>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>test</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed4</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed1</td>
+	       		<td></td>
+	       	</tr>
 	       	<tr>
 	       		<td>group2</td>
 	       		<td></td>
-	       		<td>feed4</td>
+	       		<td>feed3</td>
 	       		<td></td>
 	       	</tr>
 	   	</table>

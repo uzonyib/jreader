@@ -7,7 +7,7 @@
 		<h1>Archived entry related tests</h1>
 		
 		<p>
-			Test feeds:
+			Given the feeds are the followings:
 		</p>
 		<table concordion:execute="createFeed(#title, #url)">
 			<tr>
@@ -29,7 +29,7 @@
 		</table>
 		
 		<p>
-			Test feed entries:
+			Given the feed entries are the followings:
 		</p>
 		<table concordion:execute="createEntry(#feedTitle, #title, #description, #author, #link, #publishedDate)">
 			<tr>
@@ -91,7 +91,7 @@
 		</table>
 		
 		<p>
-			Given <span concordion:execute="initUser(#TEXT)">user1</span> has the following subscriptions:
+			Given <span concordion:execute="initUser(#TEXT)">archived_entry_user</span> has the following subscriptions:
 		</p>
 		<table>
 	       	<tr>
@@ -161,7 +161,7 @@
 	   	
 	   	<p>
 			Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span><br/>
-			when user1 archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId1, #entryId, #archiveId1)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId1"></span> to archive #<span concordion:echo="#archiveId1"></span><br/>
+			when the user archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId1, #entryId, #archiveId1)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId1"></span> to archive #<span concordion:echo="#archiveId1"></span><br/>
 			and he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
@@ -186,7 +186,7 @@
 	   	
 	   	<p>
 			Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry21</span> is <span concordion:echo="#entryId"></span><br/>
-			when user1 archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId2, #entryId, #archiveId2)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId2"></span> to archive #<span concordion:echo="#archiveId2"></span><br/>
+			when the user archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId2, #entryId, #archiveId2)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId2"></span> to archive #<span concordion:echo="#archiveId2"></span><br/>
 			and he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
@@ -219,7 +219,7 @@
 	   	
 	   	<p>
 			Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry22</span> is <span concordion:echo="#entryId"></span><br/>
-			when user1 archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId2, #entryId, #archiveId2)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId2"></span> to archive #<span concordion:echo="#archiveId2"></span><br/>
+			when the user archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId2, #entryId, #archiveId2)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId2"></span> to archive #<span concordion:echo="#archiveId2"></span><br/>
 			and he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
 			then the list contains:
 		</p>
@@ -259,7 +259,7 @@
 	   	</table>
 	   	
 	   	<p>
-			When user1 lists archived entries of archive #<span concordion:echo="#archiveId2"></span> from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			When the user lists archived entries of archive #<span concordion:echo="#archiveId2"></span> from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
 			then the list contains:
 		</p>
 		<table concordion:verifyRows="#entry : getArchivedEntries(#archiveId2, #from, #to, #order)">
@@ -290,7 +290,7 @@
 	   	</table>
 	   	
 	   	<p>
-			When user1 lists archived entries from <span concordion:set="#from">1</span> to <span concordion:set="#to">2</span> in <span concordion:set="#order">ascending</span> order<br/>
+			When the user lists archived entries from <span concordion:set="#from">1</span> to <span concordion:set="#to">2</span> in <span concordion:set="#order">ascending</span> order<br/>
 			then the list contains:
 		</p>
 		<table concordion:verifyRows="#entry : getArchivedEntries(#from, #to, #order)">
@@ -314,7 +314,7 @@
 	   	
 	   	<p>
 			Given the ID of <span concordion:execute="#entryId = getArchivedEntryId(#TEXT)">entry21</span> is <span concordion:echo="#entryId"></span><br/>
-			when user1 deletes entry #<span concordion:execute="deleteArchivedEntry(#archiveId2, #entryId)"><span concordion:echo="#entryId"></span></span> from archive #<span concordion:echo="#archiveId2"></span><br/>
+			when the user deletes entry #<span concordion:execute="deleteArchivedEntry(#archiveId2, #entryId)"><span concordion:echo="#entryId"></span></span> from archive #<span concordion:echo="#archiveId2"></span><br/>
 			and he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
 			then the list contains:
 		</p>

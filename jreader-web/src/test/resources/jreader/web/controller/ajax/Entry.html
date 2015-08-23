@@ -7,7 +7,7 @@
 		<h1>Entry related tests</h1>
 		
 		<p>
-			Test feeds:
+			Given the feeds are the followings:
 		</p>
 		<table concordion:execute="createFeed(#title, #url)">
 			<tr>
@@ -33,7 +33,7 @@
 		</table>
 		
 		<p>
-			Test feed entries:
+			Given the feed entries are the followings:
 		</p>
 		<table concordion:execute="createEntry(#feedTitle, #title, #description, #author, #link, #publishedDate)">
 			<tr>
@@ -95,7 +95,7 @@
 		</table>
 		
 		<p>
-			Given <span concordion:execute="initUser(#TEXT)">user1</span> has the following subscriptions:
+			Given <span concordion:execute="initUser(#TEXT)">entry_user</span> has the following subscriptions:
 		</p>
 		<table>
 	       	<tr>
@@ -106,11 +106,11 @@
 	       		<th>Subscription title</th>
 	       	</tr>
 	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription1</td>
+	       		<td concordion:execute="#groupId1 = createGroup(#TEXT)">group1</td>
+	       		<td concordion:echo="#groupId1"></td>
+	       		<td concordion:execute="#subscriptionId1 = subscribe(#TEXT, #groupId1)">feed1</td>
+	       		<td concordion:echo="#subscriptionId1"></td>
+	       		<td concordion:execute="entitleSubscription(#groupId1, #subscriptionId1, #TEXT)">subscription1</td>
 	       	</tr>
 	   	</table>
 		<p>
@@ -151,7 +151,7 @@
 	   	</table>
 	   	
 	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user2</span> has the following subscriptions:
+			Given the user subscribed to the following subscriptions:
 		</p>
 		<table>
 	       	<tr>
@@ -162,25 +162,18 @@
 	       		<th>Subscription title</th>
 	       	</tr>
 	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	       	<tr>
 	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription2</td>
+	       		<td concordion:echo="#groupId1"></td>
+	       		<td concordion:execute="#subscriptionId2 = subscribe(#TEXT, #groupId1)">feed2</td>
+	       		<td concordion:echo="#subscriptionId2"></td>
+	       		<td concordion:execute="entitleSubscription(#groupId1, #subscriptionId2, #TEXT)">subscription2</td>
 	       	</tr>
 	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription3</td>
+	       		<td concordion:execute="#groupId2 = createGroup(#TEXT)">group2</td>
+	       		<td concordion:echo="#groupId2"></td>
+	       		<td concordion:execute="#subscriptionId3 = subscribe(#TEXT, #groupId2)">feed3</td>
+	       		<td concordion:echo="#subscriptionId3"></td>
+	       		<td concordion:execute="entitleSubscription(#groupId2, #subscriptionId3, #TEXT)">subscription3</td>
 	       	</tr>
 	   	</table>
 		<p>
@@ -246,41 +239,8 @@
 			</tr>
 	   	</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user3</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Feed title</th>
-	       		<th>Subscription ID</th>
-	       		<th>Subscription title</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId1 = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId1"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId1)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId1, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId1"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId1)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId1, #subscriptionId, #TEXT)">subscription2</td>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId2 = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#groupId2"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId2)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId2, #subscriptionId, #TEXT)">subscription3</td>
-	       	</tr>
-	   	</table>
 		<p>
-			when he lists <span concordion:set="#selection">all</span> entries of group #<span concordion:echo="#groupId1"></span> from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			When the user lists <span concordion:set="#selection">all</span> entries of group #<span concordion:echo="#groupId1"></span> from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
 			then the list contains:
 		</p>
 		<table concordion:verifyRows="#entry : getEntries(#groupId1, #selection, #from, #to, #order)">
@@ -326,41 +286,8 @@
 			</tr>
 	   	</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user4</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Feed title</th>
-	       		<th>Subscription ID</th>
-	       		<th>Subscription title</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId1 = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId1"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId1)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId1, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId1"></td>
-	       		<td concordion:execute="#subscriptionId2 = subscribe(#TEXT, #groupId1)">feed2</td>
-	       		<td concordion:echo="#subscriptionId2"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId1, #subscriptionId2, #TEXT)">subscription2</td>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId2 = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#groupId2"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId2)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId2, #subscriptionId, #TEXT)">subscription3</td>
-	       	</tr>
-	   	</table>
 		<p>
-			when he lists <span concordion:set="#selection">all</span> entries of subscription #<span concordion:echo="#subscriptionId2"></span> from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			When the user lists <span concordion:set="#selection">all</span> entries of subscription #<span concordion:echo="#subscriptionId2"></span> from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
 			then the list contains:
 		</p>
 		<table concordion:verifyRows="#entry : getEntries(#groupId1, #subscriptionId2, #selection, #from, #to, #order)">
@@ -390,41 +317,8 @@
 			</tr>
 	   	</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user5</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Feed title</th>
-	       		<th>Subscription ID</th>
-	       		<th>Subscription title</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	       	<tr>
-	       		<td>group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed2</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription2</td>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed3</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription3</td>
-	       	</tr>
-	   	</table>
 		<p>
-			when he lists <span concordion:set="#selection">unread</span> entries from <span concordion:set="#from">2</span> to <span concordion:set="#to">4</span> in <span concordion:set="#order">ascending</span> order<br/>
+			When the user lists <span concordion:set="#selection">unread</span> entries from <span concordion:set="#from">2</span> to <span concordion:set="#to">4</span> in <span concordion:set="#order">ascending</span> order<br/>
 			then the list contains:
 		</p>
 		<table concordion:verifyRows="#entry : getEntries(#selection, #from, #to, #order)">
@@ -455,29 +349,158 @@
 	   	</table>
 	   	
 	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user6</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Feed title</th>
-	       		<th>Subscription ID</th>
-	       		<th>Subscription title</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	   	</table>
-	   	<p>
-	   		and the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
+	   		Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
 	   	</p>
 		<p>
-			when he marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="read(#groupId, #subscriptionId, #entryId)">read</span>
+			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="read(#groupId1, #subscriptionId1, #entryId)">read</span>
+			and he lists <span concordion:set="#selection">all</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getEntries(#selection, #from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.subscriptionTitle">Subscription title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.read">Read</th>
+	       		<th concordion:assertEquals="#entry.starred">Starred</th>
+	       	</tr>
+	       	<tr>
+				<td>subscription1</td>
+				<td>entry11</td>
+				<td>description11</td>
+				<td>author11</td>
+				<td>http://www.link11.com/</td>
+				<td>2015-06-06 00:00:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-06 00:15:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription1</td>
+				<td>entry12</td>
+				<td>description12</td>
+				<td>author12</td>
+				<td>http://www.link12.com/</td>
+				<td>2015-06-06 00:30:00</td>
+				<td>true</td>
+	       		<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription3</td>
+				<td>entry31</td>
+				<td>description31</td>
+				<td>author31</td>
+				<td>http://www.link31.com/</td>
+				<td>2015-06-06 00:35:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:45:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription3</td>
+				<td>entry32</td>
+				<td>description32</td>
+				<td>author32</td>
+				<td>http://www.link32.com/</td>
+				<td>2015-06-06 01:00:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+	   	</table>
+	   	
+		<p>
+			When the user lists <span concordion:set="#selection">unread</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getEntries(#selection, #from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.subscriptionTitle">Subscription title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.read">Read</th>
+	       		<th concordion:assertEquals="#entry.starred">Starred</th>
+	       	</tr>
+	       	<tr>
+				<td>subscription3</td>
+				<td>entry32</td>
+				<td>description32</td>
+				<td>author32</td>
+				<td>http://www.link32.com/</td>
+				<td>2015-06-06 01:00:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+	       	<tr>
+				<td>subscription2</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:45:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+	       	<tr>
+				<td>subscription3</td>
+				<td>entry31</td>
+				<td>description31</td>
+				<td>author31</td>
+				<td>http://www.link31.com/</td>
+				<td>2015-06-06 00:35:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+	       	<tr>
+				<td>subscription2</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-06 00:15:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+	       	<tr>
+				<td>subscription1</td>
+				<td>entry11</td>
+				<td>description11</td>
+				<td>author11</td>
+				<td>http://www.link11.com/</td>
+				<td>2015-06-06 00:00:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
+	   		Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
+	   	</p>
+		<p>
+			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="markStarred(#groupId1, #subscriptionId1, #entryId, #TEXT)">starred</span>
 			and he lists <span concordion:set="#selection">all</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
@@ -493,6 +516,36 @@
 	       		<th concordion:assertEquals="#entry.starred">Starred</th>
 	       	</tr>
 	       	<tr>
+				<td>subscription3</td>
+				<td>entry32</td>
+				<td>description32</td>
+				<td>author32</td>
+				<td>http://www.link32.com/</td>
+				<td>2015-06-06 01:00:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+	       	<tr>
+				<td>subscription2</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:45:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+	       	<tr>
+				<td>subscription3</td>
+				<td>entry31</td>
+				<td>description31</td>
+				<td>author31</td>
+				<td>http://www.link31.com/</td>
+				<td>2015-06-06 00:35:00</td>
+				<td>false</td>
+	       		<td>false</td>
+			</tr>
+			<tr>
 	       		<td>subscription1</td>
 	       		<td>entry12</td>
 	       		<td>description12</td>
@@ -500,95 +553,32 @@
 	       		<td>http://www.link12.com/</td>
 	       		<td>2015-06-06 00:30:00</td>
 	       		<td>true</td>
-	       		<td>false</td>
+	       		<td>true</td>
 	       	</tr>
 	       	<tr>
-	       		<td>subscription1</td>
-	       		<td>entry11</td>
-	       		<td>description11</td>
-	       		<td>author11</td>
-	       		<td>http://www.link11.com/</td>
-	       		<td>2015-06-06 00:00:00</td>
+				<td>subscription2</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-06 00:15:00</td>
+				<td>false</td>
 	       		<td>false</td>
+			</tr>
+	       	<tr>
+				<td>subscription1</td>
+				<td>entry11</td>
+				<td>description11</td>
+				<td>author11</td>
+				<td>http://www.link11.com/</td>
+				<td>2015-06-06 00:00:00</td>
+				<td>false</td>
 	       		<td>false</td>
-	       	</tr>
+			</tr>
 	   	</table>
 	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user7</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Feed title</th>
-	       		<th>Subscription ID</th>
-	       		<th>Subscription title</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	   	</table>
-	   	<p>
-	   		and the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
-	   	</p>
 		<p>
-			when he marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="read(#groupId, #subscriptionId, #entryId)">read</span>
-			and he lists <span concordion:set="#selection">unread</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
-			then the list contains:
-		</p>
-		<table concordion:verifyRows="#entry : getEntries(#selection, #from, #to, #order)">
-			<tr>
-	       		<th concordion:assertEquals="#entry.subscriptionTitle">Subscription title</th>
-	       		<th concordion:assertEquals="#entry.title">Title</th>
-	       		<th concordion:assertEquals="#entry.description">Description</th>
-	       		<th concordion:assertEquals="#entry.author">Author</th>
-	       		<th concordion:assertEquals="#entry.link">Link</th>
-	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
-	       		<th concordion:assertEquals="#entry.read">Read</th>
-	       		<th concordion:assertEquals="#entry.starred">Starred</th>
-	       	</tr>
-	       	<tr>
-	       		<td>subscription1</td>
-	       		<td>entry11</td>
-	       		<td>description11</td>
-	       		<td>author11</td>
-	       		<td>http://www.link11.com/</td>
-	       		<td>2015-06-06 00:00:00</td>
-	       		<td>false</td>
-	       		<td>false</td>
-	       	</tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user8</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Feed title</th>
-	       		<th>Subscription ID</th>
-	       		<th>Subscription title</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	   	</table>
-	   	<p>
-	   		and the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
-	   	</p>
-		<p>
-			when he marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="markStarred(#groupId, #subscriptionId, #entryId, #TEXT)">starred</span>
-			and he lists <span concordion:set="#selection">all</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
+			When the user lists <span concordion:set="#selection">starred</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
 		<table concordion:verifyRows="#entry : getEntries(#selection, #from, #to, #order)">
@@ -609,96 +599,14 @@
 	       		<td>author12</td>
 	       		<td>http://www.link12.com/</td>
 	       		<td>2015-06-06 00:30:00</td>
-	       		<td>false</td>
 	       		<td>true</td>
-	       	</tr>
-	       	<tr>
-	       		<td>subscription1</td>
-	       		<td>entry11</td>
-	       		<td>description11</td>
-	       		<td>author11</td>
-	       		<td>http://www.link11.com/</td>
-	       		<td>2015-06-06 00:00:00</td>
-	       		<td>false</td>
-	       		<td>false</td>
-	       	</tr>
-	   	</table>
-	   	
-	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user9</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Feed title</th>
-	       		<th>Subscription ID</th>
-	       		<th>Subscription title</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	   	</table>
-	   	<p>
-	   		and the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
-	   	</p>
-		<p>
-			when he marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="markStarred(#groupId, #subscriptionId, #entryId, #TEXT)">starred</span>
-			and he lists <span concordion:set="#selection">starred</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
-			then the list contains:
-		</p>
-		<table concordion:verifyRows="#entry : getEntries(#selection, #from, #to, #order)">
-			<tr>
-	       		<th concordion:assertEquals="#entry.subscriptionTitle">Subscription title</th>
-	       		<th concordion:assertEquals="#entry.title">Title</th>
-	       		<th concordion:assertEquals="#entry.description">Description</th>
-	       		<th concordion:assertEquals="#entry.author">Author</th>
-	       		<th concordion:assertEquals="#entry.link">Link</th>
-	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
-	       		<th concordion:assertEquals="#entry.read">Read</th>
-	       		<th concordion:assertEquals="#entry.starred">Starred</th>
-	       	</tr>
-	       	<tr>
-	       		<td>subscription1</td>
-	       		<td>entry12</td>
-	       		<td>description12</td>
-	       		<td>author12</td>
-	       		<td>http://www.link12.com/</td>
-	       		<td>2015-06-06 00:30:00</td>
-	       		<td>false</td>
 	       		<td>true</td>
 	       	</tr>
 	   	</table>
 	   	
 	   	<p>
-			Given <span concordion:execute="initUser(#TEXT)">user10</span> has the following subscriptions:
-		</p>
-		<table>
-	       	<tr>
-	       		<th>Group title</th>
-	       		<th>Group ID</th>
-	       		<th>Feed title</th>
-	       		<th>Subscription ID</th>
-	       		<th>Subscription title</th>
-	       	</tr>
-	       	<tr>
-	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
-	       		<td concordion:echo="#groupId"></td>
-	       		<td concordion:execute="#subscriptionId = subscribe(#TEXT, #groupId)">feed1</td>
-	       		<td concordion:echo="#subscriptionId"></td>
-	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId, #TEXT)">subscription1</td>
-	       	</tr>
-	   	</table>
-	   	<p>
-	   		and the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
-	   		and he marked entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="markStarred(#groupId, #subscriptionId, #entryId, #TEXT)">starred</span>
-	   	</p>
-		<p>
-			when he marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="markStarred(#groupId, #subscriptionId, #entryId, #TEXT)">unstarred</span>
+	   		Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
+			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="markStarred(#groupId1, #subscriptionId1, #entryId, #TEXT)">unstarred</span>
 			and he lists <span concordion:set="#selection">starred</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
