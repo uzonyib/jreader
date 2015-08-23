@@ -33,19 +33,19 @@ public class EntryController {
     }
 
     @RequestMapping(value = "/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(final Principal principal, @PathVariable final String selection, @RequestParam final int offset,
+    public List<FeedEntryDto> list(final Principal principal, @PathVariable final String selection, @RequestParam final int offset,
             @RequestParam final int count, @RequestParam final boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), parseSelection(selection), ascending, offset, count));
     }
 
     @RequestMapping(value = "/groups/{groupId}/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(final Principal principal, @PathVariable final Long groupId, @PathVariable final String selection,
+    public List<FeedEntryDto> list(final Principal principal, @PathVariable final Long groupId, @PathVariable final String selection,
             @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, parseSelection(selection), ascending, offset, count));
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{selection}", method = RequestMethod.GET)
-    public List<FeedEntryDto> getEntries(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
+    public List<FeedEntryDto> list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
             @PathVariable final String selection, @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
         return feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, subscriptionId, parseSelection(selection), ascending, offset,
                 count));

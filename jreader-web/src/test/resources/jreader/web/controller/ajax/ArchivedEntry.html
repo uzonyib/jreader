@@ -1,0 +1,349 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+	<head>
+		<title>Archived entry related tests</title>
+	</head>
+	<body>
+	
+		<h1>Archived entry related tests</h1>
+		
+		<p>
+			Test feeds:
+		</p>
+		<table concordion:execute="createFeed(#title, #url)">
+			<tr>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#url">URL</th>
+			</tr>
+			<tr>
+				<td>feed1</td>
+				<td>http://www.feed1.com/rss.xml</td>
+			</tr>
+			<tr>
+				<td>feed2</td>
+				<td>http://www.feed2.com/rss.xml</td>
+			</tr>
+			<tr>
+				<td>feed3</td>
+				<td>http://www.feed3.com/rss.xml</td>
+			</tr>
+		</table>
+		
+		<p>
+			Test feed entries:
+		</p>
+		<table concordion:execute="createEntry(#feedTitle, #title, #description, #author, #link, #publishedDate)">
+			<tr>
+				<th concordion:set="#feedTitle">Title</th>
+				<th concordion:set="#title">Entry title</th>
+				<th concordion:set="#description">Entry title</th>
+				<th concordion:set="#author">Entry title</th>
+				<th concordion:set="#link">Entry title</th>
+				<th concordion:set="#publishedDate">Entry title</th>
+			</tr>
+			<tr>
+				<td>feed1</td>
+				<td>entry11</td>
+				<td>description11</td>
+				<td>author11</td>
+				<td>http://www.link11.com/</td>
+				<td>2015-06-06 00:00:00</td>
+			</tr>
+			<tr>
+				<td>feed1</td>
+				<td>entry12</td>
+				<td>description12</td>
+				<td>author12</td>
+				<td>http://www.link12.com/</td>
+				<td>2015-06-06 00:30:00</td>
+			</tr>
+			<tr>
+				<td>feed2</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-06 00:15:00</td>
+			</tr>
+			<tr>
+				<td>feed2</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:45:00</td>
+			</tr>
+			<tr>
+				<td>feed3</td>
+				<td>entry31</td>
+				<td>description31</td>
+				<td>author31</td>
+				<td>http://www.link31.com/</td>
+				<td>2015-06-06 00:35:00</td>
+			</tr>
+			<tr>
+				<td>feed3</td>
+				<td>entry32</td>
+				<td>description32</td>
+				<td>author32</td>
+				<td>http://www.link32.com/</td>
+				<td>2015-06-06 01:00:00</td>
+			</tr>
+		</table>
+		
+		<p>
+			Given <span concordion:execute="initUser(#TEXT)">user1</span> has the following subscriptions:
+		</p>
+		<table>
+	       	<tr>
+	       		<th>Group title</th>
+	       		<th>Group ID</th>
+	       		<th>Feed title</th>
+	       		<th>Subscription ID</th>
+	       		<th>Subscription title</th>
+	       	</tr>
+	       	<tr>
+	       		<td concordion:execute="#groupId1 = createGroup(#TEXT)">group1</td>
+	       		<td concordion:echo="#groupId1"></td>
+	       		<td concordion:execute="#subscriptionId1 = subscribe(#TEXT, #groupId1)">feed1</td>
+	       		<td concordion:echo="#subscriptionId1"></td>
+	       		<td concordion:execute="entitleSubscription(#groupId1, #subscriptionId1, #TEXT)">subscription1</td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td concordion:echo="#groupId1"></td>
+	       		<td concordion:execute="#subscriptionId2 = subscribe(#TEXT, #groupId1)">feed2</td>
+	       		<td concordion:echo="#subscriptionId2"></td>
+	       		<td concordion:execute="entitleSubscription(#groupId1, #subscriptionId2, #TEXT)">subscription2</td>
+	       	</tr>
+	       	<tr>
+	       		<td concordion:execute="#groupId2 = createGroup(#TEXT)">group2</td>
+	       		<td concordion:echo="#groupId2"></td>
+	       		<td concordion:execute="#subscriptionId3 = subscribe(#TEXT, #groupId2)">feed3</td>
+	       		<td concordion:echo="#subscriptionId3"></td>
+	       		<td concordion:execute="entitleSubscription(#groupId2, #subscriptionId3, #TEXT)">subscription3</td>
+	       	</tr>
+	   	</table>
+	   	<p>
+			and he has the following archives:
+		</p>
+		<table>
+			<tr>
+				<th>Title</th>
+				<th>ID</th>
+			</tr>
+			<tr>
+				<td concordion:execute="#archiveId1 = createArchive(#TEXT)">archive1</td>
+				<td concordion:echo="#archiveId1"></td>
+			</tr>
+			<tr>
+				<td concordion:execute="#archiveId2 = createArchive(#TEXT)">archive2</td>
+				<td concordion:echo="#archiveId2"></td>
+			</tr>
+			<tr>
+				<td concordion:execute="#archiveId3 = createArchive(#TEXT)">archive3</td>
+				<td concordion:echo="#archiveId3"></td>
+			</tr>
+	   	</table>
+		<p>
+			when he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getArchivedEntries(#selection, #from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.archiveTitle">Archive title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       	</tr>
+	   	</table>
+	   	
+	   	<p>
+			Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span><br/>
+			when user1 archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId1, #entryId, #archiveId1)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId1"></span> to archive #<span concordion:echo="#archiveId1"></span><br/>
+			and he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getArchivedEntries(#from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.archiveTitle">Archive title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       	</tr>
+	       	<tr>
+	       		<td>archive1</td>
+	       		<td>entry12</td>
+	       		<td>description12</td>
+	       		<td>author12</td>
+	       		<td>http://www.link12.com/</td>
+	       		<td>2015-06-06 00:30:00</td>
+	       	</tr>
+	   	</table>
+	   	
+	   	<p>
+			Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry21</span> is <span concordion:echo="#entryId"></span><br/>
+			when user1 archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId2, #entryId, #archiveId2)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId2"></span> to archive #<span concordion:echo="#archiveId2"></span><br/>
+			and he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getArchivedEntries(#from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.archiveTitle">Archive title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       	</tr>
+	       	<tr>
+	       		<td>archive1</td>
+	       		<td>entry12</td>
+	       		<td>description12</td>
+	       		<td>author12</td>
+	       		<td>http://www.link12.com/</td>
+	       		<td>2015-06-06 00:30:00</td>
+	       	</tr>
+	       	<tr>
+				<td>archive2</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-06 00:15:00</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
+			Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry22</span> is <span concordion:echo="#entryId"></span><br/>
+			when user1 archives entry #<span concordion:execute="archiveEntry(#groupId1, #subscriptionId2, #entryId, #archiveId2)"><span concordion:echo="#entryId"></span></span> from group #<span concordion:echo="#groupId1"></span> and subscription #<span concordion:echo="#subscriptionId2"></span> to archive #<span concordion:echo="#archiveId2"></span><br/>
+			and he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getArchivedEntries(#from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.archiveTitle">Archive title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       	</tr>
+	       	<tr>
+				<td>archive2</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-06 00:15:00</td>
+			</tr>
+	       	<tr>
+	       		<td>archive1</td>
+	       		<td>entry12</td>
+	       		<td>description12</td>
+	       		<td>author12</td>
+	       		<td>http://www.link12.com/</td>
+	       		<td>2015-06-06 00:30:00</td>
+	       	</tr>
+			<tr>
+				<td>archive2</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:45:00</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
+			When user1 lists archived entries of archive #<span concordion:echo="#archiveId2"></span> from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getArchivedEntries(#archiveId2, #from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.archiveTitle">Archive title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       	</tr>
+	       	<tr>
+				<td>archive2</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-06 00:15:00</td>
+			</tr>
+			<tr>
+				<td>archive2</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:45:00</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
+			When user1 lists archived entries from <span concordion:set="#from">1</span> to <span concordion:set="#to">2</span> in <span concordion:set="#order">ascending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getArchivedEntries(#from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.archiveTitle">Archive title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       	</tr>
+	       	<tr>
+	       		<td>archive1</td>
+	       		<td>entry12</td>
+	       		<td>description12</td>
+	       		<td>author12</td>
+	       		<td>http://www.link12.com/</td>
+	       		<td>2015-06-06 00:30:00</td>
+	       	</tr>
+	   	</table>
+	   	
+	   	<p>
+			Given the ID of <span concordion:execute="#entryId = getArchivedEntryId(#TEXT)">entry21</span> is <span concordion:echo="#entryId"></span><br/>
+			when user1 deletes entry #<span concordion:execute="deleteArchivedEntry(#archiveId2, #entryId)"><span concordion:echo="#entryId"></span></span> from archive #<span concordion:echo="#archiveId2"></span><br/>
+			and he lists archived entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getArchivedEntries(#from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.archiveTitle">Archive title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+			</tr>
+	       	<tr>
+	       		<td>archive1</td>
+	       		<td>entry12</td>
+	       		<td>description12</td>
+	       		<td>author12</td>
+	       		<td>http://www.link12.com/</td>
+	       		<td>2015-06-06 00:30:00</td>
+	       	</tr>
+			<tr>
+				<td>archive2</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:45:00</td>
+			</tr>
+	   	</table>
+	   	
+	</body>
+</html>

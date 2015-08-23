@@ -21,11 +21,13 @@ import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
 
 import jreader.dto.ArchiveDto;
+import jreader.dto.ArchivedEntryDto;
 import jreader.dto.FeedEntryDto;
 import jreader.dto.SubscriptionDto;
 import jreader.dto.SubscriptionGroupDto;
 import jreader.services.RssService;
 import jreader.services.UserService;
+import jreader.web.controller.ajax.dto.ArchivedEntry;
 import jreader.web.controller.ajax.dto.Entry;
 import jreader.web.controller.ajax.dto.Subscription;
 import jreader.web.test.AbstractDataStoreTest;
@@ -41,6 +43,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private EntryController entryController;
     @Autowired
     private ArchiveController archiveController;
+    @Autowired
+    private ArchivedEntryController archivedEntryController;
     
     @Autowired
     private UserService userService;
@@ -146,7 +150,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getEntryId(String title) {
-        List<FeedEntryDto> entries = entryController.getEntries(principal, "all", 0, Integer.MAX_VALUE, true);
+        List<FeedEntryDto> entries = entryController.list(principal, "all", 0, Integer.MAX_VALUE, true);
         for (FeedEntryDto entry : entries) {
             if (title.equals(entry.getTitle())) {
                 return entry.getId();
@@ -156,15 +160,15 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<Entry> getEntries(String selection, int from, int to, String order) {
-        return convertEntries(entryController.getEntries(principal, selection, from, to - from, "ascending".equals(order)));
+        return convertEntries(entryController.list(principal, selection, from, to - from, "ascending".equals(order)));
     }
     
     public List<Entry> getEntries(Long groupId, String selection, int from, int to, String order) {
-        return convertEntries(entryController.getEntries(principal, groupId, selection, from, to - from, "ascending".equals(order)));
+        return convertEntries(entryController.list(principal, groupId, selection, from, to - from, "ascending".equals(order)));
     }
     
     public List<Entry> getEntries(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
-        return convertEntries(entryController.getEntries(principal, groupId, subscriptionId, selection, from, to - from, "ascending".equals(order)));
+        return convertEntries(entryController.list(principal, groupId, subscriptionId, selection, from, to - from, "ascending".equals(order)));
     }
     
     private static List<Entry> convertEntries(List<FeedEntryDto> dtos) {
@@ -224,6 +228,49 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public void moveArchive(Long id, String direction) {
         archiveController.move(principal, id, "up".equals(direction));
+    }
+    
+    public List<ArchivedEntry> getArchivedEntries(int from, int to, String order) {
+        return convertArchivedEntries(archivedEntryController.list(principal, from, to - from, "ascending".equals(order)));
+    }
+    
+    public List<ArchivedEntry> getArchivedEntries(Long archiveId, int from, int to, String order) {
+        return convertArchivedEntries(archivedEntryController.list(principal, archiveId, from, to - from, "ascending".equals(order)));
+    }
+    
+    private static List<ArchivedEntry> convertArchivedEntries(List<ArchivedEntryDto> dtos) {
+        List<ArchivedEntry> entries = new ArrayList<ArchivedEntry>();
+        for (ArchivedEntryDto dto : dtos) {
+            ArchivedEntry entry = new ArchivedEntry();
+            entry.setId(dto.getId());
+            entry.setTitle(dto.getTitle());
+            entry.setDescription(dto.getDescription());
+            entry.setAuthor(dto.getAuthor());
+            entry.setLink(dto.getLink());
+            entry.setPublishedDate(dto.getPublishedDate());
+            entry.setArchiveId(dto.getArchiveId());
+            entry.setArchiveTitle(dto.getArchiveTitle());
+            entries.add(entry);
+        }
+        return entries;
+    }
+    
+    public void archiveEntry(Long groupId, Long subscriptionId, Long entryId, Long archiveId) {
+        archivedEntryController.archive(principal, archiveId, groupId, subscriptionId, entryId);
+    }
+    
+    public void deleteArchivedEntry(Long archiveId, Long entryId) {
+        archivedEntryController.delete(principal, archiveId, entryId);
+    }
+    
+    public String getArchivedEntryId(String title) {
+        List<ArchivedEntryDto> entries = archivedEntryController.list(principal, 0, Integer.MAX_VALUE, true);
+        for (ArchivedEntryDto entry : entries) {
+            if (title.equals(entry.getTitle())) {
+                return entry.getId();
+            }
+        }
+        return null;
     }
 
 }
