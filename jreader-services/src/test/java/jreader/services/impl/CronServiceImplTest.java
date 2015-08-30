@@ -5,13 +5,21 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.core.convert.ConversionService;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
@@ -23,16 +31,8 @@ import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.RssFetchResult;
+import jreader.services.DateHelper;
 import jreader.services.RssService;
-
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.core.convert.ConversionService;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class CronServiceImplTest {
 	
@@ -54,6 +54,9 @@ public class CronServiceImplTest {
 	private RssService rssService;
 	@Mock
     private ConversionService conversionService;
+	
+	@Mock
+	private DateHelper dateHelper;
 	
 	@Mock
 	private Feed feed1;
@@ -87,9 +90,6 @@ public class CronServiceImplTest {
     private FeedDto dto1;
     @Mock
     private FeedDto dto2;
-	
-	@Captor
-	private ArgumentCaptor<Long> dateCaptor;
 	
 	@BeforeMethod
 	public void setup() {
@@ -160,14 +160,23 @@ public class CronServiceImplTest {
 		
 		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
 		
-		when(feedEntryDao.find(subscription1, 1)).thenReturn(entry11);
-		when(feedEntryDao.find(subscription2, 1)).thenReturn(entry21);
+		when(feedEntryDao.find(subscription1, 1)).thenReturn(entry12);
+		when(feedEntryDao.find(subscription2, 1)).thenReturn(entry22);
 		
-		long start = System.currentTimeMillis();
-		when(entry11.getPublishedDate()).thenReturn(start - 1000 * 60 * 60 * 25);
-		when(entry12.getPublishedDate()).thenReturn(start - 1000 * 60 * 60 * 26);
-		when(entry21.getPublishedDate()).thenReturn(start - 1000 * 60 * 60 * 27);
-		when(entry22.getPublishedDate()).thenReturn(start - 1000 * 60 * 60 * 28);
+		Calendar cal = Calendar.getInstance();
+		cal.set(2015, 6, 6, 0, 25, 0);
+		long threshold = cal.getTimeInMillis();
+		when(dateHelper.addDaysToCurrentDate(-30)).thenReturn(threshold);
+		
+        cal.set(2015, 6, 6, 0, 0, 0);
+		when(entry11.getPublishedDate()).thenReturn(cal.getTimeInMillis());
+		cal.set(2015, 6, 6, 0, 10, 0);
+		long publishedDate12 = cal.getTimeInMillis();
+		when(entry12.getPublishedDate()).thenReturn(publishedDate12);
+		cal.set(2015, 6, 6, 0, 20, 0);
+		when(entry21.getPublishedDate()).thenReturn(cal.getTimeInMillis());
+		cal.set(2015, 6, 6, 0, 30, 0);
+		when(entry22.getPublishedDate()).thenReturn(cal.getTimeInMillis());
 		
 		when(feedEntryDao.listUnstarredOlderThan(eq(subscription1), anyLong())).thenReturn(Arrays.asList(entry12));
 		when(feedEntryDao.listUnstarredOlderThan(eq(subscription2), anyLong())).thenReturn(Arrays.asList(entry22));
@@ -176,8 +185,7 @@ public class CronServiceImplTest {
 		when(subscription2.getGroup()).thenReturn(group);
 		when(group.getUser()).thenReturn(user);
 		
-		service.cleanup(FEED_URL, 1, 1);
-		long end = System.currentTimeMillis();
+		service.cleanup(FEED_URL, 30, 1);
 		
 		verify(feedDao).find(FEED_URL);
 		
@@ -186,15 +194,12 @@ public class CronServiceImplTest {
 		verify(feedEntryDao).find(subscription1, 1);
 		verify(feedEntryDao).find(subscription2, 1);
 		
-		verify(feedEntryDao).listUnstarredOlderThan(eq(subscription1), dateCaptor.capture());
-		assertTrue(dateCaptor.getValue() >= start - 1000 * 60 * 60 * 25);
-		assertTrue(dateCaptor.getValue() <= end - 1000 * 60 * 60 * 25);
+		verify(feedEntryDao).listUnstarredOlderThan(eq(subscription1), eq(publishedDate12));
 		verify(feedEntryDao).delete(entry12);
 		
-		verify(feedEntryDao).listUnstarredOlderThan(eq(subscription2), dateCaptor.capture());
-		assertTrue(dateCaptor.getValue() >= start - 1000 * 60 * 60 * 27);
-		assertTrue(dateCaptor.getValue() <= end - 1000 * 60 * 60 * 27);
+		verify(feedEntryDao).listUnstarredOlderThan(eq(subscription2), eq(threshold));
 		verify(feedEntryDao).delete(entry22);
+		verifyNoMoreInteractions(feedEntryDao);
 	}
 	
 	@Test

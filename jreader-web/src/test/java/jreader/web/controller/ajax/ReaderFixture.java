@@ -1,5 +1,6 @@
 package jreader.web.controller.ajax;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.net.URL;
@@ -7,9 +8,12 @@ import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
 import org.mockito.InjectMocks;
@@ -25,8 +29,11 @@ import jreader.dto.ArchivedEntryDto;
 import jreader.dto.FeedEntryDto;
 import jreader.dto.SubscriptionDto;
 import jreader.dto.SubscriptionGroupDto;
+import jreader.services.CronService;
+import jreader.services.DateHelper;
 import jreader.services.RssService;
 import jreader.services.UserService;
+import jreader.web.controller.TaskController;
 import jreader.web.controller.ajax.dto.ArchivedEntry;
 import jreader.web.controller.ajax.dto.Entry;
 import jreader.web.controller.ajax.dto.Subscription;
@@ -35,6 +42,8 @@ import jreader.web.test.FeedRegistry;
 
 public abstract class ReaderFixture extends AbstractDataStoreTest {
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    
     @Autowired
     private GroupController groupController;
     @Autowired
@@ -45,17 +54,24 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private ArchiveController archiveController;
     @Autowired
     private ArchivedEntryController archivedEntryController;
+    @Autowired
+    private TaskController taskController;
     
     @Autowired
     private UserService userService;
     @Autowired
     @InjectMocks
     private RssService rssService;
+    @Autowired
+    @InjectMocks
+    private CronService cronService;
 
     @Mock
     private Principal principal;
     @Mock
     private FeedFetcher feedFetcher;
+    @Mock
+    private DateHelper dateHelper;
     
     private FeedRegistry feedRegistry = new FeedRegistry();
     
@@ -75,7 +91,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public void createEntry(String feedTitle, String title, String description, String author, String link, String publishedDate) throws ParseException {
-        feedRegistry.registerEntry(feedTitle, title, description, author, link, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(publishedDate));
+        feedRegistry.registerEntry(feedTitle, title, description, author, link, new SimpleDateFormat(DATE_FORMAT).parse(publishedDate));
     }
     
     public int getGroupCount() {
@@ -271,6 +287,23 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
             }
         }
         return null;
+    }
+    
+    public void refreshFeed(String title) {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getHeader("X-AppEngine-TaskName")).thenReturn("default");
+        taskController.refreshFeed(request, principal, feedRegistry.getUrl(title));
+    }
+    
+    public void cleanupFeed(String title) {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getHeader("X-AppEngine-TaskName")).thenReturn("default");
+        taskController.cleanup(request, principal, feedRegistry.getUrl(title));
+    }
+    
+    public void setCurrentDate(String dateString) throws ParseException {
+        Date date = new SimpleDateFormat(DATE_FORMAT).parse(dateString);
+        when(dateHelper.addDaysToCurrentDate(-30)).thenReturn(date.getTime() - 30 * 24 * 60 * 60 * 1000L);
     }
 
 }

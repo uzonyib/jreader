@@ -352,7 +352,7 @@
 	   		Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
 	   	</p>
 		<p>
-			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="read(#groupId1, #subscriptionId1, #entryId)">read</span>
+			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="read(#groupId1, #subscriptionId1, #entryId)">read</span><br/>
 			and he lists <span concordion:set="#selection">all</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
 			then the list contains:
 		</p>
@@ -500,7 +500,7 @@
 	   		Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
 	   	</p>
 		<p>
-			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="markStarred(#groupId1, #subscriptionId1, #entryId, #TEXT)">starred</span>
+			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="markStarred(#groupId1, #subscriptionId1, #entryId, #TEXT)">starred</span><br/>
 			and he lists <span concordion:set="#selection">all</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
@@ -606,7 +606,7 @@
 	   	
 	   	<p>
 	   		Given the ID of <span concordion:execute="#entryId = getEntryId(#TEXT)">entry12</span> is <span concordion:echo="#entryId"></span>
-			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="markStarred(#groupId1, #subscriptionId1, #entryId, #TEXT)">unstarred</span>
+			when the user marks entry #<span concordion:echo="#entryId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="markStarred(#groupId1, #subscriptionId1, #entryId, #TEXT)">unstarred</span><br/>
 			and he lists <span concordion:set="#selection">starred</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>

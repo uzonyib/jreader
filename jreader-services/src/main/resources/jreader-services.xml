@@ -69,6 +69,9 @@
 		<constructor-arg ref="feedEntryDao" />
 		<constructor-arg ref="rssService" />
 		<constructor-arg ref="conversionService" />
+        <constructor-arg>
+            <bean class="jreader.services.impl.DateHelperImpl" />
+        </constructor-arg>
 	</bean>
 	
 </beans>

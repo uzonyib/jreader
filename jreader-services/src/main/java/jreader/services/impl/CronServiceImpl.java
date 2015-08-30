@@ -16,12 +16,12 @@ import jreader.domain.Subscription;
 import jreader.dto.FeedDto;
 import jreader.dto.RssFetchResult;
 import jreader.services.CronService;
+import jreader.services.DateHelper;
 import jreader.services.RssService;
 
 public class CronServiceImpl implements CronService {
 
     private static final Logger LOG = Logger.getLogger(CronServiceImpl.class.getName());
-    private static final long MILLISECS_PER_DAY = 1000L * 60L * 60L * 24L;
 
     private SubscriptionDao subscriptionDao;
     private FeedDao feedDao;
@@ -29,14 +29,17 @@ public class CronServiceImpl implements CronService {
 
     private RssService rssService;
     private ConversionService conversionService;
+    
+    private DateHelper dateHelper;
 
     public CronServiceImpl(final SubscriptionDao subscriptionDao, final FeedDao feedDao, final FeedEntryDao feedEntryDao, final RssService rssService,
-            final ConversionService conversionService) {
+            final ConversionService conversionService, final DateHelper dateHelper) {
         this.subscriptionDao = subscriptionDao;
         this.feedDao = feedDao;
         this.feedEntryDao = feedEntryDao;
         this.rssService = rssService;
         this.conversionService = conversionService;
+        this.dateHelper = dateHelper;
     }
 
     @Override
@@ -86,7 +89,7 @@ public class CronServiceImpl implements CronService {
 
     @Override
     public void cleanup(final String url, final int olderThanDays, final int keptCount) {
-        final long date = System.currentTimeMillis() - MILLISECS_PER_DAY * (long) olderThanDays;
+        final long date = dateHelper.addDaysToCurrentDate(-olderThanDays);
         final Feed feed = feedDao.find(url);
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
         if (subscriptions.isEmpty()) {
