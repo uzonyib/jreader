@@ -20,6 +20,7 @@ public class Subscription {
     @Load
     @Index
     private Ref<Feed> feedRef;
+    @Index
     private String title;
     @Index
     private int order;

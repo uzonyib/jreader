@@ -119,8 +119,72 @@
 	       	</tr>
 	   	</table>
 	   	
+	   	<p>
+			When the user entitles subscription #<span concordion:echo="#subscriptionId2"></span> as <span concordion:execute="entitleSubscription(#groupId1, #subscriptionId2, #TEXT)">empty string</span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">2</span><br/>
+			and the subscription list contains:
+		</p>
+		<table concordion:verifyRows="#subscription : getSubscriptions()">
+			<tr>
+	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
+	       		<th concordion:echo="#subscription.groupId">Group ID</th>
+	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
+	       		<th concordion:echo="#subscription.id">Subscription ID</th>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed1</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed2</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group2</td>
+	       		<td></td>
+	       		<td>feed3</td>
+	       		<td></td>
+	       	</tr>
+	   	</table>
+	   	
 		<p>
 			When the user entitles subscription #<span concordion:echo="#subscriptionId2"></span> as <span concordion:execute="entitleSubscription(#groupId1, #subscriptionId2, #TEXT)">test</span><br/>
+			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">2</span><br/>
+			and the subscription list contains:
+		</p>
+		<table concordion:verifyRows="#subscription : getSubscriptions()">
+			<tr>
+	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
+	       		<th concordion:echo="#subscription.groupId">Group ID</th>
+	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
+	       		<th concordion:echo="#subscription.id">Subscription ID</th>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>feed1</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td></td>
+	       		<td>test</td>
+	       		<td></td>
+	       	</tr>
+	       	<tr>
+	       		<td>group2</td>
+	       		<td></td>
+	       		<td>feed3</td>
+	       		<td></td>
+	       	</tr>
+	   	</table>
+	   	
+	   	<p>
+			When the user entitles subscription #<span concordion:echo="#subscriptionId2"></span> as <span concordion:execute="entitleSubscription(#groupId1, #subscriptionId2, #TEXT)">feed1</span><br/>
 			then the subscription count of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">2</span><br/>
 			and the subscription list contains:
 		</p>

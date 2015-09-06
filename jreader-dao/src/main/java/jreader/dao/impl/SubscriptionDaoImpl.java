@@ -16,8 +16,13 @@ public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements
     }
 
     @Override
-    public Subscription find(final SubscriptionGroup subscriptionGroup, final Long id) {
-        return getOfy().load().type(Subscription.class).parent(subscriptionGroup).id(id).now();
+    public Subscription find(final SubscriptionGroup group, final Long id) {
+        return getOfy().load().type(Subscription.class).parent(group).id(id).now();
+    }
+    
+    @Override
+    public Subscription find(final SubscriptionGroup group, final String title) {
+        return getOfy().load().type(Subscription.class).ancestor(group).filter("title =", title).first().now();
     }
 
     @Override

@@ -12,6 +12,8 @@ public interface SubscriptionDao extends OfyDao<Subscription> {
     Subscription find(User user, Feed feed);
 
     Subscription find(SubscriptionGroup subscriptionGroup, Long id);
+    
+    Subscription find(SubscriptionGroup subscriptionGroup, String title);
 
     List<Subscription> listSubscriptions(Feed feed);
 

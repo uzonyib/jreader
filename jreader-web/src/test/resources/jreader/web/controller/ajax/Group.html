@@ -26,6 +26,38 @@
 				<td>group1</td>
 			</tr>
 		</table>
+		
+		<p>
+			When the user tries to create a new group with <span concordion:execute="createGroup(#TEXT)">empty string</span> as title<br/>
+			then the group count is still <span concordion:assertEquals="getGroupCount()">1</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+			<tr>
+				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>group1</td>
+			</tr>
+		</table>
+	   	
+	   	<p>
+			When the user tries to create a new group with title <span concordion:execute="createGroup(#TEXT)">group1</span><br/>
+			then the group count is still <span concordion:assertEquals="getGroupCount()">1</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+			<tr>
+				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>group1</td>
+			</tr>
+		</table>
 	   	
 	   	<p>
 			When the user creates the following groups:
@@ -101,6 +133,54 @@
 	   	
 		<p>
 			When the user changes the title of group #<span concordion:echo="#groupId2"></span> to <span concordion:execute="entitleGroup(#groupId2, #TEXT)">test</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">3</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+			<tr>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:echo="#group.id">ID</th>
+			</tr>
+			<tr>
+				<td>group1</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>group3</td>
+				<td></td>
+			</tr>
+		</table>
+		
+		<p>
+			When the user tries to change the title of group #<span concordion:echo="#groupId2"></span> to <span concordion:execute="entitleGroup(#groupId2, #TEXT)">empty string</span><br/>
+			then the group count is <span concordion:assertEquals="getGroupCount()">3</span><br/>
+			and the group list contains:
+		</p>
+		<table concordion:verifyRows="#group : getGroups()">
+			<tr>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:echo="#group.id">ID</th>
+			</tr>
+			<tr>
+				<td>group1</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>group3</td>
+				<td></td>
+			</tr>
+		</table>
+		
+		<p>
+			When the user tries to change the title of group #<span concordion:echo="#groupId2"></span> to <span concordion:execute="entitleGroup(#groupId2, #TEXT)">group1</span><br/>
 			then the group count is <span concordion:assertEquals="getGroupCount()">3</span><br/>
 			and the group list contains:
 		</p>
@@ -218,8 +298,6 @@
 				<td></td>
 			</tr>
 	   	</table>
-	   	
-	   	<p>What if a group with the same name already exists?</p>
 	   	
 	</body>
 </html>

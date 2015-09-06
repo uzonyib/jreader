@@ -32,6 +32,7 @@ import jreader.dto.SubscriptionGroupDto;
 import jreader.services.CronService;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
+import jreader.services.ServiceException;
 import jreader.services.UserService;
 import jreader.web.controller.TaskController;
 import jreader.web.controller.ajax.dto.ArchivedEntry;
@@ -103,20 +104,32 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public Long createGroup(String title) {
-        List<SubscriptionGroupDto> groups = groupController.create(principal, title);
-        return Long.valueOf(groups.get(groups.size() - 1).getId());
+        try {
+            List<SubscriptionGroupDto> groups = groupController.create(principal, "empty string".equals(title) ? "" : title);
+            return Long.valueOf(groups.get(groups.size() - 1).getId());
+        } catch (ServiceException e) {
+            return null;
+        }
     }
     
     public void deleteGroup(Long id) {
         groupController.delete(principal, id);
     }
     
-    public void entitleGroup(Long id, String newTitle) {
-        groupController.entitle(principal, id, newTitle);
+    public void entitleGroup(Long id, String title) {
+        try {
+            groupController.entitle(principal, id, "empty string".equals(title) ? "" : title);
+        } catch (ServiceException e) {
+            
+        }
     }
     
     public void moveGroup(Long id, String direction) {
-        groupController.move(principal, id, "up".equals(direction));
+        try {
+            groupController.move(principal, id, "up".equals(direction));
+        } catch (ServiceException e) {
+            
+        }
     }
     
     public int getSubscriptionCount(Long groupId) throws Exception {
@@ -158,11 +171,19 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public void entitleSubscription(Long groupId, Long subscriptionId, String title) {
-        subscriptionController.entitle(principal, groupId, subscriptionId, title);
+        try {
+            subscriptionController.entitle(principal, groupId, subscriptionId, "empty string".equals(title) ? "" : title);
+        } catch (ServiceException e) {
+            
+        }
     }
     
     public void moveSubscription(Long groupId, Long subscriptionId, String direction) {
-        subscriptionController.move(principal, groupId, subscriptionId, "up".equals(direction));
+        try {
+            subscriptionController.move(principal, groupId, subscriptionId, "up".equals(direction));
+        } catch (ServiceException e) {
+            
+        }
     }
     
     public String getEntryId(String title) {

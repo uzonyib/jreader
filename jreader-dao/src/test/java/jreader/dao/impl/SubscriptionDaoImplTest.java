@@ -165,6 +165,25 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
     }
     
     @Test
+    public void findForGroupAndTitle_IfSubscriptionNotExists_ShouldReturnNull() {
+        Subscription subscription = sut.find(savedGroups.get(2), "title_not_found");
+        
+        assertNull(subscription);
+    }
+    
+    @Test
+    public void findForGroupAndTitle_IfSubscriptionExists_ShouldReturnSubscription() {
+        Subscription subscription = sut.find(savedGroups.get(0), savedSubscriptions.get(0).getTitle());
+        
+        assertNotNull(subscription);
+        assertEquals(subscription.getId(), savedSubscriptions.get(0).getId());
+        assertEquals(subscription.getTitle(), SUBSCRIPTION_TITLES[0]);
+        assertEquals(subscription.getOrder(), SUBSCRIPTION_ORDERS[0]);
+        assertEquals(subscription.getGroup().getTitle(), GROUP_TITLES[0]);
+        assertEquals(subscription.getGroup().getUser().getUsername(), USERNAMES[0]);
+    }
+    
+    @Test
     public void listSubscriptions_IfSubscriptionsExist_ShouldReturnSubscriptions() {
         List<Subscription> subscriptions = sut.listSubscriptions(savedFeeds.get(0));
         

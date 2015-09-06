@@ -48,6 +48,9 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     @Override
     public SubscriptionGroupDto createGroup(final String username, final String title) {
+        if (title == null || "".equals(title)) {
+            throw new ServiceException("Group title invalid.", ServiceStatus.INVALID_INPUT);
+        }
         final User user = this.getUser(username);
         if (subscriptionGroupDao.find(user, title) != null) {
             throw new ServiceException("Group already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
@@ -128,8 +131,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
             }
         }
 
-        if (groupIndex == null || groupIndex == 0) {
-            return;
+        if (groupIndex == null) {
+            throw new ServiceException("Group not found, ID: " + subscriptionGroupId, ServiceStatus.RESOURCE_NOT_FOUND);
+        }
+        if (groupIndex == 0) {
+            throw new ServiceException("Cannot move first group up.", ServiceStatus.INVALID_INPUT);
         }
 
         swap(subscriptionGroups.get(groupIndex - 1), subscriptionGroups.get(groupIndex));
@@ -147,8 +153,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
             }
         }
 
-        if (groupIndex == null || groupIndex == subscriptionGroups.size() - 1) {
-            return;
+        if (groupIndex == null) {
+            throw new ServiceException("Group not found, ID: " + subscriptionGroupId, ServiceStatus.RESOURCE_NOT_FOUND);
+        }
+        if (groupIndex == subscriptionGroups.size() - 1) {
+            throw new ServiceException("Cannot move last group down.", ServiceStatus.INVALID_INPUT);
         }
 
         swap(subscriptionGroups.get(groupIndex), subscriptionGroups.get(groupIndex + 1));
@@ -179,8 +188,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
             }
         }
 
-        if (subscriptionIndex == null || subscriptionIndex == 0) {
-            return;
+        if (subscriptionIndex == null) {
+            throw new ServiceException("Subscription not found, ID: " + subscriptionId, ServiceStatus.RESOURCE_NOT_FOUND);
+        }
+        if (subscriptionIndex == 0) {
+            throw new ServiceException("Cannot move first subscription up.", ServiceStatus.INVALID_INPUT);
         }
 
         swap(subscriptions.get(subscriptionIndex - 1), subscriptions.get(subscriptionIndex));
@@ -199,8 +211,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
             }
         }
 
-        if (subscriptionIndex == null || subscriptionIndex == subscriptions.size() - 1) {
-            return;
+        if (subscriptionIndex == null) {
+            throw new ServiceException("Subscription not found, ID: " + subscriptionId, ServiceStatus.RESOURCE_NOT_FOUND);
+        }
+        if (subscriptionIndex == subscriptions.size() - 1) {
+            throw new ServiceException("Cannot move last subscription down.", ServiceStatus.INVALID_INPUT);
         }
 
         swap(subscriptions.get(subscriptionIndex), subscriptions.get(subscriptionIndex + 1));
@@ -242,8 +257,14 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     @Override
     public void entitle(final String username, final Long subscriptionGroupId, final Long subscriptionId, final String title) {
+        if (title == null || "".equals(title)) {
+            throw new ServiceException("Subscription title invalid.", ServiceStatus.INVALID_INPUT);
+        }
         final User user = this.getUser(username);
         final SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+        if (subscriptionDao.find(group, title) != null) {
+            throw new ServiceException("Subscription with this title in the same group already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
+        }
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
         subscription.setTitle(title);
@@ -252,7 +273,13 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     @Override
     public void entitle(final String username, final Long subscriptionGroupId, final String title) {
+        if (title == null || "".equals(title)) {
+            throw new ServiceException("Group title invalid.", ServiceStatus.INVALID_INPUT);
+        }
         final User user = this.getUser(username);
+        if (subscriptionGroupDao.find(user, title) != null) {
+            throw new ServiceException("Group with this title already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
+        }
         final SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
 
         subscriptionGroup.setTitle(title);

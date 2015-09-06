@@ -37,10 +37,7 @@ public class SubscriptionController {
     @RequestMapping(value = "/{subscriptionId}/title", method = RequestMethod.PUT)
     public List<SubscriptionGroupDto> entitle(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
             @RequestParam final String value) {
-        if (value != null && !"".equals(value)) {
-            subscriptionService.entitle(principal.getName(), groupId, subscriptionId, value);
-        }
-
+        subscriptionService.entitle(principal.getName(), groupId, subscriptionId, value);
         return subscriptionService.list(principal.getName());
     }
 
