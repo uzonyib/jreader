@@ -42,10 +42,7 @@ public class ArchiveController {
 
     @RequestMapping(value = "/{id}/title", method = RequestMethod.PUT)
     public ResponseEntity<List<ArchiveDto>> entitle(final Principal principal, @PathVariable final Long id, @RequestParam final String value) {
-        if (value != null && !"".equals(value)) {
-            archiveService.entitle(principal.getName(), id, value);
-        }
-
+        archiveService.entitle(principal.getName(), id, value);
         return new ResponseEntity<List<ArchiveDto>>(archiveService.list(principal.getName()));
     }
 

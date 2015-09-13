@@ -56,6 +56,9 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
     @Override
     public ArchiveDto createArchive(final String username, final String title) {
+        if (title == null || "".equals(title)) {
+            throw new ServiceException("Archive title invalid.", HttpStatus.BAD_REQUEST);
+        }
         final User user = this.getUser(username);
         if (archiveDao.find(user, title) != null) {
             throw new ServiceException("Archive already exists.", HttpStatus.CONFLICT);
@@ -83,8 +86,11 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
             }
         }
 
-        if (index == null || index == 0) {
+        if (index == null) {
             return;
+        }
+        if (index == 0) {
+            throw new ServiceException("Cannot move first archive up.", HttpStatus.BAD_REQUEST);
         }
 
         swap(archives.get(index - 1), archives.get(index));
@@ -102,8 +108,11 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
             }
         }
 
-        if (index == null || index == archives.size() - 1) {
+        if (index == null) {
             return;
+        }
+        if (index == archives.size() - 1) {
+            throw new ServiceException("Cannot move last archive down.", HttpStatus.BAD_REQUEST);
         }
 
         swap(archives.get(index), archives.get(index + 1));
@@ -133,7 +142,13 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
     @Override
     public void entitle(final String username, final Long archiveId, final String title) {
+        if (title == null || "".equals(title)) {
+            throw new ServiceException("Archive title invalid.", HttpStatus.BAD_REQUEST);
+        }
         final User user = this.getUser(username);
+        if (archiveDao.find(user, title) != null) {
+            throw new ServiceException("Archive with this title already exists.", HttpStatus.CONFLICT);
+        }
         final Archive archive = this.getArchive(user, archiveId);
 
         archive.setTitle(title);

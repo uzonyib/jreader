@@ -26,6 +26,38 @@
 				<td>archive1</td>
 			</tr>
 		</table>
+		
+		<p>
+			When the user tries to create a new archive with <span concordion:execute="createArchive(#TEXT)">empty string</span> as title<br/>
+			then the archive count is still <span concordion:assertEquals="getArchiveCount()">1</span><br/>
+			and the archive list contains:
+		</p>
+		<table concordion:verifyRows="#archive : getArchives()">
+			<tr>
+				<th concordion:echo="#archive.id">ID</th>
+				<th concordion:assertEquals="#archive.title">Title</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>archive1</td>
+			</tr>
+		</table>
+	   	
+	   	<p>
+			When the user tries to create a new archive with title <span concordion:execute="createArchive(#TEXT)">archive1</span><br/>
+			then the archive count is still <span concordion:assertEquals="getArchiveCount()">1</span><br/>
+			and the archive list contains:
+		</p>
+		<table concordion:verifyRows="#archive : getArchives()">
+			<tr>
+				<th concordion:echo="#archive.id">ID</th>
+				<th concordion:assertEquals="#archive.title">Title</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>archive1</td>
+			</tr>
+		</table>
 	   	
 	   	<p>
 			When the user creates the following archives:
@@ -101,6 +133,54 @@
 	   	
 		<p>
 			When the user changes the title of archive #<span concordion:echo="#archiveId2"></span> to <span concordion:execute="entitleArchive(#archiveId2, #TEXT)">test</span><br/>
+			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
+			and the archive list contains:
+		</p>
+		<table concordion:verifyRows="#archive : getArchives()">
+			<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+		</table>
+		
+		<p>
+			When the user tries to change the title of archive #<span concordion:echo="#archiveId2"></span> to <span concordion:execute="entitleArchive(#archiveId2, #TEXT)">empty string</span><br/>
+			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
+			and the archive list contains:
+		</p>
+		<table concordion:verifyRows="#archive : getArchives()">
+			<tr>
+				<th concordion:assertEquals="#archive.title">Title</th>
+				<th concordion:echo="#archive.id">ID</th>
+			</tr>
+			<tr>
+				<td>archive1</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>test</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>archive4</td>
+				<td></td>
+			</tr>
+		</table>
+		
+		<p>
+			When the user tries to change the title of archive #<span concordion:echo="#archiveId2"></span> to <span concordion:execute="entitleArchive(#archiveId2, #TEXT)">archive1</span><br/>
 			then the archive count is <span concordion:assertEquals="getArchiveCount()">3</span><br/>
 			and the archive list contains:
 		</p>
