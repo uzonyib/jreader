@@ -6,18 +6,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
-import jreader.dao.UserDao;
-import jreader.domain.User;
-import jreader.services.ServiceException;
-import jreader.services.ServiceStatus;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import jreader.dao.UserDao;
+import jreader.domain.User;
+import jreader.services.ServiceException;
 
 public class UserServiceImplTest {
 	
@@ -59,7 +60,7 @@ public class UserServiceImplTest {
 			service.register(EXISTING_USER);
 			fail();
 		} catch (ServiceException e) {
-			assertEquals(e.getStatus(), ServiceStatus.RESOURCE_ALREADY_EXISTS);
+			assertEquals(e.getStatus(), HttpStatus.CONFLICT);
 		}
 		
 		verify(userDao, never()).save(any(User.class));

@@ -34,10 +34,10 @@ import jreader.services.DateHelper;
 import jreader.services.RssService;
 import jreader.services.ServiceException;
 import jreader.services.UserService;
-import jreader.web.controller.TaskController;
 import jreader.web.controller.ajax.dto.ArchivedEntry;
 import jreader.web.controller.ajax.dto.Entry;
 import jreader.web.controller.ajax.dto.Subscription;
+import jreader.web.controller.appengine.TaskController;
 import jreader.web.test.AbstractDataStoreTest;
 import jreader.web.test.FeedRegistry;
 
@@ -100,12 +100,12 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<SubscriptionGroupDto> getGroups() {
-        return groupController.listAll(principal);
+        return groupController.listAll(principal).getPayload();
     }
     
     public Long createGroup(String title) {
         try {
-            List<SubscriptionGroupDto> groups = groupController.create(principal, "empty string".equals(title) ? "" : title);
+            List<SubscriptionGroupDto> groups = groupController.create(principal, "empty string".equals(title) ? "" : title).getPayload();
             return Long.valueOf(groups.get(groups.size() - 1).getId());
         } catch (ServiceException e) {
             return null;
@@ -137,7 +137,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<SubscriptionDto> getSubscriptions(Long groupId) {
-        for (SubscriptionGroupDto group : groupController.listAll(principal)) {
+        for (SubscriptionGroupDto group : groupController.listAll(principal).getPayload()) {
             if (groupId.equals(Long.valueOf(group.getId()))) {
                 return group.getSubscriptions();
             }
@@ -147,7 +147,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public List<Subscription> getSubscriptions() {
         List<Subscription> subscriptions = new ArrayList<Subscription>();
-        for (SubscriptionGroupDto group : groupController.listAll(principal)) {
+        for (SubscriptionGroupDto group : groupController.listAll(principal).getPayload()) {
             for (SubscriptionDto dto : group.getSubscriptions()) {
                 Subscription subscription = new Subscription();
                 subscription.setId(Long.valueOf(dto.getId()));
@@ -187,7 +187,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getEntryId(String title) {
-        List<FeedEntryDto> entries = entryController.list(principal, "all", 0, Integer.MAX_VALUE, true);
+        List<FeedEntryDto> entries = entryController.list(principal, "all", 0, Integer.MAX_VALUE, true).getPayload();
         for (FeedEntryDto entry : entries) {
             if (title.equals(entry.getTitle())) {
                 return entry.getId();
@@ -197,15 +197,15 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<Entry> getEntries(String selection, int from, int to, String order) {
-        return convertEntries(entryController.list(principal, selection, from, to - from, "ascending".equals(order)));
+        return convertEntries(entryController.list(principal, selection, from, to - from, "ascending".equals(order)).getPayload());
     }
     
     public List<Entry> getEntries(Long groupId, String selection, int from, int to, String order) {
-        return convertEntries(entryController.list(principal, groupId, selection, from, to - from, "ascending".equals(order)));
+        return convertEntries(entryController.list(principal, groupId, selection, from, to - from, "ascending".equals(order)).getPayload());
     }
     
     public List<Entry> getEntries(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
-        return convertEntries(entryController.list(principal, groupId, subscriptionId, selection, from, to - from, "ascending".equals(order)));
+        return convertEntries(entryController.list(principal, groupId, subscriptionId, selection, from, to - from, "ascending".equals(order)).getPayload());
     }
     
     private static List<Entry> convertEntries(List<FeedEntryDto> dtos) {
@@ -247,11 +247,11 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<ArchiveDto> getArchives() {
-        return archiveController.listAll(principal);
+        return archiveController.listAll(principal).getPayload();
     }
     
     public Long createArchive(String title) {
-        List<ArchiveDto> archives = archiveController.create(principal, title);
+        List<ArchiveDto> archives = archiveController.create(principal, title).getPayload();
         return Long.valueOf(archives.get(archives.size() - 1).getId());
     }
     
@@ -268,11 +268,11 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<ArchivedEntry> getArchivedEntries(int from, int to, String order) {
-        return convertArchivedEntries(archivedEntryController.list(principal, from, to - from, "ascending".equals(order)));
+        return convertArchivedEntries(archivedEntryController.list(principal, from, to - from, "ascending".equals(order)).getPayload());
     }
     
     public List<ArchivedEntry> getArchivedEntries(Long archiveId, int from, int to, String order) {
-        return convertArchivedEntries(archivedEntryController.list(principal, archiveId, from, to - from, "ascending".equals(order)));
+        return convertArchivedEntries(archivedEntryController.list(principal, archiveId, from, to - from, "ascending".equals(order)).getPayload());
     }
     
     private static List<ArchivedEntry> convertArchivedEntries(List<ArchivedEntryDto> dtos) {
@@ -301,7 +301,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getArchivedEntryId(String title) {
-        List<ArchivedEntryDto> entries = archivedEntryController.list(principal, 0, Integer.MAX_VALUE, true);
+        List<ArchivedEntryDto> entries = archivedEntryController.list(principal, 0, Integer.MAX_VALUE, true).getPayload();
         for (ArchivedEntryDto entry : entries) {
             if (title.equals(entry.getTitle())) {
                 return entry.getId();

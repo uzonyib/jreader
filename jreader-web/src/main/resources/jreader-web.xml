@@ -24,9 +24,9 @@
 		<constructor-arg value="#{appProps.version}" />
 	</bean>
 	
-	<bean class="jreader.web.controller.CronJobController" />
+	<bean class="jreader.web.controller.appengine.CronJobController" />
 	
-	<bean class="jreader.web.controller.TaskController">
+	<bean class="jreader.web.controller.appengine.TaskController">
 		<constructor-arg ref="cronService" />
 		<constructor-arg value="#{cronProps.minAgeToDelete}" />
 		<constructor-arg value="#{cronProps.minCountToKeep}" />

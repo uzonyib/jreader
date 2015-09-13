@@ -10,8 +10,8 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	$scope.subscriptionGroups.items = [];
 	$scope.subscriptionGroups.unreadCount = 0;
 	
-	$scope.subscriptionGroups.setItems = function(groups) {
-		$scope.subscriptionGroups.items = groups;
+	$scope.subscriptionGroups.setItems = function(reponse) {
+		$scope.subscriptionGroups.items = reponse.payload;
 		var count = 0;
 		angular.forEach($scope.subscriptionGroups.items, function(group) {
 			count += group.unreadCount;
@@ -92,9 +92,9 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
     	filter.offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
     	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
     	
-    	$scope.ajaxService.loadEntries(filter).success(function(data) {
-    		$scope.feedEntries.moreItemsAvailable = data.length === filter.count;
-    		$scope.feedEntries.append(data);
+    	$scope.ajaxService.loadEntries(filter).success(function(response) {
+    		$scope.feedEntries.moreItemsAvailable = response.payload.length === filter.count;
+    		$scope.feedEntries.append(response.payload);
     		$scope.feedEntries.loading = false;
         });
     };
@@ -157,10 +157,6 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	$scope.archivedEntries.moreItemsAvailable = true;
 	$scope.archivedEntries.visible = false;
 	
-	$scope.archivedEntries.load = function() {
-		$scope.ajaxService.loadArchivedEntries($scope.viewService.archiveFilter.get());
-	};
-	
 	$scope.archivedEntries.loadMore = function() {
 		if ($scope.archivedEntries.moreItemsAvailable) {
 			$scope.viewService.archiveFilter.incrementPageIndex();
@@ -192,7 +188,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 		$scope.archivedEntries.moreItemsAvailable = true;
 	};
     
-    $scope.archivedEntries.load = function(filter) {
+    $scope.archivedEntries.load = function() {
     	if ($scope.archivedEntries.loading) {
     		return;
     	}
@@ -210,17 +206,17 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
     	filter.offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
     	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
     	
-    	$scope.ajaxService.loadArchivedEntries(filter).success(function(data) {
-    		$scope.archivedEntries.moreItemsAvailable = data.length === filter.count;
-    		$scope.archivedEntries.append(data);
+    	$scope.ajaxService.loadArchivedEntries(filter).success(function(response) {
+    		$scope.archivedEntries.moreItemsAvailable = response.payload.length === filter.count;
+    		$scope.archivedEntries.append(response.payload);
     		$scope.archivedEntries.loading = false;
         });
     };
     
     $scope.archives = [];
     
-	$scope.setArchives = function(archives) {
-		$scope.archives = archives;
+	$scope.setArchives = function(response) {
+		$scope.archives = response.payload;
     	angular.forEach($scope.archives, function(archive) {
 			archive.editingTitle = false;
 			archive.newTitle = archive.title;
@@ -228,9 +224,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	};
 	
 	$scope.refreshArchives = function() {
-		$scope.ajaxService.refreshArchives().success(function(archives) {
-        	$scope.setArchives(archives);
-        });
+		$scope.ajaxService.refreshArchives().success($scope.setArchives);
     };
 	
     $scope.refreshArchives();

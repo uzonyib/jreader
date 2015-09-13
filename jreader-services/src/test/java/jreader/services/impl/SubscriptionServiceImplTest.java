@@ -12,6 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
@@ -28,15 +37,6 @@ import jreader.dto.SubscriptionDto;
 import jreader.dto.SubscriptionGroupDto;
 import jreader.services.RssService;
 import jreader.services.ServiceException;
-import jreader.services.ServiceStatus;
-
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.core.convert.ConversionService;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class SubscriptionServiceImplTest {
 	
@@ -146,7 +146,7 @@ public class SubscriptionServiceImplTest {
 			service.createGroup(USERNAME, GROUP_TITLE);
 			fail();
 		} catch(ServiceException e) {
-			assertEquals(e.getStatus(), ServiceStatus.RESOURCE_ALREADY_EXISTS);
+			assertEquals(e.getStatus(), HttpStatus.CONFLICT);
 		}
 		
 		verify(userDao).find(USERNAME);
@@ -272,7 +272,7 @@ public class SubscriptionServiceImplTest {
 			service.subscribe(USERNAME, GROUP_ID, URL);
 			fail();
 		} catch(ServiceException e) {
-			assertEquals(e.getStatus(), ServiceStatus.RESOURCE_ALREADY_EXISTS);
+			assertEquals(e.getStatus(), HttpStatus.CONFLICT);
 		}
 		
 		verify(userDao).find(USERNAME);

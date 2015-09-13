@@ -2,8 +2,8 @@ package jreader.web.controller.ajax;
 
 import javax.servlet.http.HttpServletResponse;
 
-import jreader.dto.StatusDto;
 import jreader.services.ServiceException;
+import jreader.web.controller.ResponseEntity;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
-    public StatusDto handleServiceException(final ServiceException e, final HttpServletResponse response) {
-        response.setStatus(e.getStatus().getCode());
-        return new StatusDto(1, e.getMessage());
+    public ResponseEntity<Void> handleServiceException(final ServiceException e, final HttpServletResponse response) {
+        response.setStatus(e.getStatus().value());
+        return new ResponseEntity<Void>(e.getStatus().value(), e.getMessage());
     }
 
 }

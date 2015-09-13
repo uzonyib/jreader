@@ -3,6 +3,9 @@ package jreader.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
+
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedEntryDao;
 import jreader.dao.FeedEntryDao;
@@ -21,9 +24,6 @@ import jreader.dto.ArchivedEntryDto;
 import jreader.services.ArchiveService;
 import jreader.services.ArchivedEntryFilterData;
 import jreader.services.ServiceException;
-import jreader.services.ServiceStatus;
-
-import org.springframework.core.convert.ConversionService;
 
 public class ArchiveServiceImpl extends AbstractService implements ArchiveService {
 
@@ -49,7 +49,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     private Archive getArchive(final User user, final Long id) {
         final Archive archive = archiveDao.find(user, id);
         if (archive == null) {
-            throw new ServiceException("Archive not found, ID " + id, ServiceStatus.RESOURCE_NOT_FOUND);
+            throw new ServiceException("Archive not found, ID " + id, HttpStatus.NOT_FOUND);
         }
         return archive;
     }
@@ -58,7 +58,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     public ArchiveDto createArchive(final String username, final String title) {
         final User user = this.getUser(username);
         if (archiveDao.find(user, title) != null) {
-            throw new ServiceException("Archive already exists.", ServiceStatus.RESOURCE_ALREADY_EXISTS);
+            throw new ServiceException("Archive already exists.", HttpStatus.CONFLICT);
         }
         final Archive archive = archiveDao.save(builderFactory.createArchiveBuilder().user(user).title(title).order(archiveDao.getMaxOrder(user) + 1).build());
         return conversionService.convert(archive, ArchiveDto.class);
