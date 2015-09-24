@@ -77,7 +77,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private FeedRegistry feedRegistry = new FeedRegistry();
     
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
     

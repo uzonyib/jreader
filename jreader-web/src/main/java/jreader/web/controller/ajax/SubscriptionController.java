@@ -30,21 +30,22 @@ public class SubscriptionController {
     }
 
     @RequestMapping(value = "/{subscriptionId}", method = RequestMethod.DELETE)
-    public ResponseEntity<List<SubscriptionGroupDto>> delete(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId) {
+    public ResponseEntity<List<SubscriptionGroupDto>> delete(final Principal principal, @PathVariable final Long groupId,
+            @PathVariable final Long subscriptionId) {
         subscriptionService.unsubscribe(principal.getName(), groupId, subscriptionId);
         return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
     }
 
     @RequestMapping(value = "/{subscriptionId}/title", method = RequestMethod.PUT)
-    public ResponseEntity<List<SubscriptionGroupDto>> entitle(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
-            @RequestParam final String value) {
+    public ResponseEntity<List<SubscriptionGroupDto>> entitle(final Principal principal, @PathVariable final Long groupId,
+            @PathVariable final Long subscriptionId, @RequestParam final String value) {
         subscriptionService.entitle(principal.getName(), groupId, subscriptionId, value);
         return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
     }
 
     @RequestMapping(value = "/{subscriptionId}/order", method = RequestMethod.PUT)
-    public ResponseEntity<List<SubscriptionGroupDto>> move(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
-            @RequestParam final boolean up) {
+    public ResponseEntity<List<SubscriptionGroupDto>> move(final Principal principal, @PathVariable final Long groupId,
+            @PathVariable final Long subscriptionId, @RequestParam final boolean up) {
         if (up) {
             subscriptionService.moveUp(principal.getName(), groupId, subscriptionId);
         } else {

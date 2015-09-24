@@ -1,5 +1,6 @@
 package jreader.converter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.FactoryBean;
@@ -14,6 +15,10 @@ public class ConversionFactory implements FactoryBean<ConversionService>, Initia
     private Set<?> converters;
 
     private GenericConversionService conversionService;
+    
+    ConversionFactory() {
+        this(new HashSet<>());
+    }
 
     public ConversionFactory(final Set<?> converters) {
         this.converters = converters;
