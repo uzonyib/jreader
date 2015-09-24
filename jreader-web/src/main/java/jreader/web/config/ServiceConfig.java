@@ -45,7 +45,7 @@ public class ServiceConfig {
     
     @Bean
     public ConversionFactory conversionFactory() {
-        Set<Converter<?, ?>> converters = new LinkedHashSet<>();
+        final Set<Converter<?, ?>> converters = new LinkedHashSet<>();
         converters.add(new RssFetchResultConverter());
         converters.add(new FeedDtoConverter());
         converters.add(new FeedEntryDtoConverter());
