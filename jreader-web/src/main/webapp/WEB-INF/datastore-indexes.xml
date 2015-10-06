@@ -16,6 +16,10 @@
     <datastore-index kind="Subscription" ancestor="true" source="auto">
         <property name="order" direction="desc"/>
     </datastore-index>
+    
+    <datastore-index kind="FeedEntry" ancestor="true" source="auto">
+        <property name="uri" direction="asc"/>
+    </datastore-index>
 
     <datastore-index kind="FeedEntry" ancestor="true" source="auto">
         <property name="publishedDate" direction="asc"/>

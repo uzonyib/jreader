@@ -17,6 +17,8 @@ public class FeedEntry {
     @Load
     @Parent
     private Ref<Subscription> subscriptionRef;
+    @Index
+    private String uri;
     private String link;
     private String title;
     private String description;
@@ -42,6 +44,14 @@ public class FeedEntry {
 
     public void setSubscriptionRef(final Ref<Subscription> subscriptionRef) {
         this.subscriptionRef = subscriptionRef;
+    }
+    
+    public String getUri() {
+        return uri;
+    }
+    
+    public void setUri(final String uri) {
+        this.uri = uri;
     }
 
     public String getLink() {

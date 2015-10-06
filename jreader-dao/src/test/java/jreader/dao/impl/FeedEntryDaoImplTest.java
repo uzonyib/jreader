@@ -40,6 +40,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     private static final long[] SUBSCRIPTION_REFRESH_DATES = { 12L, 13L };
     private static List<Subscription> savedSubscriptions;
     
+    private static final String[] ENTRY_URIS = { "uri_1", "uri_2", "uri_3", "uri_4" };
     private static final String[] ENTRY_LINKS = { "link_1", "link_2", "link_3", "link_4" };
     private static final String[] ENTRY_TITLES = { "title_1", "title_2", "title_3", "title_4" };
     private static final String[] ENTRY_DESCRIPTIONS = { "description_1", "description_2", "description_3", "description_4" };
@@ -49,6 +50,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     private static final boolean[] ENTRY_STARRED_FLAGS = { false, true, true, false };
     private static List<FeedEntry> savedEntries;
     
+    private static final String NEW_URI = "new_uri";
     private static final String NEW_LINK = "new_link";
     private static final String NEW_TITLE = "new_title";
     private static final String NEW_DESCRIPTION = "new_description";
@@ -111,6 +113,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
         savedEntries = new ArrayList<FeedEntry>();
         for (int i = 0; i < ENTRY_TITLES.length; ++ i) {
             FeedEntry entry = new FeedEntry();
+            entry.setUri(ENTRY_URIS[i]);
             entry.setLink(ENTRY_LINKS[i]);
             entry.setTitle(ENTRY_TITLES[i]);
             entry.setDescription(ENTRY_DESCRIPTIONS[i]);
@@ -134,6 +137,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     @Test
     public void save_IfSubscriptionIsNew_ShouldReturnSubscription() {
         FeedEntry entry = new FeedEntry();
+        entry.setUri(NEW_URI);
         entry.setLink(NEW_LINK);
         entry.setTitle(NEW_TITLE);
         entry.setDescription(NEW_DESCRIPTION);
@@ -148,6 +152,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
         assertNotNull(entry);
         assertNotNull(entry.getId());
         assertEquals(entry.getSubscription().getTitle(), SUBSCRIPTION_TITLES[1]);
+        assertEquals(entry.getUri(), NEW_URI);
         assertEquals(entry.getLink(), NEW_LINK);
         assertEquals(entry.getTitle(), NEW_TITLE);
         assertEquals(entry.getDescription(), NEW_DESCRIPTION);
@@ -158,12 +163,37 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     }
     
     @Test
+    public void findByUri_IfEntryNotExists_ShouldReturnNull() {
+        FeedEntry entry = sut.find(savedSubscriptions.get(1), "not_found");
+        
+        assertNull(entry);
+    }
+    
+    @Test
+    public void findByUri_IfEntryExists_ShouldReturnEntry() {
+        FeedEntry entry = sut.find(savedSubscriptions.get(0), savedEntries.get(0).getUri());
+        
+        assertNotNull(entry);
+        assertNotNull(entry.getId());
+        assertEquals(entry.getSubscription().getTitle(), SUBSCRIPTION_TITLES[0]);
+        assertEquals(entry.getUri(), ENTRY_URIS[0]);
+        assertEquals(entry.getLink(), ENTRY_LINKS[0]);
+        assertEquals(entry.getTitle(), ENTRY_TITLES[0]);
+        assertEquals(entry.getDescription(), ENTRY_DESCRIPTIONS[0]);
+        assertEquals(entry.getAuthor(), ENTRY_AUTHORS[0]);
+        assertEquals(entry.getPublishedDate().longValue(), ENTRY_PUBLISHED_DATES[0]);
+        assertEquals(entry.isRead(), ENTRY_READ_FLAGS[0]);
+        assertEquals(entry.isStarred(), ENTRY_STARRED_FLAGS[0]);
+    }
+    
+    @Test
     public void findById_IfEntryExists_ShouldReturnEntry() {
         FeedEntry entry = sut.find(savedSubscriptions.get(0), savedEntries.get(0).getId());
         
         assertNotNull(entry);
         assertNotNull(entry.getId());
         assertEquals(entry.getSubscription().getTitle(), SUBSCRIPTION_TITLES[0]);
+        assertEquals(entry.getUri(), ENTRY_URIS[0]);
         assertEquals(entry.getLink(), ENTRY_LINKS[0]);
         assertEquals(entry.getTitle(), ENTRY_TITLES[0]);
         assertEquals(entry.getDescription(), ENTRY_DESCRIPTIONS[0]);

@@ -55,12 +55,12 @@ public class CronServiceImpl implements CronService {
     @Override
     public void refresh(final String url) {
         final Feed feed = feedDao.find(url);
+        final long refreshDate = System.currentTimeMillis();
         final RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
         if (rssFetchResult == null) {
             return;
         }
 
-        final long refreshDate = System.currentTimeMillis();
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
 
         for (final Subscription subscription : subscriptions) {
@@ -71,7 +71,14 @@ public class CronServiceImpl implements CronService {
                     LOG.warning("Publish date is null. Feed: " + feed.getTitle());
                     continue;
                 }
-                if (feedEntry.getPublishedDate() > subscription.getUpdatedDate()) {
+                if (feedEntry.getPublishedDate() < subscription.getUpdatedDate()) {
+                    continue;
+                }
+                if (feedEntry.getUri() == null) {
+                    LOG.warning("URI is null. Feed: " + feed.getTitle());
+                    continue;
+                }
+                if (feedEntryDao.find(subscription, feedEntry.getUri()) == null) {
                     feedEntry.setSubscription(subscription);
                     feedEntryDao.save(feedEntry);
                     ++counter;

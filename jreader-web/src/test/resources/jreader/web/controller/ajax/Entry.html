@@ -35,17 +35,19 @@
 		<p>
 			Given the feed entries are the followings:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #title, #description, #author, #link, #publishedDate)">
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
 			<tr>
-				<th concordion:set="#feedTitle">Title</th>
-				<th concordion:set="#title">Entry title</th>
-				<th concordion:set="#description">Entry title</th>
-				<th concordion:set="#author">Entry title</th>
-				<th concordion:set="#link">Entry title</th>
-				<th concordion:set="#publishedDate">Entry title</th>
+				<th concordion:set="#feedTitle">Feed title</th>
+				<th concordion:set="#uri">URI</th>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#author">Author</th>
+				<th concordion:set="#link">Link</th>
+				<th concordion:set="#publishedDate">Published date</th>
 			</tr>
 			<tr>
 				<td>feed1</td>
+				<td>uri11</td>
 				<td>entry11</td>
 				<td>description11</td>
 				<td>author11</td>
@@ -54,6 +56,7 @@
 			</tr>
 			<tr>
 				<td>feed1</td>
+				<td>uri12</td>
 				<td>entry12</td>
 				<td>description12</td>
 				<td>author12</td>
@@ -62,6 +65,7 @@
 			</tr>
 			<tr>
 				<td>feed2</td>
+				<td>uri21</td>
 				<td>entry21</td>
 				<td>description21</td>
 				<td>author21</td>
@@ -70,6 +74,7 @@
 			</tr>
 			<tr>
 				<td>feed2</td>
+				<td>uri22</td>
 				<td>entry22</td>
 				<td>description22</td>
 				<td>author22</td>
@@ -78,6 +83,7 @@
 			</tr>
 			<tr>
 				<td>feed3</td>
+				<td>uri31</td>
 				<td>entry31</td>
 				<td>description31</td>
 				<td>author31</td>
@@ -86,6 +92,7 @@
 			</tr>
 			<tr>
 				<td>feed3</td>
+				<td>uri32</td>
 				<td>entry32</td>
 				<td>description32</td>
 				<td>author32</td>

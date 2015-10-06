@@ -35,17 +35,19 @@
 		<p>
 			Given the feed entries are the followings:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #title, #description, #author, #link, #publishedDate)">
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
 			<tr>
-				<th concordion:set="#feedTitle">Title</th>
-				<th concordion:set="#title">Entry title</th>
-				<th concordion:set="#description">Entry title</th>
-				<th concordion:set="#author">Entry title</th>
-				<th concordion:set="#link">Entry title</th>
-				<th concordion:set="#publishedDate">Entry title</th>
+				<th concordion:set="#feedTitle">Feed title</th>
+				<th concordion:set="#uri">URI</th>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#author">Author</th>
+				<th concordion:set="#link">Link</th>
+				<th concordion:set="#publishedDate">Published date</th>
 			</tr>
 			<tr>
 				<td>feed1</td>
+				<td>uri11</td>
 				<td>entry11</td>
 				<td>description11</td>
 				<td>author11</td>
@@ -54,6 +56,7 @@
 			</tr>
 			<tr>
 				<td>feed1</td>
+				<td>uri12</td>
 				<td>entry12</td>
 				<td>description12</td>
 				<td>author12</td>
@@ -62,6 +65,7 @@
 			</tr>
 			<tr>
 				<td>feed2</td>
+				<td>uri21</td>
 				<td>entry21</td>
 				<td>description21</td>
 				<td>author21</td>
@@ -70,6 +74,7 @@
 			</tr>
 			<tr>
 				<td>feed2</td>
+				<td>uri22</td>
 				<td>entry22</td>
 				<td>description22</td>
 				<td>author22</td>
@@ -164,17 +169,19 @@
 	   	<p>
 			Given the feeds are updated with the following entries:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #title, #description, #author, #link, #publishedDate)">
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
 			<tr>
-				<th concordion:set="#feedTitle">Title</th>
-				<th concordion:set="#title">Entry title</th>
-				<th concordion:set="#description">Entry title</th>
-				<th concordion:set="#author">Entry title</th>
-				<th concordion:set="#link">Entry title</th>
-				<th concordion:set="#publishedDate">Entry title</th>
+				<th concordion:set="#feedTitle">Feed title</th>
+				<th concordion:set="#uri">URI</th>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#author">Author</th>
+				<th concordion:set="#link">Link</th>
+				<th concordion:set="#publishedDate">Published date</th>
 			</tr>
 			<tr>
 				<td>feed1</td>
+				<td>uri13</td>
 				<td>entry13</td>
 				<td>description13</td>
 				<td>author13</td>
@@ -183,6 +190,7 @@
 			</tr>
 			<tr>
 				<td>feed2</td>
+				<td>uri23</td>
 				<td>entry23</td>
 				<td>description23</td>
 				<td>author23</td>
@@ -270,6 +278,117 @@
 	   	</table>
 	   	
 	   	<p>
+			Given the feeds are updated with the following entries:
+		</p>
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+			<tr>
+				<th concordion:set="#feedTitle">Feed title</th>
+				<th concordion:set="#uri">URI</th>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#author">Author</th>
+				<th concordion:set="#link">Link</th>
+				<th concordion:set="#publishedDate">Published date</th>
+			</tr>
+			<tr>
+				<td>feed2</td>
+				<td>uri24</td>
+				<td>entry24</td>
+				<td>description24</td>
+				<td>author24</td>
+				<td>http://www.link24.com/</td>
+				<td>2015-06-06 01:15:00</td>
+			</tr>
+		</table>
+		<p>
+			when <span concordion:execute="refreshFeed(#TEXT)">feed2</span> is refreshed<br/>
+			and the user lists <span concordion:set="#selection">all</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getEntries(#selection, #from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.subscriptionTitle">Subscription title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.read">Read</th>
+	       		<th concordion:assertEquals="#entry.starred">Starred</th>
+	       	</tr>
+	       	<tr>
+				<td>subscription1</td>
+				<td>entry11</td>
+				<td>description11</td>
+				<td>author11</td>
+				<td>http://www.link11.com/</td>
+				<td>2015-06-06 00:00:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-06 00:15:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription1</td>
+				<td>entry12</td>
+				<td>description12</td>
+				<td>author12</td>
+				<td>http://www.link12.com/</td>
+				<td>2015-06-06 00:30:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:45:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription1</td>
+				<td>entry13</td>
+				<td>description13</td>
+				<td>author13</td>
+				<td>http://www.link13.com/</td>
+				<td>2015-06-06 01:00:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry23</td>
+				<td>description23</td>
+				<td>author23</td>
+				<td>http://www.link23.com/</td>
+				<td>2015-06-06 01:15:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry24</td>
+				<td>description24</td>
+				<td>author24</td>
+				<td>http://www.link24.com/</td>
+				<td>2015-06-06 01:15:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
 	   		Given the ID of <span concordion:execute="#entryId11 = getEntryId(#TEXT)">entry11</span> is <span concordion:echo="#entryId11"></span><br/>
 	   		and the ID of <span concordion:execute="#entryId21 = getEntryId(#TEXT)">entry21</span> is <span concordion:echo="#entryId21"></span><br/>
 	   		and the user marked entry #<span concordion:echo="#entryId11"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="read(#groupId, #subscriptionId1, #entryId11)">read</span><br/>
@@ -341,6 +460,16 @@
 				<td>false</td>
 				<td>false</td>
 			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry24</td>
+				<td>description24</td>
+				<td>author24</td>
+				<td>http://www.link24.com/</td>
+				<td>2015-06-06 01:15:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
 	   	</table>
 	   	
 	   	<p>
@@ -373,16 +502,6 @@
 				<td>false</td>
 			</tr>
 			<tr>
-				<td>subscription2</td>
-				<td>entry22</td>
-				<td>description22</td>
-				<td>author22</td>
-				<td>http://www.link22.com/</td>
-				<td>2015-06-06 00:45:00</td>
-				<td>false</td>
-				<td>false</td>
-			</tr>
-			<tr>
 				<td>subscription1</td>
 				<td>entry13</td>
 				<td>description13</td>
@@ -398,6 +517,16 @@
 				<td>description23</td>
 				<td>author23</td>
 				<td>http://www.link23.com/</td>
+				<td>2015-06-06 01:15:00</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry24</td>
+				<td>description24</td>
+				<td>author24</td>
+				<td>http://www.link24.com/</td>
 				<td>2015-06-06 01:15:00</td>
 				<td>false</td>
 				<td>false</td>

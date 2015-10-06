@@ -28,8 +28,9 @@ public class FeedRegistry {
         return feed;
     }
     
-    public void registerEntry(String feedTitle, String title, String description, String author, String link, Date publishedDate) {
+    public void registerEntry(String feedTitle, String uri, String title, String description, String author, String link, Date publishedDate) {
         SyndEntry entry = mock(SyndEntry.class);
+        when(entry.getUri()).thenReturn(uri);
         when(entry.getTitle()).thenReturn(title);
         SyndContent content = mock(SyndContent.class);
         when(content.getValue()).thenReturn(description);

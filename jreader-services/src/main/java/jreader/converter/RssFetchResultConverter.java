@@ -36,6 +36,7 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
 
     private static FeedEntry convert(final SyndEntry syndEntry) {
         final FeedEntry feedEntry = new FeedEntry();
+        feedEntry.setUri(syndEntry.getUri());
         feedEntry.setTitle(syndEntry.getTitle());
         if (syndEntry.getDescription() != null) {
             feedEntry.setDescription(syndEntry.getDescription().getValue());

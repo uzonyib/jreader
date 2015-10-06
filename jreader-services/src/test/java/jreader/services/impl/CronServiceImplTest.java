@@ -64,7 +64,7 @@ public class CronServiceImplTest {
 	private Feed feed2;
 	
 	@Mock
-	private RssFetchResult fetchResult1;
+	private RssFetchResult fetchResult;
 	
 	@Mock
 	private Subscription subscription1;
@@ -75,6 +75,8 @@ public class CronServiceImplTest {
 	private FeedEntry entry11;
 	@Mock
 	private FeedEntry entry12;
+	@Mock
+    private FeedEntry entry13;
 	@Mock
 	private FeedEntry entry21;
 	@Mock
@@ -120,17 +122,23 @@ public class CronServiceImplTest {
 		when(feed1.getUrl()).thenReturn(FEED_URL);
 		when(feed1.getTitle()).thenReturn(FEED_TITLE);
 		
-		when(rssService.fetch(FEED_URL)).thenReturn(fetchResult1);
+		when(rssService.fetch(FEED_URL)).thenReturn(fetchResult);
 		
 		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
 		
-		when(fetchResult1.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12));
+		when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12, entry13));
 		
 		when(subscription1.getUpdatedDate()).thenReturn(10L);
 		when(subscription2.getUpdatedDate()).thenReturn(10L);
 		
 		when(entry11.getPublishedDate()).thenReturn(9L);
+		when(entry11.getUri()).thenReturn("uri1");
+		
 		when(entry12.getPublishedDate()).thenReturn(11L);
+		when(entry12.getUri()).thenReturn("uri2");
+		
+		when(entry13.getPublishedDate()).thenReturn(11L);
+		when(entry13.getUri()).thenReturn("uri3");
 		
 		when(subscription1.getGroup()).thenReturn(group);
 		when(subscription2.getGroup()).thenReturn(group);
@@ -144,9 +152,14 @@ public class CronServiceImplTest {
 		verify(subscriptionDao).listSubscriptions(feed1);
 		
 		verify(feedEntryDao, never()).save(entry11);
+		
 		verify(entry12).setSubscription(subscription1);
 		verify(entry12).setSubscription(subscription2);
 		verify(feedEntryDao, times(2)).save(entry12);
+		
+		verify(entry13).setSubscription(subscription1);
+        verify(entry13).setSubscription(subscription2);
+        verify(feedEntryDao, times(2)).save(entry13);
 		
 		verify(subscription1).setUpdatedDate(11L);
 		verify(subscriptionDao).save(subscription1);

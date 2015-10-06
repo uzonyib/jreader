@@ -91,8 +91,9 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         when(feedFetcher.retrieveFeed(new URL(url))).thenReturn(feed);
     }
     
-    public void createEntry(String feedTitle, String title, String description, String author, String link, String publishedDate) throws ParseException {
-        feedRegistry.registerEntry(feedTitle, title, description, author, link, new SimpleDateFormat(DATE_FORMAT).parse(publishedDate));
+    public void createEntry(String feedTitle, String uri, String title, String description, String author, String link, String publishedDate)
+            throws ParseException {
+        feedRegistry.registerEntry(feedTitle, uri, title, description, author, link, new SimpleDateFormat(DATE_FORMAT).parse(publishedDate));
     }
     
     public int getGroupCount() {
