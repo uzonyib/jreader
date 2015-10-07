@@ -1,4 +1,4 @@
-angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "ajaxService", "viewService", function ($scope, $interval, ajaxService, viewService) {
+angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$interval", "ajaxService", "viewService", function ($scope, $sce, $interval, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 	
@@ -68,6 +68,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	$scope.feedEntries.append = function(entries) {
 		var copiedEntries = angular.copy(entries);
 		angular.forEach(copiedEntries, function(entry) {
+			entry.description = $sce.trustAsHtml(entry.description);
 			entry.archived = false;
 			entry.archive = $scope.archives[0];
 			$scope.feedEntries.items.push(entry);
@@ -179,6 +180,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$interval", "a
 	$scope.archivedEntries.append = function(entries) {
 		var copiedEntries = angular.copy(entries);
 		angular.forEach(copiedEntries, function(entry) {
+			entry.description = $sce.trustAsHtml(entry.description);
 			$scope.archivedEntries.items.push(entry);
 		});
 	};
