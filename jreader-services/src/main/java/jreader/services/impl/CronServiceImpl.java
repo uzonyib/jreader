@@ -65,13 +65,14 @@ public class CronServiceImpl implements CronService {
 
         for (final Subscription subscription : subscriptions) {
             int counter = 0;
-            Long updatedDate = subscription.getUpdatedDate();
+            Long lastUpdatedDate = subscription.getUpdatedDate();
+            Long newUpdatedDate = lastUpdatedDate;
             for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
                 if (feedEntry.getPublishedDate() == null) {
                     LOG.warning("Publish date is null. Feed: " + feed.getTitle());
                     continue;
                 }
-                if (feedEntry.getPublishedDate() < subscription.getUpdatedDate()) {
+                if (lastUpdatedDate != null && feedEntry.getPublishedDate() < lastUpdatedDate) {
                     continue;
                 }
                 if (feedEntry.getUri() == null) {
@@ -82,12 +83,12 @@ public class CronServiceImpl implements CronService {
                     feedEntry.setSubscription(subscription);
                     feedEntryDao.save(feedEntry);
                     ++counter;
-                    if (feedEntry.getPublishedDate() > updatedDate) {
-                        updatedDate = feedEntry.getPublishedDate();
+                    if (newUpdatedDate == null || feedEntry.getPublishedDate() > newUpdatedDate) {
+                        newUpdatedDate = feedEntry.getPublishedDate();
                     }
                 }
             }
-            subscription.setUpdatedDate(updatedDate);
+            subscription.setUpdatedDate(newUpdatedDate);
             subscription.setRefreshDate(refreshDate);
             subscriptionDao.save(subscription);
             LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);

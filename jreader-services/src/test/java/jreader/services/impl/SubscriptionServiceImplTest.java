@@ -4,6 +4,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -213,8 +214,7 @@ public class SubscriptionServiceImplTest {
 		verify(feedDao).save(feed);
 		verify(subscriptionDao).find(user, feed);
 		verify(subscriptionDao).save(subscription);
-		verify(feedEntryDao).save(entry1);
-		verify(feedEntryDao).save(entry2);
+		verifyZeroInteractions(feedEntryDao);
 	}
 	
 	@Test
@@ -245,13 +245,12 @@ public class SubscriptionServiceImplTest {
 		
 		verify(userDao).find(USERNAME);
 		verify(subscriptionGroupDao).find(user, GROUP_ID);
-		verify(rssService).fetch(URL);
+		verifyZeroInteractions(rssService);
 		verify(feedDao).find(URL);
 		verify(feedDao, never()).save(feed);
 		verify(subscriptionDao).find(user, feed);
 		verify(subscriptionDao).save(subscription);
-		verify(feedEntryDao).save(entry1);
-		verify(feedEntryDao).save(entry2);
+		verifyZeroInteractions(feedEntryDao);
 	}
 	
 	@Test
@@ -276,14 +275,13 @@ public class SubscriptionServiceImplTest {
 		}
 		
 		verify(userDao).find(USERNAME);
-		verify(subscriptionGroupDao).find(user, GROUP_ID);
-		verify(rssService).fetch(URL);
+		verifyZeroInteractions(subscriptionGroupDao);
+		verifyZeroInteractions(rssService);
 		verify(feedDao).find(URL);
 		verify(feedDao, never()).save(feed);
 		verify(subscriptionDao).find(user, feed);
 		verify(subscriptionDao, never()).save(subscription);
-		verify(feedEntryDao, never()).save(entry1);
-		verify(feedEntryDao, never()).save(entry2);
+		verifyZeroInteractions(feedEntryDao);
 	}
 	
 	@Test

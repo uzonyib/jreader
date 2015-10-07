@@ -6,18 +6,15 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jreader.dto.FeedDto;
-import jreader.services.CronService;
-import jreader.web.controller.ResponseEntity;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
+import jreader.dto.FeedDto;
+import jreader.services.CronService;
+import jreader.web.controller.ResponseEntity;
+import jreader.web.service.QueueService;
 
 @RestController
 @RequestMapping(value = "/tasks")
@@ -26,12 +23,15 @@ public class TaskController {
     private static final Logger LOG = Logger.getLogger(TaskController.class.getName());
 
     private final CronService cronService;
+    
+    private QueueService queueService;
 
     private final int minAgeToDelete;
     private final int minCountToKeep;
 
-    public TaskController(final CronService cronService, final int minAgeToDelete, final int minCountToKeep) {
+    public TaskController(final CronService cronService, final QueueService queueService, final int minAgeToDelete, final int minCountToKeep) {
         this.cronService = cronService;
+        this.queueService = queueService;
         this.minAgeToDelete = minAgeToDelete;
         this.minCountToKeep = minCountToKeep;
     }
@@ -41,9 +41,8 @@ public class TaskController {
         final ResponseEntity<Void> result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             final List<FeedDto> feeds = cronService.listFeeds();
-            final Queue queue = QueueFactory.getDefaultQueue();
             for (final FeedDto feed : feeds) {
-                queue.add(TaskOptions.Builder.withUrl("/tasks/refresh/feed").param("url", feed.getUrl()));
+                queueService.refresh(feed.getUrl());
             }
             result = new ResponseEntity<Void>(0);
         } else {
@@ -71,9 +70,8 @@ public class TaskController {
         final ResponseEntity<Void> result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             final List<FeedDto> feeds = cronService.listFeeds();
-            final Queue queue = QueueFactory.getDefaultQueue();
             for (FeedDto feed : feeds) {
-                queue.add(TaskOptions.Builder.withUrl("/tasks/cleanup/feed").param("url", feed.getUrl()));
+                queueService.cleanup(feed.getUrl());
             }
             result = new ResponseEntity<Void>(0);
         } else {

@@ -38,6 +38,7 @@ import jreader.web.controller.ajax.dto.ArchivedEntry;
 import jreader.web.controller.ajax.dto.Entry;
 import jreader.web.controller.ajax.dto.Subscription;
 import jreader.web.controller.appengine.TaskController;
+import jreader.web.service.QueueService;
 import jreader.web.test.AbstractDataStoreTest;
 import jreader.web.test.FeedRegistry;
 
@@ -48,6 +49,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     @Autowired
     private GroupController groupController;
     @Autowired
+    @InjectMocks
     private SubscriptionController subscriptionController;
     @Autowired
     private EntryController entryController;
@@ -56,6 +58,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     @Autowired
     private ArchivedEntryController archivedEntryController;
     @Autowired
+    @InjectMocks
     private TaskController taskController;
     
     @Autowired
@@ -73,6 +76,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private FeedFetcher feedFetcher;
     @Mock
     private DateHelper dateHelper;
+    @Mock
+    private QueueService queueService;
     
     private FeedRegistry feedRegistry = new FeedRegistry();
     
@@ -163,6 +168,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public Long subscribe(String feed, Long groupId) throws Exception {
         subscriptionController.create(principal, groupId, feedRegistry.getUrl(feed));
+        refreshFeed(feed);
         List<SubscriptionDto> subscriptions = getSubscriptions(groupId);
         return Long.valueOf(subscriptions.get(subscriptions.size() - 1).getId());
     }

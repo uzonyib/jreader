@@ -62,41 +62,25 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     @Override
     public SubscriptionDto subscribe(final String username, final Long subscriptionGroupId, final String url) {
-        final User user = this.getUser(username);
-        final SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
-
-        final RssFetchResult rssFetchResult = rssService.fetch(url);
-        if (rssFetchResult == null) {
-            throw new ServiceException("Cannot fetch RSS: " + url, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        final long refreshDate = System.currentTimeMillis();
         Feed feed = feedDao.find(url);
         if (feed == null) {
+            final RssFetchResult rssFetchResult = rssService.fetch(url);
+            if (rssFetchResult == null) {
+                throw new ServiceException("Cannot fetch RSS: " + url, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             feed = feedDao.save(rssFetchResult.getFeed());
         }
 
+        final User user = this.getUser(username);
         Subscription subscription = subscriptionDao.find(user, feed);
         if (subscription != null) {
             throw new ServiceException("Subscription already exists.", HttpStatus.CONFLICT);
         }
 
-        Long updatedDate = null;
-        for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
-            if (updatedDate == null || feedEntry.getPublishedDate() > updatedDate) {
-                updatedDate = feedEntry.getPublishedDate();
-            }
-        }
-
+        final SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
         subscription = builderFactory.createSubscriptionBuilder().group(group).feed(feed).title(feed.getTitle()).order(subscriptionDao.getMaxOrder(group) + 1)
-                .updatedDate(updatedDate).refreshDate(refreshDate).build();
+                .build();
         subscription = subscriptionDao.save(subscription);
-
-        for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
-            feedEntry.setSubscription(subscription);
-            feedEntryDao.save(feedEntry);
-        }
-
-        // TODO create assignments for all subscribers
 
         return conversionService.convert(subscription, SubscriptionDto.class);
     }

@@ -21,6 +21,8 @@ import jreader.web.controller.ajax.GroupController;
 import jreader.web.controller.ajax.SubscriptionController;
 import jreader.web.controller.appengine.CronJobController;
 import jreader.web.controller.appengine.TaskController;
+import jreader.web.service.QueueService;
+import jreader.web.service.appengine.AppengineQueueService;
 
 @Configuration
 @Import(ServiceConfig.class)
@@ -55,13 +57,18 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     }
     
     @Bean
+    public QueueService queueService() {
+        return new AppengineQueueService();
+    }
+    
+    @Bean
     public CronJobController cronJobController() {
-        return new CronJobController();
+        return new CronJobController(queueService());
     }
     
     @Bean
     public TaskController taskController() {
-        return new TaskController(serviceConfig.cronService(), minAgeToDelete, minCountToKeep);
+        return new TaskController(serviceConfig.cronService(), queueService(), minAgeToDelete, minCountToKeep);
     }
     
     @Bean
@@ -71,7 +78,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public SubscriptionController subscriptionController() {
-        return new SubscriptionController(serviceConfig.subscriptionService());
+        return new SubscriptionController(serviceConfig.subscriptionService(), queueService());
     }
     
     @Bean

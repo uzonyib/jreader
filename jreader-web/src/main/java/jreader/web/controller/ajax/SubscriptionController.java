@@ -3,29 +3,35 @@ package jreader.web.controller.ajax;
 import java.security.Principal;
 import java.util.List;
 
-import jreader.dto.SubscriptionGroupDto;
-import jreader.services.SubscriptionService;
-import jreader.web.controller.ResponseEntity;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jreader.dto.SubscriptionDto;
+import jreader.dto.SubscriptionGroupDto;
+import jreader.services.SubscriptionService;
+import jreader.web.controller.ResponseEntity;
+import jreader.web.service.QueueService;
+
 @RestController
 @RequestMapping(value = "/reader/groups/{groupId}/subscriptions")
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
+    
+    private QueueService queueService;
 
-    public SubscriptionController(final SubscriptionService subscriptionService) {
+    public SubscriptionController(final SubscriptionService subscriptionService, final QueueService queueService) {
         this.subscriptionService = subscriptionService;
+        this.queueService = queueService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<List<SubscriptionGroupDto>> create(final Principal principal, @PathVariable final Long groupId, @RequestParam final String url) {
-        subscriptionService.subscribe(principal.getName(), groupId, url);
+        SubscriptionDto subscription = subscriptionService.subscribe(principal.getName(), groupId, url);
+        queueService.refresh(subscription.getFeed().getUrl());
         return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
     }
 
