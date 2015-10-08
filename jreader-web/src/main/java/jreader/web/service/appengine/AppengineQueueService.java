@@ -13,7 +13,7 @@ public class AppengineQueueService implements QueueService {
     }
     
     @Override
-    public void refresh(String url) {
+    public void refresh(final String url) {
         QueueFactory.getDefaultQueue().add(TaskOptions.Builder.withUrl("/tasks/refresh/feed").param("url", url));
     }
     
@@ -23,7 +23,7 @@ public class AppengineQueueService implements QueueService {
     }
     
     @Override
-    public void cleanup(String url) {
+    public void cleanup(final String url) {
         QueueFactory.getDefaultQueue().add(TaskOptions.Builder.withUrl("/tasks/cleanup/feed").param("url", url));
     }
 

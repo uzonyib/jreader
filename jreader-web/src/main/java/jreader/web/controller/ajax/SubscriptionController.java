@@ -30,7 +30,7 @@ public class SubscriptionController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<List<SubscriptionGroupDto>> create(final Principal principal, @PathVariable final Long groupId, @RequestParam final String url) {
-        SubscriptionDto subscription = subscriptionService.subscribe(principal.getName(), groupId, url);
+        final SubscriptionDto subscription = subscriptionService.subscribe(principal.getName(), groupId, url);
         queueService.refresh(subscription.getFeed().getUrl());
         return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
     }

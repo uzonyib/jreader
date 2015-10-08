@@ -65,7 +65,7 @@ public class CronServiceImpl implements CronService {
 
         for (final Subscription subscription : subscriptions) {
             int counter = 0;
-            Long lastUpdatedDate = subscription.getUpdatedDate();
+            final Long lastUpdatedDate = subscription.getUpdatedDate();
             Long newUpdatedDate = lastUpdatedDate;
             for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
                 if (feedEntry.getPublishedDate() == null) {
