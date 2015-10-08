@@ -20,7 +20,7 @@
 			<td class="date hidden-sm hidden-xs" data-ng-click="toggleCollapsion(entry);feedEntries.markRead(entry);">{{entry.publishedDate | moment}}</td>
 		</tr>
 		<tr class="article-detail"
-			data-ng-show="entry.uncollapsed"
+			data-ng-if="entry.uncollapsed"
 			data-ng-repeat-end="">
 			<td colspan="4">
 				<div class="header">
