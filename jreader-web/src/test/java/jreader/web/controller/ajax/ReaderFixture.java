@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
 
+import jreader.dao.FeedEntryFilter.Selection;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedEntryDto;
 import jreader.dto.FeedEntryDto;
@@ -194,7 +196,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getEntryId(String title) {
-        List<FeedEntryDto> entries = entryController.list(principal, "all", 0, Integer.MAX_VALUE, true).getPayload();
+        List<FeedEntryDto> entries = entryController.list(principal, Selection.ALL, 0, Integer.MAX_VALUE, true).getPayload();
         for (FeedEntryDto entry : entries) {
             if (title.equals(entry.getTitle())) {
                 return entry.getId();
@@ -204,15 +206,19 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<Entry> getEntries(String selection, int from, int to, String order) {
-        return convertEntries(entryController.list(principal, selection, from, to - from, "ascending".equals(order)).getPayload());
+        return convertEntries(entryController
+                .list(principal, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
     }
     
     public List<Entry> getEntries(Long groupId, String selection, int from, int to, String order) {
-        return convertEntries(entryController.list(principal, groupId, selection, from, to - from, "ascending".equals(order)).getPayload());
+        return convertEntries(entryController
+                .list(principal, groupId, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
     }
     
     public List<Entry> getEntries(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
-        return convertEntries(entryController.list(principal, groupId, subscriptionId, selection, from, to - from, "ascending".equals(order)).getPayload());
+        return convertEntries(entryController
+                .list(principal, groupId, subscriptionId, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order))
+                .getPayload());
     }
     
     private static List<Entry> convertEntries(List<FeedEntryDto> dtos) {
