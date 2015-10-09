@@ -138,12 +138,12 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 		return angular.equals(this.activeView, view);
 	};
 	
-	this.isEntriesSelected = function() {
-		return angular.equals(this.activeView.type, "allItems") || angular.equals(this.activeView.type, "group") || angular.equals(this.activeView.type, "subscription");
+	service.isEntriesSelected = function() {
+		return angular.equals(service.activeView.type, "allItems") || angular.equals(service.activeView.type, "group") || angular.equals(service.activeView.type, "subscription");
 	};
 	
-	this.isArchivesSelected = function() {
-		return angular.equals(this.activeView.type, "archivedItems") || angular.equals(this.activeView.type, "archive");
+	service.isArchivesSelected = function() {
+		return angular.equals(service.activeView.type, "archivedItems") || angular.equals(service.activeView.type, "archive");
 	};
 	
 	this.getSubscriptionGroupId = function() {

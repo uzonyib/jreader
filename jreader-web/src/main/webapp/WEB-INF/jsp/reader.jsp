@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="/js/lib/moment.min.js"></script>
 		<script type="text/javascript" src="/js/reader-all.js"></script>
 	</head>
-	<body>
+	<body data-ng-keyup="shortcuts.handle($event)">
 		<div id="navbar">
 			<jsp:include page="navbar.jsp" />
 		</div>

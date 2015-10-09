@@ -141,9 +141,21 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		}
 	};
 	
+	$scope.feedEntries.refreshWithSubscriptions = function() {
+		$scope.feedEntries.refresh(true);
+	};
+	
 	$scope.feedEntries.refresh = function(reloadSubscriptions) {
 		$scope.viewService.entryFilter.resetPageIndex();
 		$scope.feedEntries.load(reloadSubscriptions);
+	};
+	
+	$scope.feedEntries.setOrderToAscending = function() {
+		$scope.feedEntries.setAscendingOrder(true);
+	};
+	
+	$scope.feedEntries.setOrderToDescending = function() {
+		$scope.feedEntries.setAscendingOrder(false);
 	};
 	
 	$scope.feedEntries.setAscendingOrder = function(ascending) {
@@ -151,6 +163,18 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 			$scope.viewService.entryFilter.ascendingOrder = ascending;
 			$scope.feedEntries.refresh(false);
 		}
+	};
+	
+	$scope.feedEntries.setSelectionToAll = function() {
+		$scope.feedEntries.setSelection("all");
+	};
+	
+	$scope.feedEntries.setSelectionToUnread = function() {
+		$scope.feedEntries.setSelection("unread");
+	};
+	
+	$scope.feedEntries.setSelectionToStarred = function() {
+		$scope.feedEntries.setSelection("starred");
 	};
 	
 	$scope.feedEntries.setSelection = function(s) {
@@ -176,6 +200,14 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	$scope.archivedEntries.refresh = function() {
 		$scope.viewService.archiveFilter.resetPageIndex();
 		$scope.archivedEntries.load();
+	};
+	
+	$scope.archivedEntries.setOrderToAscending = function() {
+		$scope.archivedEntries.setAscendingOrder(true);
+	};
+	
+	$scope.archivedEntries.setOrderToDescending = function() {
+		$scope.archivedEntries.setAscendingOrder(false);
 	};
 	
 	$scope.archivedEntries.setAscendingOrder = function(ascending) {
@@ -297,6 +329,27 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	$scope.menu.uncollapseArchivedItems = function($event) {
 		$scope.menu.archivedItemsCollapsed = false;
 		$event.stopPropagation();
+	};
+	
+	$scope.shortcuts = {};
+	$scope.shortcuts.handlers = [];
+	
+	$scope.shortcuts.register = function(char, predicate, callback) {
+		$scope.shortcuts.handlers.push({
+			"char": char.toLowerCase(),
+			"predicate": predicate,
+			"callback": callback
+		});
+	};
+	
+	$scope.shortcuts.handle = function(event) {
+		var char = String.fromCharCode(event.keyCode).toLowerCase();
+		angular.forEach($scope.shortcuts.handlers, function(handler) {
+			if (angular.equals(handler.char, char) && handler.predicate()) {
+				console.log("calling handler for " + char);
+				handler.callback();
+			}
+		});
 	};
     
 }]);
