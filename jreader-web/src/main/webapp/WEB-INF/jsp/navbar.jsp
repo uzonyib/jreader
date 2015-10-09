@@ -23,7 +23,7 @@
 							</button>
 						</li>
 						<li class="btn-group">
-							<button type="button" class="btn btn-default navbar-btn" title="Refresh" data-ng-click="feedEntries.refresh()">
+							<button type="button" class="btn btn-default navbar-btn" title="Refresh" data-ng-click="feedEntries.refresh(true)">
 								<span class="glyphicon glyphicon-refresh"></span>
 							</button>
 						</li>

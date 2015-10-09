@@ -1,7 +1,6 @@
 package jreader.web.controller.ajax;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jreader.dto.SubscriptionDto;
-import jreader.dto.SubscriptionGroupDto;
 import jreader.services.SubscriptionService;
 import jreader.web.controller.ResponseEntity;
 import jreader.web.service.QueueService;
@@ -29,28 +27,28 @@ public class SubscriptionController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<List<SubscriptionGroupDto>> create(final Principal principal, @PathVariable final Long groupId, @RequestParam final String url) {
+    public ResponseEntity create(final Principal principal, @PathVariable final Long groupId, @RequestParam final String url) {
         final SubscriptionDto subscription = subscriptionService.subscribe(principal.getName(), groupId, url);
         queueService.refresh(subscription.getFeed().getUrl());
-        return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
+        return new ResponseEntity(subscriptionService.list(principal.getName()));
     }
 
     @RequestMapping(value = "/{subscriptionId}", method = RequestMethod.DELETE)
-    public ResponseEntity<List<SubscriptionGroupDto>> delete(final Principal principal, @PathVariable final Long groupId,
+    public ResponseEntity delete(final Principal principal, @PathVariable final Long groupId,
             @PathVariable final Long subscriptionId) {
         subscriptionService.unsubscribe(principal.getName(), groupId, subscriptionId);
-        return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
+        return new ResponseEntity(subscriptionService.list(principal.getName()));
     }
 
     @RequestMapping(value = "/{subscriptionId}/title", method = RequestMethod.PUT)
-    public ResponseEntity<List<SubscriptionGroupDto>> entitle(final Principal principal, @PathVariable final Long groupId,
+    public ResponseEntity entitle(final Principal principal, @PathVariable final Long groupId,
             @PathVariable final Long subscriptionId, @RequestParam final String value) {
         subscriptionService.entitle(principal.getName(), groupId, subscriptionId, value);
-        return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
+        return new ResponseEntity(subscriptionService.list(principal.getName()));
     }
 
     @RequestMapping(value = "/{subscriptionId}/order", method = RequestMethod.PUT)
-    public ResponseEntity<List<SubscriptionGroupDto>> move(final Principal principal, @PathVariable final Long groupId,
+    public ResponseEntity move(final Principal principal, @PathVariable final Long groupId,
             @PathVariable final Long subscriptionId, @RequestParam final boolean up) {
         if (up) {
             subscriptionService.moveUp(principal.getName(), groupId, subscriptionId);
@@ -58,7 +56,7 @@ public class SubscriptionController {
             subscriptionService.moveDown(principal.getName(), groupId, subscriptionId);
         }
 
-        return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
+        return new ResponseEntity(subscriptionService.list(principal.getName()));
     }
 
 }

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
-    public ResponseEntity<Void> handleServiceException(final ServiceException e, final HttpServletResponse response) {
+    public ResponseEntity handleServiceException(final ServiceException e, final HttpServletResponse response) {
         response.setStatus(e.getStatus().value());
-        return new ResponseEntity<Void>(e.getStatus().value(), e.getMessage());
+        return new ResponseEntity(e.getStatus().value(), e.getMessage());
     }
 
 }

@@ -26,28 +26,28 @@ public class CronJobController {
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
-    public ResponseEntity<Void> refreshFeeds(final HttpServletRequest request, final Principal principal) {
-        final ResponseEntity<Void> result;
+    public ResponseEntity refreshFeeds(final HttpServletRequest request, final Principal principal) {
+        final ResponseEntity result;
         if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
             queueService.refresh();
-            result = new ResponseEntity<Void>();
+            result = new ResponseEntity();
             LOG.info("Refresh job added to queue.");
         } else {
-            result = new ResponseEntity<Void>(HttpStatus.FORBIDDEN.value());
+            result = new ResponseEntity(HttpStatus.FORBIDDEN.value());
             LOG.warning("Refresh job skipped.");
         }
         return result;
     }
 
     @RequestMapping(value = "/cleanup", method = RequestMethod.GET)
-    public ResponseEntity<Void> cleanup(final HttpServletRequest request, final Principal principal) {
-        final ResponseEntity<Void> result;
+    public ResponseEntity cleanup(final HttpServletRequest request, final Principal principal) {
+        final ResponseEntity result;
         if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
             queueService.cleanup();
-            result = new ResponseEntity<Void>();
+            result = new ResponseEntity();
             LOG.info("Cleanup job added to queue.");
         } else {
-            result = new ResponseEntity<Void>(HttpStatus.FORBIDDEN.value());
+            result = new ResponseEntity(HttpStatus.FORBIDDEN.value());
             LOG.warning("Cleanup job skipped.");
         }
         return result;

@@ -10,8 +10,12 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	$scope.subscriptionGroups.items = [];
 	$scope.subscriptionGroups.unreadCount = 0;
 	
-	$scope.subscriptionGroups.setItems = function(reponse) {
-		$scope.subscriptionGroups.items = reponse.payload;
+	$scope.subscriptionGroups.setItemsFromPayLoad = function(response) {
+		$scope.subscriptionGroups.setItems(response.payload);
+	};
+	
+	$scope.subscriptionGroups.setItems = function(items) {
+		$scope.subscriptionGroups.items = items;
 		var count = 0;
 		angular.forEach($scope.subscriptionGroups.items, function(group) {
 			count += group.unreadCount;
@@ -36,7 +40,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	
 	$scope.subscriptionGroups.refresh = function() {
 		$scope.ajaxService.refreshSubscriptions().success(function(data) {
-        	$scope.subscriptionGroups.setItems(data);
+        	$scope.subscriptionGroups.setItemsFromPayLoad(data);
         });
     };
     
@@ -53,7 +57,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		if ($scope.viewService.isEntriesSelected()) {
 			$scope.feedEntries.visible = true;
 			$scope.archivedEntries.visible = false;
-			$scope.feedEntries.refresh();
+			$scope.feedEntries.refresh(false);
 		} else if ($scope.viewService.isArchivesSelected()) {
 			$scope.feedEntries.visible = false;
 			$scope.archivedEntries.visible = true;
@@ -80,12 +84,13 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		$scope.feedEntries.moreItemsAvailable = true;
 	};
 	
-	$scope.feedEntries.load = function() {
+	$scope.feedEntries.load = function(reloadSubscriptions) {
     	if ($scope.feedEntries.loading) {
     		return;
     	}
     	$scope.feedEntries.loading = true;
     	var filter = $scope.viewService.entryFilter.get();
+    	filter.reloadSubscriptions = reloadSubscriptions;
     	if (filter.pageIndex === 0) {
     		$scope.feedEntries.reset();
     	}
@@ -95,6 +100,9 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     	
     	$scope.ajaxService.loadEntries(filter).success(function(response) {
     		$scope.feedEntries.moreItemsAvailable = response.payload.length === filter.count;
+    		if (reloadSubscriptions) {
+    			$scope.subscriptionGroups.setItems(response.auxiliaryPayload);
+    		}
     		$scope.feedEntries.append(response.payload);
     		$scope.feedEntries.loading = false;
         });
@@ -103,14 +111,14 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	$scope.feedEntries.loadMore = function() {
 		if ($scope.feedEntries.moreItemsAvailable) {
 			$scope.viewService.entryFilter.incrementPageIndex();
-			$scope.feedEntries.load();
+			$scope.feedEntries.load(false);
 		}
 	};
 	
 	$scope.feedEntries.markRead = function(entry) {
 		if (!entry.read) {
 			entry.read = true;
-			$scope.ajaxService.markRead(entry).success($scope.subscriptionGroups.setItems);
+			$scope.ajaxService.markRead(entry).success($scope.subscriptionGroups.setItemsFromPayLoad);
 		}
 	};
 	
@@ -126,29 +134,29 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 			$scope.feedEntries.loading = true;
 			$scope.viewService.entryFilter.resetPageIndex();
 			$scope.ajaxService.markAllRead(unreads, $scope.viewService.entryFilter.get()).success(function(response) {
-				$scope.subscriptionGroups.setItems(response);
+				$scope.subscriptionGroups.setItemsFromPayLoad(response);
 				$scope.feedEntries.loading = false;
-				$scope.feedEntries.load();
+				$scope.feedEntries.load(false);
 	        });
 		}
 	};
 	
-	$scope.feedEntries.refresh = function() {
+	$scope.feedEntries.refresh = function(reloadSubscriptions) {
 		$scope.viewService.entryFilter.resetPageIndex();
-		$scope.feedEntries.load();
+		$scope.feedEntries.load(reloadSubscriptions);
 	};
 	
 	$scope.feedEntries.setAscendingOrder = function(ascending) {
 		if (!angular.equals($scope.viewService.entryFilter.ascendingOrder, ascending)) {
 			$scope.viewService.entryFilter.ascendingOrder = ascending;
-			$scope.feedEntries.refresh();
+			$scope.feedEntries.refresh(false);
 		}
 	};
 	
 	$scope.feedEntries.setSelection = function(s) {
 		if (!angular.equals($scope.viewService.entryFilter.selection, s)) {
 			$scope.viewService.entryFilter.selection = s;
-			$scope.feedEntries.refresh();
+			$scope.feedEntries.refresh(false);
 		}
 	};
 	

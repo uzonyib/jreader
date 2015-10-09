@@ -21,8 +21,10 @@ import jreader.web.controller.ajax.GroupController;
 import jreader.web.controller.ajax.SubscriptionController;
 import jreader.web.controller.appengine.CronJobController;
 import jreader.web.controller.appengine.TaskController;
+import jreader.web.service.AuxiliaryPayloadProcessor;
 import jreader.web.service.QueueService;
-import jreader.web.service.appengine.AppengineQueueService;
+import jreader.web.service.impl.AppengineQueueService;
+import jreader.web.service.impl.AuxiliaryPayloadProcessorImpl;
 
 @Configuration
 @Import(ServiceConfig.class)
@@ -82,8 +84,13 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     }
     
     @Bean
+    public AuxiliaryPayloadProcessor auxiliaryPayloadProcessor() {
+        return new AuxiliaryPayloadProcessorImpl(serviceConfig.subscriptionService());
+    }
+    
+    @Bean
     public EntryController entryController() {
-        return new EntryController(serviceConfig.subscriptionService(), serviceConfig.feedEntryService());
+        return new EntryController(serviceConfig.subscriptionService(), serviceConfig.feedEntryService(), auxiliaryPayloadProcessor());
     }
     
     @Bean

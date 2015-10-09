@@ -19,14 +19,19 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
     	}
     	items += "/entries";
     	
+    	var params = {
+			"offset": filter.offset,
+			"count": filter.count,
+			"ascending": filter.ascendingOrder
+		};
+    	if (filter.reloadSubscriptions) {
+    		params.auxiliaryPayload = "subscriptions";
+    	}
+    	
     	return $http({
     		method: "GET",
     		url: "/reader" + items + "/" + filter.selection,
-    		params: {
-    			"offset": filter.offset,
-    			"count": filter.count,
-    			"ascending": filter.ascendingOrder
-    		}
+    		params: params
         });
     };
     

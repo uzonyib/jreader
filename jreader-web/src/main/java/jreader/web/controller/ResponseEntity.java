@@ -5,17 +5,17 @@ import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResponseEntity<T> {
+public class ResponseEntity {
 
     private int code;
     private String message;
-    private T payload;
+    private Object payload;
 
     public ResponseEntity() {
         this.code = HttpStatus.OK.value();
     }
     
-    public ResponseEntity(final T payload) {
+    public ResponseEntity(final Object payload) {
         this();
         this.payload = payload;
     }
@@ -37,7 +37,7 @@ public class ResponseEntity<T> {
         return message;
     }
     
-    public T getPayload() {
+    public Object getPayload() {
         return payload;
     }
 

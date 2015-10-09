@@ -26,36 +26,36 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
 	});
 	
 	$scope.createGroup = function() {
-		$scope.ajaxService.createGroup($scope.newGroupTitle).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.createGroup($scope.newGroupTitle).success($scope.subscriptionGroups.setItemsFromPayLoad);
 		$scope.newGroupTitle = "";
 	};
 	
 	$scope.deleteGroup = function(subscriptionGroupId) {
-		$scope.ajaxService.deleteGroup(subscriptionGroupId).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.deleteGroup(subscriptionGroupId).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.moveGroupUp = function(subscriptionGroupId) {
-		$scope.ajaxService.moveGroupUp(subscriptionGroupId).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.moveGroupUp(subscriptionGroupId).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.moveGroupDown = function(subscriptionGroupId) {
-		$scope.ajaxService.moveGroupDown(subscriptionGroupId).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.moveGroupDown(subscriptionGroupId).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.moveSubscriptionUp = function(subscriptionGroupId, subscriptionId) {
-		$scope.ajaxService.moveSubscriptionUp(subscriptionGroupId, subscriptionId).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.moveSubscriptionUp(subscriptionGroupId, subscriptionId).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.moveSubscriptionDown = function(subscriptionGroupId, subscriptionId) {
-		$scope.ajaxService.moveSubscriptionDown(subscriptionGroupId, subscriptionId).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.moveSubscriptionDown(subscriptionGroupId, subscriptionId).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.subscribe = function() {
-		$scope.ajaxService.subscribe($scope.newSubscription.group.id, $scope.newSubscription.url).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.subscribe($scope.newSubscription.group.id, $scope.newSubscription.url).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.unsubscribe = function(subscriptionGroupId, subscriptionId) {
-		$scope.ajaxService.unsubscribe(subscriptionGroupId, subscriptionId).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.unsubscribe(subscriptionGroupId, subscriptionId).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.editTitle = function(groupOrSubscription) {
@@ -63,11 +63,11 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
 	};
 	
 	$scope.entitleGroup = function(group) {
-		$scope.ajaxService.entitleGroup(group.id, group.newTitle).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.entitleGroup(group.id, group.newTitle).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.entitleSubscription = function(group, subscription) {
-		$scope.ajaxService.entitleSubscription(group.id, subscription.id, subscription.newTitle).success($scope.subscriptionGroups.setItems);
+		$scope.ajaxService.entitleSubscription(group.id, subscription.id, subscription.newTitle).success($scope.subscriptionGroups.setItemsFromPayLoad);
 	};
 	
 	$scope.createArchive = function() {

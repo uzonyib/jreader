@@ -1,4 +1,4 @@
-package jreader.web.service.appengine;
+package jreader.web.service.impl;
 
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;

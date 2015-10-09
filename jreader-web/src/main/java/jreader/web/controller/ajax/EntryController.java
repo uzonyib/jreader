@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jreader.dao.FeedEntryFilter.Selection;
 import jreader.dto.FeedEntryDto;
-import jreader.dto.SubscriptionGroupDto;
 import jreader.services.FeedEntryFilterData;
 import jreader.services.FeedEntryService;
 import jreader.services.SubscriptionService;
+import jreader.web.controller.ExtendedResponseEntity;
 import jreader.web.controller.ResponseEntity;
+import jreader.web.controller.util.AuxiliaryPayloadType;
+import jreader.web.controller.util.AuxiliaryPayloadTypeEditor;
 import jreader.web.controller.util.SelectionEditor;
+import jreader.web.service.AuxiliaryPayloadProcessor;
 
 @RestController
 @RequestMapping(value = "/reader")
@@ -28,53 +31,62 @@ public class EntryController {
 
     private final SubscriptionService subscriptionService;
     private final FeedEntryService feedEntryService;
+    
+    private final AuxiliaryPayloadProcessor auxiliaryPayloadProcessor;
 
-    public EntryController(final SubscriptionService subscriptionService, final FeedEntryService feedEntryService) {
+    public EntryController(final SubscriptionService subscriptionService, final FeedEntryService feedEntryService,
+            final AuxiliaryPayloadProcessor auxiliaryPayloadProcessor) {
         this.subscriptionService = subscriptionService;
         this.feedEntryService = feedEntryService;
+        this.auxiliaryPayloadProcessor = auxiliaryPayloadProcessor;
     }
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.registerCustomEditor(Selection.class, new SelectionEditor());
+        dataBinder.registerCustomEditor(AuxiliaryPayloadType.class, new AuxiliaryPayloadTypeEditor());
     }
 
     @RequestMapping(value = "/entries/{selection}", method = RequestMethod.GET)
-    public ResponseEntity<List<FeedEntryDto>> list(final Principal principal, @PathVariable final Selection selection, @RequestParam final int offset,
-            @RequestParam final int count, @RequestParam final boolean ascending) {
-        return new ResponseEntity<List<FeedEntryDto>>(
-                feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), selection, ascending, offset, count)));
+    public ResponseEntity list(final Principal principal, @PathVariable final Selection selection, @RequestParam final int offset,
+            @RequestParam final int count, @RequestParam final boolean ascending,
+            @RequestParam(required = false) final AuxiliaryPayloadType auxiliaryPayload) {
+        List<FeedEntryDto> entries = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), selection, ascending, offset, count));
+        return new ExtendedResponseEntity(entries, auxiliaryPayloadProcessor.process(auxiliaryPayload, principal.getName()));
     }
 
     @RequestMapping(value = "/groups/{groupId}/entries/{selection}", method = RequestMethod.GET)
-    public ResponseEntity<List<FeedEntryDto>> list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Selection selection,
-            @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
-        return new ResponseEntity<List<FeedEntryDto>>(
-                feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, selection, ascending, offset, count)));
+    public ResponseEntity list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Selection selection,
+            @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending,
+            @RequestParam(required = false) final AuxiliaryPayloadType auxiliaryPayload) {
+        List<FeedEntryDto> entries = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, selection, ascending, offset, count));
+        return new ExtendedResponseEntity(entries, auxiliaryPayloadProcessor.process(auxiliaryPayload, principal.getName()));
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{selection}", method = RequestMethod.GET)
-    public ResponseEntity<List<FeedEntryDto>> list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
-            @PathVariable final Selection selection, @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
-        return new ResponseEntity<List<FeedEntryDto>>(feedEntryService.listEntries(
-                new FeedEntryFilterData(principal.getName(), groupId, subscriptionId, selection, ascending, offset, count)));
+    public ResponseEntity list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
+            @PathVariable final Selection selection, @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending,
+            @RequestParam(required = false) final AuxiliaryPayloadType auxiliaryPayload) {
+        List<FeedEntryDto> entries = feedEntryService.listEntries(
+                        new FeedEntryFilterData(principal.getName(), groupId, subscriptionId, selection, ascending, offset, count));
+        return new ExtendedResponseEntity(entries, auxiliaryPayloadProcessor.process(auxiliaryPayload, principal.getName()));
     }
 
     @RequestMapping(value = "/entries", method = RequestMethod.POST)
-    public ResponseEntity<List<SubscriptionGroupDto>> readAll(final Principal principal, @RequestBody final Map<Long, Map<Long, List<Long>>> ids) {
+    public ResponseEntity readAll(final Principal principal, @RequestBody final Map<Long, Map<Long, List<Long>>> ids) {
         feedEntryService.markRead(principal.getName(), ids);
-        return new ResponseEntity<List<SubscriptionGroupDto>>(subscriptionService.list(principal.getName()));
+        return new ResponseEntity(subscriptionService.list(principal.getName()));
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{id}/starred", method = RequestMethod.PUT)
-    public ResponseEntity<Void> setStarred(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
+    public ResponseEntity setStarred(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
             @PathVariable final Long id, @RequestParam final boolean value) {
         if (value) {
             feedEntryService.star(principal.getName(), groupId, subscriptionId, id);
         } else {
             feedEntryService.unstar(principal.getName(), groupId, subscriptionId, id);
         }
-        return new ResponseEntity<Void>();
+        return new ResponseEntity();
     }
 
 }

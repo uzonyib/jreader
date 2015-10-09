@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,58 +38,58 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.POST)
-    public ResponseEntity<Void> refreshFeeds(final HttpServletRequest request, final Principal principal) {
-        final ResponseEntity<Void> result;
+    public ResponseEntity refreshFeeds(final HttpServletRequest request, final Principal principal) {
+        final ResponseEntity result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             final List<FeedDto> feeds = cronService.listFeeds();
             for (final FeedDto feed : feeds) {
                 queueService.refresh(feed.getUrl());
             }
-            result = new ResponseEntity<Void>(0);
+            result = new ResponseEntity();
         } else {
-            result = new ResponseEntity<Void>(1);
+            result = new ResponseEntity(HttpStatus.FORBIDDEN.value());
             LOG.warning("Feed refresh prevented.");
         }
         return result;
     }
 
     @RequestMapping(value = "/refresh/feed", method = RequestMethod.POST)
-    public ResponseEntity<Void> refreshFeed(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
-        final ResponseEntity<Void> result;
+    public ResponseEntity refreshFeed(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
+        final ResponseEntity result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             cronService.refresh(url);
-            result = new ResponseEntity<Void>(0);
+            result = new ResponseEntity();
         } else {
-            result = new ResponseEntity<Void>(1);
+            result = new ResponseEntity(HttpStatus.FORBIDDEN.value());
             LOG.warning("Feed refresh prevented.");
         }
         return result;
     }
 
     @RequestMapping(value = "/cleanup", method = RequestMethod.POST)
-    public ResponseEntity<Void> cleanup(final HttpServletRequest request, final Principal principal) {
-        final ResponseEntity<Void> result;
+    public ResponseEntity cleanup(final HttpServletRequest request, final Principal principal) {
+        final ResponseEntity result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             final List<FeedDto> feeds = cronService.listFeeds();
             for (FeedDto feed : feeds) {
                 queueService.cleanup(feed.getUrl());
             }
-            result = new ResponseEntity<Void>(0);
+            result = new ResponseEntity();
         } else {
-            result = new ResponseEntity<Void>(1);
+            result = new ResponseEntity(HttpStatus.FORBIDDEN.value());
             LOG.warning("Cleanup prevented.");
         }
         return result;
     }
 
     @RequestMapping(value = "/cleanup/feed", method = RequestMethod.POST)
-    public ResponseEntity<Void> cleanup(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
-        final ResponseEntity<Void> result;
+    public ResponseEntity cleanup(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
+        final ResponseEntity result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
             cronService.cleanup(url, minAgeToDelete, minCountToKeep);
-            result = new ResponseEntity<Void>(0);
+            result = new ResponseEntity();
         } else {
-            result = new ResponseEntity<Void>(1);
+            result = new ResponseEntity(HttpStatus.FORBIDDEN.value());
             LOG.warning("Cleanup prevented.");
         }
         return result;
