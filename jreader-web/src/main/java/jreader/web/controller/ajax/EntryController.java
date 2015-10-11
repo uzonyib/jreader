@@ -42,7 +42,7 @@ public class EntryController {
     }
 
     @InitBinder
-    public void initBinder(WebDataBinder dataBinder) {
+    public void initBinder(final WebDataBinder dataBinder) {
         dataBinder.registerCustomEditor(Selection.class, new SelectionEditor());
         dataBinder.registerCustomEditor(AuxiliaryPayloadType.class, new AuxiliaryPayloadTypeEditor());
     }
@@ -51,7 +51,7 @@ public class EntryController {
     public ResponseEntity list(final Principal principal, @PathVariable final Selection selection, @RequestParam final int offset,
             @RequestParam final int count, @RequestParam final boolean ascending,
             @RequestParam(required = false) final AuxiliaryPayloadType auxiliaryPayload) {
-        List<FeedEntryDto> entries = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), selection, ascending, offset, count));
+        final List<FeedEntryDto> entries = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), selection, ascending, offset, count));
         return new ExtendedResponseEntity(entries, auxiliaryPayloadProcessor.process(auxiliaryPayload, principal.getName()));
     }
 
@@ -59,7 +59,7 @@ public class EntryController {
     public ResponseEntity list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Selection selection,
             @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending,
             @RequestParam(required = false) final AuxiliaryPayloadType auxiliaryPayload) {
-        List<FeedEntryDto> entries = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, selection, ascending, offset, count));
+        final List<FeedEntryDto> entries = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, selection, ascending, offset, count));
         return new ExtendedResponseEntity(entries, auxiliaryPayloadProcessor.process(auxiliaryPayload, principal.getName()));
     }
 
@@ -67,7 +67,7 @@ public class EntryController {
     public ResponseEntity list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
             @PathVariable final Selection selection, @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending,
             @RequestParam(required = false) final AuxiliaryPayloadType auxiliaryPayload) {
-        List<FeedEntryDto> entries = feedEntryService.listEntries(
+        final List<FeedEntryDto> entries = feedEntryService.listEntries(
                         new FeedEntryFilterData(principal.getName(), groupId, subscriptionId, selection, ascending, offset, count));
         return new ExtendedResponseEntity(entries, auxiliaryPayloadProcessor.process(auxiliaryPayload, principal.getName()));
     }
