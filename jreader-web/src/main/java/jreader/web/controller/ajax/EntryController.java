@@ -59,7 +59,8 @@ public class EntryController {
     public ResponseEntity list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Selection selection,
             @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending,
             @RequestParam(required = false) final AuxiliaryPayloadType auxiliaryPayload) {
-        final List<FeedEntryDto> entries = feedEntryService.listEntries(new FeedEntryFilterData(principal.getName(), groupId, selection, ascending, offset, count));
+        final List<FeedEntryDto> entries = feedEntryService
+                .listEntries(new FeedEntryFilterData(principal.getName(), groupId, selection, ascending, offset, count));
         return new ExtendedResponseEntity(entries, auxiliaryPayloadProcessor.process(auxiliaryPayload, principal.getName()));
     }
 
