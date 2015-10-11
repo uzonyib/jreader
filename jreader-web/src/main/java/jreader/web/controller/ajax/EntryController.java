@@ -17,7 +17,7 @@ import jreader.dao.FeedEntryFilter.Selection;
 import jreader.dto.FeedEntryDto;
 import jreader.services.FeedEntryFilterData;
 import jreader.services.FeedEntryService;
-import jreader.services.SubscriptionService;
+import jreader.services.SubscriptionGroupService;
 import jreader.web.controller.ExtendedResponseEntity;
 import jreader.web.controller.ResponseEntity;
 import jreader.web.controller.util.AuxiliaryPayloadType;
@@ -29,14 +29,14 @@ import jreader.web.service.AuxiliaryPayloadProcessor;
 @RequestMapping(value = "/reader")
 public class EntryController {
 
-    private final SubscriptionService subscriptionService;
+    private final SubscriptionGroupService subscriptionGroupService;
     private final FeedEntryService feedEntryService;
     
     private final AuxiliaryPayloadProcessor auxiliaryPayloadProcessor;
 
-    public EntryController(final SubscriptionService subscriptionService, final FeedEntryService feedEntryService,
+    public EntryController(final SubscriptionGroupService subscriptionGroupService, final FeedEntryService feedEntryService,
             final AuxiliaryPayloadProcessor auxiliaryPayloadProcessor) {
-        this.subscriptionService = subscriptionService;
+        this.subscriptionGroupService = subscriptionGroupService;
         this.feedEntryService = feedEntryService;
         this.auxiliaryPayloadProcessor = auxiliaryPayloadProcessor;
     }
@@ -75,7 +75,7 @@ public class EntryController {
     @RequestMapping(value = "/entries", method = RequestMethod.POST)
     public ResponseEntity readAll(final Principal principal, @RequestBody final Map<Long, Map<Long, List<Long>>> ids) {
         feedEntryService.markRead(principal.getName(), ids);
-        return new ResponseEntity(subscriptionService.list(principal.getName()));
+        return new ResponseEntity(subscriptionGroupService.list(principal.getName()));
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{id}/starred", method = RequestMethod.PUT)

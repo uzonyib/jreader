@@ -26,6 +26,7 @@ import jreader.services.ArchiveService;
 import jreader.services.CronService;
 import jreader.services.FeedEntryService;
 import jreader.services.RssService;
+import jreader.services.SubscriptionGroupService;
 import jreader.services.SubscriptionService;
 import jreader.services.UserService;
 import jreader.services.impl.ArchiveServiceImpl;
@@ -33,6 +34,7 @@ import jreader.services.impl.CronServiceImpl;
 import jreader.services.impl.DateHelperImpl;
 import jreader.services.impl.FeedEntryServiceImpl;
 import jreader.services.impl.RssServiceImpl;
+import jreader.services.impl.SubscriptionGroupServiceImpl;
 import jreader.services.impl.SubscriptionServiceImpl;
 import jreader.services.impl.UserServiceImpl;
 
@@ -75,6 +77,12 @@ public class ServiceConfig {
     @Bean
     public UserService userService() {
         return new UserServiceImpl(daoConfig.userDao());
+    }
+    
+    @Bean
+    public SubscriptionGroupService subscriptionGroupService() {
+        return new SubscriptionGroupServiceImpl(daoConfig.userDao(), daoConfig.subscriptionGroupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
+                conversionService(), builderFactory());
     }
     
     @Bean
