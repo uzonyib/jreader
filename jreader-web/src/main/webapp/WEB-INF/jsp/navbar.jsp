@@ -18,33 +18,33 @@
 					</button>
 			    	<ul class="nav navbar-nav" data-ng-controller="EntriesNavbarCtrl" data-ng-show="active">
 			    		<li class="btn-group">
-							<button type="button" class="btn btn-default navbar-btn" title="Mark all as read"
+							<button type="button" class="btn btn-default navbar-btn" title="Mark all as read (M)"
 								data-ng-init="shortcuts.register('m', viewService.isEntriesSelected, feedEntries.markAllRead)"
 								data-ng-click="feedEntries.markAllRead()">
 								<span class="glyphicon glyphicon-ok"></span>
 							</button>
 						</li>
 						<li class="btn-group">
-							<button type="button" class="btn btn-default navbar-btn" title="Refresh"
+							<button type="button" class="btn btn-default navbar-btn" title="Refresh (R)"
 								data-ng-init="shortcuts.register('r', viewService.isEntriesSelected, feedEntries.refreshWithSubscriptions)"
 								data-ng-click="feedEntries.refreshWithSubscriptions()">
 								<span class="glyphicon glyphicon-refresh"></span>
 							</button>
 						</li>
 						<li class="btn-group" data-toggle="buttons">
-							<label class="btn btn-default navbar-btn" title="All"
+							<label class="btn btn-default navbar-btn" title="All (1)"
 								data-ng-class="{active: viewService.entryFilter.selection == 'all'}"
 								data-ng-init="shortcuts.register('1', viewService.isEntriesSelected, feedEntries.setSelectionToAll)"
 								data-ng-click="feedEntries.setSelectionToAll()">
 					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-th-list"></span>
 					  		</label>
-					  		<label class="btn btn-default navbar-btn" title="Unread"
+					  		<label class="btn btn-default navbar-btn" title="Unread (2)"
 					  			data-ng-class="{active: viewService.entryFilter.selection == 'unread'}"
 					  			data-ng-init="shortcuts.register('2', viewService.isEntriesSelected, feedEntries.setSelectionToUnread)"
 					  			data-ng-click="feedEntries.setSelectionToUnread()">
 					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-unchecked"></span>
 					  		</label>
-					  		<label class="btn btn-default navbar-btn" title="Starred"
+					  		<label class="btn btn-default navbar-btn" title="Starred (3)"
 					  			data-ng-class="{active: viewService.entryFilter.selection == 'starred'}"
 					  			data-ng-init="shortcuts.register('3', viewService.isEntriesSelected, feedEntries.setSelectionToStarred)"
 					  			data-ng-click="feedEntries.setSelectionToStarred()">
@@ -52,13 +52,13 @@
 					  		</label>
 						</li>
 						<li class="btn-group" data-toggle="buttons">
-							<label class="btn btn-default navbar-btn" title="Ascending"
+							<label class="btn btn-default navbar-btn" title="Ascending (A)"
 								data-ng-class="{active: viewService.entryFilter.ascendingOrder}"
 								data-ng-init="shortcuts.register('a', viewService.isEntriesSelected, feedEntries.setOrderToAscending)"
 								data-ng-click="feedEntries.setOrderToAscending()">
 					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-chevron-down"></span>
 					  		</label>
-					  		<label class="btn btn-default navbar-btn" title="Descending"
+					  		<label class="btn btn-default navbar-btn" title="Descending (D)"
 					  			data-ng-class="{active: !viewService.entryFilter.ascendingOrder}"
 					  			data-ng-init="shortcuts.register('d', viewService.isEntriesSelected, feedEntries.setOrderToDescending)"
 					  			data-ng-click="feedEntries.setOrderToDescending()">
@@ -81,20 +81,20 @@
 					</ul>
 			    	<ul class="nav navbar-nav" data-ng-controller="ArchivesNavbarCtrl" data-ng-show="active">
 						<li class="btn-group">
-							<button type="button" class="btn btn-default navbar-btn" title="Refresh"
+							<button type="button" class="btn btn-default navbar-btn" title="Refresh (R)"
 								data-ng-init="shortcuts.register('r', viewService.isArchivesSelected, archivedEntries.refresh)"
 								data-ng-click="archivedEntries.refresh()">
 								<span class="glyphicon glyphicon-refresh"></span>
 							</button>
 						</li>
 						<li class="btn-group" data-toggle="buttons">
-							<label class="btn btn-default navbar-btn" title="Ascending"
+							<label class="btn btn-default navbar-btn" title="Ascending (A)"
 								data-ng-class="{active: viewService.archiveFilter.ascendingOrder}"
 								data-ng-init="shortcuts.register('a', viewService.isArchivesSelected, archivedEntries.setOrderToAscending)"
 								data-ng-click="archivedEntries.setAscendingOrder(true)">
 					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-chevron-down"></span>
 					  		</label>
-					  		<label class="btn btn-default navbar-btn" title="Descending"
+					  		<label class="btn btn-default navbar-btn" title="Descending (D)"
 					  			data-ng-class="{active: !viewService.archiveFilter.ascendingOrder}"
 					  			data-ng-init="shortcuts.register('d', viewService.isArchivesSelected, archivedEntries.setOrderToDescending)"
 					  			data-ng-click="archivedEntries.setAscendingOrder(false)">
@@ -198,9 +198,20 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="aboutModalLabel">About jReader</h4>
+				<h3 class="modal-title" id="aboutModalLabel">Welcome to jReader!</h3>
 			</div>
-			<div class="modal-body">Current version: ${appVersion}</div>
+			<div class="modal-body">
+				<h4>Keyboard shortcuts</h4>
+				<p>M - Mark all entries as read</p>
+				<p>R - Refresh entries</p>
+				<p>1 - Show all entries</p>
+				<p>2 - Show unread entries</p>
+				<p>3 - Show starred entries</p>
+				<p>A - Ascending order</p>
+				<p>D - Descending order</p>
+				<hr>
+				<h4>Current version: ${appVersion}</h4>
+			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
