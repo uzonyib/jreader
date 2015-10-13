@@ -13,6 +13,7 @@ public class Feed {
     private String title;
     private String description;
     private String feedType;
+    private Long refreshDate;
     private Long publishedDate;
 
     public String getUrl() {
@@ -45,6 +46,14 @@ public class Feed {
 
     public void setFeedType(final String feedType) {
         this.feedType = feedType;
+    }
+
+    public Long getRefreshDate() {
+        return refreshDate;
+    }
+
+    public void setRefreshDate(Long refreshDate) {
+        this.refreshDate = refreshDate;
     }
 
     public Long getPublishedDate() {

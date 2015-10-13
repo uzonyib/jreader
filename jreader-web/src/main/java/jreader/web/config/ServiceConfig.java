@@ -105,8 +105,8 @@ public class ServiceConfig {
     
     @Bean
     public CronService cronService() {
-        return new CronServiceImpl(daoConfig.subscriptionDao(), daoConfig.feedDao(),
-                daoConfig.feedEntryDao(), rssService(), conversionService(), new DateHelperImpl());
+        return new CronServiceImpl(daoConfig.subscriptionDao(), daoConfig.feedDao(), daoConfig.feedEntryDao(), daoConfig.feedStatDao(), rssService(),
+                conversionService(), builderFactory(), new DateHelperImpl());
     }
 
 }

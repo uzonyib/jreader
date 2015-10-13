@@ -1,6 +1,8 @@
 package jreader.services.impl;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -23,9 +25,12 @@ import org.testng.annotations.Test;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
+import jreader.dao.FeedStatDao;
 import jreader.dao.SubscriptionDao;
+import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
@@ -39,6 +44,7 @@ public class CronServiceImplTest {
     private static final String USERNAME = "username";
 	private static final String FEED_URL = "url";
 	private static final String FEED_TITLE = "title";
+	private static final long CURRENT_DATE = 1000L;
 
 	@InjectMocks
 	private CronServiceImpl service;
@@ -49,11 +55,16 @@ public class CronServiceImplTest {
 	private FeedDao feedDao;
 	@Mock
 	private FeedEntryDao feedEntryDao;
+	@Mock
+    private FeedStatDao feedStatDao;
 	
 	@Mock
 	private RssService rssService;
 	@Mock
     private ConversionService conversionService;
+	
+	@Mock
+	private BuilderFactory builderFactory;
 	
 	@Mock
 	private DateHelper dateHelper;
@@ -81,6 +92,12 @@ public class CronServiceImplTest {
 	private FeedEntry entry21;
 	@Mock
 	private FeedEntry entry22;
+	
+	@Mock
+	private FeedStat.Builder builder;
+	
+	@Mock
+	private FeedStat feedStat;
 	
 	@Mock
 	private SubscriptionGroup group;
@@ -117,10 +134,66 @@ public class CronServiceImplTest {
     }
 	
 	@Test
-	public void refreshFeeds() {
+    public void refreshFeeds_NoNewEntries() {
+        when(feedDao.find(FEED_URL)).thenReturn(feed1);
+        when(feed1.getUrl()).thenReturn(FEED_URL);
+        when(feed1.getTitle()).thenReturn(FEED_TITLE);
+        
+        when(dateHelper.getCurrentDate()).thenReturn(CURRENT_DATE);
+        
+        when(rssService.fetch(FEED_URL)).thenReturn(fetchResult);
+        
+        when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
+        
+        when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12, entry13));
+        
+        when(subscription1.getUpdatedDate()).thenReturn(800L);
+        when(subscription2.getUpdatedDate()).thenReturn(900L);
+        
+        when(entry11.getPublishedDate()).thenReturn(600L);
+        when(entry11.getUri()).thenReturn("uri1");
+        when(feedEntryDao.find(subscription1, "uri1")).thenReturn(entry11);
+        
+        when(entry12.getPublishedDate()).thenReturn(700L);
+        when(entry12.getUri()).thenReturn("uri2");
+        when(feedEntryDao.find(subscription1, "uri2")).thenReturn(entry12);
+        
+        when(entry13.getPublishedDate()).thenReturn(800L);
+        when(entry13.getUri()).thenReturn("uri3");
+        when(feedEntryDao.find(subscription1, "uri3")).thenReturn(entry13);
+        
+        when(subscription1.getGroup()).thenReturn(group);
+        when(subscription2.getGroup()).thenReturn(group);
+        when(group.getUser()).thenReturn(user);
+        when(user.getUsername()).thenReturn(USERNAME);
+        
+        service.refresh(FEED_URL);
+        
+        verify(rssService).fetch(FEED_URL);
+        
+        verify(subscriptionDao).listSubscriptions(feed1);
+        
+        verify(feedEntryDao, never()).save(entry11);
+        
+        verify(feedEntryDao, never()).save(any(FeedEntry.class));
+        
+        verify(subscription1).setUpdatedDate(800L);
+        verify(subscription1).setRefreshDate(CURRENT_DATE);
+        verify(subscriptionDao).save(subscription1);
+        verify(subscription2).setUpdatedDate(900L);
+        verify(subscription2).setRefreshDate(CURRENT_DATE);
+        verify(subscriptionDao).save(subscription2);
+        
+        verifyNoMoreInteractions(builderFactory);
+    }
+	
+	@Test
+	public void refreshFeeds_NewEntries() {
 	    when(feedDao.find(FEED_URL)).thenReturn(feed1);
 		when(feed1.getUrl()).thenReturn(FEED_URL);
 		when(feed1.getTitle()).thenReturn(FEED_TITLE);
+		
+		when(dateHelper.getCurrentDate()).thenReturn(CURRENT_DATE);
 		
 		when(rssService.fetch(FEED_URL)).thenReturn(fetchResult);
 		
@@ -145,6 +218,12 @@ public class CronServiceImplTest {
 		when(group.getUser()).thenReturn(user);
 		when(user.getUsername()).thenReturn(USERNAME);
 		
+		when(builderFactory.createFeedStatBuilder()).thenReturn(builder);
+		when(builder.feed(feed1)).thenReturn(builder);
+		when(builder.refreshDate(anyLong())).thenReturn(builder);
+		when(builder.count(anyInt())).thenReturn(builder);
+		when(builder.build()).thenReturn(feedStat);
+		
 		service.refresh(FEED_URL);
 		
 		verify(rssService).fetch(FEED_URL);
@@ -162,9 +241,17 @@ public class CronServiceImplTest {
         verify(feedEntryDao, times(2)).save(entry13);
 		
 		verify(subscription1).setUpdatedDate(11L);
+		verify(subscription1).setRefreshDate(CURRENT_DATE);
 		verify(subscriptionDao).save(subscription1);
 		verify(subscription2).setUpdatedDate(11L);
+		verify(subscription2).setRefreshDate(CURRENT_DATE);
         verify(subscriptionDao).save(subscription2);
+        
+        verify(builder).feed(feed1);
+        verify(builder).refreshDate(CURRENT_DATE);
+        verify(builder).count(2);
+        verify(builder).build();
+        verify(feedStatDao).save(feedStat);
 	}
 	
 	@Test

@@ -7,6 +7,7 @@ import jreader.domain.Archive;
 import jreader.domain.ArchivedEntry;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
 import jreader.domain.SubscriptionGroup;
 import jreader.domain.User;
@@ -27,6 +28,7 @@ abstract class AbstractOfyDao<EntityType> implements OfyDao<EntityType> {
         factory.register(Subscription.class);
         factory.register(Feed.class);
         factory.register(FeedEntry.class);
+        factory.register(FeedStat.class);
         factory.register(Archive.class);
         factory.register(ArchivedEntry.class);
     }

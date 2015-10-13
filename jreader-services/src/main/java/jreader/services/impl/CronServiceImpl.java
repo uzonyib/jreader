@@ -9,9 +9,12 @@ import org.springframework.core.convert.ConversionService;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
+import jreader.dao.FeedStatDao;
 import jreader.dao.SubscriptionDao;
+import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
+import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
 import jreader.dto.FeedDto;
 import jreader.dto.RssFetchResult;
@@ -26,19 +29,24 @@ public class CronServiceImpl implements CronService {
     private SubscriptionDao subscriptionDao;
     private FeedDao feedDao;
     private FeedEntryDao feedEntryDao;
+    private FeedStatDao feedStatDao;
 
     private RssService rssService;
     private ConversionService conversionService;
     
+    private BuilderFactory builderFactory;
+    
     private DateHelper dateHelper;
 
-    public CronServiceImpl(final SubscriptionDao subscriptionDao, final FeedDao feedDao, final FeedEntryDao feedEntryDao, final RssService rssService,
-            final ConversionService conversionService, final DateHelper dateHelper) {
+    public CronServiceImpl(final SubscriptionDao subscriptionDao, final FeedDao feedDao, final FeedEntryDao feedEntryDao, final FeedStatDao feedStatDao,
+            final RssService rssService, final ConversionService conversionService, final BuilderFactory builderFactory, final DateHelper dateHelper) {
         this.subscriptionDao = subscriptionDao;
         this.feedDao = feedDao;
         this.feedEntryDao = feedEntryDao;
+        this.feedStatDao = feedStatDao;
         this.rssService = rssService;
         this.conversionService = conversionService;
+        this.builderFactory = builderFactory;
         this.dateHelper = dateHelper;
     }
 
@@ -55,14 +63,15 @@ public class CronServiceImpl implements CronService {
     @Override
     public void refresh(final String url) {
         final Feed feed = feedDao.find(url);
-        final long refreshDate = System.currentTimeMillis();
+        final long refreshDate = dateHelper.getCurrentDate();
         final RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
         if (rssFetchResult == null) {
             return;
         }
 
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
-
+        Integer statCounter = null;
+        
         for (final Subscription subscription : subscriptions) {
             int counter = 0;
             final Long lastUpdatedDate = subscription.getUpdatedDate();
@@ -91,7 +100,17 @@ public class CronServiceImpl implements CronService {
             subscription.setUpdatedDate(newUpdatedDate);
             subscription.setRefreshDate(refreshDate);
             subscriptionDao.save(subscription);
+            
             LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);
+            
+            if (statCounter == null || statCounter > counter) {
+                statCounter = counter;
+            }
+        }
+        
+        if (statCounter != null && statCounter > 0) {
+            final FeedStat feedStat = builderFactory.createFeedStatBuilder().feed(feed).refreshDate(refreshDate).count(statCounter).build();
+            feedStatDao.save(feedStat);
         }
     }
 

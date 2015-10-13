@@ -1,5 +1,7 @@
 package jreader.domain;
 
+import jreader.domain.FeedStat.Builder;
+
 public class BuilderFactory {
     
     public SubscriptionGroup.Builder createGroupBuilder() {
@@ -12,6 +14,10 @@ public class BuilderFactory {
 
     public Archive.Builder createArchiveBuilder() {
         return new Archive.Builder();
+    }
+    
+    public Builder createFeedStatBuilder() {
+        return new FeedStat.Builder();
     }
 
 }
