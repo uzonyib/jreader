@@ -116,10 +116,11 @@ public class CronServiceImpl implements CronService {
 
     @Override
     public void cleanup(final String url, final int olderThanDays, final int keptCount) {
-        final long date = dateHelper.addDaysToCurrentDate(-olderThanDays);
+        final long date = dateHelper.substractDaysFromCurrentDate(olderThanDays);
         final Feed feed = feedDao.find(url);
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
         if (subscriptions.isEmpty()) {
+            cleanupStats(feed);
             feedDao.delete(feed);
             LOG.info("Deleted feed with no subscription: " + feed.getUrl());
         }
@@ -137,6 +138,12 @@ public class CronServiceImpl implements CronService {
                         + "): " + count);
             }
         }
+    }
+    
+    private void cleanupStats(final Feed feed) {
+        List<FeedStat> stats = feedStatDao.list(feed);
+        feedStatDao.deleteAll(stats);
+        LOG.info("Deleted stats (" + feed.getUrl() + "): " + stats.size());
     }
 
 }

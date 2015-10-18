@@ -18,6 +18,7 @@ import jreader.web.controller.ajax.ArchivedEntryController;
 import jreader.web.controller.ajax.EntryController;
 import jreader.web.controller.ajax.GlobalExceptionHandler;
 import jreader.web.controller.ajax.GroupController;
+import jreader.web.controller.ajax.StatController;
 import jreader.web.controller.ajax.SubscriptionController;
 import jreader.web.controller.appengine.CronJobController;
 import jreader.web.controller.appengine.TaskController;
@@ -37,11 +38,14 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     @Value("${version}")
     private String appVersion;
     
-    @Value("${minAgeToDelete}")
-    private int minAgeToDelete;
+    @Value("${daysToDisplayStats}")
+    private int daysToDisplayStats;
     
-    @Value("${minCountToKeep}")
-    private int minCountToKeep;
+    @Value("${daysToKeepEntries}")
+    private int daysToKeepEntries;
+    
+    @Value("${entriesToKeep}")
+    private int entriesToKeep;
     
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
@@ -70,7 +74,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public TaskController taskController() {
-        return new TaskController(serviceConfig.cronService(), queueService(), minAgeToDelete, minCountToKeep);
+        return new TaskController(serviceConfig.cronService(), queueService(), daysToKeepEntries, entriesToKeep);
     }
     
     @Bean
@@ -91,6 +95,11 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     @Bean
     public EntryController entryController() {
         return new EntryController(serviceConfig.subscriptionGroupService(), serviceConfig.feedEntryService(), auxiliaryPayloadProcessor());
+    }
+    
+    @Bean
+    public StatController statController() {
+        return new StatController(serviceConfig.statService(), daysToDisplayStats);
     }
     
     @Bean

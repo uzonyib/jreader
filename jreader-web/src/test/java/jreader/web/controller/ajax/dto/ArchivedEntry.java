@@ -16,7 +16,7 @@ public class ArchivedEntry extends ArchivedEntryDto {
     @Override
     public void setPublishedDate(Long publishedDate) {
         super.setPublishedDate(publishedDate);
-        this.formattedPublishedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(publishedDate));
+        this.formattedPublishedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z").format(new Date(publishedDate));
     }
     
 }

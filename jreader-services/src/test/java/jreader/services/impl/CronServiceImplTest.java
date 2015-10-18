@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -98,6 +99,8 @@ public class CronServiceImplTest {
 	
 	@Mock
 	private FeedStat feedStat;
+	@Mock
+    private List<FeedStat> feedStats;
 	
 	@Mock
 	private SubscriptionGroup group;
@@ -263,10 +266,10 @@ public class CronServiceImplTest {
 		when(feedEntryDao.find(subscription1, 1)).thenReturn(entry12);
 		when(feedEntryDao.find(subscription2, 1)).thenReturn(entry22);
 		
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		cal.set(2015, 6, 6, 0, 25, 0);
 		long threshold = cal.getTimeInMillis();
-		when(dateHelper.addDaysToCurrentDate(-30)).thenReturn(threshold);
+		when(dateHelper.substractDaysFromCurrentDate(30)).thenReturn(threshold);
 		
         cal.set(2015, 6, 6, 0, 0, 0);
 		when(entry11.getPublishedDate()).thenReturn(cal.getTimeInMillis());
@@ -306,11 +309,13 @@ public class CronServiceImplTest {
     public void cleanUpFeedWithoutSubscription() {
         when(feedDao.find(FEED_URL)).thenReturn(feed1);
         when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Collections.<Subscription>emptyList());
+        when(feedStatDao.list(feed1)).thenReturn(feedStats);
         
         service.cleanup(FEED_URL, 1, 1);
         
         verify(feedDao).find(FEED_URL);
         verify(subscriptionDao).listSubscriptions(feed1);
+        verify(feedStatDao).deleteAll(feedStats);
         verify(feedDao).delete(feed1);
     }
 

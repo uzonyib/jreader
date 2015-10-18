@@ -48,6 +48,10 @@
         <property name="starred" direction="asc"/>
         <property name="publishedDate" direction="desc"/>
     </datastore-index>
+    
+    <datastore-index kind="FeedStat" ancestor="true" source="auto">
+        <property name="refreshDate" direction="asc"/>
+    </datastore-index>
 
     <datastore-index kind="Archive" ancestor="true" source="auto">
         <property name="order" direction="asc"/>

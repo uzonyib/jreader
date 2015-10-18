@@ -24,8 +24,10 @@ import jreader.converter.SubscriptionGroupDtoConverter;
 import jreader.domain.BuilderFactory;
 import jreader.services.ArchiveService;
 import jreader.services.CronService;
+import jreader.services.DateHelper;
 import jreader.services.FeedEntryService;
 import jreader.services.RssService;
+import jreader.services.StatService;
 import jreader.services.SubscriptionGroupService;
 import jreader.services.SubscriptionService;
 import jreader.services.UserService;
@@ -34,6 +36,7 @@ import jreader.services.impl.CronServiceImpl;
 import jreader.services.impl.DateHelperImpl;
 import jreader.services.impl.FeedEntryServiceImpl;
 import jreader.services.impl.RssServiceImpl;
+import jreader.services.impl.StatServiceImpl;
 import jreader.services.impl.SubscriptionGroupServiceImpl;
 import jreader.services.impl.SubscriptionServiceImpl;
 import jreader.services.impl.UserServiceImpl;
@@ -75,6 +78,11 @@ public class ServiceConfig {
     }
     
     @Bean
+    public DateHelper dateHelper() {
+        return new DateHelperImpl();
+    }
+    
+    @Bean
     public UserService userService() {
         return new UserServiceImpl(daoConfig.userDao());
     }
@@ -98,6 +106,12 @@ public class ServiceConfig {
     }
     
     @Bean
+    public StatService statService() {
+        return new StatServiceImpl(daoConfig.userDao(), daoConfig.subscriptionGroupDao(), daoConfig.subscriptionDao(), daoConfig.feedStatDao(),
+                conversionService(), dateHelper());
+    }
+    
+    @Bean
     public ArchiveService archiveService() {
         return new ArchiveServiceImpl(daoConfig.userDao(), daoConfig.subscriptionGroupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
                 daoConfig.archiveDao(), daoConfig.archivedEntryDao(), conversionService(), builderFactory());
@@ -106,7 +120,7 @@ public class ServiceConfig {
     @Bean
     public CronService cronService() {
         return new CronServiceImpl(daoConfig.subscriptionDao(), daoConfig.feedDao(), daoConfig.feedEntryDao(), daoConfig.feedStatDao(), rssService(),
-                conversionService(), builderFactory(), new DateHelperImpl());
+                conversionService(), builderFactory(), dateHelper());
     }
 
 }

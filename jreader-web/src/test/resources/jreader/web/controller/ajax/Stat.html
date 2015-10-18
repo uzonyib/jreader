@@ -1,0 +1,235 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+	<head>
+		<title>Feed stats related tests</title>
+	</head>
+	<body>
+	
+		<h1>Feed stats related tests</h1>
+		
+		<p>
+			Given the feeds are the followings:
+		</p>
+		<table concordion:execute="createFeed(#title, #url)">
+			<tr>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#url">URL</th>
+			</tr>
+			<tr>
+				<td>feed1</td>
+				<td>http://www.feed1.com/rss.xml</td>
+			</tr>
+			<tr>
+				<td>feed2</td>
+				<td>http://www.feed2.com/rss.xml</td>
+			</tr>
+		</table>
+		
+		<p>
+			Given the feed entries are the followings:
+		</p>
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+			<tr>
+				<th concordion:set="#feedTitle">Feed title</th>
+				<th concordion:set="#uri">URI</th>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#author">Author</th>
+				<th concordion:set="#link">Link</th>
+				<th concordion:set="#publishedDate">Published date</th>
+			</tr>
+			<tr>
+				<td>feed1</td>
+				<td>uri11</td>
+				<td>entry11</td>
+				<td>description11</td>
+				<td>author11</td>
+				<td>http://www.link11.com/</td>
+				<td>2015-06-06 00:00:00 UTC</td>
+			</tr>
+			<tr>
+				<td>feed1</td>
+				<td>uri12</td>
+				<td>entry12</td>
+				<td>description12</td>
+				<td>author12</td>
+				<td>http://www.link12.com/</td>
+				<td>2015-06-06 00:30:00 UTC</td>
+			</tr>
+			<tr>
+				<td>feed2</td>
+				<td>uri21</td>
+				<td>entry21</td>
+				<td>description21</td>
+				<td>author21</td>
+				<td>http://www.link21.com/</td>
+				<td>2015-06-05 23:45:00 UTC</td>
+			</tr>
+			<tr>
+				<td>feed2</td>
+				<td>uri22</td>
+				<td>entry22</td>
+				<td>description22</td>
+				<td>author22</td>
+				<td>http://www.link22.com/</td>
+				<td>2015-06-06 00:15:00 UTC</td>
+			</tr>
+		</table>
+		
+		<p>
+			Given the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-06 01:00:00 GMT</span><br/>
+			and <span concordion:execute="initUser(#TEXT)">stat_user</span> created the following subscriptions:
+		</p>
+		<table>
+	       	<tr>
+	       		<th>Group title</th>
+	       		<th>Group ID</th>
+	       		<th>Feed title</th>
+	       		<th>Subscription ID</th>
+	       		<th>Subscription title</th>
+	       	</tr>
+	       	<tr>
+	       		<td concordion:execute="#groupId = createGroup(#TEXT)">group1</td>
+	       		<td concordion:echo="#groupId"></td>
+	       		<td concordion:execute="#subscriptionId1 = subscribe(#TEXT, #groupId)">feed1</td>
+	       		<td concordion:echo="#subscriptionId1"></td>
+	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId1, #TEXT)">subscription1</td>
+	       	</tr>
+	       	<tr>
+	       		<td>group1</td>
+	       		<td concordion:echo="#groupId"></td>
+	       		<td concordion:execute="#subscriptionId2 = subscribe(#TEXT, #groupId)">feed2</td>
+	       		<td concordion:echo="#subscriptionId2"></td>
+	       		<td concordion:execute="entitleSubscription(#groupId, #subscriptionId2, #TEXT)">subscription2</td>
+	       	</tr>
+	   	</table>
+		<p>
+			when the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-06 01:15:00 UTC</span><br/>
+			then the statistics of <span concordion:set="#feed">feed1</span> are:
+		</p>
+		<table concordion:verifyRows="#stat : getStats(#feed)">
+			<tr>
+	       		<th concordion:assertEquals="#stat.count">Count</th>
+	       		<th concordion:assertEquals="#stat.formattedDate">Date</th>
+	       	</tr>
+	       	<tr>
+				<td>2</td>
+				<td>2015-06-06 00:00:00 UTC</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
+			When the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-06 01:30:00 UTC</span><br/>
+			then the statistics of <span concordion:set="#feed">feed2</span> are:
+		</p>
+		<table concordion:verifyRows="#stat : getStats(#feed)">
+			<tr>
+	       		<th concordion:assertEquals="#stat.count">Count</th>
+	       		<th concordion:assertEquals="#stat.formattedDate">Date</th>
+	       	</tr>
+	       	<tr>
+				<td>2</td>
+				<td>2015-06-06 00:00:00 UTC</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
+	   		Given the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-06 02:00:00 UTC</span><br/>
+			and the feeds are updated with the following entries:
+		</p>
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+			<tr>
+				<th concordion:set="#feedTitle">Feed title</th>
+				<th concordion:set="#uri">URI</th>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#author">Author</th>
+				<th concordion:set="#link">Link</th>
+				<th concordion:set="#publishedDate">Published date</th>
+			</tr>
+			<tr>
+				<td>feed1</td>
+				<td>uri13</td>
+				<td>entry13</td>
+				<td>description13</td>
+				<td>author13</td>
+				<td>http://www.link13.com/</td>
+				<td>2015-06-06 01:30:00 UTC</td>
+			</tr>
+		</table>
+		<p>
+			when the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-06 02:30:00 UTC</span><br/>
+			and <span concordion:execute="refreshFeed(#TEXT)">feed1</span> is refreshed<br/>
+			then the statistics of <span concordion:set="#feed">feed1</span> are:
+		</p>
+		<table concordion:verifyRows="#stat : getStats(#feed)">
+			<tr>
+	       		<th concordion:assertEquals="#stat.count">Count</th>
+	       		<th concordion:assertEquals="#stat.formattedDate">Date</th>
+	       	</tr>
+	       	<tr>
+				<td>3</td>
+				<td>2015-06-06 00:00:00 UTC</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
+	   		Given the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-07 02:00:00 UTC</span><br/>
+			and the feeds are updated with the following entries:
+		</p>
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+			<tr>
+				<th concordion:set="#feedTitle">Feed title</th>
+				<th concordion:set="#uri">URI</th>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#author">Author</th>
+				<th concordion:set="#link">Link</th>
+				<th concordion:set="#publishedDate">Published date</th>
+			</tr>
+			<tr>
+				<td>feed2</td>
+				<td>uri23</td>
+				<td>entry23</td>
+				<td>description23</td>
+				<td>author23</td>
+				<td>http://www.link23.com/</td>
+				<td>2015-06-07 01:30:00 UTC</td>
+			</tr>
+		</table>
+		<p>
+			when the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-07 02:30:00 UTC</span><br/>
+			and <span concordion:execute="refreshFeed(#TEXT)">feed2</span> is refreshed<br/>
+			then the statistics of <span concordion:set="#feed">feed2</span> are:
+		</p>
+		<table concordion:verifyRows="#stat : getStats(#feed)">
+			<tr>
+	       		<th concordion:assertEquals="#stat.count">Count</th>
+	       		<th concordion:assertEquals="#stat.formattedDate">Date</th>
+	       	</tr>
+	       	<tr>
+				<td>2</td>
+				<td>2015-06-06 00:00:00 UTC</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>2015-06-07 00:00:00 UTC</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
+			When the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-07-07 00:15:00 UTC</span><br/>
+			then the statistics of <span concordion:set="#feed">feed2</span> are:
+		</p>
+		<table concordion:verifyRows="#stat : getStats(#feed)">
+			<tr>
+	       		<th concordion:assertEquals="#stat.count">Count</th>
+	       		<th concordion:assertEquals="#stat.formattedDate">Date</th>
+	       	</tr>
+			<tr>
+				<td>1</td>
+				<td>2015-06-07 00:00:00 UTC</td>
+			</tr>
+	   	</table>
+	   	
+	</body>
+</html>
