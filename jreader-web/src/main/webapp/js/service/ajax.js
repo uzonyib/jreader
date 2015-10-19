@@ -237,5 +237,12 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 			url: "/reader/archives/" + archiveId + "/entries/" + entryId
         });
 	};
+	
+	this.loadStats = function() {
+		return $http({
+			method: "GET",
+    		url: "/reader/stats"
+		});
+	};
     
 }]);
