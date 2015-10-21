@@ -37,10 +37,43 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 						subscription.stats = {};
 						subscription.stats.labels = [];
 						subscription.stats.data = [[]];
-						angular.forEach(feedStats.stats, function(stat) {
-							subscription.stats.labels.push(moment(stat.date).utc().format("MMM DD"));
-							subscription.stats.data[0].push(stat.count);
-						});
+						
+						var last = null;
+						var dayMillis = 24 * 60 * 60 * 1000;
+
+						var to = moment().unix() * 1000;
+						var from = to - 30 * dayMillis;
+
+						if (feedStats.stats.length > 0) {
+						    for (var date = feedStats.stats[0].date - dayMillis; date > from; date -= dayMillis) {
+						    	subscription.stats.data[0].unshift(0);
+								subscription.stats.labels.unshift(moment(date).utc().format("DD MMM"));
+						    }
+
+						    angular.forEach(feedStats.stats, function(stat) {
+						        if (last != null) {
+						            for (var date = last + dayMillis; date < stat.date; date += dayMillis) {
+						            	subscription.stats.data[0].push(0);
+						                subscription.stats.labels.push(moment(date).utc().format("DD MMM"));
+						            }
+						        }
+
+						        subscription.stats.data[0].push(stat.count);
+						        subscription.stats.labels.push(moment(stat.date).utc().format("DD MMM"));
+						        last = stat.date;
+						    });
+
+							last = feedStats.stats[feedStats.stats.length - 1].date;
+						    for (var date = last + dayMillis; date < to; date += dayMillis) {
+						    	subscription.stats.data[0].push(0);
+						        subscription.stats.labels.push(moment(date).utc().format("DD MMM"));
+						    }
+						} else {
+							for (var date = from + dayMillis; date <= to; date += dayMillis) {
+								subscription.stats.data[0].push(0);
+						        subscription.stats.labels.push(moment(date).utc().format("DD MMM"));
+						    }
+						}
 					}
 				});
 			});
