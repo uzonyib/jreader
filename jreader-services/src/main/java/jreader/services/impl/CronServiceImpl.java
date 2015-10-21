@@ -137,6 +137,9 @@ public class CronServiceImpl implements CronService {
             }
             
             feedEntry.setSubscription(subscription);
+            if (feedEntry.getPublishedDate() > refreshDate) {
+                feedEntry.setPublishedDate(refreshDate);
+            }
             feedEntryDao.save(feedEntry);
             ++counter;
             if (newUpdatedDate == null || feedEntry.getPublishedDate() > newUpdatedDate) {

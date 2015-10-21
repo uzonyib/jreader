@@ -3,6 +3,7 @@ package jreader.services.impl;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -21,6 +22,7 @@ import java.util.TimeZone;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.core.convert.ConversionService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -93,6 +95,8 @@ public class CronServiceImplTest {
 	private FeedEntry entry21;
 	@Mock
 	private FeedEntry entry22;
+	@Spy
+    private FeedEntry entrySpy;
 	
 	@Mock
 	private FeedStat.Builder builder;
@@ -218,6 +222,68 @@ public class CronServiceImplTest {
         verify(feedStat1).setCount(2);
         verify(feedStatDao).saveAll(Arrays.asList(feedStat1));
 	}
+	
+	@Test
+    public void refreshFeeds_NewEntryInTheFuture() {
+        when(feedDao.find(FEED_URL)).thenReturn(feed1);
+        when(feed1.getUrl()).thenReturn(FEED_URL);
+        when(feed1.getTitle()).thenReturn(FEED_TITLE);
+        
+        long date = 1445271922000L;
+        when(feed1.getRefreshDate()).thenReturn(date - 1000 * 60 * 20);
+        when(dateHelper.getCurrentDate()).thenReturn(date);
+        
+        when(rssService.fetch(FEED_URL)).thenReturn(fetchResult);
+        
+        when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1));
+        
+        when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entrySpy));
+        
+        when(subscription1.getUpdatedDate()).thenReturn(date - 1000 * 60 * 20);
+        
+        DateHelper dh = new DateHelperImpl();
+        long pubDate1 = date + 1000 * 60 * 30;
+        entrySpy.setPublishedDate(pubDate1);
+        when(entrySpy.getUri()).thenReturn("uri1");
+        long day = dh.getFirstSecondOfDay(pubDate1);
+        when(dateHelper.getFirstSecondOfDay(pubDate1)).thenReturn(day);
+        
+        doNothing().when(entrySpy).setSubscription(subscription1);
+        
+        when(subscription1.getGroup()).thenReturn(group);
+        when(group.getUser()).thenReturn(user);
+        when(user.getUsername()).thenReturn(USERNAME);
+        
+        when(builderFactory.createFeedStatBuilder()).thenReturn(builder);
+        when(builder.feed(feed1)).thenReturn(builder);
+        when(builder.refreshDate(anyLong())).thenReturn(builder);
+        when(builder.count(anyInt())).thenReturn(builder);
+        when(builder.build()).thenReturn(feedStat1);
+        
+        when(feedStat1.getCount()).thenReturn(1);
+        
+        service.refresh(FEED_URL);
+        
+        verify(rssService).fetch(FEED_URL);
+        
+        verify(subscriptionDao).listSubscriptions(feed1);
+        
+        verify(entrySpy).setPublishedDate(date);
+        verify(feedEntryDao).save(entrySpy);
+        
+        verify(subscription1).setUpdatedDate(date);
+        verify(subscription1).setRefreshDate(date);
+        verify(subscriptionDao).save(subscription1);
+        
+        verify(feed1).setRefreshDate(date);
+        verify(feedDao).save(feed1);
+        
+        verify(builder).feed(feed1);
+        verify(builder).refreshDate(day);
+        verify(builder).count(1);
+        verify(builder).build();
+        verify(feedStatDao).saveAll(Arrays.asList(feedStat1));
+    }
 	
 	@Test
 	public void isNew_Feed_PublishedDateIsNull() {
