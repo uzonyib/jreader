@@ -8,12 +8,12 @@ import jreader.dto.FeedStatDto;
 public class FeedStat extends FeedStatDto {
 
     public FeedStat(long date) {
-        super(date);
+        setDate(date);
     }
     
     public FeedStat(FeedStatDto dto) {
         this(dto.getDate());
-        this.addCount(dto.getCount());
+        this.setCount(dto.getCount());
     }
 
     public String getFormattedDate() {

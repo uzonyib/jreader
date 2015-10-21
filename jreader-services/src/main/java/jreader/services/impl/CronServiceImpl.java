@@ -2,7 +2,9 @@ package jreader.services.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.springframework.core.convert.ConversionService;
@@ -68,50 +70,98 @@ public class CronServiceImpl implements CronService {
         if (rssFetchResult == null) {
             return;
         }
+        
+        updateFeed(feed, refreshDate, rssFetchResult);
 
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
-        Integer statCounter = null;
         
         for (final Subscription subscription : subscriptions) {
-            int counter = 0;
-            final Long lastUpdatedDate = subscription.getUpdatedDate();
-            Long newUpdatedDate = lastUpdatedDate;
-            for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
-                if (feedEntry.getPublishedDate() == null) {
-                    LOG.warning("Publish date is null. Feed: " + feed.getTitle());
-                    continue;
-                }
-                if (lastUpdatedDate != null && feedEntry.getPublishedDate() < lastUpdatedDate) {
-                    continue;
-                }
-                if (feedEntry.getUri() == null) {
-                    LOG.warning("URI is null. Feed: " + feed.getTitle());
-                    continue;
-                }
-                if (feedEntryDao.find(subscription, feedEntry.getUri()) == null) {
-                    feedEntry.setSubscription(subscription);
-                    feedEntryDao.save(feedEntry);
-                    ++counter;
-                    if (newUpdatedDate == null || feedEntry.getPublishedDate() > newUpdatedDate) {
-                        newUpdatedDate = feedEntry.getPublishedDate();
-                    }
-                }
+            updateSubscription(feed, refreshDate, rssFetchResult, subscription);
+        }
+        
+    }
+
+    void updateFeed(final Feed feed, final long refreshDate, final RssFetchResult rssFetchResult) {
+        final Long lastRefreshDate = feed.getRefreshDate();
+        feed.setRefreshDate(refreshDate);
+        feedDao.save(feed);
+        
+        final Map<Long, FeedStat> stats = new LinkedHashMap<Long, FeedStat>();
+        for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
+            if (!isNew(feedEntry, feed, lastRefreshDate)) {
+                continue;
             }
-            subscription.setUpdatedDate(newUpdatedDate);
-            subscription.setRefreshDate(refreshDate);
-            subscriptionDao.save(subscription);
             
-            LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);
-            
-            if (statCounter == null || statCounter > counter) {
-                statCounter = counter;
+            final long refreshDay = dateHelper.getFirstSecondOfDay(feedEntry.getPublishedDate());
+            if (!stats.containsKey(refreshDay)) {
+                FeedStat stat = feedStatDao.find(feed, refreshDay);
+                if (stat == null) {
+                    stat = builderFactory.createFeedStatBuilder().feed(feed).refreshDate(refreshDay).count(1).build();
+                } else {
+                    stat.setCount(stat.getCount() + 1);
+                }
+                stats.put(refreshDay, stat);
+            } else {
+                final FeedStat stat = stats.get(refreshDay);
+                stat.setCount(stat.getCount() + 1);
             }
         }
         
-        if (statCounter != null && statCounter > 0) {
-            final FeedStat feedStat = builderFactory.createFeedStatBuilder().feed(feed).refreshDate(refreshDate).count(statCounter).build();
-            feedStatDao.save(feedStat);
+        if (stats.size() > 0) {
+            feedStatDao.saveAll(new ArrayList<FeedStat>(stats.values()));
         }
+    }
+    
+    boolean isNew(final FeedEntry entry, final Feed feed, final Long feedRefreshDate) {
+        if (entry.getPublishedDate() == null) {
+            LOG.warning("Published date is null. Feed: " + feed.getTitle());
+            return false;
+        }
+        if (entry.getUri() == null) {
+            LOG.warning("URI is null. Feed: " + feed.getTitle());
+            return false;
+        }
+        if (feedRefreshDate != null && entry.getPublishedDate() <= feedRefreshDate) {
+            return false;
+        }
+        return true;
+    }
+    
+    private void updateSubscription(final Feed feed, final long refreshDate, final RssFetchResult rssFetchResult, final Subscription subscription) {
+        int counter = 0;
+        final Long lastUpdatedDate = subscription.getUpdatedDate();
+        Long newUpdatedDate = lastUpdatedDate;
+        for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
+            if (!isNew(feedEntry, subscription, lastUpdatedDate)) {
+                continue;
+            }
+            
+            feedEntry.setSubscription(subscription);
+            feedEntryDao.save(feedEntry);
+            ++counter;
+            if (newUpdatedDate == null || feedEntry.getPublishedDate() > newUpdatedDate) {
+                newUpdatedDate = feedEntry.getPublishedDate();
+            }
+        }
+        
+        subscription.setUpdatedDate(newUpdatedDate);
+        subscription.setRefreshDate(refreshDate);
+        subscriptionDao.save(subscription);
+        
+        LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);
+    }
+    
+    boolean isNew(final FeedEntry feedEntry, final Subscription subscription, final Long lastUpdatedDate) {
+        if (feedEntry.getPublishedDate() == null || feedEntry.getUri() == null) {
+            return false;
+        }
+        if (lastUpdatedDate != null && feedEntry.getPublishedDate() < lastUpdatedDate) {
+            return false;
+        }
+        if (feedEntryDao.find(subscription, feedEntry.getUri()) != null) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -141,7 +191,7 @@ public class CronServiceImpl implements CronService {
     }
     
     private void cleanupStats(final Feed feed) {
-        List<FeedStat> stats = feedStatDao.list(feed);
+        final List<FeedStat> stats = feedStatDao.list(feed);
         feedStatDao.deleteAll(stats);
         LOG.info("Deleted stats (" + feed.getUrl() + "): " + stats.size());
     }

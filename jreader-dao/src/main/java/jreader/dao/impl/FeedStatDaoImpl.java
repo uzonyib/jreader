@@ -9,6 +9,11 @@ import jreader.domain.FeedStat;
 public class FeedStatDaoImpl extends AbstractOfyDao<FeedStat> implements FeedStatDao {
     
     @Override
+    public FeedStat find(final Feed feed, final long day) {
+        return getOfy().load().type(FeedStat.class).ancestor(feed).filter("refreshDate =", day).first().now();
+    }
+    
+    @Override
     public List<FeedStat> list(final Feed feed) {
         return getOfy().load().type(FeedStat.class).ancestor(feed).list();
     }

@@ -18,6 +18,7 @@ import jreader.converter.ArchivedEntryDtoConverter;
 import jreader.converter.ConversionFactory;
 import jreader.converter.FeedDtoConverter;
 import jreader.converter.FeedEntryDtoConverter;
+import jreader.converter.FeedStatDtoConverter;
 import jreader.converter.RssFetchResultConverter;
 import jreader.converter.SubscriptionDtoConverter;
 import jreader.converter.SubscriptionGroupDtoConverter;
@@ -54,6 +55,7 @@ public class ServiceConfig {
         converters.add(new RssFetchResultConverter());
         converters.add(new FeedDtoConverter());
         converters.add(new FeedEntryDtoConverter());
+        converters.add(new FeedStatDtoConverter());
         converters.add(new SubscriptionGroupDtoConverter());
         converters.add(new SubscriptionDtoConverter());
         converters.add(new ArchiveDtoConverter());

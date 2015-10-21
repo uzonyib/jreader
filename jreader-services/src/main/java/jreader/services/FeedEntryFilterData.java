@@ -4,7 +4,7 @@ import jreader.dao.FeedEntryFilter;
 
 public class FeedEntryFilterData extends FeedEntryFilter {
 
-    public static enum Group {
+    public enum Group {
         ALL, SUBSCRIPTION_GROUP, SUBSCRIPTION;
     }
 

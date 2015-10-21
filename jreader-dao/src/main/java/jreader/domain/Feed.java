@@ -13,8 +13,8 @@ public class Feed {
     private String title;
     private String description;
     private String feedType;
-    private Long refreshDate;
     private Long publishedDate;
+    private Long refreshDate;
 
     public String getUrl() {
         return url;
@@ -48,20 +48,20 @@ public class Feed {
         this.feedType = feedType;
     }
 
-    public Long getRefreshDate() {
-        return refreshDate;
-    }
-
-    public void setRefreshDate(Long refreshDate) {
-        this.refreshDate = refreshDate;
-    }
-
     public Long getPublishedDate() {
         return publishedDate;
     }
 
     public void setPublishedDate(final Long publishedDate) {
         this.publishedDate = publishedDate;
+    }
+
+    public Long getRefreshDate() {
+        return refreshDate;
+    }
+    
+    public void setRefreshDate(final Long refreshDate) {
+        this.refreshDate = refreshDate;
     }
 
 }

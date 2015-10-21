@@ -2,24 +2,23 @@ package jreader.dto;
 
 public class FeedStatDto {
 
-    private final long date;
+    private long date;
     private int count;
-    
-    public FeedStatDto(final long date) {
-        this.date = date;
-        this.count = 0;
-    }
     
     public long getDate() {
         return date;
+    }
+    
+    public void setDate(final long date) {
+        this.date = date;
     }
 
     public int getCount() {
         return count;
     }
 
-    public void addCount(int count) {
-        this.count += count;
+    public void setCount(final int count) {
+        this.count = count;
     }
 
 }

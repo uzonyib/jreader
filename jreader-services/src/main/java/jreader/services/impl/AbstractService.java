@@ -16,7 +16,7 @@ abstract class AbstractService {
     protected SubscriptionGroupDao subscriptionGroupDao;
     protected SubscriptionDao subscriptionDao;
 
-    public AbstractService(final UserDao userDao, final SubscriptionGroupDao subscriptionGroupDao, final SubscriptionDao subscriptionDao) {
+    AbstractService(final UserDao userDao, final SubscriptionGroupDao subscriptionGroupDao, final SubscriptionDao subscriptionDao) {
         this.userDao = userDao;
         this.subscriptionGroupDao = subscriptionGroupDao;
         this.subscriptionDao = subscriptionDao;

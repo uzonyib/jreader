@@ -71,6 +71,14 @@ public class FeedStatDaoImplTest extends AbstractDaoTest {
         assertEquals(stats.get(2).getCount(), 3);
         assertEquals(stats.get(3).getCount(), 4);
     }
+    
+    @Test
+    public void find_ShouldReturnMatchingStat() {
+        FeedStat stat = sut.find(savedFeed, 110L);
+        
+        assertNotNull(stat);
+        assertEquals(stat.getCount(), 2);
+    }
 
     @Test
     public void list_ShouldReturnMatchingStats() {

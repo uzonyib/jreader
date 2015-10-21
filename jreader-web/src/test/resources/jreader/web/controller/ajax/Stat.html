@@ -76,7 +76,7 @@
 		</table>
 		
 		<p>
-			Given the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-06 01:00:00 GMT</span><br/>
+			Given the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-06 01:00:00 UTC</span><br/>
 			and <span concordion:execute="initUser(#TEXT)">stat_user</span> created the following subscriptions:
 		</p>
 		<table>
@@ -127,7 +127,11 @@
 	       		<th concordion:assertEquals="#stat.formattedDate">Date</th>
 	       	</tr>
 	       	<tr>
-				<td>2</td>
+				<td>1</td>
+				<td>2015-06-05 00:00:00 UTC</td>
+			</tr>
+	       	<tr>
+				<td>1</td>
 				<td>2015-06-06 00:00:00 UTC</td>
 			</tr>
 	   	</table>
@@ -207,7 +211,11 @@
 	       		<th concordion:assertEquals="#stat.formattedDate">Date</th>
 	       	</tr>
 	       	<tr>
-				<td>2</td>
+				<td>1</td>
+				<td>2015-06-05 00:00:00 UTC</td>
+			</tr>
+	       	<tr>
+				<td>1</td>
 				<td>2015-06-06 00:00:00 UTC</td>
 			</tr>
 			<tr>

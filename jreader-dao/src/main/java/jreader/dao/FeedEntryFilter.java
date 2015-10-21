@@ -2,7 +2,7 @@ package jreader.dao;
 
 public class FeedEntryFilter {
 
-    public static enum Selection {
+    public enum Selection {
         ALL, UNREAD, STARRED;
     }
 
