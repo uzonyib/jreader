@@ -19,8 +19,8 @@ public class FeedEntryDaoImpl extends AbstractOfyDao<FeedEntry> implements FeedE
     }
     
     @Override
-    public FeedEntry find(final Subscription subscription, final String uri) {
-        return getOfy().load().type(FeedEntry.class).ancestor(subscription).filter("uri =", uri).first().now();
+    public FeedEntry find(final Subscription subscription, final String uri, final long publishedDate) {
+        return getOfy().load().type(FeedEntry.class).ancestor(subscription).filter("uri =", uri).filter("publishedDate =", publishedDate).first().now();
     }
 
     @Override

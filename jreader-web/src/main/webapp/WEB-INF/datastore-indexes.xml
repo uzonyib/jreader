@@ -19,6 +19,7 @@
     
     <datastore-index kind="FeedEntry" ancestor="true" source="auto">
         <property name="uri" direction="asc"/>
+        <property name="publishedDate" direction="asc"/>
     </datastore-index>
 
     <datastore-index kind="FeedEntry" ancestor="true" source="auto">

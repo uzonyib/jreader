@@ -534,5 +534,96 @@
 			</tr>
 	   	</table>
 	   	
+	   	<p>
+			Given the feeds are updated with the following entries:
+		</p>
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+			<tr>
+				<th concordion:set="#feedTitle">Feed title</th>
+				<th concordion:set="#uri">URI</th>
+				<th concordion:set="#title">Title</th>
+				<th concordion:set="#description">Description</th>
+				<th concordion:set="#author">Author</th>
+				<th concordion:set="#link">Link</th>
+				<th concordion:set="#publishedDate">Published date</th>
+			</tr>
+			<tr>
+				<td>feed1</td>
+				<td>uri12</td>
+				<td>entry12</td>
+				<td>description12</td>
+				<td>author12</td>
+				<td>http://www.link12.com/</td>
+				<td>2015-06-06 02:00:00 UTC</td>
+			</tr>
+		</table>
+		<p>
+			when <span concordion:execute="refreshFeed(#TEXT)">feed1</span> is refreshed<br/>
+			and the user lists <span concordion:set="#selection">all</span> entries from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">ascending</span> order<br/>
+			then the list contains:
+		</p>
+		<table concordion:verifyRows="#entry : getEntries(#selection, #from, #to, #order)">
+			<tr>
+	       		<th concordion:assertEquals="#entry.subscriptionTitle">Subscription title</th>
+	       		<th concordion:assertEquals="#entry.title">Title</th>
+	       		<th concordion:assertEquals="#entry.description">Description</th>
+	       		<th concordion:assertEquals="#entry.author">Author</th>
+	       		<th concordion:assertEquals="#entry.link">Link</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.read">Read</th>
+	       		<th concordion:assertEquals="#entry.starred">Starred</th>
+	       	</tr>
+			<tr>
+				<td>subscription1</td>
+				<td>entry12</td>
+				<td>description12</td>
+				<td>author12</td>
+				<td>http://www.link12.com/</td>
+				<td>2015-06-06 00:30:00 UTC</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription1</td>
+				<td>entry13</td>
+				<td>description13</td>
+				<td>author13</td>
+				<td>http://www.link13.com/</td>
+				<td>2015-06-06 01:00:00 UTC</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry23</td>
+				<td>description23</td>
+				<td>author23</td>
+				<td>http://www.link23.com/</td>
+				<td>2015-06-06 01:15:00 UTC</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription2</td>
+				<td>entry24</td>
+				<td>description24</td>
+				<td>author24</td>
+				<td>http://www.link24.com/</td>
+				<td>2015-06-06 01:15:00 UTC</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+			<tr>
+				<td>subscription1</td>
+				<td>entry12</td>
+				<td>description12</td>
+				<td>author12</td>
+				<td>http://www.link12.com/</td>
+				<td>2015-06-06 02:00:00 UTC</td>
+				<td>false</td>
+				<td>false</td>
+			</tr>
+		</table>
+	   	
 	</body>
 </html>

@@ -164,14 +164,14 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     
     @Test
     public void findByUri_IfEntryNotExists_ShouldReturnNull() {
-        FeedEntry entry = sut.find(savedSubscriptions.get(1), "not_found");
+        FeedEntry entry = sut.find(savedSubscriptions.get(1), "not_found", 1L);
         
         assertNull(entry);
     }
     
     @Test
     public void findByUri_IfEntryExists_ShouldReturnEntry() {
-        FeedEntry entry = sut.find(savedSubscriptions.get(0), savedEntries.get(0).getUri());
+        FeedEntry entry = sut.find(savedSubscriptions.get(0), savedEntries.get(0).getUri(), savedEntries.get(0).getPublishedDate());
         
         assertNotNull(entry);
         assertNotNull(entry.getId());

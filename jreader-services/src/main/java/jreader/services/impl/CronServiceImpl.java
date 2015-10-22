@@ -161,7 +161,7 @@ public class CronServiceImpl implements CronService {
         if (lastUpdatedDate != null && feedEntry.getPublishedDate() < lastUpdatedDate) {
             return false;
         }
-        if (feedEntryDao.find(subscription, feedEntry.getUri()) != null) {
+        if (feedEntryDao.find(subscription, feedEntry.getUri(), feedEntry.getPublishedDate()) != null) {
             return false;
         }
         return true;

@@ -377,7 +377,7 @@ public class CronServiceImplTest {
     public void isNew_Subscription_PublishedDateIsEqual() {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
-        when(feedEntryDao.find(subscription1, "uri")).thenReturn(null);
+        when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(null);
         
         boolean isNew = service.isNew(entry11, subscription1, 1000L);
         
@@ -388,7 +388,7 @@ public class CronServiceImplTest {
     public void isNew_Subscription_EntryFound() {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
-        when(feedEntryDao.find(subscription1, "uri")).thenReturn(entry11);
+        when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(entry11);
         
         boolean isNew = service.isNew(entry11, subscription1, 900L);
         
@@ -399,7 +399,7 @@ public class CronServiceImplTest {
     public void isNew_Subscription_EntryNotFound() {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
-        when(feedEntryDao.find(subscription1, "uri")).thenReturn(null);
+        when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(null);
         
         boolean isNew = service.isNew(entry11, subscription1, 900L);
         

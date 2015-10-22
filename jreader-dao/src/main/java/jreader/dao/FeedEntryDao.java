@@ -11,7 +11,7 @@ public interface FeedEntryDao extends OfyDao<FeedEntry> {
 
     FeedEntry find(Subscription subscription, Long id);
     
-    FeedEntry find(Subscription subscription, String uri);
+    FeedEntry find(Subscription subscription, String uri, long publishedDate);
 
     FeedEntry find(Subscription subscription, int ordinal);
 
