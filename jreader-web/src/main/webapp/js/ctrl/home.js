@@ -8,6 +8,7 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 	$scope.chartOptions = {
 		scaleBeginAtZero: true,
 		responsive: true,
+		animation: false,
 		maintainAspectRatio: false
 	};
 	
