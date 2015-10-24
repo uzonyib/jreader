@@ -11,6 +11,8 @@ public interface FeedStatDao extends OfyDao<FeedStat> {
     
     List<FeedStat> list(Feed feed);
     
-    List<FeedStat> list(Feed feed, long dateAfter);
+    List<FeedStat> listAfter(Feed feed, long dateAfter);
+    
+    List<FeedStat> listBefore(Feed feed, long dateBefore);
 
 }

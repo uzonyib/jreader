@@ -175,35 +175,47 @@ public class CronServiceImpl implements CronService {
     }
 
     @Override
-    public void cleanup(final String url, final int olderThanDays, final int keptCount) {
+    public void cleanup(final String url, final int olderThanDays, final int keptCount, final int statsToKeep) {
         final long date = dateHelper.substractDaysFromCurrentDate(olderThanDays);
         final Feed feed = feedDao.find(url);
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
+        
         if (subscriptions.isEmpty()) {
-            cleanupStats(feed);
-            feedDao.delete(feed);
-            LOG.info("Deleted feed with no subscription: " + feed.getUrl());
-        }
-        for (final Subscription subscription : subscriptions) {
-            int count = 0;
-            final FeedEntry e = feedEntryDao.find(subscription, keptCount);
-            if (e != null) {
-                final long threshold = Math.min(date, e.getPublishedDate());
-                final List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
-                for (final FeedEntry feedEntry : feedEntries) {
-                    feedEntryDao.delete(feedEntry);
-                    ++count;
+            cleanupFeed(feed);
+        } else {
+            cleanupStats(feed, statsToKeep);
+            
+            for (final Subscription subscription : subscriptions) {
+                int count = 0;
+                final FeedEntry e = feedEntryDao.find(subscription, keptCount);
+                if (e != null) {
+                    final long threshold = Math.min(date, e.getPublishedDate());
+                    final List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
+                    for (final FeedEntry feedEntry : feedEntries) {
+                        feedEntryDao.delete(feedEntry);
+                        ++count;
+                    }
+                    LOG.info("Deleted items older than " + new Date(threshold) + " (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl()
+                    + "): " + count);
                 }
-                LOG.info("Deleted items older than " + new Date(threshold) + " (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl()
-                        + "): " + count);
             }
         }
     }
-    
-    private void cleanupStats(final Feed feed) {
+
+    private void cleanupFeed(final Feed feed) {
         final List<FeedStat> stats = feedStatDao.list(feed);
         feedStatDao.deleteAll(stats);
         LOG.info("Deleted stats (" + feed.getUrl() + "): " + stats.size());
+        
+        feedDao.delete(feed);
+        LOG.info("Deleted feed with no subscription: " + feed.getUrl());
+    }
+    
+    private void cleanupStats(final Feed feed, final int statsToKeep) {
+        final long threshold = dateHelper.substractDaysFromCurrentDate(statsToKeep);
+        final List<FeedStat> stats = feedStatDao.listBefore(feed, threshold);
+        feedStatDao.deleteAll(stats);
+        LOG.info("Deleted stats older than " + new Date(threshold) + " (" + feed.getUrl() + "): " + stats.size());
     }
 
 }

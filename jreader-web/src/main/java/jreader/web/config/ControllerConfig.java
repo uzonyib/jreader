@@ -36,14 +36,17 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     @Value("${version}")
     private String appVersion;
     
-    @Value("${daysToDisplayStats}")
-    private int daysToDisplayStats;
-    
     @Value("${daysToKeepEntries}")
     private int daysToKeepEntries;
     
     @Value("${entriesToKeep}")
     private int entriesToKeep;
+    
+    @Value("${daysToDisplayStats}")
+    private int daysToDisplayStats;
+    
+    @Value("${daysToKeepStats}")
+    private int daysToKeepStats;
     
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
@@ -72,7 +75,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public TaskController taskController() {
-        return new TaskController(serviceConfig.cronService(), queueService(), daysToKeepEntries, entriesToKeep);
+        return new TaskController(serviceConfig.cronService(), queueService(), daysToKeepEntries, entriesToKeep, daysToKeepStats);
     }
     
     @Bean

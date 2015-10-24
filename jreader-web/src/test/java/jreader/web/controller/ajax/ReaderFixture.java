@@ -369,6 +369,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         long millis = date.getTime() - 30 * 24 * 60 * 60 * 1000L;
         when(dateHelper.substractDaysFromCurrentDate(30)).thenReturn(millis);
         when(dateHelper.getFirstSecondOfDay(millis)).thenReturn(new DateHelperImpl().getFirstSecondOfDay(millis));
+        millis = date.getTime() - 20 * 24 * 60 * 60 * 1000L;
+        when(dateHelper.substractDaysFromCurrentDate(20)).thenReturn(millis);
     }
     
     public List<FeedStat> getStats(String feed) {

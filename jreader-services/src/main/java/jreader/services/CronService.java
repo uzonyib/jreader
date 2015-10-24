@@ -10,6 +10,6 @@ public interface CronService {
 
     void refresh(String url);
 
-    void cleanup(String url, int olderThanDays, int keptCount);
+    void cleanup(String url, int olderThanDays, int keptCount, int statsToKeep);
 
 }

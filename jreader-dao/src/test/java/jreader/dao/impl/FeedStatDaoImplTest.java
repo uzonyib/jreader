@@ -81,13 +81,23 @@ public class FeedStatDaoImplTest extends AbstractDaoTest {
     }
 
     @Test
-    public void list_ShouldReturnMatchingStats() {
-        List<FeedStat> stats = sut.list(savedFeed, 115L);
+    public void listAfter_ShouldReturnMatchingStats() {
+        List<FeedStat> stats = sut.listAfter(savedFeed, 115L);
         
         assertNotNull(stats);
         assertEquals(stats.size(), 2);
         assertEquals(stats.get(0).getCount(), 3);
         assertEquals(stats.get(1).getCount(), 4);
+    }
+    
+    @Test
+    public void listBefore_ShouldReturnMatchingStats() {
+        List<FeedStat> stats = sut.listBefore(savedFeed, 115L);
+        
+        assertNotNull(stats);
+        assertEquals(stats.size(), 2);
+        assertEquals(stats.get(0).getCount(), 1);
+        assertEquals(stats.get(1).getCount(), 2);
     }
 
 }

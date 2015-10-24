@@ -116,8 +116,8 @@ public class StatServiceImplTest {
         when(conversionService.convert(feed1, FeedDto.class)).thenReturn(feedDto1);
         when(conversionService.convert(feed2, FeedDto.class)).thenReturn(feedDto2);
         
-        when(feedStatDao.list(feed1, minDate.getTimeInMillis())).thenReturn(new ArrayList<FeedStat>());
-        when(feedStatDao.list(feed2, minDate.getTimeInMillis())).thenReturn(Arrays.asList(stat21, stat22));
+        when(feedStatDao.listAfter(feed1, minDate.getTimeInMillis())).thenReturn(new ArrayList<FeedStat>());
+        when(feedStatDao.listAfter(feed2, minDate.getTimeInMillis())).thenReturn(Arrays.asList(stat21, stat22));
         
         Calendar date21 = Calendar.getInstance(timeZone);
         date21.set(2015, 9, 16, 0, 0, 30);

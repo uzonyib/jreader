@@ -45,7 +45,7 @@ public class StatServiceImpl extends AbstractService implements StatService {
         
         for (final SubscriptionGroup group : subscriptionGroupDao.list(user)) {
             for (final Subscription subscription : subscriptionDao.list(group)) {
-                final List<FeedStat> feedStats = feedStatDao.list(subscription.getFeed(), dateAfter);
+                final List<FeedStat> feedStats = feedStatDao.listAfter(subscription.getFeed(), dateAfter);
                 stats.add(convert(subscription.getFeed(), feedStats));
             }
         }

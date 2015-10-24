@@ -29,12 +29,15 @@ public class TaskController {
 
     private final int daysToKeepEntries;
     private final int entriesToKeep;
+    private final int statsToKeep;
 
-    public TaskController(final CronService cronService, final QueueService queueService, final int daysToKeepEntries, final int entriesToKeep) {
+    public TaskController(final CronService cronService, final QueueService queueService, final int daysToKeepEntries, final int entriesToKeep,
+            final int statsToKeep) {
         this.cronService = cronService;
         this.queueService = queueService;
         this.daysToKeepEntries = daysToKeepEntries;
         this.entriesToKeep = entriesToKeep;
+        this.statsToKeep = statsToKeep;
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.POST)
@@ -86,7 +89,7 @@ public class TaskController {
     public ResponseEntity cleanup(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
         final ResponseEntity result;
         if (request.getHeader("X-AppEngine-TaskName") != null || principal != null) {
-            cronService.cleanup(url, daysToKeepEntries, entriesToKeep);
+            cronService.cleanup(url, daysToKeepEntries, entriesToKeep, statsToKeep);
             result = new ResponseEntity();
         } else {
             result = new ResponseEntity(HttpStatus.FORBIDDEN.value());

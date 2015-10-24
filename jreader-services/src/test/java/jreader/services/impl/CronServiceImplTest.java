@@ -574,7 +574,11 @@ public class CronServiceImplTest {
 		when(subscription2.getGroup()).thenReturn(group);
 		when(group.getUser()).thenReturn(user);
 		
-		service.cleanup(FEED_URL, 30, 1);
+		cal.set(2015, 6, 16, 0, 25, 0);
+		when(dateHelper.substractDaysFromCurrentDate(20)).thenReturn(cal.getTimeInMillis());
+		when(feedStatDao.listBefore(feed1, cal.getTimeInMillis())).thenReturn(feedStats);
+		
+		service.cleanup(FEED_URL, 30, 1, 20);
 		
 		verify(feedDao).find(FEED_URL);
 		
@@ -589,6 +593,8 @@ public class CronServiceImplTest {
 		verify(feedEntryDao).listUnstarredOlderThan(eq(subscription2), eq(threshold));
 		verify(feedEntryDao).delete(entry22);
 		verifyNoMoreInteractions(feedEntryDao);
+		
+		verify(feedStatDao).deleteAll(feedStats);
 	}
 	
 	@Test
@@ -597,7 +603,7 @@ public class CronServiceImplTest {
         when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Collections.<Subscription>emptyList());
         when(feedStatDao.list(feed1)).thenReturn(feedStats);
         
-        service.cleanup(FEED_URL, 1, 1);
+        service.cleanup(FEED_URL, 1, 1, 1);
         
         verify(feedDao).find(FEED_URL);
         verify(subscriptionDao).listSubscriptions(feed1);

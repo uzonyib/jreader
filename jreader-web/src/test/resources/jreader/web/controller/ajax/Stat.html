@@ -234,6 +234,26 @@
 	   	</table>
 	   	
 	   	<p>
+			Given the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-25 00:15:00 UTC</span><br/>
+			when <span concordion:execute="cleanupFeed(#TEXT)">feed2</span> is cleaned up<br/>
+			then the statistics of <span concordion:set="#feed">feed2</span> are:
+		</p>
+		<table concordion:verifyRows="#stat : getStats(#feed)">
+			<tr>
+	       		<th concordion:assertEquals="#stat.count">Count</th>
+	       		<th concordion:assertEquals="#stat.formattedDate">Date</th>
+	       	</tr>
+			<tr>
+				<td>1</td>
+				<td>2015-06-06 00:00:00 UTC</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>2015-06-07 00:00:00 UTC</td>
+			</tr>
+	   	</table>
+	   	
+	   	<p>
 			When the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-07-07 00:15:00 UTC</span><br/>
 			then the statistics of <span concordion:set="#feed">feed2</span> are:
 		</p>
