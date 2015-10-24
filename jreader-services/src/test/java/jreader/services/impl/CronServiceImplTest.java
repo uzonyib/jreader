@@ -149,7 +149,7 @@ public class CronServiceImplTest {
 		when(feed1.getTitle()).thenReturn(FEED_TITLE);
 		
 		long date = 1445271922000L;
-		when(feed1.getRefreshDate()).thenReturn(date - 1000 * 60 * 20);
+		when(feed1.getUpdatedDate()).thenReturn(date - 1000 * 60 * 20);
 		when(dateHelper.getCurrentDate()).thenReturn(date);
 		
 		when(rssService.fetch(FEED_URL)).thenReturn(fetchResult);
@@ -289,7 +289,7 @@ public class CronServiceImplTest {
 	public void isNew_Feed_PublishedDateIsNull() {
 	    when(entry11.getPublishedDate()).thenReturn(null);
 	    
-	    boolean isNew = service.isNew(entry11, feed1, 0L);
+	    boolean isNew = service.isNew(entry11, feed1);
 	    
 	    assertFalse(isNew);
 	}
@@ -299,47 +299,89 @@ public class CronServiceImplTest {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, feed1, 0L);
+        boolean isNew = service.isNew(entry11, feed1);
         
         assertFalse(isNew);
     }
 	
 	@Test
-    public void isNew_Feed_FeedRefreshDateIsNull() {
+    public void isNew_Feed_FeedUpdatedDateIsLarger() {
+        when(entry11.getPublishedDate()).thenReturn(1000L);
+        when(entry11.getUri()).thenReturn("uri");
+        when(feed1.getUpdatedDate()).thenReturn(1100L);
+        
+        boolean isNew = service.isNew(entry11, feed1);
+        
+        assertFalse(isNew);
+    }
+	
+	@Test
+    public void isNew_Feed_FeedUpdatedDateAndRefreshDateIsNull() {
 	    when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
+        when(feed1.getUpdatedDate()).thenReturn(null);
+        when(feed1.getRefreshDate()).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, feed1, null);
+        boolean isNew = service.isNew(entry11, feed1);
         
         assertTrue(isNew);
+    }
+	
+	@Test
+    public void isNew_Feed_PublishedDateIsEqualToUpdatedDate() {
+        when(entry11.getPublishedDate()).thenReturn(1000L);
+        when(entry11.getUri()).thenReturn("uri");
+        when(feed1.getUpdatedDate()).thenReturn(1000L);
+        
+        boolean isNew = service.isNew(entry11, feed1);
+        
+        assertFalse(isNew);
     }
 	
 	@Test
     public void isNew_Feed_PublishedDateIsSmaller() {
         when(entry11.getPublishedDate()).thenReturn(999L);
         when(entry11.getUri()).thenReturn("uri");
+        when(feed1.getUpdatedDate()).thenReturn(null);
+        when(feed1.getRefreshDate()).thenReturn(1000L);
         
-        boolean isNew = service.isNew(entry11, feed1, 1000L);
+        boolean isNew = service.isNew(entry11, feed1);
         
         assertFalse(isNew);
     }
 	
 	@Test
-    public void isNew_Feed_PublishedDateIsEqual() {
+    public void isNew_Feed_PublishedDateIsEqualToRefreshDate() {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
+        when(feed1.getUpdatedDate()).thenReturn(null);
+        when(feed1.getRefreshDate()).thenReturn(1000L);
         
-        boolean isNew = service.isNew(entry11, feed1, 1000L);
+        boolean isNew = service.isNew(entry11, feed1);
         
         assertFalse(isNew);
     }
 	
 	@Test
-    public void isNew_Feed_PublishedDateIsLarger() {
+    public void isNew_Feed_PublishedDateIsLargerThanRefreshDate() {
         when(entry11.getPublishedDate()).thenReturn(1001L);
         when(entry11.getUri()).thenReturn("uri");
+        when(feed1.getUpdatedDate()).thenReturn(null);
+        when(feed1.getRefreshDate()).thenReturn(1000L);
         
-        boolean isNew = service.isNew(entry11, feed1, 1000L);
+        boolean isNew = service.isNew(entry11, feed1);
+        
+        assertTrue(isNew);
+    }
+	
+	@Test
+    public void isNew_Feed_PublishedDateIsLargerThanUpdatedDate() {
+        when(entry11.getPublishedDate()).thenReturn(1001L);
+        when(entry11.getUri()).thenReturn("uri");
+        when(feed1.getUpdatedDate()).thenReturn(1000L);
+        when(feed1.getRefreshDate()).thenReturn(1100L);
+        
+        boolean isNew = service.isNew(entry11, feed1);
         
         assertTrue(isNew);
     }
@@ -348,7 +390,7 @@ public class CronServiceImplTest {
     public void isNew_Subscription_PublishedDateIsNull() {
         when(entry11.getPublishedDate()).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, subscription1, 0L);
+        boolean isNew = service.isNew(entry11, subscription1);
         
         assertFalse(isNew);
     }
@@ -358,7 +400,7 @@ public class CronServiceImplTest {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, subscription1, 0L);
+        boolean isNew = service.isNew(entry11, subscription1);
         
         assertFalse(isNew);
     }
@@ -367,8 +409,9 @@ public class CronServiceImplTest {
     public void isNew_Subscription_PublishedDateIsSmaller() {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
+        when(subscription1.getUpdatedDate()).thenReturn(1100L);
         
-        boolean isNew = service.isNew(entry11, subscription1, 1100L);
+        boolean isNew = service.isNew(entry11, subscription1);
         
         assertFalse(isNew);
     }
@@ -377,9 +420,10 @@ public class CronServiceImplTest {
     public void isNew_Subscription_PublishedDateIsEqual() {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
+        when(subscription1.getUpdatedDate()).thenReturn(1000L);
         when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, subscription1, 1000L);
+        boolean isNew = service.isNew(entry11, subscription1);
         
         assertTrue(isNew);
     }
@@ -388,9 +432,10 @@ public class CronServiceImplTest {
     public void isNew_Subscription_EntryFound() {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
+        when(subscription1.getUpdatedDate()).thenReturn(900L);
         when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(entry11);
         
-        boolean isNew = service.isNew(entry11, subscription1, 900L);
+        boolean isNew = service.isNew(entry11, subscription1);
         
         assertFalse(isNew);
     }
@@ -399,17 +444,17 @@ public class CronServiceImplTest {
     public void isNew_Subscription_EntryNotFound() {
         when(entry11.getPublishedDate()).thenReturn(1000L);
         when(entry11.getUri()).thenReturn("uri");
+        when(subscription1.getUpdatedDate()).thenReturn(900L);
         when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, subscription1, 900L);
+        boolean isNew = service.isNew(entry11, subscription1);
         
         assertTrue(isNew);
     }
 	
 	@Test
 	public void updateFeed_SameDay() {
-	    long lastRefreshDate = 850L;
-        when(feed1.getRefreshDate()).thenReturn(lastRefreshDate);
+	    when(feed1.getUpdatedDate()).thenReturn(850L);
 	    when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12, entry13));
 	    
 	    long currentDate = 1000L;
@@ -451,8 +496,7 @@ public class CronServiceImplTest {
 	
 	@Test
     public void updateFeed_DifferentDay() {
-        long lastRefreshDate = 850L;
-        when(feed1.getRefreshDate()).thenReturn(lastRefreshDate);
+        when(feed1.getUpdatedDate()).thenReturn(850L);
         when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12, entry13));
         
         long currentDate = 1000L;

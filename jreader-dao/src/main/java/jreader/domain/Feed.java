@@ -14,6 +14,7 @@ public class Feed {
     private String description;
     private String feedType;
     private Long publishedDate;
+    private Long updatedDate;
     private Long refreshDate;
 
     public String getUrl() {
@@ -54,6 +55,14 @@ public class Feed {
 
     public void setPublishedDate(final Long publishedDate) {
         this.publishedDate = publishedDate;
+    }
+
+    public Long getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(final Long updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     public Long getRefreshDate() {
