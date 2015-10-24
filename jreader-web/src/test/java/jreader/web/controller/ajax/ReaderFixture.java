@@ -210,7 +210,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getEntryId(String title) {
-        List<FeedEntryDto> entries = (List<FeedEntryDto>) entryController.list(principal, Selection.ALL, 0, Integer.MAX_VALUE, true, null).getPayload();
+        List<FeedEntryDto> entries = (List<FeedEntryDto>) entryController.list(principal, Selection.ALL, 0, Integer.MAX_VALUE, true).getPayload();
         for (FeedEntryDto entry : entries) {
             if (title.equals(entry.getTitle())) {
                 return entry.getId();
@@ -221,18 +221,17 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public List<Entry> getEntries(String selection, int from, int to, String order) {
         return convertEntries((List<FeedEntryDto>) entryController
-                .list(principal, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order), null).getPayload());
+                .list(principal, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
     }
     
     public List<Entry> getEntries(Long groupId, String selection, int from, int to, String order) {
         return convertEntries((List<FeedEntryDto>) entryController
-                .list(principal, groupId, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order), null)
-                .getPayload());
+                .list(principal, groupId, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
     }
     
     public List<Entry> getEntries(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
         return convertEntries((List<FeedEntryDto>) entryController.list(principal, groupId, subscriptionId,
-                Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order), null).getPayload());
+                Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
     }
     
     private static List<Entry> convertEntries(List<FeedEntryDto> dtos) {

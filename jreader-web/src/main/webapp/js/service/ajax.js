@@ -24,9 +24,6 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 			"count": filter.count,
 			"ascending": filter.ascendingOrder
 		};
-    	if (filter.reloadSubscriptions) {
-    		params.auxiliaryPayload = "subscriptions";
-    	}
     	
     	return $http({
     		method: "GET",
