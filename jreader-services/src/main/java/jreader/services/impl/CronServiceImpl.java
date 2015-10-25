@@ -116,7 +116,7 @@ public class CronServiceImpl implements CronService {
             }
             
             if (updatedDate == null || updatedDate < feedEntry.getPublishedDate()) {
-                updatedDate = feed.getPublishedDate();
+                updatedDate = feedEntry.getPublishedDate();
             }
         }
         
