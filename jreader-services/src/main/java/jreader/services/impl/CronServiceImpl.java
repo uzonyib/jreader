@@ -27,6 +27,8 @@ import jreader.services.RssService;
 public class CronServiceImpl implements CronService {
 
     private static final Logger LOG = Logger.getLogger(CronServiceImpl.class.getName());
+    private static final int STATUS_MIN = 0;
+    private static final int STATUS_MAX = 5;
 
     private SubscriptionDao subscriptionDao;
     private FeedDao feedDao;
@@ -67,18 +69,28 @@ public class CronServiceImpl implements CronService {
         final Feed feed = feedDao.find(url);
         final long refreshDate = dateHelper.getCurrentDate();
         final RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
-        if (rssFetchResult == null) {
+        
+        final boolean failure = rssFetchResult == null;
+        if (failure) {
+            handleFailure(feed);
             return;
         }
         
         updateFeed(feed, refreshDate, rssFetchResult);
 
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
-        
         for (final Subscription subscription : subscriptions) {
             updateSubscription(feed, refreshDate, rssFetchResult, subscription);
         }
-        
+    }
+    
+    private void handleFailure(final Feed feed) {
+        int status = feed.getStatus() == null ? STATUS_MIN : feed.getStatus();
+        if (status < STATUS_MAX) {
+            ++status;
+        }
+        feed.setStatus(status);
+        feedDao.save(feed);
     }
 
     void updateFeed(final Feed feed, final long refreshDate, final RssFetchResult rssFetchResult) {
@@ -110,6 +122,11 @@ public class CronServiceImpl implements CronService {
         
         feed.setUpdatedDate(updatedDate);
         feed.setRefreshDate(refreshDate);
+        int status = feed.getStatus() == null ? STATUS_MIN : feed.getStatus();
+        if (status > STATUS_MIN) {
+            --status;
+        }
+        feed.setStatus(status);
         feedDao.save(feed);
         
         if (stats.size() > 0) {

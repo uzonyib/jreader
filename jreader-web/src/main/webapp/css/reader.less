@@ -136,6 +136,17 @@ body {
 	.subscription-stat {
 		text-align: center;
 		padding: 20px 0px;
+		.status {
+			&.ok {
+				color: green;
+			}
+			&.warning {
+				color: orange;
+			}
+			&.error {
+				color: red;
+			}
+		}
 		.title {
 			font-weight: bold;
 		}

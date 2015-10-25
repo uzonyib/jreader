@@ -16,6 +16,7 @@ public class Feed {
     private Long publishedDate;
     private Long updatedDate;
     private Long refreshDate;
+    private Integer status;
 
     public String getUrl() {
         return url;
@@ -71,6 +72,14 @@ public class Feed {
     
     public void setRefreshDate(final Long refreshDate) {
         this.refreshDate = refreshDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(final Integer status) {
+        this.status = status;
     }
 
 }

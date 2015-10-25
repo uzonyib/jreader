@@ -147,6 +147,7 @@ public class CronServiceImplTest {
 	    when(feedDao.find(FEED_URL)).thenReturn(feed1);
 		when(feed1.getUrl()).thenReturn(FEED_URL);
 		when(feed1.getTitle()).thenReturn(FEED_TITLE);
+		when(feed1.getStatus()).thenReturn(null);
 		
 		long date = 1445271922000L;
 		when(feed1.getUpdatedDate()).thenReturn(date - 1000 * 60 * 20);
@@ -213,6 +214,7 @@ public class CronServiceImplTest {
         verify(subscriptionDao).save(subscription2);
         
         verify(feed1).setRefreshDate(date);
+        verify(feed1).setStatus(0);
         verify(feedDao).save(feed1);
         
         verify(builder).feed(feed1);
@@ -228,6 +230,7 @@ public class CronServiceImplTest {
         when(feedDao.find(FEED_URL)).thenReturn(feed1);
         when(feed1.getUrl()).thenReturn(FEED_URL);
         when(feed1.getTitle()).thenReturn(FEED_TITLE);
+        when(feed1.getStatus()).thenReturn(2);
         
         long date = 1445271922000L;
         when(feed1.getRefreshDate()).thenReturn(date - 1000 * 60 * 20);
@@ -276,6 +279,7 @@ public class CronServiceImplTest {
         verify(subscriptionDao).save(subscription1);
         
         verify(feed1).setRefreshDate(date);
+        verify(feed1).setStatus(1);
         verify(feedDao).save(feed1);
         
         verify(builder).feed(feed1);
@@ -283,6 +287,57 @@ public class CronServiceImplTest {
         verify(builder).count(1);
         verify(builder).build();
         verify(feedStatDao).saveAll(Arrays.asList(feedStat1));
+    }
+	
+	@Test
+    public void refreshFeeds_Failure_StatusIsNull() {
+        when(feedDao.find(FEED_URL)).thenReturn(feed1);
+        when(feed1.getUrl()).thenReturn(FEED_URL);
+        when(feed1.getTitle()).thenReturn(FEED_TITLE);
+        when(feed1.getStatus()).thenReturn(null);
+        
+        when(rssService.fetch(FEED_URL)).thenReturn(null);
+        
+        service.refresh(FEED_URL);
+        
+        verify(rssService).fetch(FEED_URL);
+        
+        verify(feed1).setStatus(1);
+        verify(feedDao).save(feed1);
+    }
+	
+	@Test
+    public void refreshFeeds_Failure_StatusIsIncremented() {
+        when(feedDao.find(FEED_URL)).thenReturn(feed1);
+        when(feed1.getUrl()).thenReturn(FEED_URL);
+        when(feed1.getTitle()).thenReturn(FEED_TITLE);
+        when(feed1.getStatus()).thenReturn(3);
+        
+        when(rssService.fetch(FEED_URL)).thenReturn(null);
+        
+        service.refresh(FEED_URL);
+        
+        verify(rssService).fetch(FEED_URL);
+        
+        verify(feed1).setStatus(4);
+        verify(feedDao).save(feed1);
+    }
+	
+	@Test
+    public void refreshFeeds_Failure_StatusIsMax() {
+        when(feedDao.find(FEED_URL)).thenReturn(feed1);
+        when(feed1.getUrl()).thenReturn(FEED_URL);
+        when(feed1.getTitle()).thenReturn(FEED_TITLE);
+        when(feed1.getStatus()).thenReturn(5);
+        
+        when(rssService.fetch(FEED_URL)).thenReturn(null);
+        
+        service.refresh(FEED_URL);
+        
+        verify(rssService).fetch(FEED_URL);
+        
+        verify(feed1).setStatus(5);
+        verify(feedDao).save(feed1);
     }
 	
 	@Test

@@ -16,6 +16,7 @@ public class FeedDtoConverter implements Converter<Feed, FeedDto> {
         dto.setFeedType(entity.getFeedType());
         dto.setPublishedDate(entity.getPublishedDate());
         dto.setRefreshDate(entity.getRefreshDate());
+        dto.setStatus(entity.getStatus());
         return dto;
     }
 

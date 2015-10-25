@@ -8,6 +8,7 @@ public class FeedDto {
     private String feedType;
     private Long publishedDate;
     private Long refreshDate;
+    private Integer status;
 
     public String getTitle() {
         return title;
@@ -55,6 +56,14 @@ public class FeedDto {
 
     public void setRefreshDate(final Long refreshDate) {
         this.refreshDate = refreshDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(final Integer status) {
+        this.status = status;
     }
 
 }

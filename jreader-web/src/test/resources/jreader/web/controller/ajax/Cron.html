@@ -535,7 +535,14 @@
 	   	</table>
 	   	
 	   	<p>
-			Given the feeds are updated with the following entries:
+			Given <span concordion:execute="setFeedUnavailable(#TEXT)">feed1</span> has become unavailable<br/>
+			when <span concordion:execute="refreshFeed(#TEXT)">feed1</span> is refreshed<br/>
+			then the status of feed <span concordion:set="#feed">feed1</span> is <span concordion:assertEquals="getFeedStatus(#feed)">1</span>.
+		</p>
+		
+	   	<p>
+	   		Given <span concordion:execute="setFeedAvailable(#TEXT)">feed1</span> has become available again<br/>
+			and the feeds are updated with the following entries:
 		</p>
 		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
 			<tr>
@@ -624,6 +631,9 @@
 				<td>false</td>
 			</tr>
 		</table>
+		<p>
+			and the status of feed <span concordion:set="#feed">feed1</span> is <span concordion:assertEquals="getFeedStatus(#feed)">0</span>.
+		</p>
 	   	
 	</body>
 </html>

@@ -45,5 +45,9 @@ public class FeedRegistry {
     public String getUrl(String title) {
         return feedUrls.get(title);
     }
+    
+    public SyndFeed getFeed(String title) {
+        return feeds.get(title);
+    }
 
 }

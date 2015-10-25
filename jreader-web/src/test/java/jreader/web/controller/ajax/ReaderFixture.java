@@ -1,5 +1,6 @@
 package jreader.web.controller.ajax;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -109,11 +110,33 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         when(feedFetcher.retrieveFeed(new URL(url))).thenReturn(feed);
     }
     
+    public void setFeedUnavailable(String title) throws Exception {
+        String url = feedRegistry.getUrl(title);
+        when(feedFetcher.retrieveFeed(new URL(url))).thenThrow(Exception.class);
+    }
+    
+    public void setFeedAvailable(String title) throws Exception {
+        String url = feedRegistry.getUrl(title);
+        SyndFeed feed = feedRegistry.getFeed(title);
+        doReturn(feed).when(feedFetcher).retrieveFeed(new URL(url));
+    }
+    
     public void createEntry(String feedTitle, String uri, String title, String description, String author, String link, String publishedDate)
-            throws ParseException {
+            throws Exception {
         Date date = new SimpleDateFormat(DATE_FORMAT).parse(publishedDate);
         feedRegistry.registerEntry(feedTitle, uri, title, description, author, link, date);
         when(dateHelper.getFirstSecondOfDay(date.getTime())).thenReturn(new DateHelperImpl().getFirstSecondOfDay(date.getTime()));
+    }
+    
+    public Integer getFeedStatus(String title) {
+        for (SubscriptionGroupDto group : (List<SubscriptionGroupDto>) groupController.listAll(principal).getPayload()) {
+            for (SubscriptionDto dto : group.getSubscriptions()) {
+                if (title.equals(dto.getFeed().getTitle())) {
+                    return dto.getFeed().getStatus();
+                }
+            }
+        }
+        return null;
     }
     
     public int getGroupCount() {
