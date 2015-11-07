@@ -120,25 +120,25 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
 		$scope.importErrors = 0;
 		
 		var findGroup = function(title) {
-			var id = undefined;
+			var g = undefined;
 			angular.forEach($scope.subscriptionGroups.items, function(group) {
 				if (group.title === title) {
-					id = group.id;
+					g = group;
 				}
 			});
-			return id;
+			return g;
 		};
 		
 		var findSubscription = function(url) {
-			var id = undefined;
+			var s = undefined;
 			angular.forEach($scope.subscriptionGroups.items, function(group) {
 				angular.forEach(group.subscriptions, function(subscription) {
 					if (subscription.feed.url === url) {
-						id = subscription.id;
+						s = subscription;
 					}
 				});
 			});
-			return id;
+			return s;
 		};
 		
 		var addSubscribeJobs = function(group, id, jobQueue) {
@@ -162,17 +162,17 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
             if (angular.isUndefined(job)) {
             	$scope.importLog += "\nImport completed with " + $scope.importErrors + " error(s).\n";
             } else if (job.type === 1) {
-    			var id = findGroup(job.title);
-    			if (angular.isDefined(id)) {
+    			var group = findGroup(job.title);
+    			if (angular.isDefined(group)) {
     				$scope.importLog += "Group \"" + job.title + "\" already exists.\n";
-    				addSubscribeJobs(job, id, jobQueue);
+    				addSubscribeJobs(job, group.id, jobQueue);
     				process(jobQueue.pop());
     			} else {
     				$scope.importLog += "Creating group \"" + job.title + "\"...";
     				$scope.ajaxService.createGroup(job.title).success(function(response) {
     					$scope.importLog += " OK.\n";
-    					$scope.subscriptionGroups.items = response;
-    					addSubscribeJobs(job, findGroup(job.title), jobQueue);
+    					$scope.subscriptionGroups.setItemsFromPayLoad(response);
+    					addSubscribeJobs(job, findGroup(job.title).id, jobQueue);
         				process(jobQueue.pop());
     				}).error(function(response) {
     					$scope.importLog += " ERROR.\n";
@@ -181,15 +181,15 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
     				});
     			}
             } else if (job.type === 2) {
-            	var id = findSubscription(job.url);
-            	if (angular.isDefined(id)) {
+            	var subscription = findSubscription(job.url);
+            	if (angular.isDefined(subscription)) {
     				$scope.importLog += "Already subscribed to " + job.url + ".\n";
     				process(jobQueue.pop());
     			} else {
     				$scope.importLog += "Subscribing to " + job.url + "...";
     				$scope.ajaxService.subscribe(job.groupId, job.url).success(function(response) {
     					$scope.importLog += " OK.\n";
-    					$scope.subscriptionGroups.items = response;
+    					$scope.subscriptionGroups.setItemsFromPayLoad(response);
     					addEntitleJobs(job, jobQueue);
     					process(jobQueue.pop());
     				}).error(function(response) {
@@ -200,16 +200,21 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
     			}
             } else {
             	$scope.importLog += "Setting title \"" + job.title + "\"...";
-            	var id = findSubscription(job.url);
-            	$scope.ajaxService.entitleSubscription(job.groupId, id, job.title).success(function(response) {
-		        	$scope.importLog += " OK.\n";
-		        	$scope.subscriptionGroups.items = response;
+            	var subscription = findSubscription(job.url);
+            	if (!angular.equals(subscription.title, job.title)) {
+	            	$scope.ajaxService.entitleSubscription(job.groupId, subscription.id, job.title).success(function(response) {
+			        	$scope.importLog += " OK.\n";
+			        	$scope.subscriptionGroups.setItemsFromPayLoad(response);
+						process(jobQueue.pop());
+			        }).error(function(response) {
+						$scope.importLog += " ERROR.\n";
+						++$scope.importErrors;
+	    				process(jobQueue.pop());
+					});
+            	} else {
+            		$scope.importLog += " OK.\n";
 					process(jobQueue.pop());
-		        }).error(function(response) {
-					$scope.importLog += " ERROR.\n";
-					++$scope.importErrors;
-    				process(jobQueue.pop());
-				});
+            	}
             }
         };
         process(jobQueue.pop());
