@@ -21,7 +21,7 @@ public class HomePage {
     
     public HomePage(WebDriver browser) {
         this.browser = browser;
-        PageFactory.initElements(browser, this);
+        PageFactory.initElements(this.browser, this);
     }
     
     public WebElement getMainContent() {

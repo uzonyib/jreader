@@ -1,14 +1,12 @@
 package jreader.test.acceptance.page;
 
-import java.util.UUID;
-
-import jreader.test.acceptance.Constants;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import jreader.test.acceptance.Constants;
 
 public class LoginPage {
     
@@ -23,7 +21,7 @@ public class LoginPage {
     @CacheLookup
     private WebElement adminCheckbox;
     
-    @FindBy(xpath = "//input[@value='Log In']")
+    @FindBy(id = "btn-login")
     @CacheLookup
     private WebElement loginButton;
     
@@ -51,9 +49,9 @@ public class LoginPage {
         loginButton.click();
     }
     
-    public void login(boolean isAdmin) {
+    public void login(String username, boolean isAdmin) {
         open();
-        String email = UUID.randomUUID() + EMAIL_SUFFIX;
+        String email = username + EMAIL_SUFFIX;
         enterEmail(email);
         checkAdmin(isAdmin);
         clickLogin();
