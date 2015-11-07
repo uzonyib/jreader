@@ -14,6 +14,7 @@
 				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">Unread<br /><span>{{subscription.unreadCount}}</span></div>
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<canvas class="chart chart-line"
+						data-ng-if="active"
 						data-chart-options="chartOptions"
 						data-chart-data="subscription.stats.data"
 						data-chart-labels="subscription.stats.labels">
