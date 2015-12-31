@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -89,10 +91,12 @@ public class GroupStepsDef {
         assertThat(groupFound).isTrue();
     }
     
-    @When("^he creates group \"(.*?)\"$")
-    public void createGroup(String title) {
-        this.groupTitles.add(title);
-        groupForm.createGroup(title);
+    @When("^he creates the following groups:$")
+    public void createGroups(List<String> titles) {
+    	for (String title: titles) {
+	        groupTitles.add(title);
+	        groupForm.createGroup(title);
+    	}
     }
     
     @When("^he opens the group dropdown$")
@@ -100,25 +104,32 @@ public class GroupStepsDef {
         subscriptionForm.openGroupDropdown();
     }
     
-    @Then("^group \"(.*?)\" is displayed in the (\\d+)\\. position in the menu$")
-    public void checkGroupIsDisplayedInTheMenu(String title, int index) {
-        assertThat(menu.getGroupMenuItems().get(index - 1).getText()).isEqualTo(title);
+    @Then("^the following groups are displayed in the menu:$")
+    public void checkGroupsAreDisplayedInTheMenu(Map<Integer, String> groups) {
+        for (Entry<Integer, String> entry : groups.entrySet()) {
+        	assertThat(menu.getGroupMenuItems().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
+        }
     }
 
-    @Then("^group \"(.*?)\" is displayed in the (\\d+)\\. position in the subscription settings$")
-    public void checkGroupIsDisplayedInTheSubscriptionSettings(String title, int index) {
-        assertThat(subscriptionSettingsForm.getGroupItems().get(index - 1).getText()).isEqualTo(title);
+    @Then("^the following groups are displayed in the subscription settings:$")
+    public void checkGroupsAreDisplayedInTheSubscriptionSettings(Map<Integer, String> groups) {
+        for (Entry<Integer, String> entry : groups.entrySet()) {
+        	assertThat(subscriptionSettingsForm.getGroupItems().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
+        }
     }
     
-    @Then("^group \"(.*?)\" is displayed in the (\\d+)\\. position in the group field of the new subscription form$")
-    public void checkGroupIsDisplayedInTheGroupFieldOfTheNewSubscriptionForm(String title, int index) {
-        List<WebElement> options = subscriptionForm.getGroupOptions();
-        assertThat(options.get(index - 1).getText()).isEqualTo(title);
+    @Then("^the following groups are displayed in the group field of the new subscription form:$")
+    public void checkGroupsAreDisplayedInTheGroupFieldOfTheNewSubscriptionForm(Map<Integer, String> groups) {
+        for (Entry<Integer, String> entry : groups.entrySet()) {
+        	assertThat(subscriptionForm.getGroupOptions().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
+        }
     }
-
-    @Then("^group \"(.*?)\" is displayed in the (\\d+)\\. position$")
-    public void checkGroupIsDisplayedOnTheHomePage(String title, int index) {
-        assertThat(homePage.getGroupItems().get(index - 1).getText()).isEqualTo(title);
+    
+    @Then("^the following groups are displayed on the home page:$")
+    public void checkGroupsAreDisplayedOnTheHomePage(Map<Integer, String> groups) {
+        for (Entry<Integer, String> entry : groups.entrySet()) {
+        	assertThat(homePage.getGroupItems().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
+        }
     }
 
 }

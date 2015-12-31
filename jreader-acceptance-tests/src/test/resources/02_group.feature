@@ -19,23 +19,28 @@ Feature: create subscription group
 
 	Scenario: By default, groups are listed in creation order in the menu and on the settings page
 		When he navigates to the settings page
-		And he creates group "test group 2"
-		And he creates group "test group 3"
-		Then group "test group 1" is displayed in the 1. position in the menu
-		And group "test group 2" is displayed in the 2. position in the menu
-		And group "test group 3" is displayed in the 3. position in the menu
-		And group "test group 1" is displayed in the 1. position in the subscription settings
-		And group "test group 2" is displayed in the 2. position in the subscription settings
-		And group "test group 3" is displayed in the 3. position in the subscription settings
+		And he creates the following groups:
+		| test group 2 |
+		| test group 3 |
+		Then the following groups are displayed in the menu:
+		| 1 | test group 1 |
+		| 2 | test group 2 |
+		| 3 | test group 3 |
+		And the following groups are displayed in the subscription settings:
+		| 1 | test group 1 |
+		| 2 | test group 2 |
+		| 3 | test group 3 |
 		
 	Scenario: By default, groups are listed in creation order on the new subscription form
 		When he opens the group dropdown
-		Then group "test group 1" is displayed in the 1. position in the group field of the new subscription form
-		And group "test group 2" is displayed in the 2. position in the group field of the new subscription form
-		And group "test group 3" is displayed in the 3. position in the group field of the new subscription form
+		Then the following groups are displayed in the group field of the new subscription form:
+		| 1 | test group 1 |
+		| 2 | test group 2 |
+		| 3 | test group 3 |
 
 	Scenario: By default, groups are listed in creation order on the home page
 		When he navigates to the home page
-		Then group "test group 1" is displayed in the 1. position
-		And group "test group 2" is displayed in the 2. position
-		And group "test group 3" is displayed in the 3. position
+		Then the following groups are displayed on the home page:
+		| 1 | test group 1 |
+		| 2 | test group 2 |
+		| 3 | test group 3 |
