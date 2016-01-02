@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.core.convert.ConversionService;
 
 import jreader.dao.UserDao;
+import jreader.domain.Role;
 import jreader.domain.User;
 import jreader.dto.UserDto;
 
@@ -28,6 +29,15 @@ public class UserAdminServiceImpl implements UserAdminService {
             dtos.add(conversionService.convert(user, UserDto.class));
         }
         return dtos;
+    }
+    
+    @Override
+    public void updateRole(final String username, final String role) {
+        final User user = userDao.find(username);
+        if (user != null) {
+            user.setRole(Role.valueOf(role));
+            userDao.save(user);
+        }
     }
 
 }

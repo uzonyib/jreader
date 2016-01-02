@@ -1,6 +1,7 @@
 package jreader.services.impl;
 
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -17,12 +18,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import jreader.dao.UserDao;
+import jreader.domain.Role;
 import jreader.domain.User;
 import jreader.dto.UserDto;
 
 public class UserAdminServiceImplTest {
 	
-	@InjectMocks
+	private static final String USERNAME = "user";
+
+    @InjectMocks
 	private UserAdminServiceImpl service;
 	
 	@Mock
@@ -58,6 +62,16 @@ public class UserAdminServiceImplTest {
         assertEquals(dtos.size(), 2);
         assertSame(dtos.get(0), dto1);
         assertSame(dtos.get(1), dto2);
+    }
+    
+    @Test
+    public void updateRole() {
+        when(userDao.find(USERNAME)).thenReturn(user1);
+        
+        service.updateRole(USERNAME, "ADMIN");
+        
+        verify(user1).setRole(Role.ADMIN);
+        verify(userDao).save(user1);
     }
 
 }

@@ -30,4 +30,10 @@ public class AdminController {
         return modelAndView;
     }
     
+    @RequestMapping(value = "/users", method = RequestMethod.POST)
+    public String updateRole(@RequestParam final String username, @RequestParam final String role) {
+        userAdminService.updateRole(username, role);
+        return "redirect:/admin/users";
+    }
+    
 }
