@@ -11,7 +11,7 @@ import com.googlecode.objectify.util.Closeable;
 public class TestDataStoreServiceImpl implements TestDataStoreService {
     
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(
-            new LocalDatastoreServiceTestConfig().setDefaultHighRepJobPolicyUnappliedJobPercentage(1.0f),
+            new LocalDatastoreServiceTestConfig().setApplyAllHighRepJobPolicy(),
             new LocalMemcacheServiceTestConfig());
     
     private Closeable session;

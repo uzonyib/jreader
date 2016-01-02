@@ -3,6 +3,7 @@ package jreader.services.impl;
 import org.springframework.http.HttpStatus;
 
 import jreader.dao.UserDao;
+import jreader.domain.Role;
 import jreader.domain.User;
 import jreader.services.ServiceException;
 import jreader.services.UserService;
@@ -10,9 +11,12 @@ import jreader.services.UserService;
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
+    
+    private com.google.appengine.api.users.UserService googleUserService;
 
-    public UserServiceImpl(final UserDao userDao) {
+    public UserServiceImpl(final UserDao userDao, final com.google.appengine.api.users.UserService googleUserService) {
         this.userDao = userDao;
+        this.googleUserService = googleUserService;
     }
 
     @Override
@@ -22,6 +26,7 @@ public class UserServiceImpl implements UserService {
         }
         final User user = new User();
         user.setUsername(username);
+        user.setRole(googleUserService.isUserAdmin() ? Role.ADMIN : Role.UNAUTHORIZED);
         userDao.save(user);
     }
     

@@ -16,7 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.google.appengine.api.users.UserService;
+
 import jreader.dao.UserDao;
+import jreader.domain.Role;
 import jreader.domain.User;
 import jreader.services.ServiceException;
 
@@ -32,6 +35,9 @@ public class UserServiceImplTest {
 	private UserDao userDao;
 	
 	@Mock
+	private UserService googleUserService;
+	
+	@Mock
 	private User user;
 	
 	@Captor
@@ -45,11 +51,25 @@ public class UserServiceImplTest {
 	@Test
 	public void registerNewUser() {
 		when(userDao.find(NEW_USER)).thenReturn(null);
+		when(googleUserService.isUserAdmin()).thenReturn(false);
 		
 		service.register(NEW_USER);
 		
 		verify(userDao).save(userCaptor.capture());
 		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
+		assertEquals(userCaptor.getValue().getRole(), Role.UNAUTHORIZED);
+	}
+	
+	@Test
+	public void registerNewAdmin() {
+		when(userDao.find(NEW_USER)).thenReturn(null);
+		when(googleUserService.isUserAdmin()).thenReturn(true);
+		
+		service.register(NEW_USER);
+		
+		verify(userDao).save(userCaptor.capture());
+		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
+		assertEquals(userCaptor.getValue().getRole(), Role.ADMIN);
 	}
 	
 	@Test
@@ -69,11 +89,25 @@ public class UserServiceImplTest {
 	@Test
     public void ensureNewUserIsRegistered() {
         when(userDao.find(NEW_USER)).thenReturn(null);
+        when(googleUserService.isUserAdmin()).thenReturn(false);
         
         service.ensureIsRegistered(NEW_USER);
         
         verify(userDao).save(userCaptor.capture());
         assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
+        assertEquals(userCaptor.getValue().getRole(), Role.UNAUTHORIZED);
+    }
+	
+	@Test
+    public void ensureNewAdminIsRegistered() {
+        when(userDao.find(NEW_USER)).thenReturn(null);
+        when(googleUserService.isUserAdmin()).thenReturn(true);
+        
+        service.ensureIsRegistered(NEW_USER);
+        
+        verify(userDao).save(userCaptor.capture());
+        assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
+        assertEquals(userCaptor.getValue().getRole(), Role.ADMIN);
     }
     
     @Test

@@ -73,6 +73,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private StatController statController;
     
     @Autowired
+    @InjectMocks
     private UserService userService;
     @Autowired
     @InjectMocks
@@ -86,6 +87,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
 
     @Mock
     private Principal principal;
+    @Mock
+    private com.google.appengine.api.users.UserService googleUserService;
     @Mock
     private FeedFetcher feedFetcher;
     @Mock
@@ -101,6 +104,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public void initUser(String username) {
+    	when(googleUserService.isUserAdmin()).thenReturn(true);
         userService.register(username);
         when(principal.getName()).thenReturn(username);
     }

@@ -9,9 +9,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
 import jreader.web.controller.PageController;
 import jreader.web.controller.ajax.ArchiveController;
 import jreader.web.controller.ajax.ArchivedEntryController;
@@ -54,13 +51,8 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     }
     
     @Bean
-    public UserService googleUserService() {
-        return UserServiceFactory.getUserService();
-    }
-    
-    @Bean
     public PageController pageController() {
-        return new PageController(serviceConfig.userService(), googleUserService(), appVersion);
+        return new PageController(serviceConfig.userService(), serviceConfig.googleUserService(), appVersion);
     }
     
     @Bean

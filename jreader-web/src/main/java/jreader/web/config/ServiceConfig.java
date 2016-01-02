@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 
+import com.google.appengine.api.users.UserServiceFactory;
 import com.rometools.fetcher.impl.HttpURLFeedFetcher;
 
 import jreader.converter.ArchiveDtoConverter;
@@ -50,6 +51,11 @@ public class ServiceConfig {
     private DaoConfig daoConfig;
     
     @Bean
+    public com.google.appengine.api.users.UserService googleUserService() {
+        return UserServiceFactory.getUserService();
+    }
+    
+    @Bean
     public ConversionFactory conversionFactory() {
         final Set<Converter<?, ?>> converters = new LinkedHashSet<>();
         converters.add(new RssFetchResultConverter());
@@ -86,7 +92,7 @@ public class ServiceConfig {
     
     @Bean
     public UserService userService() {
-        return new UserServiceImpl(daoConfig.userDao());
+        return new UserServiceImpl(daoConfig.userDao(), googleUserService());
     }
     
     @Bean
