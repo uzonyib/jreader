@@ -27,6 +27,7 @@ import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
 
 import jreader.dao.FeedEntryFilter.Selection;
+import jreader.domain.Role;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedEntryDto;
 import jreader.dto.FeedEntryDto;
@@ -105,7 +106,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public void initUser(String username) {
     	when(googleUserService.isUserAdmin()).thenReturn(true);
-        userService.register(username);
+        userService.register(username, Role.ADMIN);
         when(principal.getName()).thenReturn(username);
     }
     

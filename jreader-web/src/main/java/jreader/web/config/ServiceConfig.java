@@ -92,7 +92,7 @@ public class ServiceConfig {
     
     @Bean
     public UserService userService() {
-        return new UserServiceImpl(daoConfig.userDao(), googleUserService());
+        return new UserServiceImpl(daoConfig.userDao());
     }
     
     @Bean

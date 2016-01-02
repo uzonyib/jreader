@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.appengine.api.users.UserService;
+
 import jreader.web.controller.ResponseEntity;
 import jreader.web.service.QueueService;
 
@@ -21,14 +23,17 @@ public class CronJobController {
     
     private QueueService queueService;
     
-    public CronJobController(final QueueService queueService) {
+    private UserService userService;
+    
+    public CronJobController(final QueueService queueService, final UserService userService) {
         this.queueService = queueService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public ResponseEntity refreshFeeds(final HttpServletRequest request, final Principal principal) {
         final ResponseEntity result;
-        if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
+        if (isAuthorized(request)) {
             queueService.refresh();
             result = new ResponseEntity();
             LOG.info("Refresh job added to queue.");
@@ -42,7 +47,7 @@ public class CronJobController {
     @RequestMapping(value = "/cleanup", method = RequestMethod.GET)
     public ResponseEntity cleanup(final HttpServletRequest request, final Principal principal) {
         final ResponseEntity result;
-        if (request.getHeader("X-AppEngine-Cron") != null || principal != null) {
+        if (isAuthorized(request)) {
             queueService.cleanup();
             result = new ResponseEntity();
             LOG.info("Cleanup job added to queue.");
@@ -51,6 +56,10 @@ public class CronJobController {
             LOG.warning("Cleanup job skipped.");
         }
         return result;
+    }
+    
+    private boolean isAuthorized(final HttpServletRequest request) {
+        return request.getHeader("X-AppEngine-Cron") != null || (userService.isUserLoggedIn() && userService.isUserAdmin());
     }
 
 }

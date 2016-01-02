@@ -5,6 +5,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import org.mockito.ArgumentCaptor;
@@ -15,8 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.google.appengine.api.users.UserService;
 
 import jreader.dao.UserDao;
 import jreader.domain.Role;
@@ -35,9 +35,6 @@ public class UserServiceImplTest {
 	private UserDao userDao;
 	
 	@Mock
-	private UserService googleUserService;
-	
-	@Mock
 	private User user;
 	
 	@Captor
@@ -51,9 +48,8 @@ public class UserServiceImplTest {
 	@Test
 	public void registerNewUser() {
 		when(userDao.find(NEW_USER)).thenReturn(null);
-		when(googleUserService.isUserAdmin()).thenReturn(false);
 		
-		service.register(NEW_USER);
+		service.register(NEW_USER, Role.UNAUTHORIZED);
 		
 		verify(userDao).save(userCaptor.capture());
 		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
@@ -63,9 +59,8 @@ public class UserServiceImplTest {
 	@Test
 	public void registerNewAdmin() {
 		when(userDao.find(NEW_USER)).thenReturn(null);
-		when(googleUserService.isUserAdmin()).thenReturn(true);
 		
-		service.register(NEW_USER);
+		service.register(NEW_USER, Role.ADMIN);
 		
 		verify(userDao).save(userCaptor.capture());
 		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
@@ -77,7 +72,7 @@ public class UserServiceImplTest {
 		when(userDao.find(EXISTING_USER)).thenReturn(user);
 
 		try {
-			service.register(EXISTING_USER);
+			service.register(EXISTING_USER, Role.UNAUTHORIZED);
 			fail();
 		} catch (ServiceException e) {
 			assertEquals(e.getStatus(), HttpStatus.CONFLICT);
@@ -87,36 +82,40 @@ public class UserServiceImplTest {
 	}
 	
 	@Test
-    public void ensureNewUserIsRegistered() {
+    public void isRegisteredNewUser() {
         when(userDao.find(NEW_USER)).thenReturn(null);
-        when(googleUserService.isUserAdmin()).thenReturn(false);
         
-        service.ensureIsRegistered(NEW_USER);
+        boolean registered = service.isRegistered(NEW_USER);
         
-        verify(userDao).save(userCaptor.capture());
-        assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
-        assertEquals(userCaptor.getValue().getRole(), Role.UNAUTHORIZED);
+        assertFalse(registered);
     }
 	
 	@Test
-    public void ensureNewAdminIsRegistered() {
-        when(userDao.find(NEW_USER)).thenReturn(null);
-        when(googleUserService.isUserAdmin()).thenReturn(true);
+    public void isRegisteredExistingUser() {
+        when(userDao.find(EXISTING_USER)).thenReturn(user);
         
-        service.ensureIsRegistered(NEW_USER);
+        boolean registered = service.isRegistered(EXISTING_USER);
         
-        verify(userDao).save(userCaptor.capture());
-        assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
-        assertEquals(userCaptor.getValue().getRole(), Role.ADMIN);
+        assertTrue(registered);
     }
     
     @Test
-    public void ensureExistingUserIsRegistered() {
-        when(userDao.find(EXISTING_USER)).thenReturn(user);
-
-        service.ensureIsRegistered(EXISTING_USER);
+    public void roleIsUnauthorizedForUnregisteredUsers() {
+        when(userDao.find(NEW_USER)).thenReturn(null);
         
-        verify(userDao, never()).save(any(User.class));
+        Role role = service.getRole(NEW_USER);
+        
+        assertEquals(role, null);
+    }
+    
+    @Test
+    public void roleReturnedForUsersWithRole() {
+        when(userDao.find(EXISTING_USER)).thenReturn(user);
+        when(user.getRole()).thenReturn(Role.USER);
+        
+        Role role = service.getRole(EXISTING_USER);
+        
+        assertEquals(role, Role.USER);
     }
 
 }

@@ -12,29 +12,33 @@ public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
     
-    private com.google.appengine.api.users.UserService googleUserService;
-
-    public UserServiceImpl(final UserDao userDao, final com.google.appengine.api.users.UserService googleUserService) {
+    public UserServiceImpl(final UserDao userDao) {
         this.userDao = userDao;
-        this.googleUserService = googleUserService;
+    }
+    
+    @Override
+    public boolean isRegistered(String username) {
+        return userDao.find(username) != null;
     }
 
     @Override
-    public void register(final String username) {
+    public void register(final String username, final Role role) {
         if (userDao.find(username) != null) {
             throw new ServiceException("User already exists.", HttpStatus.CONFLICT);
         }
         final User user = new User();
         user.setUsername(username);
-        user.setRole(googleUserService.isUserAdmin() ? Role.ADMIN : Role.UNAUTHORIZED);
+        user.setRole(role);
         userDao.save(user);
     }
     
     @Override
-    public void ensureIsRegistered(final String username) {
-        if (userDao.find(username) == null) {
-            this.register(username);
+    public Role getRole(final String username) {
+        final User user = userDao.find(username);
+        if (user == null) {
+            return null;
         }
+        return user.getRole();
     }
 
 }

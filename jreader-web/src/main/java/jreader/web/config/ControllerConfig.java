@@ -52,7 +52,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public PageController pageController() {
-        return new PageController(serviceConfig.userService(), serviceConfig.googleUserService(), appVersion);
+        return new PageController(serviceConfig.googleUserService(), appVersion);
     }
     
     @Bean
@@ -62,12 +62,13 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public CronJobController cronJobController() {
-        return new CronJobController(queueService());
+        return new CronJobController(queueService(), serviceConfig.googleUserService());
     }
     
     @Bean
     public TaskController taskController() {
-        return new TaskController(serviceConfig.cronService(), queueService(), daysToKeepEntries, entriesToKeep, daysToKeepStats);
+        return new TaskController(serviceConfig.cronService(), queueService(), serviceConfig.googleUserService(), daysToKeepEntries, entriesToKeep,
+                daysToKeepStats);
     }
     
     @Bean

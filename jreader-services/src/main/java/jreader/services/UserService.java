@@ -1,9 +1,13 @@
 package jreader.services;
 
+import jreader.domain.Role;
+
 public interface UserService {
 
-    void register(String username);
+    boolean isRegistered(String username);
+    
+    void register(String username, Role role);
 
-    void ensureIsRegistered(String username);
+    Role getRole(String username);
 
 }
