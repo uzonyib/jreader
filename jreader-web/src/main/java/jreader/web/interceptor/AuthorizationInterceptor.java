@@ -24,16 +24,19 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        final String username = googleUserService.getCurrentUser().getEmail();
-        if (!userService.isRegistered(username)) {
-            userService.register(username, googleUserService.isUserAdmin() ? Role.ADMIN : Role.UNAUTHORIZED);
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
+        if (googleUserService.isUserLoggedIn()) {
+            final String username = googleUserService.getCurrentUser().getEmail();
+            if (!userService.isRegistered(username)) {
+                userService.register(username, googleUserService.isUserAdmin() ? Role.ADMIN : Role.UNAUTHORIZED);
+            }
+    
+            final Role role = userService.getRole(username);
+            if (authorizedRoles.contains(role)) {
+                return true;
+            }
         }
-
-        final Role role = userService.getRole(username);
-        if (authorizedRoles.contains(role)) {
-            return true;
-        }
+        
         response.sendRedirect("/forbidden");
         return false;
     }

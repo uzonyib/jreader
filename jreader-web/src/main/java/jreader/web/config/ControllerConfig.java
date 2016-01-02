@@ -9,6 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import jreader.web.controller.AdminController;
 import jreader.web.controller.PageController;
 import jreader.web.controller.ajax.ArchiveController;
 import jreader.web.controller.ajax.ArchivedEntryController;
@@ -45,6 +46,9 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     @Value("${daysToKeepStats}")
     private int daysToKeepStats;
     
+    @Value("${admin.users.pageSize}")
+    private int userAdminPageSize;
+    
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
@@ -69,6 +73,11 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     public TaskController taskController() {
         return new TaskController(serviceConfig.cronService(), queueService(), serviceConfig.googleUserService(), daysToKeepEntries, entriesToKeep,
                 daysToKeepStats);
+    }
+    
+    @Bean
+    public AdminController AdminController() {
+        return new AdminController(serviceConfig.userAdminService(), userAdminPageSize);
     }
     
     @Bean

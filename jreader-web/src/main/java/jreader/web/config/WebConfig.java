@@ -34,10 +34,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(
                 new AuthorizationInterceptor(serviceConfig.userService(), serviceConfig.googleUserService(), Arrays.asList(Role.USER, Role.ADMIN)))
                 .addPathPatterns("/reader", "/reader/*");
+        registry.addInterceptor(
+                new AuthorizationInterceptor(serviceConfig.userService(), serviceConfig.googleUserService(), Arrays.asList(Role.ADMIN)))
+                .addPathPatterns("/admin/*");
     }
 
 }

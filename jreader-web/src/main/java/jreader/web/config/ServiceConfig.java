@@ -23,6 +23,7 @@ import jreader.converter.FeedStatDtoConverter;
 import jreader.converter.RssFetchResultConverter;
 import jreader.converter.SubscriptionDtoConverter;
 import jreader.converter.SubscriptionGroupDtoConverter;
+import jreader.converter.UserDtoConverter;
 import jreader.domain.BuilderFactory;
 import jreader.services.ArchiveService;
 import jreader.services.CronService;
@@ -41,6 +42,8 @@ import jreader.services.impl.RssServiceImpl;
 import jreader.services.impl.StatServiceImpl;
 import jreader.services.impl.SubscriptionGroupServiceImpl;
 import jreader.services.impl.SubscriptionServiceImpl;
+import jreader.services.impl.UserAdminService;
+import jreader.services.impl.UserAdminServiceImpl;
 import jreader.services.impl.UserServiceImpl;
 
 @Configuration
@@ -62,6 +65,7 @@ public class ServiceConfig {
         converters.add(new FeedDtoConverter());
         converters.add(new FeedEntryDtoConverter());
         converters.add(new FeedStatDtoConverter());
+        converters.add(new UserDtoConverter());
         converters.add(new SubscriptionGroupDtoConverter());
         converters.add(new SubscriptionDtoConverter());
         converters.add(new ArchiveDtoConverter());
@@ -129,6 +133,11 @@ public class ServiceConfig {
     public CronService cronService() {
         return new CronServiceImpl(daoConfig.subscriptionDao(), daoConfig.feedDao(), daoConfig.feedEntryDao(), daoConfig.feedStatDao(), rssService(),
                 conversionService(), builderFactory(), dateHelper());
+    }
+    
+    @Bean
+    public UserAdminService userAdminService() {
+        return new UserAdminServiceImpl(daoConfig.userDao(), conversionService());
     }
 
 }

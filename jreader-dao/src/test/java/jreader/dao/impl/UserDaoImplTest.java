@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jreader.dao.UserDao;
+import jreader.domain.Role;
 import jreader.domain.User;
 
 import org.testng.annotations.BeforeMethod;
@@ -16,7 +17,9 @@ import org.testng.annotations.Test;
 public class UserDaoImplTest extends AbstractDaoTest {
     
     private static final String[] NEW_USERNAMES = { "new_user_1", "new_user_2" };
-    private static final String[] EXISTING_USERNAMES = { "existing_user_1", "existing_user_2" };
+    private static final Role[] NEW_ROLES = { Role.ADMIN, Role.USER };
+    private static final String[] EXISTING_USERNAMES = { "existing_user_1", "existing_user_2", "existing_user_4", "existing_user_3" };
+    private static final Role[] EXISTING_ROLES = { Role.ADMIN, Role.USER, Role.UNAUTHORIZED, Role.UNAUTHORIZED };
     
     private UserDao sut;
     
@@ -24,9 +27,10 @@ public class UserDaoImplTest extends AbstractDaoTest {
     public void init() {
         sut = new UserDaoImpl();
         
-        for (String username : EXISTING_USERNAMES) {
+        for (int i = 0; i < EXISTING_USERNAMES.length; ++i) {
             User user = new User();
-            user.setUsername(username);
+            user.setUsername(EXISTING_USERNAMES[i]);
+            user.setRole(EXISTING_ROLES[i]);
             sut.save(user);
         }
     }
@@ -35,11 +39,13 @@ public class UserDaoImplTest extends AbstractDaoTest {
     public void save_IfUserIsNew_ShouldReturnUser() {
         User user = new User();
         user.setUsername(NEW_USERNAMES[0]);
+        user.setRole(NEW_ROLES[0]);
         
         user = sut.save(user);
         
         assertNotNull(user);
         assertEquals(user.getUsername(), NEW_USERNAMES[0]);
+        assertEquals(user.getRole(), NEW_ROLES[0]);
     }
     
     @Test
@@ -55,6 +61,7 @@ public class UserDaoImplTest extends AbstractDaoTest {
         
         assertNotNull(user);
         assertEquals(user.getUsername(), EXISTING_USERNAMES[0]);
+        assertEquals(user.getRole(), EXISTING_ROLES[0]);
     }
     
     @Test
@@ -70,18 +77,20 @@ public class UserDaoImplTest extends AbstractDaoTest {
     @Test
     public void saveAll_IfUsersNotExist_ShouldFindUsers() {
         List<User> users = new ArrayList<User>();
-        for (String username : NEW_USERNAMES) {
+        for (int i = 0; i < NEW_USERNAMES.length; ++i) {
             User user = new User();
-            user.setUsername(username);
+            user.setUsername(NEW_USERNAMES[i]);
+            user.setRole(NEW_ROLES[i]);
             users.add(user);
         }
         
         sut.saveAll(users);
         
-        for (String username : NEW_USERNAMES) {
-            User user = sut.find(username);
+        for (int i = 0; i < NEW_USERNAMES.length; ++i) {
+            User user = sut.find(NEW_USERNAMES[i]);
             assertNotNull(user);
-            assertEquals(user.getUsername(), username);
+            assertEquals(user.getUsername(), NEW_USERNAMES[i]);
+            assertEquals(user.getRole(), NEW_ROLES[i]);
         }
     }
     
@@ -100,6 +109,34 @@ public class UserDaoImplTest extends AbstractDaoTest {
             User user = sut.find(username);
             assertNull(user);
         }
+    }
+    
+    @Test
+    public void list_ShouldReturnUsersOrdered() {
+        List<User> users = sut.list(0, 10);
+        
+        assertNotNull(users);
+        assertEquals(users.size(), 4);
+        assertEquals(users.get(0).getUsername(), EXISTING_USERNAMES[0]);
+        assertEquals(users.get(0).getRole(), EXISTING_ROLES[0]);
+        assertEquals(users.get(1).getUsername(), EXISTING_USERNAMES[1]);
+        assertEquals(users.get(1).getRole(), EXISTING_ROLES[1]);
+        assertEquals(users.get(2).getUsername(), EXISTING_USERNAMES[3]);
+        assertEquals(users.get(2).getRole(), EXISTING_ROLES[3]);
+        assertEquals(users.get(3).getUsername(), EXISTING_USERNAMES[2]);
+        assertEquals(users.get(3).getRole(), EXISTING_ROLES[2]);
+    }
+    
+    @Test
+    public void list_ShouldReturnUsersLimited() {
+        List<User> users = sut.list(1, 2);
+        
+        assertNotNull(users);
+        assertEquals(users.size(), 2);
+        assertEquals(users.get(0).getUsername(), EXISTING_USERNAMES[1]);
+        assertEquals(users.get(0).getRole(), EXISTING_ROLES[1]);
+        assertEquals(users.get(1).getUsername(), EXISTING_USERNAMES[3]);
+        assertEquals(users.get(1).getRole(), EXISTING_ROLES[3]);
     }
 
 }
