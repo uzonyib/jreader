@@ -1,6 +1,5 @@
 package jreader.web.controller.appengine;
 
-import java.security.Principal;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +30,7 @@ public class CronJobController {
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
-    public ResponseEntity refreshFeeds(final HttpServletRequest request, final Principal principal) {
+    public ResponseEntity refreshFeeds(final HttpServletRequest request) {
         final ResponseEntity result;
         if (isAuthorized(request)) {
             queueService.refresh();
@@ -45,7 +44,7 @@ public class CronJobController {
     }
 
     @RequestMapping(value = "/cleanup", method = RequestMethod.GET)
-    public ResponseEntity cleanup(final HttpServletRequest request, final Principal principal) {
+    public ResponseEntity cleanup(final HttpServletRequest request) {
         final ResponseEntity result;
         if (isAuthorized(request)) {
             queueService.cleanup();

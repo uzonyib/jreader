@@ -1,6 +1,5 @@
 package jreader.web.controller.appengine;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -46,9 +45,9 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.POST)
-    public ResponseEntity refreshFeeds(final HttpServletRequest request, final Principal principal) {
+    public ResponseEntity refreshFeeds(final HttpServletRequest request) {
         final ResponseEntity result;
-        if (isAuthorized(request, principal)) {
+        if (isAuthorized(request)) {
             final List<FeedDto> feeds = cronService.listFeeds();
             for (final FeedDto feed : feeds) {
                 queueService.refresh(feed.getUrl());
@@ -62,9 +61,9 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/refresh/feed", method = RequestMethod.POST)
-    public ResponseEntity refreshFeed(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
+    public ResponseEntity refreshFeed(final HttpServletRequest request, @RequestParam final String url) {
         final ResponseEntity result;
-        if (isAuthorized(request, principal)) {
+        if (isAuthorized(request)) {
             cronService.refresh(url);
             result = new ResponseEntity();
         } else {
@@ -75,9 +74,9 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/cleanup", method = RequestMethod.POST)
-    public ResponseEntity cleanup(final HttpServletRequest request, final Principal principal) {
+    public ResponseEntity cleanup(final HttpServletRequest request) {
         final ResponseEntity result;
-        if (isAuthorized(request, principal)) {
+        if (isAuthorized(request)) {
             final List<FeedDto> feeds = cronService.listFeeds();
             for (FeedDto feed : feeds) {
                 queueService.cleanup(feed.getUrl());
@@ -91,9 +90,9 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/cleanup/feed", method = RequestMethod.POST)
-    public ResponseEntity cleanup(final HttpServletRequest request, final Principal principal, @RequestParam final String url) {
+    public ResponseEntity cleanup(final HttpServletRequest request, @RequestParam final String url) {
         final ResponseEntity result;
-        if (isAuthorized(request, principal)) {
+        if (isAuthorized(request)) {
             cronService.cleanup(url, daysToKeepEntries, entriesToKeep, statsToKeep);
             result = new ResponseEntity();
         } else {
@@ -103,7 +102,7 @@ public class TaskController {
         return result;
     }
 
-    private boolean isAuthorized(final HttpServletRequest request, final Principal principal) {
+    private boolean isAuthorized(final HttpServletRequest request) {
         return request.getHeader("X-AppEngine-TaskName") != null || (userService.isUserLoggedIn() && userService.isUserAdmin());
     }
 

@@ -20,12 +20,12 @@ public class User {
         this.username = username;
     }
 
-	public Role getRole() {
-		return role;
-	}
+    public Role getRole() {
+        return role;
+    }
 
-	public void setRole(final Role role) {
-		this.role = role;
-	}
+    public void setRole(final Role role) {
+        this.role = role;
+    }
 
 }

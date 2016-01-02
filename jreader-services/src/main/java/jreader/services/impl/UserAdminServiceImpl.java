@@ -23,8 +23,8 @@ public class UserAdminServiceImpl implements UserAdminService {
 
     @Override
     public List<UserDto> list(final int offset, final int count) {
-        List<User> users = userDao.list(offset, count);
-        List<UserDto> dtos = new ArrayList<UserDto>();
+        final List<User> users = userDao.list(offset, count);
+        final List<UserDto> dtos = new ArrayList<UserDto>();
         for (User user : users) {
             dtos.add(conversionService.convert(user, UserDto.class));
         }

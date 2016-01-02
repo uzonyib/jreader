@@ -381,13 +381,13 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     public void refreshFeed(String title) {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader("X-AppEngine-TaskName")).thenReturn("default");
-        taskController.refreshFeed(request, principal, feedRegistry.getUrl(title));
+        taskController.refreshFeed(request, feedRegistry.getUrl(title));
     }
     
     public void cleanupFeed(String title) {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getHeader("X-AppEngine-TaskName")).thenReturn("default");
-        taskController.cleanup(request, principal, feedRegistry.getUrl(title));
+        taskController.cleanup(request, feedRegistry.getUrl(title));
     }
     
     public void setCurrentDate(String dateString) throws ParseException {

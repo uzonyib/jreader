@@ -76,7 +76,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     }
     
     @Bean
-    public AdminController AdminController() {
+    public AdminController adminController() {
         return new AdminController(serviceConfig.userAdminService(), userAdminPageSize);
     }
     

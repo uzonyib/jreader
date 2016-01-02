@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public boolean isRegistered(String username) {
+    public boolean isRegistered(final String username) {
         return userDao.find(username) != null;
     }
 
