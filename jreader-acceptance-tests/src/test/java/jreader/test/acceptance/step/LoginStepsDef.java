@@ -15,7 +15,7 @@ import jreader.test.acceptance.page.LoginPage;
 
 public class LoginStepsDef {
     
-    private static final String ERROR_TITLE_PREFIX = "Error 403";
+    private static final String FORBIDDEN_PAGE_TITLE = "jReader - Not authorized";
     
     private WebDriver browser = BrowserManager.getBrowser();
     
@@ -65,7 +65,7 @@ public class LoginStepsDef {
     
     @Then("^the forbidden page is displayed$")
     public void checkForbiddenPageIsDisplayed() {
-        assertThat(browser.getTitle()).startsWith(ERROR_TITLE_PREFIX);
+        assertThat(browser.getTitle()).isEqualTo(FORBIDDEN_PAGE_TITLE);
     }
     
 }
