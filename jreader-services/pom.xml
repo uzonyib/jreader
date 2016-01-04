@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>jreader</artifactId>
 		<groupId>jreader</groupId>
-		<version>1.0.16</version>
+		<version>1.0.17-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>jreader-services</artifactId>
