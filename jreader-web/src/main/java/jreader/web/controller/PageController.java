@@ -24,7 +24,7 @@ public class PageController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void getMainPage(final HttpServletResponse response) throws IOException {
-        response.sendRedirect("reader");
+        response.sendRedirect("/reader");
     }
 
     @RequestMapping(value = "/reader", method = RequestMethod.GET)

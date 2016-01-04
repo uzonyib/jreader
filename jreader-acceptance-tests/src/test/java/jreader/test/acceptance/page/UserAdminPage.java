@@ -7,8 +7,11 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import jreader.test.acceptance.Constants;
+import jreader.test.acceptance.page.element.UserRoleTable;
 
-public class LoginPage {
+public class UserAdminPage {
+    
+    private static final String TITLE = "jReader - Users";
     
     private WebDriver browser;
     
@@ -23,39 +26,24 @@ public class LoginPage {
     @CacheLookup
     private WebElement loginButton;
     
-    public LoginPage(WebDriver browser) {
+    private UserRoleTable userRoleTable;
+    
+    public UserAdminPage(WebDriver browser) {
         this.browser = browser;
         PageFactory.initElements(browser, this);
+        this.userRoleTable = new UserRoleTable(browser);
+    }
+    
+    public UserRoleTable getUserRoleTable() {
+        return userRoleTable;
     }
     
     public void open() {
-        browser.get(Constants.LOGIN_PAGE_URL);
-    }
-    
-    public void enterEmail(String email) {
-        emailField.clear();
-        emailField.sendKeys(email);
-    }
-    
-    public void checkAdmin(boolean isAdmin) {
-        if (isAdmin != adminCheckbox.isSelected()) {
-            adminCheckbox.click();
-        }
-    }
-    
-    public void clickLogin() {
-        loginButton.click();
-    }
-    
-    public void login(String email, boolean isAdmin) {
-        open();
-        enterEmail(email);
-        checkAdmin(isAdmin);
-        clickLogin();
+        browser.get(Constants.USER_ADMIN_PAGE_URL);
     }
     
     public boolean isDisplayed() {
-        return emailField != null && emailField.isDisplayed();
+        return TITLE.equals(browser.getTitle());
     }
 
 }

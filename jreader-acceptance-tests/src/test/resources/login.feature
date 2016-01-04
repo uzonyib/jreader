@@ -4,14 +4,14 @@ Feature: Administrators can log in, log out and use the menu for navigation
 		When the user opens the main page
 		Then the login page is displayed
 
-	Scenario: Non-administrator users cannot log in
-		Given "nonadmin" is not an administrator
+	Scenario: Non-administrator users cannot access the application by default
+		Given "nonadmin@jreader.com" is not an administrator
 		And he is on the login page
 		When he tries to log in
 		Then the forbidden page is displayed
 
 	Scenario: Administrators can log in and then they can see the main screen
-		Given "admin" is an administrator
+		Given "admin@jreader.com" is an administrator
 		And he is on the login page
 		When he tries to log in
 		Then the home page is displayed

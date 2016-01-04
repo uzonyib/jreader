@@ -11,15 +11,15 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import jreader.test.acceptance.BrowserManager;
 import jreader.test.acceptance.Constants;
+import jreader.test.acceptance.page.ForbiddenPage;
 import jreader.test.acceptance.page.LoginPage;
 
 public class LoginStepsDef {
     
-    private static final String FORBIDDEN_PAGE_TITLE = "jReader - Not authorized";
-    
     private WebDriver browser = BrowserManager.getBrowser();
     
     private LoginPage loginPage = new LoginPage(browser);
+    private ForbiddenPage forbiddenPage = new ForbiddenPage(browser);
     
     private String username;
     private boolean isAdmin = true;
@@ -43,8 +43,13 @@ public class LoginStepsDef {
     
     @Given("^a new user is logged in$")
     public void ensureLoggedInAsAdmin() {
-        this.username = UUID.randomUUID().toString();
+        this.username = UUID.randomUUID().toString() + "@jreader.com";
         this.isAdmin = true;
+        loginPage.login(username, true);
+    }
+    
+    @Given("^he is logged in$")
+    public void ensureLoggedIn() {
         loginPage.login(username, true);
     }
     
@@ -65,7 +70,7 @@ public class LoginStepsDef {
     
     @Then("^the forbidden page is displayed$")
     public void checkForbiddenPageIsDisplayed() {
-        assertThat(browser.getTitle()).isEqualTo(FORBIDDEN_PAGE_TITLE);
+        assertThat(forbiddenPage.isDisplayed()).isTrue();
     }
     
 }

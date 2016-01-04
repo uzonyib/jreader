@@ -6,7 +6,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "classpath:01_login.feature", strict = true)
+@CucumberOptions(features = "classpath:login.feature", strict = true)
 public class LoginTest extends AbstractTest {
 
 }
