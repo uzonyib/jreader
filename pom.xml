@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 	
 	<properties>
-		<appengine.sdk.version>1.9.21</appengine.sdk.version>
+		<appengine.sdk.version>1.9.30</appengine.sdk.version>
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<ui.minify>false</ui.minify>
@@ -60,7 +60,7 @@
 			<dependency>
 	        	<groupId>com.googlecode.objectify</groupId>
 	        	<artifactId>objectify</artifactId>
-	        	<version>5.1.5</version>
+	        	<version>5.1.9</version>
 	        </dependency>
 	        <dependency>
 		  		<groupId>org.springframework</groupId>
