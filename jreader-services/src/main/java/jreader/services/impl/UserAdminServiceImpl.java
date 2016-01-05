@@ -9,6 +9,7 @@ import jreader.dao.UserDao;
 import jreader.domain.Role;
 import jreader.domain.User;
 import jreader.dto.UserDto;
+import jreader.services.UserAdminService;
 
 public class UserAdminServiceImpl implements UserAdminService {
     

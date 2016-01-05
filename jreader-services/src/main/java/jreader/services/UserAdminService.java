@@ -1,4 +1,4 @@
-package jreader.services.impl;
+package jreader.services;
 
 import java.util.List;
 

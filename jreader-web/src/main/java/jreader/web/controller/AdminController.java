@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import jreader.services.impl.UserAdminService;
+import jreader.services.UserAdminService;
 
 @Controller
 @RequestMapping(value = "/admin")

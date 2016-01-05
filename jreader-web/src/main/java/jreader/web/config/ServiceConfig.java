@@ -33,6 +33,7 @@ import jreader.services.RssService;
 import jreader.services.StatService;
 import jreader.services.SubscriptionGroupService;
 import jreader.services.SubscriptionService;
+import jreader.services.UserAdminService;
 import jreader.services.UserService;
 import jreader.services.impl.ArchiveServiceImpl;
 import jreader.services.impl.CronServiceImpl;
@@ -42,7 +43,6 @@ import jreader.services.impl.RssServiceImpl;
 import jreader.services.impl.StatServiceImpl;
 import jreader.services.impl.SubscriptionGroupServiceImpl;
 import jreader.services.impl.SubscriptionServiceImpl;
-import jreader.services.impl.UserAdminService;
 import jreader.services.impl.UserAdminServiceImpl;
 import jreader.services.impl.UserServiceImpl;
 
