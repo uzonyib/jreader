@@ -399,7 +399,7 @@ public class CronServiceImplTest {
         
         boolean isNew = service.isNew(entry11, feed1);
         
-        assertFalse(isNew);
+        assertTrue(isNew);
     }
 	
 	@Test
@@ -411,7 +411,7 @@ public class CronServiceImplTest {
         
         boolean isNew = service.isNew(entry11, feed1);
         
-        assertFalse(isNew);
+        assertTrue(isNew);
     }
 	
 	@Test
