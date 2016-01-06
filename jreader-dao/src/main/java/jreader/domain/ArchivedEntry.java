@@ -22,7 +22,7 @@ public class ArchivedEntry {
     private String description;
     private String author;
     @Index
-    private Long publishedDate;
+    private Long publishDate;
 
     public Long getId() {
         return id;
@@ -72,12 +72,12 @@ public class ArchivedEntry {
         this.author = author;
     }
 
-    public Long getPublishedDate() {
-        return publishedDate;
+    public Long getPublishDate() {
+        return publishDate;
     }
 
-    public void setPublishedDate(final Long publishedDate) {
-        this.publishedDate = publishedDate;
+    public void setPublishDate(final Long publishDate) {
+        this.publishDate = publishDate;
     }
 
     public Archive getArchive() {

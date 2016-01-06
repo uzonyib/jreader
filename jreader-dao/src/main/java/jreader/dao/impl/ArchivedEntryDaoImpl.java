@@ -27,7 +27,7 @@ public class ArchivedEntryDaoImpl extends AbstractOfyDao<ArchivedEntry> implemen
 
     private List<ArchivedEntry> listForAncestor(final Object ancestor, final ArchivedEntryFilter filter) {
         return getOfy().load().type(ArchivedEntry.class).ancestor(ancestor)
-                .order(filter.isAscending() ? "publishedDate" : "-publishedDate")
+                .order(filter.isAscending() ? "publishDate" : "-publishDate")
                 .offset(filter.getOffset()).limit(filter.getCount()).list();
     }
 

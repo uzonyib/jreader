@@ -24,7 +24,7 @@ public class Subscription {
     private String title;
     @Index
     private int order;
-    private Long updatedDate;
+    private Long lastUpdateDate;
     
     public Subscription() {
         
@@ -36,7 +36,7 @@ public class Subscription {
         this.setFeed(builder.feed);
         this.setTitle(builder.title);
         this.setOrder(builder.order);
-        this.setUpdatedDate(builder.updatedDate);
+        this.setLastUpdateDate(builder.lastUpdateDate);
     }
 
     public Long getId() {
@@ -95,12 +95,12 @@ public class Subscription {
         this.order = order;
     }
 
-    public Long getUpdatedDate() {
-        return updatedDate;
+    public Long getLastUpdateDate() {
+        return lastUpdateDate;
     }
 
-    public void setUpdatedDate(final Long updatedDate) {
-        this.updatedDate = updatedDate;
+    public void setLastUpdateDate(final Long lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public static class Builder {
@@ -110,7 +110,7 @@ public class Subscription {
         private Feed feed;
         private String title;
         private int order;
-        private Long updatedDate;
+        private Long lastUpdateDate;
 
         public Builder id(final Long id) {
             this.id = id;
@@ -137,8 +137,8 @@ public class Subscription {
             return this;
         }
 
-        public Builder updatedDate(final Long updatedDate) {
-            this.updatedDate = updatedDate;
+        public Builder lastUpdateDate(final Long lastUpdateDate) {
+            this.lastUpdateDate = lastUpdateDate;
             return this;
         }
         

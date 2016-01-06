@@ -72,7 +72,7 @@ public class ArchivedEntryDaoImplTest extends AbstractDaoTest {
             entry.setTitle(ENTRY_TITLES[i]);
             entry.setDescription(ENTRY_DESCRIPTIONS[i]);
             entry.setAuthor(ENTRY_AUTHORS[i]);
-            entry.setPublishedDate(ENTRY_PUBLISHED_DATES[i]);
+            entry.setPublishDate(ENTRY_PUBLISHED_DATES[i]);
             SAVED_ENTRIES.add(sut.save(entry));
         }
     }
@@ -92,7 +92,7 @@ public class ArchivedEntryDaoImplTest extends AbstractDaoTest {
         entry.setTitle(NEW_TITLE);
         entry.setDescription(NEW_DESCRIPTION);
         entry.setAuthor(NEW_AUTHOR);
-        entry.setPublishedDate(NEW_PUBLISHED_DATE);
+        entry.setPublishDate(NEW_PUBLISHED_DATE);
         
         entry = sut.save(entry);
         
@@ -103,7 +103,7 @@ public class ArchivedEntryDaoImplTest extends AbstractDaoTest {
         assertEquals(entry.getTitle(), NEW_TITLE);
         assertEquals(entry.getDescription(), NEW_DESCRIPTION);
         assertEquals(entry.getAuthor(), NEW_AUTHOR);
-        assertEquals(entry.getPublishedDate(), NEW_PUBLISHED_DATE);
+        assertEquals(entry.getPublishDate(), NEW_PUBLISHED_DATE);
     }
     
     @Test
@@ -116,7 +116,7 @@ public class ArchivedEntryDaoImplTest extends AbstractDaoTest {
         assertEquals(entry.getTitle(), ENTRY_TITLES[0]);
         assertEquals(entry.getDescription(), ENTRY_DESCRIPTIONS[0]);
         assertEquals(entry.getAuthor(), ENTRY_AUTHORS[0]);
-        assertEquals(entry.getPublishedDate(), ENTRY_PUBLISHED_DATES[0]);
+        assertEquals(entry.getPublishDate(), ENTRY_PUBLISHED_DATES[0]);
     }
     
     @Test
@@ -128,7 +128,7 @@ public class ArchivedEntryDaoImplTest extends AbstractDaoTest {
         
         assertNotNull(entries);
         assertEquals(entries.size(), 2);
-        assertTrue(entries.get(0).getPublishedDate() <= entries.get(1).getPublishedDate());
+        assertTrue(entries.get(0).getPublishDate() <= entries.get(1).getPublishDate());
     }
     
     @Test
@@ -140,7 +140,7 @@ public class ArchivedEntryDaoImplTest extends AbstractDaoTest {
         
         assertNotNull(entries);
         assertEquals(entries.size(), 2);
-        assertTrue(entries.get(0).getPublishedDate() >= entries.get(1).getPublishedDate());
+        assertTrue(entries.get(0).getPublishDate() >= entries.get(1).getPublishDate());
     }
     
     @Test

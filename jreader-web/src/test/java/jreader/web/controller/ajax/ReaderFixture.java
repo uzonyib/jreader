@@ -126,9 +126,9 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         doReturn(feed).when(feedFetcher).retrieveFeed(new URL(url));
     }
     
-    public void createEntry(String feedTitle, String uri, String title, String description, String author, String link, String publishedDate)
+    public void createEntry(String feedTitle, String uri, String title, String description, String author, String link, String publishDate)
             throws Exception {
-        Date date = new SimpleDateFormat(DATE_FORMAT).parse(publishedDate);
+        Date date = new SimpleDateFormat(DATE_FORMAT).parse(publishDate);
         feedRegistry.registerEntry(feedTitle, uri, title, description, author, link, date);
         when(dateHelper.getFirstSecondOfDay(date.getTime())).thenReturn(new DateHelperImpl().getFirstSecondOfDay(date.getTime()));
     }
@@ -271,7 +271,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
             entry.setDescription(dto.getDescription());
             entry.setAuthor(dto.getAuthor());
             entry.setLink(dto.getLink());
-            entry.setPublishedDate(dto.getPublishedDate());
+            entry.setPublishDate(dto.getPublishDate());
             entry.setSubscriptionTitle(dto.getSubscriptionTitle());
             entry.setSubscriptionGroupId(dto.getSubscriptionGroupId());
             entry.setSubscriptionId(dto.getSubscriptionId());
@@ -352,7 +352,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
             entry.setDescription(dto.getDescription());
             entry.setAuthor(dto.getAuthor());
             entry.setLink(dto.getLink());
-            entry.setPublishedDate(dto.getPublishedDate());
+            entry.setPublishDate(dto.getPublishDate());
             entry.setArchiveId(dto.getArchiveId());
             entry.setArchiveTitle(dto.getArchiveTitle());
             entries.add(entry);

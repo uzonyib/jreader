@@ -35,7 +35,7 @@
 		<p>
 			Given the feed entries are the followings:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
 			<tr>
 				<th concordion:set="#feedTitle">Feed title</th>
 				<th concordion:set="#uri">URI</th>
@@ -43,7 +43,7 @@
 				<th concordion:set="#description">Description</th>
 				<th concordion:set="#author">Author</th>
 				<th concordion:set="#link">Link</th>
-				<th concordion:set="#publishedDate">Published date</th>
+				<th concordion:set="#publishDate">Publish date</th>
 			</tr>
 			<tr>
 				<td>feed1</td>
@@ -121,7 +121,7 @@
 	       		<th concordion:assertEquals="#entry.description">Description</th>
 	       		<th concordion:assertEquals="#entry.author">Author</th>
 	       		<th concordion:assertEquals="#entry.link">Link</th>
-	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#entry.read">Read</th>
 	       		<th concordion:assertEquals="#entry.starred">Starred</th>
 	       	</tr>
@@ -170,7 +170,7 @@
 	   	<p>
 			Given the feeds are updated with the following entries:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
 			<tr>
 				<th concordion:set="#feedTitle">Feed title</th>
 				<th concordion:set="#uri">URI</th>
@@ -178,7 +178,7 @@
 				<th concordion:set="#description">Description</th>
 				<th concordion:set="#author">Author</th>
 				<th concordion:set="#link">Link</th>
-				<th concordion:set="#publishedDate">Published date</th>
+				<th concordion:set="#publishDate">Publish date</th>
 			</tr>
 			<tr>
 				<td>feed1</td>
@@ -212,7 +212,7 @@
 	       		<th concordion:assertEquals="#entry.description">Description</th>
 	       		<th concordion:assertEquals="#entry.author">Author</th>
 	       		<th concordion:assertEquals="#entry.link">Link</th>
-	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#entry.read">Read</th>
 	       		<th concordion:assertEquals="#entry.starred">Starred</th>
 	       	</tr>
@@ -281,7 +281,7 @@
 	   	<p>
 			Given the feeds are updated with the following entries:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
 			<tr>
 				<th concordion:set="#feedTitle">Feed title</th>
 				<th concordion:set="#uri">URI</th>
@@ -289,7 +289,7 @@
 				<th concordion:set="#description">Description</th>
 				<th concordion:set="#author">Author</th>
 				<th concordion:set="#link">Link</th>
-				<th concordion:set="#publishedDate">Published date</th>
+				<th concordion:set="#publishDate">Publish date</th>
 			</tr>
 			<tr>
 				<td>feed2</td>
@@ -313,7 +313,7 @@
 	       		<th concordion:assertEquals="#entry.description">Description</th>
 	       		<th concordion:assertEquals="#entry.author">Author</th>
 	       		<th concordion:assertEquals="#entry.link">Link</th>
-	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#entry.read">Read</th>
 	       		<th concordion:assertEquals="#entry.starred">Starred</th>
 	       	</tr>
@@ -407,7 +407,7 @@
 	       		<th concordion:assertEquals="#entry.description">Description</th>
 	       		<th concordion:assertEquals="#entry.author">Author</th>
 	       		<th concordion:assertEquals="#entry.link">Link</th>
-	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#entry.read">Read</th>
 	       		<th concordion:assertEquals="#entry.starred">Starred</th>
 	       	</tr>
@@ -488,7 +488,7 @@
 	       		<th concordion:assertEquals="#entry.description">Description</th>
 	       		<th concordion:assertEquals="#entry.author">Author</th>
 	       		<th concordion:assertEquals="#entry.link">Link</th>
-	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#entry.read">Read</th>
 	       		<th concordion:assertEquals="#entry.starred">Starred</th>
 	       	</tr>
@@ -544,7 +544,7 @@
 	   		Given <span concordion:execute="setFeedAvailable(#TEXT)">feed1</span> has become available again<br/>
 			and the feeds are updated with the following entries:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishedDate)">
+		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
 			<tr>
 				<th concordion:set="#feedTitle">Feed title</th>
 				<th concordion:set="#uri">URI</th>
@@ -552,7 +552,7 @@
 				<th concordion:set="#description">Description</th>
 				<th concordion:set="#author">Author</th>
 				<th concordion:set="#link">Link</th>
-				<th concordion:set="#publishedDate">Published date</th>
+				<th concordion:set="#publishDate">Publish date</th>
 			</tr>
 			<tr>
 				<td>feed1</td>
@@ -576,7 +576,7 @@
 	       		<th concordion:assertEquals="#entry.description">Description</th>
 	       		<th concordion:assertEquals="#entry.author">Author</th>
 	       		<th concordion:assertEquals="#entry.link">Link</th>
-	       		<th concordion:assertEquals="#entry.formattedPublishedDate">Published date</th>
+	       		<th concordion:assertEquals="#entry.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#entry.read">Read</th>
 	       		<th concordion:assertEquals="#entry.starred">Starred</th>
 	       	</tr>

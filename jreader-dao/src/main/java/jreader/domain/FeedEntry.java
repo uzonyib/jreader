@@ -24,7 +24,7 @@ public class FeedEntry {
     private String description;
     private String author;
     @Index
-    private Long publishedDate;
+    private Long publishDate;
     @Index
     private boolean read;
     @Index
@@ -86,12 +86,12 @@ public class FeedEntry {
         this.author = author;
     }
 
-    public Long getPublishedDate() {
-        return publishedDate;
+    public Long getPublishDate() {
+        return publishDate;
     }
 
-    public void setPublishedDate(final Long publishedDate) {
-        this.publishedDate = publishedDate;
+    public void setPublishDate(final Long publishDate) {
+        this.publishDate = publishDate;
     }
 
     public boolean isRead() {

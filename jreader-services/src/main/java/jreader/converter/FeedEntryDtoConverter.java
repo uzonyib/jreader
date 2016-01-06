@@ -14,7 +14,7 @@ public class FeedEntryDtoConverter implements Converter<FeedEntry, FeedEntryDto>
         dto.setDescription(entity.getDescription());
         dto.setAuthor(entity.getAuthor());
         dto.setLink(entity.getLink());
-        dto.setPublishedDate(entity.getPublishedDate());
+        dto.setPublishDate(entity.getPublishDate());
         dto.setRead(entity.isRead());
         dto.setStarred(entity.isStarred());
         dto.setId(String.valueOf(entity.getId()));

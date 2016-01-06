@@ -10,7 +10,7 @@ public class FeedEntryDto {
     private String title;
     private String description;
     private String author;
-    private Long publishedDate;
+    private Long publishDate;
     private boolean read;
     private boolean starred;
 
@@ -78,12 +78,12 @@ public class FeedEntryDto {
         this.author = author;
     }
 
-    public Long getPublishedDate() {
-        return publishedDate;
+    public Long getPublishDate() {
+        return publishDate;
     }
 
-    public void setPublishedDate(final Long publishedDate) {
-        this.publishedDate = publishedDate;
+    public void setPublishDate(final Long publishDate) {
+        this.publishDate = publishDate;
     }
 
     public boolean isRead() {

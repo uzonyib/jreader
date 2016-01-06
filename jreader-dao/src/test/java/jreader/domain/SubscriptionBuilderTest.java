@@ -45,14 +45,14 @@ public class SubscriptionBuilderTest extends AbstractDaoTest {
     
     @Test
     public void build_shouldReturnSubscription() {
-        Subscription subscription = builder.id(ID).title(TITLE).order(ORDER).updatedDate(UPDATED_DATE).group(group).feed(feed).build();
+        Subscription subscription = builder.id(ID).title(TITLE).order(ORDER).lastUpdateDate(UPDATED_DATE).group(group).feed(feed).build();
         
         assertNotNull(subscription);
         assertNotNull(subscription.getId());
         assertEquals(subscription.getId().longValue(), ID);
         assertEquals(subscription.getTitle(), TITLE);
         assertEquals(subscription.getOrder(), ORDER);
-        assertEquals(subscription.getUpdatedDate().longValue(), UPDATED_DATE);
+        assertEquals(subscription.getLastUpdateDate().longValue(), UPDATED_DATE);
         assertNotNull(subscription.getGroup());
         assertNotNull(subscription.getGroup().getUser());
         assertEquals(subscription.getGroup().getUser().getUsername(), USERNAME);

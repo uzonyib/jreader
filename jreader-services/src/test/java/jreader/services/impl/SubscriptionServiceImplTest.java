@@ -99,8 +99,8 @@ public class SubscriptionServiceImplTest {
 		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
 		when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry1, entry2));
-		when(entry1.getPublishedDate()).thenReturn(1000L);
-		when(entry1.getPublishedDate()).thenReturn(2000L);
+		when(entry1.getPublishDate()).thenReturn(1000L);
+		when(entry1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
@@ -114,7 +114,7 @@ public class SubscriptionServiceImplTest {
 		when(subscriptionBuilder.feed(feed)).thenReturn(subscriptionBuilder);
 		when(subscriptionBuilder.title(FEED_TITLE)).thenReturn(subscriptionBuilder);
 		when(subscriptionBuilder.order(SUBSCRIPTION_ORDER)).thenReturn(subscriptionBuilder);
-		when(subscriptionBuilder.updatedDate(2000L)).thenReturn(subscriptionBuilder);
+		when(subscriptionBuilder.lastUpdateDate(2000L)).thenReturn(subscriptionBuilder);
 		when(subscriptionBuilder.build()).thenReturn(subscription);
 		when(subscriptionDao.save(subscription)).thenReturn(subscription);
 		when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
@@ -137,8 +137,8 @@ public class SubscriptionServiceImplTest {
 		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
 		when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry1, entry2));
-		when(entry1.getPublishedDate()).thenReturn(1000L);
-		when(entry1.getPublishedDate()).thenReturn(2000L);
+		when(entry1.getPublishDate()).thenReturn(1000L);
+		when(entry1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
@@ -151,7 +151,7 @@ public class SubscriptionServiceImplTest {
         when(subscriptionBuilder.feed(feed)).thenReturn(subscriptionBuilder);
         when(subscriptionBuilder.title(FEED_TITLE)).thenReturn(subscriptionBuilder);
         when(subscriptionBuilder.order(SUBSCRIPTION_ORDER)).thenReturn(subscriptionBuilder);
-        when(subscriptionBuilder.updatedDate(2000L)).thenReturn(subscriptionBuilder);
+        when(subscriptionBuilder.lastUpdateDate(2000L)).thenReturn(subscriptionBuilder);
         when(subscriptionBuilder.build()).thenReturn(subscription);
         when(subscriptionDao.save(subscription)).thenReturn(subscription);
 		
@@ -172,8 +172,8 @@ public class SubscriptionServiceImplTest {
 		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
 		when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry1, entry2));
-		when(entry1.getPublishedDate()).thenReturn(1000L);
-		when(entry1.getPublishedDate()).thenReturn(2000L);
+		when(entry1.getPublishDate()).thenReturn(1000L);
+		when(entry1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);

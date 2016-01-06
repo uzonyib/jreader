@@ -47,7 +47,7 @@ public class FeedStatDaoImplTest extends AbstractDaoTest {
         feed.setTitle("title");
         feed.setDescription("description");
         feed.setFeedType("feedType");
-        feed.setUpdatedDate(1000L);
+        feed.setLastUpdateDate(1000L);
         savedFeed = feedDao.save(feed);
         
         savedStats = new ArrayList<FeedStat>();

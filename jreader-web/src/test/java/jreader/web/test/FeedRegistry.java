@@ -28,7 +28,7 @@ public class FeedRegistry {
         return feed;
     }
     
-    public void registerEntry(String feedTitle, String uri, String title, String description, String author, String link, Date publishedDate) {
+    public void registerEntry(String feedTitle, String uri, String title, String description, String author, String link, Date publishDate) {
         SyndEntry entry = mock(SyndEntry.class);
         when(entry.getUri()).thenReturn(uri);
         when(entry.getTitle()).thenReturn(title);
@@ -37,7 +37,7 @@ public class FeedRegistry {
         when(entry.getDescription()).thenReturn(content);
         when(entry.getAuthor()).thenReturn(author);
         when(entry.getLink()).thenReturn(link);
-        when(entry.getPublishedDate()).thenReturn(publishedDate);
+        when(entry.getPublishedDate()).thenReturn(publishDate);
         feedEntries.get(feedTitle).add(entry);
         when(feeds.get(feedTitle).getEntries()).thenReturn(feedEntries.get(feedTitle));
     }

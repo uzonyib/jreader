@@ -7,16 +7,16 @@ import jreader.dto.ArchivedEntryDto;
 
 public class ArchivedEntry extends ArchivedEntryDto {
     
-    private String formattedPublishedDate;
+    private String formattedPublishDate;
     
-    public String getFormattedPublishedDate() {
-        return formattedPublishedDate;
+    public String getFormattedPublishDate() {
+        return formattedPublishDate;
     }
     
     @Override
-    public void setPublishedDate(Long publishedDate) {
-        super.setPublishedDate(publishedDate);
-        this.formattedPublishedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z").format(new Date(publishedDate));
+    public void setPublishDate(Long publishDate) {
+        super.setPublishDate(publishDate);
+        this.formattedPublishDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z").format(new Date(publishDate));
     }
     
 }

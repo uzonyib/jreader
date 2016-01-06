@@ -12,7 +12,7 @@
 				</button>
 			</td>
 			<td class="title" data-ng-click="toggleCollapsion(entry)">{{entry.title}}</td>
-			<td class="date hidden-sm hidden-xs" data-ng-click="toggleCollapsion(entry)">{{entry.publishedDate | moment}}</td>
+			<td class="date hidden-sm hidden-xs" data-ng-click="toggleCollapsion(entry)">{{entry.publishDate | moment}}</td>
 		</tr>
 		<tr class="article-detail"
 			data-ng-if="entry.uncollapsed"
@@ -27,7 +27,7 @@
 					</div>
 					<div>
 						<span data-ng-if="entry.author">by {{entry.author}}<span class="hidden-lg hidden-md">,</span></span>
-						<span class="hidden-lg hidden-md">{{entry.publishedDate | moment}}</span>
+						<span class="hidden-lg hidden-md">{{entry.publishDate | moment}}</span>
 					</div>
 				</div>
 				<div class="description" data-ng-bind-html="entry.description"></div>

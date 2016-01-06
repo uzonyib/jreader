@@ -24,7 +24,7 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
         result.getFeed().setDescription(syndFeed.getDescription());
         result.getFeed().setFeedType(syndFeed.getFeedType());
         if (syndFeed.getPublishedDate() != null) {
-            result.getFeed().setUpdatedDate(syndFeed.getPublishedDate().getTime());
+            result.getFeed().setLastUpdateDate(syndFeed.getPublishedDate().getTime());
         }
         if (syndFeed.getEntries() != null) {
             for (SyndEntry syndEntry : (List<SyndEntry>) syndFeed.getEntries()) {
@@ -44,9 +44,9 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
         feedEntry.setAuthor(syndEntry.getAuthor());
         feedEntry.setLink(syndEntry.getLink());
         if (syndEntry.getPublishedDate() != null) {
-            feedEntry.setPublishedDate(syndEntry.getPublishedDate().getTime());
+            feedEntry.setPublishDate(syndEntry.getPublishedDate().getTime());
         } else if (syndEntry.getUpdatedDate() != null) {
-            feedEntry.setPublishedDate(syndEntry.getUpdatedDate().getTime());
+            feedEntry.setPublishDate(syndEntry.getUpdatedDate().getTime());
         }
         return feedEntry;
     }

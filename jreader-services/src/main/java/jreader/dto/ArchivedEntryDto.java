@@ -9,7 +9,7 @@ public class ArchivedEntryDto {
     private String title;
     private String description;
     private String author;
-    private Long publishedDate;
+    private Long publishDate;
 
     public String getId() {
         return id;
@@ -67,12 +67,12 @@ public class ArchivedEntryDto {
         this.author = author;
     }
 
-    public Long getPublishedDate() {
-        return publishedDate;
+    public Long getPublishDate() {
+        return publishDate;
     }
 
-    public void setPublishedDate(final Long publishedDate) {
-        this.publishedDate = publishedDate;
+    public void setPublishDate(final Long publishDate) {
+        this.publishDate = publishDate;
     }
 
 }

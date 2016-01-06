@@ -14,7 +14,7 @@ public class ArchivedEntryConverter implements Converter<FeedEntry, ArchivedEntr
         archivedEntity.setDescription(entity.getDescription());
         archivedEntity.setAuthor(entity.getAuthor());
         archivedEntity.setLink(entity.getLink());
-        archivedEntity.setPublishedDate(entity.getPublishedDate());
+        archivedEntity.setPublishDate(entity.getPublishDate());
         return archivedEntity;
     }
 

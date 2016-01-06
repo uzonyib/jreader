@@ -84,7 +84,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
             feed.setTitle("title_" + i);
             feed.setDescription("description_" + i);
             feed.setFeedType("feedType_" + i);
-            feed.setUpdatedDate(1000L);
+            feed.setLastUpdateDate(1000L);
             savedFeeds.add(feedDao.save(feed));
         }
         
@@ -102,7 +102,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
             Subscription subscription = new Subscription();
             subscription.setTitle(SUBSCRIPTION_TITLES[i]);
             subscription.setOrder(SUBSCRIPTION_ORDERS[i]);
-            subscription.setUpdatedDate(SUBSCRIPTION_UPDATED_DATES[i]);
+            subscription.setLastUpdateDate(SUBSCRIPTION_UPDATED_DATES[i]);
             subscription.setFeed(savedFeeds.get(i));
             subscription.setGroup(savedGroups.get(0));
             savedSubscriptions.add(subscriptionDao.save(subscription));
@@ -117,7 +117,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
             entry.setDescription(ENTRY_DESCRIPTIONS[i]);
             entry.setAuthor(ENTRY_AUTHORS[i]);
             entry.setLink(ENTRY_LINKS[i]);
-            entry.setPublishedDate(ENTRY_PUBLISHED_DATES[i]);
+            entry.setPublishDate(ENTRY_PUBLISHED_DATES[i]);
             entry.setRead(ENTRY_READ_FLAGS[i]);
             entry.setStarred(ENTRY_STARRED_FLAGS[i]);
             entry.setSubscription(savedSubscriptions.get(0));
@@ -140,7 +140,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
         entry.setTitle(NEW_TITLE);
         entry.setDescription(NEW_DESCRIPTION);
         entry.setAuthor(NEW_AUTHOR);
-        entry.setPublishedDate(NEW_PUBLISHED_DATE);
+        entry.setPublishDate(NEW_PUBLISHED_DATE);
         entry.setRead(NEW_READ_FLAG);
         entry.setStarred(NEW_STARRED_FLAG);
         entry.setSubscription(savedSubscriptions.get(1));
@@ -155,7 +155,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
         assertEquals(entry.getTitle(), NEW_TITLE);
         assertEquals(entry.getDescription(), NEW_DESCRIPTION);
         assertEquals(entry.getAuthor(), NEW_AUTHOR);
-        assertEquals(entry.getPublishedDate().longValue(), NEW_PUBLISHED_DATE);
+        assertEquals(entry.getPublishDate().longValue(), NEW_PUBLISHED_DATE);
         assertEquals(entry.isRead(), NEW_READ_FLAG);
         assertEquals(entry.isStarred(), NEW_STARRED_FLAG);
     }
@@ -169,7 +169,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     
     @Test
     public void findByUri_IfEntryExists_ShouldReturnEntry() {
-        FeedEntry entry = sut.find(savedSubscriptions.get(0), savedEntries.get(0).getUri(), savedEntries.get(0).getPublishedDate());
+        FeedEntry entry = sut.find(savedSubscriptions.get(0), savedEntries.get(0).getUri(), savedEntries.get(0).getPublishDate());
         
         assertNotNull(entry);
         assertNotNull(entry.getId());
@@ -179,7 +179,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
         assertEquals(entry.getTitle(), ENTRY_TITLES[0]);
         assertEquals(entry.getDescription(), ENTRY_DESCRIPTIONS[0]);
         assertEquals(entry.getAuthor(), ENTRY_AUTHORS[0]);
-        assertEquals(entry.getPublishedDate().longValue(), ENTRY_PUBLISHED_DATES[0]);
+        assertEquals(entry.getPublishDate().longValue(), ENTRY_PUBLISHED_DATES[0]);
         assertEquals(entry.isRead(), ENTRY_READ_FLAGS[0]);
         assertEquals(entry.isStarred(), ENTRY_STARRED_FLAGS[0]);
     }
@@ -196,7 +196,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
         assertEquals(entry.getTitle(), ENTRY_TITLES[0]);
         assertEquals(entry.getDescription(), ENTRY_DESCRIPTIONS[0]);
         assertEquals(entry.getAuthor(), ENTRY_AUTHORS[0]);
-        assertEquals(entry.getPublishedDate().longValue(), ENTRY_PUBLISHED_DATES[0]);
+        assertEquals(entry.getPublishDate().longValue(), ENTRY_PUBLISHED_DATES[0]);
         assertEquals(entry.isRead(), ENTRY_READ_FLAGS[0]);
         assertEquals(entry.isStarred(), ENTRY_STARRED_FLAGS[0]);
     }

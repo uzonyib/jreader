@@ -6,7 +6,7 @@ public class SubscriptionDto {
     private String title;
     private FeedDto feed;
     private int unreadCount;
-    private Long updatedDate;
+    private Long lastUpdateDate;
     private int order;
 
     public String getId() {
@@ -41,12 +41,12 @@ public class SubscriptionDto {
         this.unreadCount = unreadCount;
     }
 
-    public Long getUpdatedDate() {
-        return updatedDate;
+    public Long getLastUpdateDate() {
+        return lastUpdateDate;
     }
 
-    public void setUpdatedDate(final Long updatedDate) {
-        this.updatedDate = updatedDate;
+    public void setLastUpdateDate(final Long lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public int getOrder() {

@@ -66,7 +66,7 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
             feed.setTitle("title_" + i);
             feed.setDescription("description_" + i);
             feed.setFeedType("feedType_" + i);
-            feed.setUpdatedDate(1000L);
+            feed.setLastUpdateDate(1000L);
             savedFeeds.add(feedDao.save(feed));
         }
         
@@ -88,7 +88,7 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
             Subscription subscription = new Subscription();
             subscription.setTitle(SUBSCRIPTION_TITLES[i]);
             subscription.setOrder(SUBSCRIPTION_ORDERS[i]);
-            subscription.setUpdatedDate(SUBSCRIPTION_UPDATED_DATES[i]);
+            subscription.setLastUpdateDate(SUBSCRIPTION_UPDATED_DATES[i]);
             subscription.setFeed(savedFeeds.get(i));
             subscription.setGroup(savedGroups.get(i));
             savedSubscriptions.add(sut.save(subscription));
@@ -110,7 +110,7 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
         Subscription subscription = new Subscription();
         subscription.setTitle(NEW_TITLE);
         subscription.setOrder(NEW_ORDER);
-        subscription.setUpdatedDate(NEW_UPDATED_DATE);
+        subscription.setLastUpdateDate(NEW_UPDATED_DATE);
         subscription.setGroup(savedGroups.get(2));
         subscription.setFeed(savedFeeds.get(0));
 
@@ -122,7 +122,7 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
         assertEquals(subscription.getGroup().getUser().getUsername(), USERNAMES[1]);
         assertEquals(subscription.getTitle(), NEW_TITLE);
         assertEquals(subscription.getOrder(), NEW_ORDER);
-        assertEquals(subscription.getUpdatedDate().longValue(), NEW_UPDATED_DATE);
+        assertEquals(subscription.getLastUpdateDate().longValue(), NEW_UPDATED_DATE);
     }
     
     @Test

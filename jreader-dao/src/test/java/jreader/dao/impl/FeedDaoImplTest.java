@@ -41,7 +41,7 @@ public class FeedDaoImplTest extends AbstractDaoTest {
             feed.setTitle(TITLES[i]);
             feed.setDescription(DESCRIPTIONS[i]);
             feed.setFeedType(FEED_TYPES[i]);
-            feed.setUpdatedDate(UPDATE_DATES[i]);
+            feed.setLastUpdateDate(UPDATE_DATES[i]);
             SAVED_FEEDS.add(sut.save(feed));
         }
     }
@@ -60,7 +60,7 @@ public class FeedDaoImplTest extends AbstractDaoTest {
         feed.setTitle(NEW_TITLE);
         feed.setDescription(NEW_DESCRIPTION);
         feed.setFeedType(NEW_FEED_TYPE);
-        feed.setUpdatedDate(NEW_PUBLISHED_DATE);
+        feed.setLastUpdateDate(NEW_PUBLISHED_DATE);
 
         feed = sut.save(feed);
         
@@ -69,7 +69,7 @@ public class FeedDaoImplTest extends AbstractDaoTest {
         assertEquals(feed.getTitle(), NEW_TITLE);
         assertEquals(feed.getDescription(), NEW_DESCRIPTION);
         assertEquals(feed.getFeedType(), NEW_FEED_TYPE);
-        assertEquals(feed.getUpdatedDate(), NEW_PUBLISHED_DATE);
+        assertEquals(feed.getLastUpdateDate(), NEW_PUBLISHED_DATE);
     }
     
     @Test
@@ -81,7 +81,7 @@ public class FeedDaoImplTest extends AbstractDaoTest {
         assertEquals(feed.getTitle(), TITLES[0]);
         assertEquals(feed.getDescription(), DESCRIPTIONS[0]);
         assertEquals(feed.getFeedType(), FEED_TYPES[0]);
-        assertEquals(feed.getUpdatedDate(), UPDATE_DATES[0]);
+        assertEquals(feed.getLastUpdateDate(), UPDATE_DATES[0]);
     }
     
     @Test

@@ -19,13 +19,13 @@ public class FeedEntryDaoImpl extends AbstractOfyDao<FeedEntry> implements FeedE
     }
     
     @Override
-    public FeedEntry find(final Subscription subscription, final String uri, final long publishedDate) {
-        return getOfy().load().type(FeedEntry.class).ancestor(subscription).filter("uri =", uri).filter("publishedDate =", publishedDate).first().now();
+    public FeedEntry find(final Subscription subscription, final String uri, final long publishDate) {
+        return getOfy().load().type(FeedEntry.class).ancestor(subscription).filter("uri =", uri).filter("publishDate =", publishDate).first().now();
     }
 
     @Override
     public FeedEntry find(final Subscription subscription, final int ordinal) {
-        return getOfy().load().type(FeedEntry.class).ancestor(subscription).order("-publishedDate")
+        return getOfy().load().type(FeedEntry.class).ancestor(subscription).order("-publishDate")
                 .offset(ordinal - 1).limit(1).first().now();
     }
 
@@ -56,14 +56,14 @@ public class FeedEntryDaoImpl extends AbstractOfyDao<FeedEntry> implements FeedE
             default:
                 break;
         }
-        return query.order(filter.isAscending() ? "publishedDate" : "-publishedDate")
+        return query.order(filter.isAscending() ? "publishDate" : "-publishDate")
                 .offset(filter.getOffset()).limit(filter.getCount()).list();
     }
 
     @Override
     public List<FeedEntry> listUnstarredOlderThan(final Subscription subscription, final long date) {
         return getOfy().load().type(FeedEntry.class).ancestor(subscription).filter("starred", false)
-                .filter("publishedDate <", date).list();
+                .filter("publishDate <", date).list();
     }
 
     @Override
