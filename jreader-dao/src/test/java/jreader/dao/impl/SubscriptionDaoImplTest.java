@@ -34,13 +34,11 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
     private static final String[] SUBSCRIPTION_TITLES = { "title_1", "title_2" };
     private static final int[] SUBSCRIPTION_ORDERS = { 11, 6 };
     private static final long[] SUBSCRIPTION_UPDATED_DATES = { 10L, 11L };
-    private static final long[] SUBSCRIPTION_REFRESH_DATES = { 12L, 13L };
     private static List<Subscription> savedSubscriptions;
     
     private static final String NEW_TITLE = "new_title";
     private static final int NEW_ORDER = 7;
     private static final long NEW_UPDATED_DATE = 4L;
-    private static final long NEW_REFRESH_DATE = 5L;
     
     private UserDao userDao;
     private FeedDao feedDao;
@@ -91,7 +89,6 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
             subscription.setTitle(SUBSCRIPTION_TITLES[i]);
             subscription.setOrder(SUBSCRIPTION_ORDERS[i]);
             subscription.setUpdatedDate(SUBSCRIPTION_UPDATED_DATES[i]);
-            subscription.setRefreshDate(SUBSCRIPTION_REFRESH_DATES[i]);
             subscription.setFeed(savedFeeds.get(i));
             subscription.setGroup(savedGroups.get(i));
             savedSubscriptions.add(sut.save(subscription));
@@ -114,7 +111,6 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
         subscription.setTitle(NEW_TITLE);
         subscription.setOrder(NEW_ORDER);
         subscription.setUpdatedDate(NEW_UPDATED_DATE);
-        subscription.setRefreshDate(NEW_REFRESH_DATE);
         subscription.setGroup(savedGroups.get(2));
         subscription.setFeed(savedFeeds.get(0));
 
@@ -127,7 +123,6 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
         assertEquals(subscription.getTitle(), NEW_TITLE);
         assertEquals(subscription.getOrder(), NEW_ORDER);
         assertEquals(subscription.getUpdatedDate().longValue(), NEW_UPDATED_DATE);
-        assertEquals(subscription.getRefreshDate().longValue(), NEW_REFRESH_DATE);
     }
     
     @Test

@@ -172,7 +172,6 @@ public class CronServiceImpl implements CronService {
         }
         
         subscription.setUpdatedDate(newUpdatedDate);
-        subscription.setRefreshDate(refreshDate);
         subscriptionDao.save(subscription);
         
         LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);

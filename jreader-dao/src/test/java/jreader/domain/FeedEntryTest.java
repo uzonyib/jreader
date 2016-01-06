@@ -55,7 +55,6 @@ public class FeedEntryTest extends AbstractDaoTest {
         subscription.setGroup(savedGroup);
         subscription.setTitle("title");
         subscription.setOrder(1);
-        subscription.setRefreshDate(1000L);
         subscription.setUpdatedDate(2000L);
         SubscriptionDao subscriptionDao = new SubscriptionDaoImpl();
         savedSubscription = subscriptionDao.save(subscription);

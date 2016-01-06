@@ -1,7 +1,6 @@
 package jreader.services.impl;
 
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -116,7 +115,6 @@ public class SubscriptionServiceImplTest {
 		when(subscriptionBuilder.title(FEED_TITLE)).thenReturn(subscriptionBuilder);
 		when(subscriptionBuilder.order(SUBSCRIPTION_ORDER)).thenReturn(subscriptionBuilder);
 		when(subscriptionBuilder.updatedDate(2000L)).thenReturn(subscriptionBuilder);
-		when(subscriptionBuilder.refreshDate(anyLong())).thenReturn(subscriptionBuilder);
 		when(subscriptionBuilder.build()).thenReturn(subscription);
 		when(subscriptionDao.save(subscription)).thenReturn(subscription);
 		when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
@@ -154,7 +152,6 @@ public class SubscriptionServiceImplTest {
         when(subscriptionBuilder.title(FEED_TITLE)).thenReturn(subscriptionBuilder);
         when(subscriptionBuilder.order(SUBSCRIPTION_ORDER)).thenReturn(subscriptionBuilder);
         when(subscriptionBuilder.updatedDate(2000L)).thenReturn(subscriptionBuilder);
-        when(subscriptionBuilder.refreshDate(anyLong())).thenReturn(subscriptionBuilder);
         when(subscriptionBuilder.build()).thenReturn(subscription);
         when(subscriptionDao.save(subscription)).thenReturn(subscription);
 		

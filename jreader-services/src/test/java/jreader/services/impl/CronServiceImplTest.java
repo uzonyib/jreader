@@ -207,10 +207,8 @@ public class CronServiceImplTest {
         verify(feedEntryDao, times(2)).save(entry13);
 		
 		verify(subscription1).setUpdatedDate(pubDate2);
-		verify(subscription1).setRefreshDate(date);
 		verify(subscriptionDao).save(subscription1);
 		verify(subscription2).setUpdatedDate(pubDate2);
-		verify(subscription2).setRefreshDate(date);
         verify(subscriptionDao).save(subscription2);
         
         verify(feed1).setRefreshDate(date);
@@ -275,7 +273,6 @@ public class CronServiceImplTest {
         verify(feedEntryDao).save(entrySpy);
         
         verify(subscription1).setUpdatedDate(date);
-        verify(subscription1).setRefreshDate(date);
         verify(subscriptionDao).save(subscription1);
         
         verify(feed1).setRefreshDate(date);

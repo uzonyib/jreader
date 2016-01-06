@@ -37,7 +37,6 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     private static final String[] SUBSCRIPTION_TITLES = { "title_1", "title_2" };
     private static final int[] SUBSCRIPTION_ORDERS = { 11, 6 };
     private static final long[] SUBSCRIPTION_UPDATED_DATES = { 10L, 11L };
-    private static final long[] SUBSCRIPTION_REFRESH_DATES = { 12L, 13L };
     private static List<Subscription> savedSubscriptions;
     
     private static final String[] ENTRY_URIS = { "uri_1", "uri_2", "uri_3", "uri_4" };
@@ -104,7 +103,6 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
             subscription.setTitle(SUBSCRIPTION_TITLES[i]);
             subscription.setOrder(SUBSCRIPTION_ORDERS[i]);
             subscription.setUpdatedDate(SUBSCRIPTION_UPDATED_DATES[i]);
-            subscription.setRefreshDate(SUBSCRIPTION_REFRESH_DATES[i]);
             subscription.setFeed(savedFeeds.get(i));
             subscription.setGroup(savedGroups.get(0));
             savedSubscriptions.add(subscriptionDao.save(subscription));

@@ -25,7 +25,6 @@ public class Subscription {
     @Index
     private int order;
     private Long updatedDate;
-    private Long refreshDate;
     
     public Subscription() {
         
@@ -38,7 +37,6 @@ public class Subscription {
         this.setTitle(builder.title);
         this.setOrder(builder.order);
         this.setUpdatedDate(builder.updatedDate);
-        this.setRefreshDate(builder.refreshDate);
     }
 
     public Long getId() {
@@ -105,14 +103,6 @@ public class Subscription {
         this.updatedDate = updatedDate;
     }
 
-    public Long getRefreshDate() {
-        return refreshDate;
-    }
-
-    public void setRefreshDate(final Long refreshDate) {
-        this.refreshDate = refreshDate;
-    }
-
     public static class Builder {
 
         private Long id;
@@ -121,7 +111,6 @@ public class Subscription {
         private String title;
         private int order;
         private Long updatedDate;
-        private Long refreshDate;
 
         public Builder id(final Long id) {
             this.id = id;
@@ -150,11 +139,6 @@ public class Subscription {
 
         public Builder updatedDate(final Long updatedDate) {
             this.updatedDate = updatedDate;
-            return this;
-        }
-
-        public Builder refreshDate(final Long refreshDate) {
-            this.refreshDate = refreshDate;
             return this;
         }
         

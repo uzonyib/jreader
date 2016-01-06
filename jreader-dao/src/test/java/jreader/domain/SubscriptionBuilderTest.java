@@ -19,7 +19,6 @@ public class SubscriptionBuilderTest extends AbstractDaoTest {
     private static final String TITLE = "title";
     private static final int ORDER = 123;
     private static final long UPDATED_DATE = 456L;
-    private static final long REFRESH_DATE = 789L;
     
     private User user;
     private SubscriptionGroup group;
@@ -46,9 +45,7 @@ public class SubscriptionBuilderTest extends AbstractDaoTest {
     
     @Test
     public void build_shouldReturnSubscription() {
-        Subscription subscription = builder.id(ID).title(TITLE).order(ORDER)
-                .updatedDate(UPDATED_DATE).refreshDate(REFRESH_DATE)
-                .group(group).feed(feed).build();
+        Subscription subscription = builder.id(ID).title(TITLE).order(ORDER).updatedDate(UPDATED_DATE).group(group).feed(feed).build();
         
         assertNotNull(subscription);
         assertNotNull(subscription.getId());
@@ -56,7 +53,6 @@ public class SubscriptionBuilderTest extends AbstractDaoTest {
         assertEquals(subscription.getTitle(), TITLE);
         assertEquals(subscription.getOrder(), ORDER);
         assertEquals(subscription.getUpdatedDate().longValue(), UPDATED_DATE);
-        assertEquals(subscription.getRefreshDate().longValue(), REFRESH_DATE);
         assertNotNull(subscription.getGroup());
         assertNotNull(subscription.getGroup().getUser());
         assertEquals(subscription.getGroup().getUser().getUsername(), USERNAME);
