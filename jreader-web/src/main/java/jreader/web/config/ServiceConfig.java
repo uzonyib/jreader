@@ -22,7 +22,7 @@ import jreader.converter.FeedEntryDtoConverter;
 import jreader.converter.FeedStatDtoConverter;
 import jreader.converter.RssFetchResultConverter;
 import jreader.converter.SubscriptionDtoConverter;
-import jreader.converter.SubscriptionGroupDtoConverter;
+import jreader.converter.GroupDtoConverter;
 import jreader.converter.UserDtoConverter;
 import jreader.domain.BuilderFactory;
 import jreader.services.ArchiveService;
@@ -31,7 +31,7 @@ import jreader.services.DateHelper;
 import jreader.services.FeedEntryService;
 import jreader.services.RssService;
 import jreader.services.StatService;
-import jreader.services.SubscriptionGroupService;
+import jreader.services.GroupService;
 import jreader.services.SubscriptionService;
 import jreader.services.UserAdminService;
 import jreader.services.UserService;
@@ -41,7 +41,7 @@ import jreader.services.impl.DateHelperImpl;
 import jreader.services.impl.FeedEntryServiceImpl;
 import jreader.services.impl.RssServiceImpl;
 import jreader.services.impl.StatServiceImpl;
-import jreader.services.impl.SubscriptionGroupServiceImpl;
+import jreader.services.impl.GroupServiceImpl;
 import jreader.services.impl.SubscriptionServiceImpl;
 import jreader.services.impl.UserAdminServiceImpl;
 import jreader.services.impl.UserServiceImpl;
@@ -66,7 +66,7 @@ public class ServiceConfig {
         converters.add(new FeedEntryDtoConverter());
         converters.add(new FeedStatDtoConverter());
         converters.add(new UserDtoConverter());
-        converters.add(new SubscriptionGroupDtoConverter());
+        converters.add(new GroupDtoConverter());
         converters.add(new SubscriptionDtoConverter());
         converters.add(new ArchiveDtoConverter());
         converters.add(new ArchivedEntryConverter());
@@ -100,32 +100,32 @@ public class ServiceConfig {
     }
     
     @Bean
-    public SubscriptionGroupService subscriptionGroupService() {
-        return new SubscriptionGroupServiceImpl(daoConfig.userDao(), daoConfig.subscriptionGroupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
+    public GroupService groupService() {
+        return new GroupServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
                 conversionService(), builderFactory());
     }
     
     @Bean
     public SubscriptionService subscriptionService() {
-        return new SubscriptionServiceImpl(daoConfig.userDao(), daoConfig.subscriptionGroupDao(), daoConfig.subscriptionDao(), daoConfig.feedDao(),
+        return new SubscriptionServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedDao(),
                 daoConfig.feedEntryDao(), rssService(), conversionService(), builderFactory());
     }
     
     @Bean
     public FeedEntryService feedEntryService() {
-        return new FeedEntryServiceImpl(daoConfig.userDao(), daoConfig.subscriptionGroupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
+        return new FeedEntryServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
                 conversionService());
     }
     
     @Bean
     public StatService statService() {
-        return new StatServiceImpl(daoConfig.userDao(), daoConfig.subscriptionGroupDao(), daoConfig.subscriptionDao(), daoConfig.feedStatDao(),
+        return new StatServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedStatDao(),
                 conversionService(), dateHelper());
     }
     
     @Bean
     public ArchiveService archiveService() {
-        return new ArchiveServiceImpl(daoConfig.userDao(), daoConfig.subscriptionGroupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
+        return new ArchiveServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
                 daoConfig.archiveDao(), daoConfig.archivedEntryDao(), conversionService(), builderFactory());
     }
     

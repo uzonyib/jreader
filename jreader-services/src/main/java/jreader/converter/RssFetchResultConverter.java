@@ -23,9 +23,6 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
         result.getFeed().setTitle(syndFeed.getTitle());
         result.getFeed().setDescription(syndFeed.getDescription());
         result.getFeed().setFeedType(syndFeed.getFeedType());
-        if (syndFeed.getPublishedDate() != null) {
-            result.getFeed().setLastUpdateDate(syndFeed.getPublishedDate().getTime());
-        }
         if (syndFeed.getEntries() != null) {
             for (SyndEntry syndEntry : (List<SyndEntry>) syndFeed.getEntries()) {
                 result.getFeedEntries().add(convert(syndEntry));

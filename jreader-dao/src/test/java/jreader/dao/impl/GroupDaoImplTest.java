@@ -7,31 +7,31 @@ import static org.testng.Assert.assertNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class SubscriptionGroupDaoImplTest extends AbstractDaoTest {
+public class GroupDaoImplTest extends AbstractDaoTest {
     
     private static final String[] USERNAMES = { "test_user_1", "test_user_2" };
     private static final String[] TITLES = { "title_1", "title_2" };
     private static final int[] ORDERS = { 10, 5 };
-    private static List<SubscriptionGroup> SAVED_GROUPS;
+    private static List<Group> SAVED_GROUPS;
     private static final String NEW_TITLE = "new_title";
     private static final int NEW_ORDER = 1;
     
     private UserDao userDao;
     
-    private SubscriptionGroupDao sut;
+    private GroupDao sut;
     
     @BeforeMethod
     public void init() {
         userDao = new UserDaoImpl();
-        sut = new SubscriptionGroupDaoImpl();
+        sut = new GroupDaoImpl();
         
         for (String username : USERNAMES) {
             User user = new User();
@@ -39,11 +39,11 @@ public class SubscriptionGroupDaoImplTest extends AbstractDaoTest {
             userDao.save(user);
         }
         
-        SAVED_GROUPS = new ArrayList<SubscriptionGroup>();
+        SAVED_GROUPS = new ArrayList<Group>();
         User user = new User();
         user.setUsername(USERNAMES[0]);
         for (int i = 0; i < TITLES.length; ++i) {
-            SubscriptionGroup group = new SubscriptionGroup();
+            Group group = new Group();
             group.setUser(user);
             group.setTitle(TITLES[i]);
             group.setOrder(ORDERS[i]);
@@ -56,7 +56,7 @@ public class SubscriptionGroupDaoImplTest extends AbstractDaoTest {
         User user = new User();
         user.setUsername(USERNAMES[0]);
         
-        SubscriptionGroup group = sut.find(user, SAVED_GROUPS.get(SAVED_GROUPS.size() - 1).getId() + 1);
+        Group group = sut.find(user, SAVED_GROUPS.get(SAVED_GROUPS.size() - 1).getId() + 1);
         
         assertNull(group);
     }
@@ -65,7 +65,7 @@ public class SubscriptionGroupDaoImplTest extends AbstractDaoTest {
     public void save_IfGroupIsNew_ShouldReturnGroup() {
         User user = new User();
         user.setUsername(USERNAMES[1]);
-        SubscriptionGroup group = new SubscriptionGroup();
+        Group group = new Group();
         group.setUser(user);
         group.setTitle(NEW_TITLE);
         group.setOrder(NEW_ORDER);
@@ -84,7 +84,7 @@ public class SubscriptionGroupDaoImplTest extends AbstractDaoTest {
         User user = new User();
         user.setUsername(USERNAMES[0]);
         
-        SubscriptionGroup group = sut.find(user, SAVED_GROUPS.get(0).getId());
+        Group group = sut.find(user, SAVED_GROUPS.get(0).getId());
         
         assertNotNull(group);
         assertEquals(group.getId(), SAVED_GROUPS.get(0).getId());
@@ -98,7 +98,7 @@ public class SubscriptionGroupDaoImplTest extends AbstractDaoTest {
         User user = new User();
         user.setUsername(USERNAMES[0]);
         
-        SubscriptionGroup group = sut.find(user, NEW_TITLE);
+        Group group = sut.find(user, NEW_TITLE);
         
         assertNull(group);
     }
@@ -108,7 +108,7 @@ public class SubscriptionGroupDaoImplTest extends AbstractDaoTest {
         User user = new User();
         user.setUsername(USERNAMES[0]);
         
-        SubscriptionGroup group = sut.find(user, TITLES[0]);
+        Group group = sut.find(user, TITLES[0]);
         
         assertNotNull(group);
         assertEquals(group.getId(), SAVED_GROUPS.get(0).getId());
@@ -122,7 +122,7 @@ public class SubscriptionGroupDaoImplTest extends AbstractDaoTest {
         User user = new User();
         user.setUsername(USERNAMES[0]);
         
-        List<SubscriptionGroup> groups = sut.list(user);
+        List<Group> groups = sut.list(user);
         
         assertNotNull(groups);
         assertEquals(groups.size(), 2);

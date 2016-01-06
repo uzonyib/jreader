@@ -22,17 +22,17 @@ import org.testng.annotations.Test;
 
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.SubscriptionDto;
-import jreader.dto.SubscriptionGroupDto;
+import jreader.dto.GroupDto;
 import jreader.services.ServiceException;
 
-public class SubscriptionGroupServiceImplTest {
+public class GroupServiceImplTest {
 	
 	private static final String USERNAME = "user";
 	private static final String GROUP_TITLE = "group_title";
@@ -40,12 +40,12 @@ public class SubscriptionGroupServiceImplTest {
 	private static final long GROUP_ID = 123;
 	
 	@InjectMocks
-	private SubscriptionGroupServiceImpl service;
+	private GroupServiceImpl service;
 
 	@Mock
 	private UserDao userDao;
 	@Mock
-	private SubscriptionGroupDao subscriptionGroupDao;
+	private GroupDao groupDao;
 	@Mock
 	private SubscriptionDao subscriptionDao;
 	@Mock
@@ -55,16 +55,16 @@ public class SubscriptionGroupServiceImplTest {
 	@Mock
 	private BuilderFactory builderFactory;
 	@Mock
-	private SubscriptionGroup.Builder groupBuilder;
+	private Group.Builder groupBuilder;
 	
 	@Mock
 	private User user;
 	@Mock
-	private SubscriptionGroup group;
+	private Group group;
 	@Mock
-	private SubscriptionGroup group1;
+	private Group group1;
 	@Mock
-	private SubscriptionGroup group2;
+	private Group group2;
 	@Mock
 	private Subscription subscription;
 	@Mock
@@ -73,11 +73,11 @@ public class SubscriptionGroupServiceImplTest {
 	private Subscription subscription2;
 	
 	@Mock
-	private SubscriptionGroupDto groupDto;
+	private GroupDto groupDto;
 	@Mock
-	private SubscriptionGroupDto groupDto1;
+	private GroupDto groupDto1;
 	@Mock
-	private SubscriptionGroupDto groupDto2;
+	private GroupDto groupDto2;
 	@Mock
 	private SubscriptionDto subscriptionDto;
 	@Mock
@@ -93,29 +93,29 @@ public class SubscriptionGroupServiceImplTest {
 	@Test
 	public void createNewGroup() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_TITLE)).thenReturn(null);
-		when(subscriptionGroupDao.getMaxOrder(user)).thenReturn(GROUP_ORDER - 1);
+		when(groupDao.find(user, GROUP_TITLE)).thenReturn(null);
+		when(groupDao.getMaxOrder(user)).thenReturn(GROUP_ORDER - 1);
 		when(builderFactory.createGroupBuilder()).thenReturn(groupBuilder);
 		when(groupBuilder.user(user)).thenReturn(groupBuilder);
 		when(groupBuilder.title(GROUP_TITLE)).thenReturn(groupBuilder);
 		when(groupBuilder.order(GROUP_ORDER)).thenReturn(groupBuilder);
 		when(groupBuilder.build()).thenReturn(group);
-		when(subscriptionGroupDao.save(group)).thenReturn(group);
-		when(conversionService.convert(group, SubscriptionGroupDto.class)).thenReturn(groupDto);
+		when(groupDao.save(group)).thenReturn(group);
+		when(conversionService.convert(group, GroupDto.class)).thenReturn(groupDto);
 		
-		SubscriptionGroupDto result = service.create(USERNAME, GROUP_TITLE);
+		GroupDto result = service.create(USERNAME, GROUP_TITLE);
 		assertEquals(result, groupDto);
 		
 		verify(userDao).find(USERNAME);
-		verify(subscriptionGroupDao).find(user, GROUP_TITLE);
-		verify(subscriptionGroupDao).getMaxOrder(user);
-		verify(subscriptionGroupDao).save(group);
+		verify(groupDao).find(user, GROUP_TITLE);
+		verify(groupDao).getMaxOrder(user);
+		verify(groupDao).save(group);
 	}
 	
 	@Test
 	public void createExistingGroup() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_TITLE)).thenReturn(group);
+		when(groupDao.find(user, GROUP_TITLE)).thenReturn(group);
 		
 		try {
 			service.create(USERNAME, GROUP_TITLE);
@@ -125,37 +125,37 @@ public class SubscriptionGroupServiceImplTest {
 		}
 		
 		verify(userDao).find(USERNAME);
-		verify(subscriptionGroupDao).find(user, GROUP_TITLE);
-		verify(subscriptionGroupDao, never()).save(group);
+		verify(groupDao).find(user, GROUP_TITLE);
+		verify(groupDao, never()).save(group);
 	}
 	
 	@Test
 	public void deleteGroup() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		
 		service.delete(USERNAME, GROUP_ID);
 		
 		verify(userDao).find(USERNAME);
-		verify(subscriptionGroupDao).delete(group);
+		verify(groupDao).delete(group);
 	}
 	
 	@Test
 	public void entitleGroup() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		
 		service.entitle(USERNAME, GROUP_ID, GROUP_TITLE);
 		
 		verify(userDao).find(USERNAME);
 		verify(group).setTitle(GROUP_TITLE);
-		verify(subscriptionGroupDao).save(group);
+		verify(groupDao).save(group);
 	}
 	
 	@Test
 	public void moveGroupUp() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
+		when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
 		final long id = 100L;
 		when(group.getId()).thenReturn(GROUP_ID);
 		when(group1.getId()).thenReturn(id);
@@ -169,14 +169,14 @@ public class SubscriptionGroupServiceImplTest {
 		
 		verify(group).setOrder(2);
 		verify(group1).setOrder(1);
-		verify(subscriptionGroupDao).saveAll(Arrays.asList(group, group1));
+		verify(groupDao).saveAll(Arrays.asList(group, group1));
 		verify(group2, never()).setOrder(anyInt());
 	}
 	
 	@Test
 	public void moveGroupDown() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
+		when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
 		final long id = 100L;
 		when(group.getId()).thenReturn(GROUP_ID);
 		when(group1.getId()).thenReturn(id);
@@ -190,14 +190,14 @@ public class SubscriptionGroupServiceImplTest {
 		
 		verify(group1).setOrder(3);
 		verify(group2).setOrder(2);
-		verify(subscriptionGroupDao).saveAll(Arrays.asList(group1, group2));
+		verify(groupDao).saveAll(Arrays.asList(group1, group2));
 		verify(group, never()).setOrder(anyInt());
 	}
 	
 	@Test
 	public void list() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
+		when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
 		when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription));
 		when(subscriptionDao.list(group1)).thenReturn(Arrays.asList(subscription1, subscription2));
 		when(subscriptionDao.list(group2)).thenReturn(Collections.<Subscription>emptyList());
@@ -205,14 +205,14 @@ public class SubscriptionGroupServiceImplTest {
 		when(feedEntryDao.countUnread(subscription1)).thenReturn(2);
 		when(feedEntryDao.countUnread(subscription2)).thenReturn(3);
 		
-		when(conversionService.convert(group, SubscriptionGroupDto.class)).thenReturn(groupDto);
-		when(conversionService.convert(group1, SubscriptionGroupDto.class)).thenReturn(groupDto1);
-		when(conversionService.convert(group2, SubscriptionGroupDto.class)).thenReturn(groupDto2);
+		when(conversionService.convert(group, GroupDto.class)).thenReturn(groupDto);
+		when(conversionService.convert(group1, GroupDto.class)).thenReturn(groupDto1);
+		when(conversionService.convert(group2, GroupDto.class)).thenReturn(groupDto2);
 		when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
 		when(conversionService.convert(subscription1, SubscriptionDto.class)).thenReturn(subscriptionDto1);
 		when(conversionService.convert(subscription2, SubscriptionDto.class)).thenReturn(subscriptionDto2);
 		
-		List<SubscriptionGroupDto> result = service.list(USERNAME);
+		List<GroupDto> result = service.list(USERNAME);
 		Assert.assertEquals(result, Arrays.asList(groupDto, groupDto1, groupDto2));
 		
 		verify(subscriptionDto).setUnreadCount(1);

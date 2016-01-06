@@ -5,7 +5,7 @@ import java.util.List;
 import jreader.dao.SubscriptionDao;
 import jreader.domain.Feed;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements SubscriptionDao {
@@ -16,12 +16,12 @@ public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements
     }
 
     @Override
-    public Subscription find(final SubscriptionGroup group, final Long id) {
+    public Subscription find(final Group group, final Long id) {
         return getOfy().load().type(Subscription.class).parent(group).id(id).now();
     }
     
     @Override
-    public Subscription find(final SubscriptionGroup group, final String title) {
+    public Subscription find(final Group group, final String title) {
         return getOfy().load().type(Subscription.class).ancestor(group).filter("title =", title).first().now();
     }
 
@@ -31,7 +31,7 @@ public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements
     }
 
     @Override
-    public List<Subscription> list(final SubscriptionGroup group) {
+    public List<Subscription> list(final Group group) {
         return getOfy().load().type(Subscription.class).ancestor(group).order("order").list();
     }
 
@@ -41,7 +41,7 @@ public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements
     }
 
     @Override
-    public int getMaxOrder(final SubscriptionGroup group) {
+    public int getMaxOrder(final Group group) {
         final Subscription subscription = getOfy().load().type(Subscription.class)
                 .ancestor(group).order("-order").first().now();
         return subscription == null ? -1 : subscription.getOrder();

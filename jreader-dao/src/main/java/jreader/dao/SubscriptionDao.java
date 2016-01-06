@@ -4,23 +4,23 @@ import java.util.List;
 
 import jreader.domain.Feed;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 public interface SubscriptionDao extends OfyDao<Subscription> {
 
     Subscription find(User user, Feed feed);
 
-    Subscription find(SubscriptionGroup subscriptionGroup, Long id);
+    Subscription find(Group group, Long id);
     
-    Subscription find(SubscriptionGroup subscriptionGroup, String title);
+    Subscription find(Group group, String title);
 
     List<Subscription> listSubscriptions(Feed feed);
 
-    List<Subscription> list(SubscriptionGroup group);
+    List<Subscription> list(Group group);
 
     int countSubscribers(Feed feed);
 
-    int getMaxOrder(SubscriptionGroup group);
+    int getMaxOrder(Group group);
 
 }

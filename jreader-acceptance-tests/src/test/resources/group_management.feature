@@ -1,4 +1,4 @@
-Feature: subscription group management
+Feature: group management
 		
 	Scenario: Users should be able delete empty groups
 		When I click the delete group button of "group #1"

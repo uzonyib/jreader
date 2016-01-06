@@ -36,7 +36,7 @@ import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.RssFetchResult;
@@ -109,7 +109,7 @@ public class CronServiceImplTest {
     private List<FeedStat> feedStats;
 	
 	@Mock
-	private SubscriptionGroup group;
+	private Group group;
 	
 	@Mock
 	private User user;

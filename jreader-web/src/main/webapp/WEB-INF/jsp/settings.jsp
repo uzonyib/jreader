@@ -20,7 +20,7 @@
 				<span class="title">{{newSubscription.group.title}}</span><span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li data-ng-repeat="group in subscriptionGroups.items" data-ng-click="newSubscription.group=group">
+				<li data-ng-repeat="group in groups.items" data-ng-click="newSubscription.group=group">
 					<a tabindex="-1" href="">{{group.title}}</a>
 				</li>
 			</ul>
@@ -34,7 +34,7 @@
 </form>
 
 <table id="subscription-settings" class="table">
-	<tbody class="settings-group" data-ng-repeat="group in subscriptionGroups.items">
+	<tbody class="settings-group" data-ng-repeat="group in groups.items">
 		<tr class="group-title">
 			<td>
 				<span class="title" data-ng-show="!group.editingTitle" data-ng-click="editTitle(group)">{{group.title}}</span>

@@ -9,7 +9,7 @@ import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 import com.googlecode.objectify.Key;
@@ -24,7 +24,7 @@ abstract class AbstractOfyDao<EntityType> implements OfyDao<EntityType> {
     static {
         final ObjectifyFactory factory = factory();
         factory.register(User.class);
-        factory.register(SubscriptionGroup.class);
+        factory.register(Group.class);
         factory.register(Subscription.class);
         factory.register(Feed.class);
         factory.register(FeedEntry.class);

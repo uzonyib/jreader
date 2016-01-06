@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jreader.dao.FeedEntryFilter.Selection;
 import jreader.services.FeedEntryFilterData;
 import jreader.services.FeedEntryService;
-import jreader.services.SubscriptionGroupService;
+import jreader.services.GroupService;
 import jreader.web.controller.ResponseEntity;
 import jreader.web.controller.util.SelectionEditor;
 
@@ -24,11 +24,11 @@ import jreader.web.controller.util.SelectionEditor;
 @RequestMapping(value = "/reader")
 public class EntryController {
 
-    private final SubscriptionGroupService subscriptionGroupService;
+    private final GroupService groupService;
     private final FeedEntryService feedEntryService;
     
-    public EntryController(final SubscriptionGroupService subscriptionGroupService, final FeedEntryService feedEntryService) {
-        this.subscriptionGroupService = subscriptionGroupService;
+    public EntryController(final GroupService groupService, final FeedEntryService feedEntryService) {
+        this.groupService = groupService;
         this.feedEntryService = feedEntryService;
     }
 
@@ -59,7 +59,7 @@ public class EntryController {
     @RequestMapping(value = "/entries", method = RequestMethod.POST)
     public ResponseEntity readAll(final Principal principal, @RequestBody final Map<Long, Map<Long, List<Long>>> ids) {
         feedEntryService.markRead(principal.getName(), ids);
-        return new ResponseEntity(subscriptionGroupService.list(principal.getName()));
+        return new ResponseEntity(groupService.list(principal.getName()));
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/entries/{id}/starred", method = RequestMethod.PUT)

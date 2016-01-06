@@ -5,12 +5,12 @@ import static org.testng.Assert.assertNotNull;
 import jreader.dao.UserDao;
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.UserDaoImpl;
-import jreader.domain.SubscriptionGroup.Builder;
+import jreader.domain.Group.Builder;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class SubscriptionGroupBuilderTest extends AbstractDaoTest {
+public class GroupBuilderTest extends AbstractDaoTest {
     
     private static final String USERNAME = "username";
     private static final long ID = 10L;
@@ -32,7 +32,7 @@ public class SubscriptionGroupBuilderTest extends AbstractDaoTest {
     
     @Test
     public void build_shouldReturnGroup() {
-        SubscriptionGroup group = builder.id(ID).title(TITLE).order(ORDER).user(savedUser).build();
+        Group group = builder.id(ID).title(TITLE).order(ORDER).user(savedUser).build();
         
         assertNotNull(group);
         assertNotNull(group.getId());

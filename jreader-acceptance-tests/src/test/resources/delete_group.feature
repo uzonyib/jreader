@@ -1,4 +1,4 @@
-Feature: rename subscription group
+Feature: rename group
 
 	Background:
 		Given I am logged in

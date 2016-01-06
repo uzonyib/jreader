@@ -3,7 +3,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	
 	this.activeView = {
 		type: "home",
-		subscriptionGroupId: null,
+		groupId: null,
 		subscriptionId: null,
 		archiveId: null
 	};
@@ -11,7 +11,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.selectHome = function() {
 		var view = {
 			type: "home",
-			subscriptionGroupId: null,
+			groupId: null,
 			subscriptionId: null,
 			archiveId: null
 		};
@@ -23,7 +23,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.selectSettings = function() {
 		var view = {
 			type: "settings",
-			subscriptionGroupId: null,
+			groupId: null,
 			subscriptionId: null,
 			archiveId: null
 		};
@@ -35,7 +35,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.selectAllItems = function() {
 		var view = {
 			type: "allItems",
-			subscriptionGroupId: null,
+			groupId: null,
 			subscriptionId: null,
 			archiveId: null
 		};
@@ -44,10 +44,10 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 		}
 	};
 	
-	this.selectSubscriptionGroup = function(groupId) {
+	this.selectGroup = function(groupId) {
 		var view = {
 			type: "group",
-			subscriptionGroupId: groupId,
+			groupId: groupId,
 			subscriptionId: null,
 			archiveId: null
 		};
@@ -59,7 +59,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.selectSubscription = function(groupId, subscriptionId) {
 		var view = {
 			type: "subscription",
-			subscriptionGroupId: groupId,
+			groupId: groupId,
 			subscriptionId: subscriptionId,
 			archiveId: null
 		};
@@ -71,7 +71,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.selectArchivedItems = function() {
 		var view = {
 			type: "archivedItems",
-			subscriptionGroupId: null,
+			groupId: null,
 			subscriptionId: null,
 			archiveId: null
 		};
@@ -83,7 +83,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.selectArchive = function(archiveId) {
 		var view = {
 			type: "archive",
-			subscriptionGroupId: null,
+			groupId: null,
 			subscriptionId: null,
 			archiveId: archiveId
 		};
@@ -104,10 +104,10 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 		return angular.equals(this.activeView.type, "allItems");
 	};
 	
-	this.isSubscriptionGroupSelected = function(groupId) {
+	this.isGroupSelected = function(groupId) {
 		var view = {
 			type: "group",
-			subscriptionGroupId: groupId,
+			groupId: groupId,
 			subscriptionId: null,
 			archiveId: null
 		};
@@ -117,7 +117,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.isSubscriptionSelected = function(groupId, subscriptionId) {
 		var view = {
 			type: "subscription",
-			subscriptionGroupId: groupId,
+			groupId: groupId,
 			subscriptionId: subscriptionId,
 			archiveId: null
 		};
@@ -131,7 +131,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	this.isArchiveSelected = function(archiveId) {
 		var view = {
 			type: "archive",
-			subscriptionGroupId: null,
+			groupId: null,
 			subscriptionId: null,
 			archiveId: archiveId
 		};
@@ -146,8 +146,8 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 		return angular.equals(service.activeView.type, "archivedItems") || angular.equals(service.activeView.type, "archive");
 	};
 	
-	this.getSubscriptionGroupId = function() {
-		return this.activeView.subscriptionGroupId;
+	this.getGroupId = function() {
+		return this.activeView.groupId;
 	};
 	
 	this.getSubscriptionId = function() {
@@ -168,7 +168,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 	
 	this.entryFilter.get = function() {
 		var filter = angular.copy(this);
-		filter.subscriptionGroupId = service.activeView.subscriptionGroupId;
+		filter.groupId = service.activeView.groupId;
 		filter.subscriptionId = service.activeView.subscriptionId;
 		return filter;
 	};

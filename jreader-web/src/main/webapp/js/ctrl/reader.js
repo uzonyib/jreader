@@ -6,18 +6,18 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	$scope.head.titlePrefix = "jReader";
 	$scope.head.title = $scope.head.titlePrefix;
 	
-	$scope.subscriptionGroups = {};
-	$scope.subscriptionGroups.items = [];
-	$scope.subscriptionGroups.unreadCount = 0;
+	$scope.groups = {};
+	$scope.groups.items = [];
+	$scope.groups.unreadCount = 0;
 	
-	$scope.subscriptionGroups.setItemsFromPayLoad = function(response) {
-		$scope.subscriptionGroups.setItems(response.payload);
+	$scope.groups.setItemsFromPayLoad = function(response) {
+		$scope.groups.setItems(response.payload);
 	};
 	
-	$scope.subscriptionGroups.setItems = function(items) {
-		$scope.subscriptionGroups.items = items;
+	$scope.groups.setItems = function(items) {
+		$scope.groups.items = items;
 		var count = 0;
-		angular.forEach($scope.subscriptionGroups.items, function(group) {
+		angular.forEach($scope.groups.items, function(group) {
 			count += group.unreadCount;
 			group.editingTitle = false;
 			group.newTitle = group.title;
@@ -27,7 +27,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 			});
 		});
 		
-		$scope.subscriptionGroups.unreadCount = count;
+		$scope.groups.unreadCount = count;
 		if (count > 0) {
 			$scope.head.title = $scope.head.titlePrefix + " (" + count + ")";
 		} else {
@@ -38,14 +38,14 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		$scope.menu.refreshCollapsion();
 	};
 	
-	$scope.subscriptionGroups.refresh = function() {
+	$scope.groups.refresh = function() {
 		$scope.ajaxService.refreshSubscriptions().success(function(data) {
-        	$scope.subscriptionGroups.setItemsFromPayLoad(data);
+        	$scope.groups.setItemsFromPayLoad(data);
         });
     };
     
-    $interval($scope.subscriptionGroups.refresh, 1000 * 60 * 5);
-    $scope.subscriptionGroups.refresh();
+    $interval($scope.groups.refresh, 1000 * 60 * 5);
+    $scope.groups.refresh();
 	
 	$scope.feedEntries = {};
 	$scope.feedEntries.items = [];
@@ -114,7 +114,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	$scope.feedEntries.markRead = function(entry) {
 		if (!entry.read) {
 			entry.read = true;
-			$scope.ajaxService.markRead(entry).success($scope.subscriptionGroups.setItemsFromPayLoad);
+			$scope.ajaxService.markRead(entry).success($scope.groups.setItemsFromPayLoad);
 		}
 	};
 	
@@ -130,7 +130,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 			$scope.feedEntries.loading = true;
 			$scope.viewService.entryFilter.resetPageIndex();
 			$scope.ajaxService.markAllRead(unreads, $scope.viewService.entryFilter.get()).success(function(response) {
-				$scope.subscriptionGroups.setItemsFromPayLoad(response);
+				$scope.groups.setItemsFromPayLoad(response);
 				$scope.feedEntries.loading = false;
 				$scope.feedEntries.load();
 	        });
@@ -139,7 +139,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	
 	$scope.feedEntries.refreshWithSubscriptions = function() {
 		$scope.feedEntries.refresh();
-		$scope.subscriptionGroups.refresh();
+		$scope.groups.refresh();
 	};
 	
 	$scope.feedEntries.refresh = function() {
@@ -282,8 +282,8 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		$scope.menu.allItemsSelected = $scope.viewService.isAllItemsSelected();
 		$scope.menu.archivedItemsSelected = $scope.viewService.isArchivedItemsSelected();
 		
-		angular.forEach($scope.subscriptionGroups.items, function(group) {
-			group.selected = $scope.viewService.isSubscriptionGroupSelected(group.id);
+		angular.forEach($scope.groups.items, function(group) {
+			group.selected = $scope.viewService.isGroupSelected(group.id);
 			angular.forEach(group.subscriptions, function(subscription) {
 				subscription.selected = $scope.viewService.isSubscriptionSelected(group.id, subscription.id);
 			});
@@ -295,7 +295,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	};
 	
 	$scope.menu.refreshCollapsion = function() {
-		angular.forEach($scope.subscriptionGroups.items, function(group) {
+		angular.forEach($scope.groups.items, function(group) {
 			group.collapsed = $scope.menu.uncollapsedItems.indexOf(group.id) < 0;
 		});
 	};

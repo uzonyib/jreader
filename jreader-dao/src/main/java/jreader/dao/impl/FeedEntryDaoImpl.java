@@ -6,7 +6,7 @@ import jreader.dao.FeedEntryDao;
 import jreader.dao.FeedEntryFilter;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 import com.googlecode.objectify.cmd.Query;
@@ -35,8 +35,8 @@ public class FeedEntryDaoImpl extends AbstractOfyDao<FeedEntry> implements FeedE
     }
 
     @Override
-    public List<FeedEntry> list(final SubscriptionGroup subscriptionGroup, final FeedEntryFilter filter) {
-        return listForAncestor(subscriptionGroup, filter);
+    public List<FeedEntry> list(final Group group, final FeedEntryFilter filter) {
+        return listForAncestor(group, filter);
     }
 
     @Override

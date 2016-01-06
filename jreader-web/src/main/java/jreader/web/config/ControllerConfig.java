@@ -82,17 +82,17 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public GroupController groupController() {
-        return new GroupController(serviceConfig.subscriptionGroupService());
+        return new GroupController(serviceConfig.groupService());
     }
     
     @Bean
     public SubscriptionController subscriptionController() {
-        return new SubscriptionController(serviceConfig.subscriptionGroupService(), serviceConfig.subscriptionService(), queueService());
+        return new SubscriptionController(serviceConfig.groupService(), serviceConfig.subscriptionService(), queueService());
     }
     
     @Bean
     public EntryController entryController() {
-        return new EntryController(serviceConfig.subscriptionGroupService(), serviceConfig.feedEntryService());
+        return new EntryController(serviceConfig.groupService(), serviceConfig.feedEntryService());
     }
     
     @Bean

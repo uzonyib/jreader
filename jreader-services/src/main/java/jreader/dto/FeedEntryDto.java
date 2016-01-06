@@ -4,7 +4,7 @@ public class FeedEntryDto {
 
     private String id;
     private String subscriptionId;
-    private String subscriptionGroupId;
+    private String groupId;
     private String subscriptionTitle;
     private String link;
     private String title;
@@ -30,12 +30,12 @@ public class FeedEntryDto {
         this.subscriptionId = subscriptionId;
     }
 
-    public String getSubscriptionGroupId() {
-        return subscriptionGroupId;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setSubscriptionGroupId(final String subscriptionGroupId) {
-        this.subscriptionGroupId = subscriptionGroupId;
+    public void setGroupId(final String groupId) {
+        this.groupId = groupId;
     }
 
     public String getSubscriptionTitle() {

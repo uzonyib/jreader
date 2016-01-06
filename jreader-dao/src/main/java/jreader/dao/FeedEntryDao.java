@@ -4,7 +4,7 @@ import java.util.List;
 
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 public interface FeedEntryDao extends OfyDao<FeedEntry> {
@@ -17,7 +17,7 @@ public interface FeedEntryDao extends OfyDao<FeedEntry> {
 
     List<FeedEntry> list(User user, FeedEntryFilter filter);
 
-    List<FeedEntry> list(SubscriptionGroup subscriptionGroup, FeedEntryFilter filter);
+    List<FeedEntry> list(Group group, FeedEntryFilter filter);
 
     List<FeedEntry> list(Subscription subscription, FeedEntryFilter filter);
 

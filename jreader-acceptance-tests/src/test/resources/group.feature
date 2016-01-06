@@ -1,4 +1,4 @@
-Feature: create subscription group
+Feature: create group
 
 	Scenario: Users can create new groups
 		Given a new user is logged in

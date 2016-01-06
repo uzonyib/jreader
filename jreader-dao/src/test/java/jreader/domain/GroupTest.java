@@ -5,13 +5,13 @@ import static org.testng.Assert.assertNull;
 import jreader.dao.UserDao;
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.UserDaoImpl;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class SubscriptionGroupTest extends AbstractDaoTest {
+public class GroupTest extends AbstractDaoTest {
     
     private User savedUser;
     
@@ -25,7 +25,7 @@ public class SubscriptionGroupTest extends AbstractDaoTest {
     
     @Test
     public void setUser_IfUserIsNull_RefShouldBeNull() {
-        SubscriptionGroup group = new SubscriptionGroup();
+        Group group = new Group();
         
         group.setUser(null);
         
@@ -35,7 +35,7 @@ public class SubscriptionGroupTest extends AbstractDaoTest {
     
     @Test
     public void setUser_IfUserIsNotNull_RefShouldNotBeNull() {
-        SubscriptionGroup group = new SubscriptionGroup();
+        Group group = new Group();
         
         group.setUser(savedUser);
         

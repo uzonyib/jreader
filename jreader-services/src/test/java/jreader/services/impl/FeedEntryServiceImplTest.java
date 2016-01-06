@@ -10,15 +10,15 @@ import java.util.Map;
 
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.FeedEntryDto;
 import jreader.services.FeedEntryFilterData;
-import jreader.services.FeedEntryFilterData.Group;
+import jreader.services.FeedEntryFilterData.Type;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -44,7 +44,7 @@ public class FeedEntryServiceImplTest {
 	@Mock
 	private UserDao userDao;
 	@Mock
-	private SubscriptionGroupDao subscriptionGroupDao;
+	private GroupDao groupDao;
 	@Mock
 	private SubscriptionDao subscriptionDao;
 	@Mock
@@ -55,9 +55,9 @@ public class FeedEntryServiceImplTest {
 	@Mock
 	private User user;
 	@Mock
-	private SubscriptionGroup group1;
+	private Group group1;
 	@Mock
-	private SubscriptionGroup group2;
+	private Group group2;
 	@Mock
 	private Subscription subscription1;
 	@Mock
@@ -81,8 +81,8 @@ public class FeedEntryServiceImplTest {
 	@Test
 	public void markRead() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID_1)).thenReturn(group1);
-		when(subscriptionGroupDao.find(user, GROUP_ID_2)).thenReturn(group2);
+		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
+		when(groupDao.find(user, GROUP_ID_2)).thenReturn(group2);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		when(subscriptionDao.find(group2, SUBSCRIPTION_ID_2)).thenReturn(subscription2);
 		when(feedEntryDao.find(subscription1, ENTRY_ID_1)).thenReturn(entry1);
@@ -107,7 +107,7 @@ public class FeedEntryServiceImplTest {
 	@Test
 	public void star() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID_1)).thenReturn(group1);
+		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		when(feedEntryDao.find(subscription1, ENTRY_ID_1)).thenReturn(entry1);
 		when(entry1.isStarred()).thenReturn(false);
@@ -121,7 +121,7 @@ public class FeedEntryServiceImplTest {
 	@Test
 	public void unstar() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID_1)).thenReturn(group1);
+		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		when(feedEntryDao.find(subscription1, ENTRY_ID_1)).thenReturn(entry1);
 		when(entry1.isStarred()).thenReturn(true);
@@ -134,7 +134,7 @@ public class FeedEntryServiceImplTest {
 	
 	@Test
 	public void listForUser() {
-		when(filter.getGroup()).thenReturn(Group.ALL);
+		when(filter.getType()).thenReturn(Type.ALL);
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(feedEntryDao.list(user, filter)).thenReturn(Arrays.asList(entry1, entry2));
@@ -149,11 +149,11 @@ public class FeedEntryServiceImplTest {
 	
 	@Test
 	public void listForGroup() {
-		when(filter.getGroup()).thenReturn(Group.SUBSCRIPTION_GROUP);
+		when(filter.getType()).thenReturn(Type.GROUP);
 		when(filter.getUsername()).thenReturn(USERNAME);
-		when(filter.getSubscriptionGroupId()).thenReturn(GROUP_ID_1);
+		when(filter.getGroupId()).thenReturn(GROUP_ID_1);
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID_1)).thenReturn(group1);
+		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(feedEntryDao.list(group1, filter)).thenReturn(Arrays.asList(entry1, entry2));
 		when(conversionService.convert(entry1, FeedEntryDto.class)).thenReturn(entryDto1);
 		when(conversionService.convert(entry2, FeedEntryDto.class)).thenReturn(entryDto2);
@@ -166,12 +166,12 @@ public class FeedEntryServiceImplTest {
 	
 	@Test
 	public void listForSubscription() {
-		when(filter.getGroup()).thenReturn(Group.SUBSCRIPTION);
+		when(filter.getType()).thenReturn(Type.SUBSCRIPTION);
 		when(filter.getUsername()).thenReturn(USERNAME);
-		when(filter.getSubscriptionGroupId()).thenReturn(GROUP_ID_1);
+		when(filter.getGroupId()).thenReturn(GROUP_ID_1);
 		when(filter.getSubscriptionId()).thenReturn(SUBSCRIPTION_ID_1);
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID_1)).thenReturn(group1);
+		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		when(feedEntryDao.list(subscription1, filter)).thenReturn(Arrays.asList(entry1, entry2));
 		when(conversionService.convert(entry1, FeedEntryDto.class)).thenReturn(entryDto1);

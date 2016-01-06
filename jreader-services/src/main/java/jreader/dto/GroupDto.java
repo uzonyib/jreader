@@ -2,7 +2,7 @@ package jreader.dto;
 
 import java.util.List;
 
-public class SubscriptionGroupDto {
+public class GroupDto {
 
     private String id;
     private String title;

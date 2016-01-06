@@ -22,13 +22,13 @@ import org.testng.annotations.Test;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.RssFetchResult;
 import jreader.dto.SubscriptionDto;
@@ -51,7 +51,7 @@ public class SubscriptionServiceImplTest {
 	@Mock
 	private UserDao userDao;
 	@Mock
-	private SubscriptionGroupDao subscriptionGroupDao;
+	private GroupDao groupDao;
 	@Mock
 	private SubscriptionDao subscriptionDao;
 	@Mock
@@ -70,7 +70,7 @@ public class SubscriptionServiceImplTest {
 	@Mock
 	private User user;
 	@Mock
-	private SubscriptionGroup group;
+	private Group group;
 	@Mock
 	private Subscription subscription;
 	@Mock
@@ -103,7 +103,7 @@ public class SubscriptionServiceImplTest {
 		when(entry1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(rssService.fetch(URL)).thenReturn(fetchResult);
 		when(feedDao.find(URL)).thenReturn(null);
 		when(feedDao.save(feed)).thenReturn(feed);
@@ -123,7 +123,7 @@ public class SubscriptionServiceImplTest {
 		assertEquals(result, subscriptionDto);
 		
 		verify(userDao).find(USERNAME);
-		verify(subscriptionGroupDao).find(user, GROUP_ID);
+		verify(groupDao).find(user, GROUP_ID);
 		verify(rssService).fetch(URL);
 		verify(feedDao).find(URL);
 		verify(feedDao).save(feed);
@@ -141,7 +141,7 @@ public class SubscriptionServiceImplTest {
 		when(entry1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(rssService.fetch(URL)).thenReturn(fetchResult);
 		when(feedDao.find(URL)).thenReturn(feed);
 		when(subscriptionDao.find(user, feed)).thenReturn(null);
@@ -158,7 +158,7 @@ public class SubscriptionServiceImplTest {
 		service.subscribe(USERNAME, GROUP_ID, URL);
 		
 		verify(userDao).find(USERNAME);
-		verify(subscriptionGroupDao).find(user, GROUP_ID);
+		verify(groupDao).find(user, GROUP_ID);
 		verifyZeroInteractions(rssService);
 		verify(feedDao).find(URL);
 		verify(feedDao, never()).save(feed);
@@ -176,7 +176,7 @@ public class SubscriptionServiceImplTest {
 		when(entry1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(rssService.fetch(URL)).thenReturn(fetchResult);
 		when(feedDao.find(URL)).thenReturn(feed);
 		when(subscriptionDao.find(user, feed)).thenReturn(subscription);
@@ -189,7 +189,7 @@ public class SubscriptionServiceImplTest {
 		}
 		
 		verify(userDao).find(USERNAME);
-		verifyZeroInteractions(subscriptionGroupDao);
+		verifyZeroInteractions(groupDao);
 		verifyZeroInteractions(rssService);
 		verify(feedDao).find(URL);
 		verify(feedDao, never()).save(feed);
@@ -201,7 +201,7 @@ public class SubscriptionServiceImplTest {
 	@Test
 	public void unsubscribe() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(subscriptionDao.find(group, SUBSCRIPTION_ID)).thenReturn(subscription);
 		List<FeedEntry> entries = Arrays.asList(entry1, entry2);
 		when(feedEntryDao.list(subscription)).thenReturn(entries);
@@ -215,7 +215,7 @@ public class SubscriptionServiceImplTest {
 	@Test
 	public void entitleSubscription() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(subscriptionDao.find(group, SUBSCRIPTION_ID)).thenReturn(subscription);
 		
 		service.entitle(USERNAME, GROUP_ID, SUBSCRIPTION_ID, SUBSCRIPTION_TITLE);
@@ -227,7 +227,7 @@ public class SubscriptionServiceImplTest {
 	@Test
 	public void moveSubscriptionUp() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
 		final long id = 100L;
 		when(subscription.getId()).thenReturn(SUBSCRIPTION_ID);
@@ -249,7 +249,7 @@ public class SubscriptionServiceImplTest {
 	@Test
 	public void moveSubscriptionDown() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
 		final long id = 100L;
 		when(subscription.getId()).thenReturn(SUBSCRIPTION_ID);

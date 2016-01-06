@@ -23,14 +23,14 @@ import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedEntryDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedEntry;
 import jreader.domain.BuilderFactory;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedEntryDto;
@@ -54,7 +54,7 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private UserDao userDao;
 	@Mock
-	private SubscriptionGroupDao subscriptionGroupDao;
+	private GroupDao groupDao;
 	@Mock
 	private SubscriptionDao subscriptionDao;
 	@Mock
@@ -71,7 +71,7 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private User user;
 	@Mock
-	private SubscriptionGroup group;
+	private Group group;
 	@Mock
 	private Subscription subscription;
 	@Mock
@@ -230,7 +230,7 @@ public class ArchiveServiceImplTest {
 	@Test
 	public void archive() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(subscriptionGroupDao.find(user, GROUP_ID)).thenReturn(group);
+		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(subscriptionDao.find(group, SUBSCRIPTION_ID)).thenReturn(subscription);
 		when(feedEntryDao.find(subscription, ENTRY_ID)).thenReturn(entry);
 		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);

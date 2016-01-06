@@ -5,7 +5,7 @@ import static org.testng.Assert.assertNotNull;
 import jreader.dao.UserDao;
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.FeedDaoImpl;
-import jreader.dao.impl.SubscriptionGroupDaoImpl;
+import jreader.dao.impl.GroupDaoImpl;
 import jreader.dao.impl.UserDaoImpl;
 import jreader.domain.Subscription.Builder;
 
@@ -21,7 +21,7 @@ public class SubscriptionBuilderTest extends AbstractDaoTest {
     private static final long UPDATED_DATE = 456L;
     
     private User user;
-    private SubscriptionGroup group;
+    private Group group;
     private Feed feed;
     private Builder builder;
     
@@ -32,10 +32,10 @@ public class SubscriptionBuilderTest extends AbstractDaoTest {
         UserDao userDao = new UserDaoImpl();
         user = userDao.save(user);
         
-        group = new SubscriptionGroup();
+        group = new Group();
         group.setId(1L);
         group.setUser(user);
-        group = new SubscriptionGroupDaoImpl().save(group);
+        group = new GroupDaoImpl().save(group);
         feed = new Feed();
         feed.setUrl("url");
         feed = new FeedDaoImpl().save(feed);

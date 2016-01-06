@@ -16,7 +16,7 @@ public class Subscription {
     private Long id;
     @Load
     @Parent
-    private Ref<SubscriptionGroup> groupRef;
+    private Ref<Group> groupRef;
     @Load
     @Index
     private Ref<Feed> feedRef;
@@ -47,11 +47,11 @@ public class Subscription {
         this.id = id;
     }
 
-    public Ref<SubscriptionGroup> getGroupRef() {
+    public Ref<Group> getGroupRef() {
         return groupRef;
     }
 
-    public void setGroupRef(final Ref<SubscriptionGroup> groupRef) {
+    public void setGroupRef(final Ref<Group> groupRef) {
         this.groupRef = groupRef;
     }
 
@@ -71,11 +71,11 @@ public class Subscription {
         this.title = title;
     }
 
-    public SubscriptionGroup getGroup() {
+    public Group getGroup() {
         return getGroupRef() == null ? null : getGroupRef().get();
     }
 
-    public void setGroup(final SubscriptionGroup group) {
+    public void setGroup(final Group group) {
         this.setGroupRef(group == null ? null : Ref.create(group));
     }
 
@@ -106,7 +106,7 @@ public class Subscription {
     public static class Builder {
 
         private Long id;
-        private SubscriptionGroup group;
+        private Group group;
         private Feed feed;
         private String title;
         private int order;
@@ -117,7 +117,7 @@ public class Subscription {
             return this;
         }
 
-        public Builder group(final SubscriptionGroup group) {
+        public Builder group(final Group group) {
             this.group = group;
             return this;
         }

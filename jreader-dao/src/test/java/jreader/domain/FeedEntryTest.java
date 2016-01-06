@@ -4,17 +4,17 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import jreader.dao.FeedDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.FeedDaoImpl;
 import jreader.dao.impl.SubscriptionDaoImpl;
-import jreader.dao.impl.SubscriptionGroupDaoImpl;
+import jreader.dao.impl.GroupDaoImpl;
 import jreader.dao.impl.UserDaoImpl;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 import org.testng.annotations.BeforeMethod;
@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 public class FeedEntryTest extends AbstractDaoTest {
     
     private User savedUser;
-    private SubscriptionGroup savedGroup;
+    private Group savedGroup;
     private Feed savedFeed;
     private Subscription savedSubscription;
     
@@ -34,11 +34,11 @@ public class FeedEntryTest extends AbstractDaoTest {
         UserDao userDao = new UserDaoImpl();
         savedUser = userDao.save(user);
         
-        SubscriptionGroup group = new SubscriptionGroup();
+        Group group = new Group();
         group.setUser(savedUser);
         group.setTitle("title");
         group.setOrder(1);
-        SubscriptionGroupDao groupDao = new SubscriptionGroupDaoImpl();
+        GroupDao groupDao = new GroupDaoImpl();
         savedGroup = groupDao.save(group);
         
         Feed feed = new Feed();

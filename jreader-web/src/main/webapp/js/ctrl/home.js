@@ -19,7 +19,7 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 		}
 	});
 	
-	$scope.$watch("subscriptionGroups.items", function(subscriptionGroups) {
+	$scope.$watch("groups.items", function() {
 		$scope.populateStats();
 	});
 	
@@ -31,7 +31,7 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 	};
 	
 	$scope.populateStats = function() {
-		angular.forEach($scope.subscriptionGroups.items, function(group) {
+		angular.forEach($scope.groups.items, function(group) {
 			angular.forEach(group.subscriptions, function(subscription) {
 				angular.forEach($scope.stats, function(feedStats) {
 					if (angular.equals(feedStats.feed.url, subscription.feed.url)) {

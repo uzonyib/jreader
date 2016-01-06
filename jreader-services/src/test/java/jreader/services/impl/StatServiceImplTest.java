@@ -20,12 +20,12 @@ import org.testng.annotations.Test;
 
 import jreader.dao.FeedStatDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.FeedStatDto;
@@ -42,7 +42,7 @@ public class StatServiceImplTest {
     @Mock
     private UserDao userDao;
     @Mock
-    private SubscriptionGroupDao subscriptionGroupDao;
+    private GroupDao groupDao;
     @Mock
     private SubscriptionDao subscriptionDao;
     @Mock
@@ -55,7 +55,7 @@ public class StatServiceImplTest {
     @Mock
     private User user;
     @Mock
-    private SubscriptionGroup group;
+    private Group group;
     @Mock
     private Subscription subscription1;
     @Mock
@@ -99,7 +99,7 @@ public class StatServiceImplTest {
     @Test
     public void list() {
         when(userDao.find(USERNAME)).thenReturn(user);
-        when(subscriptionGroupDao.list(user)).thenReturn(Arrays.asList(group));
+        when(groupDao.list(user)).thenReturn(Arrays.asList(group));
         when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription1, subscription2));
         
         TimeZone timeZone = TimeZone.getTimeZone("GMT");

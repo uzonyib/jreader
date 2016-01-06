@@ -34,7 +34,7 @@ import jreader.dto.FeedEntryDto;
 import jreader.dto.FeedStatDto;
 import jreader.dto.FeedStatsDto;
 import jreader.dto.SubscriptionDto;
-import jreader.dto.SubscriptionGroupDto;
+import jreader.dto.GroupDto;
 import jreader.services.CronService;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
@@ -134,7 +134,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public Integer getFeedStatus(String title) {
-        for (SubscriptionGroupDto group : (List<SubscriptionGroupDto>) groupController.listAll(principal).getPayload()) {
+        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal).getPayload()) {
             for (SubscriptionDto dto : group.getSubscriptions()) {
                 if (title.equals(dto.getFeed().getTitle())) {
                     return dto.getFeed().getStatus();
@@ -148,13 +148,13 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         return getGroups().size();
     }
     
-    public List<SubscriptionGroupDto> getGroups() {
-        return (List<SubscriptionGroupDto>) groupController.listAll(principal).getPayload();
+    public List<GroupDto> getGroups() {
+        return (List<GroupDto>) groupController.listAll(principal).getPayload();
     }
     
     public Long createGroup(String title) {
         try {
-            List<SubscriptionGroupDto> groups = (List<SubscriptionGroupDto>) groupController.create(principal, "empty string".equals(title) ? "" : title)
+            List<GroupDto> groups = (List<GroupDto>) groupController.create(principal, "empty string".equals(title) ? "" : title)
                     .getPayload();
             return Long.valueOf(groups.get(groups.size() - 1).getId());
         } catch (ServiceException e) {
@@ -187,7 +187,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<SubscriptionDto> getSubscriptions(Long groupId) {
-        for (SubscriptionGroupDto group : (List<SubscriptionGroupDto>) groupController.listAll(principal).getPayload()) {
+        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal).getPayload()) {
             if (groupId.equals(Long.valueOf(group.getId()))) {
                 return group.getSubscriptions();
             }
@@ -197,7 +197,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public List<Subscription> getSubscriptions() {
         List<Subscription> subscriptions = new ArrayList<Subscription>();
-        for (SubscriptionGroupDto group : (List<SubscriptionGroupDto>) groupController.listAll(principal).getPayload()) {
+        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal).getPayload()) {
             for (SubscriptionDto dto : group.getSubscriptions()) {
                 Subscription subscription = new Subscription();
                 subscription.setId(Long.valueOf(dto.getId()));
@@ -273,7 +273,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
             entry.setLink(dto.getLink());
             entry.setPublishDate(dto.getPublishDate());
             entry.setSubscriptionTitle(dto.getSubscriptionTitle());
-            entry.setSubscriptionGroupId(dto.getSubscriptionGroupId());
+            entry.setGroupId(dto.getGroupId());
             entry.setSubscriptionId(dto.getSubscriptionId());
             entry.setRead(dto.isRead());
             entry.setStarred(dto.isStarred());

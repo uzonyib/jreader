@@ -22,7 +22,7 @@ public class FeedEntryDtoConverter implements Converter<FeedEntry, FeedEntryDto>
             dto.setSubscriptionTitle(entity.getSubscription().getTitle());
             dto.setSubscriptionId(String.valueOf(entity.getSubscription().getId()));
             if (entity.getSubscription().getGroup() != null) {
-                dto.setSubscriptionGroupId(String.valueOf(entity.getSubscription().getGroup().getId()));
+                dto.setGroupId(String.valueOf(entity.getSubscription().getGroup().getId()));
             }
         }
         return dto;

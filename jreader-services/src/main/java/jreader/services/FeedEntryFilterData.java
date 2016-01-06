@@ -4,36 +4,36 @@ import jreader.dao.FeedEntryFilter;
 
 public class FeedEntryFilterData extends FeedEntryFilter {
 
-    public enum Group {
-        ALL, SUBSCRIPTION_GROUP, SUBSCRIPTION;
+    public enum Type {
+        ALL, GROUP, SUBSCRIPTION;
     }
 
     private String username;
-    private Group group;
-    private Long subscriptionGroupId;
+    private Type type;
+    private Long groupId;
     private Long subscriptionId;
 
     public FeedEntryFilterData(final String username, final Selection selection, final boolean ascending, final int offset, final int count) {
         super(selection, ascending, offset, count);
         this.username = username;
-        this.group = Group.ALL;
+        this.type = Type.ALL;
     }
 
-    public FeedEntryFilterData(final String username, final Long subscriptionGroupId, final Selection selection, final boolean ascending, final int offset,
+    public FeedEntryFilterData(final String username, final Long groupId, final Selection selection, final boolean ascending, final int offset,
             final int count) {
         super(selection, ascending, offset, count);
         this.username = username;
-        this.subscriptionGroupId = subscriptionGroupId;
-        this.group = Group.SUBSCRIPTION_GROUP;
+        this.groupId = groupId;
+        this.type = Type.GROUP;
     }
 
-    public FeedEntryFilterData(final String username, final Long subscriptionGroupId, final Long subscriptionId, final Selection selection,
-            final boolean ascending, final int offset, final int count) {
+    public FeedEntryFilterData(final String username, final Long groupId, final Long subscriptionId, final Selection selection, final boolean ascending,
+            final int offset, final int count) {
         super(selection, ascending, offset, count);
         this.username = username;
-        this.subscriptionGroupId = subscriptionGroupId;
+        this.groupId = groupId;
         this.subscriptionId = subscriptionId;
-        this.group = Group.SUBSCRIPTION;
+        this.type = Type.SUBSCRIPTION;
     }
 
     public String getUsername() {
@@ -44,20 +44,20 @@ public class FeedEntryFilterData extends FeedEntryFilter {
         this.username = username;
     }
 
-    public Group getGroup() {
-        return group;
+    public Type getType() {
+        return type;
     }
 
-    public void setGroup(final Group group) {
-        this.group = group;
+    public void setType(final Type type) {
+        this.type = type;
     }
 
-    public Long getSubscriptionGroupId() {
-        return subscriptionGroupId;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setSubscriptionGroupId(final Long subscriptionGroupId) {
-        this.subscriptionGroupId = subscriptionGroupId;
+    public void setGroupId(final Long groupId) {
+        this.groupId = groupId;
     }
 
     public Long getSubscriptionId() {

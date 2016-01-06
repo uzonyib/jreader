@@ -4,8 +4,8 @@ import jreader.domain.FeedStat.Builder;
 
 public class BuilderFactory {
     
-    public SubscriptionGroup.Builder createGroupBuilder() {
-        return new SubscriptionGroup.Builder();
+    public Group.Builder createGroupBuilder() {
+        return new Group.Builder();
     }
 
     public Subscription.Builder createSubscriptionBuilder() {

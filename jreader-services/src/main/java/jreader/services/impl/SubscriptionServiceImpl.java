@@ -9,13 +9,13 @@ import org.springframework.http.HttpStatus;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.RssFetchResult;
 import jreader.dto.SubscriptionDto;
@@ -34,10 +34,10 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     private BuilderFactory builderFactory;
 
-    public SubscriptionServiceImpl(final UserDao userDao, final SubscriptionGroupDao subscriptionGroupDao, final SubscriptionDao subscriptionDao,
+    public SubscriptionServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
             final FeedDao feedDao, final FeedEntryDao feedEntryDao, final RssService rssService, final ConversionService conversionService,
             final BuilderFactory builderFactory) {
-        super(userDao, subscriptionGroupDao, subscriptionDao);
+        super(userDao, groupDao, subscriptionDao);
         this.feedDao = feedDao;
         this.feedEntryDao = feedEntryDao;
         this.rssService = rssService;
@@ -46,12 +46,12 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public SubscriptionDto subscribe(final String username, final Long subscriptionGroupId, final String url) {
+    public SubscriptionDto subscribe(final String username, final Long groupId, final String url) {
         Feed feed = feedDao.find(url);
         if (feed == null) {
             final RssFetchResult rssFetchResult = rssService.fetch(url);
             if (rssFetchResult == null) {
-                throw new ServiceException("Cannot fetch RSS: " + url, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new ServiceException("Cannot fetch feed: " + url, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             feed = feedDao.save(rssFetchResult.getFeed());
         }
@@ -62,7 +62,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
             throw new ServiceException("Subscription already exists.", HttpStatus.CONFLICT);
         }
 
-        final SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+        final Group group = this.getGroup(user, groupId);
         subscription = builderFactory.createSubscriptionBuilder().group(group).feed(feed).title(feed.getTitle()).order(subscriptionDao.getMaxOrder(group) + 1)
                 .build();
         subscription = subscriptionDao.save(subscription);
@@ -71,9 +71,9 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void unsubscribe(final String username, final Long subscriptionGroupId, final Long subscriptionId) {
+    public void unsubscribe(final String username, final Long groupId, final Long subscriptionId) {
         final User user = this.getUser(username);
-        final SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+        final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
         final List<FeedEntry> feedEntries = feedEntryDao.list(subscription);
@@ -82,12 +82,12 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
     
     @Override
-    public void entitle(final String username, final Long subscriptionGroupId, final Long subscriptionId, final String title) {
+    public void entitle(final String username, final Long groupId, final Long subscriptionId, final String title) {
         if (title == null || "".equals(title)) {
             throw new ServiceException("Subscription title invalid.", HttpStatus.BAD_REQUEST);
         }
         final User user = this.getUser(username);
-        final SubscriptionGroup group = this.getGroup(user, subscriptionGroupId);
+        final Group group = this.getGroup(user, groupId);
         if (subscriptionDao.find(group, title) != null) {
             throw new ServiceException("Subscription with this title in the same group already exists.", HttpStatus.CONFLICT);
         }
@@ -98,11 +98,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void moveUp(final String username, final Long subscriptionGroupId, final Long subscriptionId) {
+    public void moveUp(final String username, final Long groupId, final Long subscriptionId) {
         final User user = this.getUser(username);
-        final SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
+        final Group group = this.getGroup(user, groupId);
 
-        final List<Subscription> subscriptions = subscriptionDao.list(subscriptionGroup);
+        final List<Subscription> subscriptions = subscriptionDao.list(group);
         Integer subscriptionIndex = null;
         for (int i = 0; i < subscriptions.size(); ++i) {
             if (subscriptions.get(i).getId().equals(subscriptionId)) {
@@ -121,11 +121,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     }
 
     @Override
-    public void moveDown(final String username, final Long subscriptionGroupId, final Long subscriptionId) {
+    public void moveDown(final String username, final Long groupId, final Long subscriptionId) {
         final User user = this.getUser(username);
-        final SubscriptionGroup subscriptionGroup = this.getGroup(user, subscriptionGroupId);
+        final Group group = this.getGroup(user, groupId);
 
-        final List<Subscription> subscriptions = subscriptionDao.list(subscriptionGroup);
+        final List<Subscription> subscriptions = subscriptionDao.list(group);
         Integer subscriptionIndex = null;
         for (int i = 0; i < subscriptions.size(); ++i) {
             if (subscriptions.get(i).getId().equals(subscriptionId)) {

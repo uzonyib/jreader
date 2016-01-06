@@ -11,8 +11,8 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
     
     this.loadEntries = function(filter) {
     	var items = "";
-    	if (filter.subscriptionGroupId != null) {
-    		items = "/groups/" + filter.subscriptionGroupId;
+    	if (filter.groupId != null) {
+    		items = "/groups/" + filter.groupId;
     		if (filter.subscriptionId != null) {
     			items += "/subscriptions/" + filter.subscriptionId;
     		}
@@ -168,8 +168,8 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	
 	this.markRead = function(entry) {
 		var map = {};
-		map[entry.subscriptionGroupId] = {};
-		map[entry.subscriptionGroupId][entry.subscriptionId] = [entry.id];
+		map[entry.groupId] = {};
+		map[entry.groupId][entry.subscriptionId] = [entry.id];
 		
 		return $http({
 			method: "POST",
@@ -182,13 +182,13 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	this.markAllRead = function(entries, filter) {
 		var map = {};
 		angular.forEach(entries, function(entry) {
-			if (!angular.isDefined(map[entry.subscriptionGroupId])) {
-				map[entry.subscriptionGroupId] = {};
+			if (!angular.isDefined(map[entry.groupId])) {
+				map[entry.groupId] = {};
 			}
-			if (!angular.isDefined(map[entry.subscriptionGroupId][entry.subscriptionId])) {
-				map[entry.subscriptionGroupId][entry.subscriptionId] = [];
+			if (!angular.isDefined(map[entry.groupId][entry.subscriptionId])) {
+				map[entry.groupId][entry.subscriptionId] = [];
 			}
-			map[entry.subscriptionGroupId][entry.subscriptionId].push(entry.id);
+			map[entry.groupId][entry.subscriptionId].push(entry.id);
 		});
 
 		return $http({
@@ -202,7 +202,7 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	this.setStarred = function(entry, starred) {
 		$http({
 			method: "PUT",
-			url: "/reader/groups/" + entry.subscriptionGroupId + "/subscriptions/" + entry.subscriptionId + "/entries/" + entry.id + "/starred",
+			url: "/reader/groups/" + entry.groupId + "/subscriptions/" + entry.subscriptionId + "/entries/" + entry.id + "/starred",
             params: { "value": starred }
         });
 	};
@@ -220,7 +220,7 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 			method: "POST",
 			url: "/reader/archives/" + archive.id + "/entries",
             params: {
-            	"groupId": entry.subscriptionGroupId,
+            	"groupId": entry.groupId,
             	"subscriptionId": entry.subscriptionId,
             	"entryId": entry.id,
             },

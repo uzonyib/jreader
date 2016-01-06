@@ -10,14 +10,14 @@ import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedEntryDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedEntry;
 import jreader.domain.BuilderFactory;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedEntryDto;
@@ -35,10 +35,10 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
     private BuilderFactory builderFactory;
 
-    public ArchiveServiceImpl(final UserDao userDao, final SubscriptionGroupDao subscriptionGroupDao, final SubscriptionDao subscriptionDao,
+    public ArchiveServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
             final FeedEntryDao feedEntryDao, final ArchiveDao archiveDao, final ArchivedEntryDao archivedEntryDao, final ConversionService conversionService,
             final BuilderFactory builderFactory) {
-        super(userDao, subscriptionGroupDao, subscriptionDao);
+        super(userDao, groupDao, subscriptionDao);
         this.feedEntryDao = feedEntryDao;
         this.archiveDao = archiveDao;
         this.archivedEntryDao = archivedEntryDao;
@@ -158,7 +158,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     @Override
     public void archive(final String username, final Long groupId, final Long subscriptionId, final Long entryId, final Long archiveId) {
         final User user = this.getUser(username);
-        final SubscriptionGroup group = this.getGroup(user, groupId);
+        final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
         final FeedEntry feedEntry = feedEntryDao.find(subscription, entryId);

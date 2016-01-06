@@ -1,5 +1,5 @@
 <div id="subscription-group-stats">
-	<div data-ng-repeat="group in subscriptionGroups.items" class="subscription-group-stat">
+	<div data-ng-repeat="group in groups.items" class="subscription-group-stat">
 		<div class="group-title">{{group.title}}</div>
 		<div data-ng-repeat="subscription in group.subscriptions" class="subscription-stat">
 			<span class="status ok" data-ng-show="subscription.feed.status == 0" title="OK">&#x25cf;</span>

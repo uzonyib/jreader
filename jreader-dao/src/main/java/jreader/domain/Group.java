@@ -10,7 +10,7 @@ import com.googlecode.objectify.annotation.Parent;
 
 @Entity
 @Cache
-public class SubscriptionGroup {
+public class Group {
 
     @Id
     private Long id;
@@ -22,11 +22,11 @@ public class SubscriptionGroup {
     @Index
     private int order;
     
-    public SubscriptionGroup() {
+    public Group() {
         
     }
 
-    private SubscriptionGroup(final Builder builder) {
+    private Group(final Builder builder) {
         this.setId(builder.id);
         this.setUser(builder.user);
         this.setTitle(builder.title);
@@ -100,8 +100,8 @@ public class SubscriptionGroup {
             return this;
         }
         
-        public SubscriptionGroup build() {
-            return new SubscriptionGroup(this);
+        public Group build() {
+            return new Group(this);
         }
 
     }

@@ -7,12 +7,12 @@ import org.springframework.core.convert.ConversionService;
 
 import jreader.dao.FeedStatDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.FeedStatDto;
@@ -28,9 +28,9 @@ public class StatServiceImpl extends AbstractService implements StatService {
     
     private DateHelper dateHelper;
 
-    public StatServiceImpl(final UserDao userDao, final SubscriptionGroupDao subscriptionGroupDao, final SubscriptionDao subscriptionDao,
+    public StatServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
             final FeedStatDao feedStatDao, final ConversionService conversionService, final DateHelper dateHelper) {
-        super(userDao, subscriptionGroupDao, subscriptionDao);
+        super(userDao, groupDao, subscriptionDao);
         this.feedStatDao = feedStatDao;
         this.conversionService = conversionService;
         this.dateHelper = dateHelper;
@@ -43,7 +43,7 @@ public class StatServiceImpl extends AbstractService implements StatService {
         final long dateAfter = dateHelper.getFirstSecondOfDay(dateHelper.substractDaysFromCurrentDate(days));
         final List<FeedStatsDto> stats = new ArrayList<FeedStatsDto>();
         
-        for (final SubscriptionGroup group : subscriptionGroupDao.list(user)) {
+        for (final Group group : groupDao.list(user)) {
             for (final Subscription subscription : subscriptionDao.list(group)) {
                 final List<FeedStat> feedStats = feedStatDao.listAfter(subscription.getFeed(), dateAfter);
                 stats.add(convert(subscription.getFeed(), feedStats));

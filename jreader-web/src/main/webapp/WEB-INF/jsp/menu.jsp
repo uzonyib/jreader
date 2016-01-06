@@ -14,14 +14,14 @@
 		data-ng-click="viewService.selectAllItems()">
 		<span class="glyphicon glyphicon-th-list"></span>
 		<span class="title">All feeds</span>
-		<span class="unread-count badge" data-ng-show="subscriptionGroups.unreadCount">{{subscriptionGroups.unreadCount}}</span>
+		<span class="unread-count badge" data-ng-show="groups.unreadCount">{{groups.unreadCount}}</span>
 	</li>
 </ul>
-<ul data-ng-repeat="group in subscriptionGroups.items"
+<ul data-ng-repeat="group in groups.items"
 	class="menu-group nav nav-pills nav-stacked">
 	<li class="menu-item group-item"
 		data-ng-class="{selected: group.selected}"
-		data-ng-click="viewService.selectSubscriptionGroup(group.id)">
+		data-ng-click="viewService.selectGroup(group.id)">
 		<span class="glyphicon glyphicon-chevron-right" data-ng-show="group.collapsed" data-ng-click="menu.uncollapse(group.id, $event)"></span>
 		<span class="glyphicon glyphicon-chevron-down" data-ng-show="!group.collapsed" data-ng-click="menu.collapse(group.id, $event)"></span>
 		<span class="title">{{group.title}}</span>

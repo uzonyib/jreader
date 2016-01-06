@@ -11,13 +11,13 @@ import jreader.dao.FeedDao;
 import jreader.dao.FeedEntryDao;
 import jreader.dao.FeedEntryFilter;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.SubscriptionGroupDao;
+import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.dao.FeedEntryFilter.Selection;
 import jreader.domain.Feed;
 import jreader.domain.FeedEntry;
 import jreader.domain.Subscription;
-import jreader.domain.SubscriptionGroup;
+import jreader.domain.Group;
 import jreader.domain.User;
 
 import org.testng.annotations.BeforeMethod;
@@ -29,7 +29,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     
     private static final String[] GROUP_TITLES = { "group_1", "group_2" };
     private static final int[] GROUP_ORDERS = { 10, 5 };
-    private static List<SubscriptionGroup> savedGroups;
+    private static List<Group> savedGroups;
     
     private static final String[] FEED_URLS = { "url_1", "url_2" };
     private static List<Feed> savedFeeds;
@@ -60,7 +60,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     
     private UserDao userDao;
     private FeedDao feedDao;
-    private SubscriptionGroupDao groupDao;
+    private GroupDao groupDao;
     private SubscriptionDao subscriptionDao;
 
     private FeedEntryDao sut;
@@ -69,7 +69,7 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
     public void init() {
         userDao = new UserDaoImpl();
         feedDao = new FeedDaoImpl();
-        groupDao = new SubscriptionGroupDaoImpl();
+        groupDao = new GroupDaoImpl();
         subscriptionDao = new SubscriptionDaoImpl();
         sut = new FeedEntryDaoImpl();
         
@@ -88,9 +88,9 @@ public class FeedEntryDaoImplTest extends AbstractDaoTest {
             savedFeeds.add(feedDao.save(feed));
         }
         
-        savedGroups = new ArrayList<SubscriptionGroup>();
+        savedGroups = new ArrayList<Group>();
         for (int i = 0; i < GROUP_TITLES.length; ++i) {
-            SubscriptionGroup group = new SubscriptionGroup();
+            Group group = new Group();
             group.setUser(user);
             group.setTitle(GROUP_TITLES[i]);
             group.setOrder(GROUP_ORDERS[i]);
