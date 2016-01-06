@@ -6,7 +6,7 @@ public class FeedDto {
     private String url;
     private String description;
     private String feedType;
-    private Long publishedDate;
+    private Long updatedDate;
     private Long refreshDate;
     private Integer status;
 
@@ -42,12 +42,12 @@ public class FeedDto {
         this.feedType = feedType;
     }
 
-    public Long getPublishedDate() {
-        return publishedDate;
+    public Long getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setPublishedDate(final Long publishedDate) {
-        this.publishedDate = publishedDate;
+    public void setUpdatedDate(final Long updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     public Long getRefreshDate() {

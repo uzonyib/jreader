@@ -13,7 +13,6 @@ public class Feed {
     private String title;
     private String description;
     private String feedType;
-    private Long publishedDate;
     private Long updatedDate;
     private Long refreshDate;
     private Integer status;
@@ -48,14 +47,6 @@ public class Feed {
 
     public void setFeedType(final String feedType) {
         this.feedType = feedType;
-    }
-
-    public Long getPublishedDate() {
-        return publishedDate;
-    }
-
-    public void setPublishedDate(final Long publishedDate) {
-        this.publishedDate = publishedDate;
     }
 
     public Long getUpdatedDate() {

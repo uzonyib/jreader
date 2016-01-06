@@ -66,7 +66,7 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
             feed.setTitle("title_" + i);
             feed.setDescription("description_" + i);
             feed.setFeedType("feedType_" + i);
-            feed.setPublishedDate(1000L);
+            feed.setUpdatedDate(1000L);
             savedFeeds.add(feedDao.save(feed));
         }
         
