@@ -12,8 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import jreader.web.controller.AdminController;
 import jreader.web.controller.PageController;
 import jreader.web.controller.ajax.ArchiveController;
-import jreader.web.controller.ajax.ArchivedEntryController;
-import jreader.web.controller.ajax.EntryController;
+import jreader.web.controller.ajax.ArchivedPostController;
+import jreader.web.controller.ajax.PostController;
 import jreader.web.controller.ajax.GlobalExceptionHandler;
 import jreader.web.controller.ajax.GroupController;
 import jreader.web.controller.ajax.StatController;
@@ -34,11 +34,11 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     @Value("${version}")
     private String appVersion;
     
-    @Value("${daysToKeepEntries}")
-    private int daysToKeepEntries;
+    @Value("${daysToKeepPosts}")
+    private int daysToKeepPosts;
     
-    @Value("${entriesToKeep}")
-    private int entriesToKeep;
+    @Value("${postsToKeep}")
+    private int postsToKeep;
     
     @Value("${daysToDisplayStats}")
     private int daysToDisplayStats;
@@ -71,7 +71,7 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     
     @Bean
     public TaskController taskController() {
-        return new TaskController(serviceConfig.cronService(), queueService(), serviceConfig.googleUserService(), daysToKeepEntries, entriesToKeep,
+        return new TaskController(serviceConfig.cronService(), queueService(), serviceConfig.googleUserService(), daysToKeepPosts, postsToKeep,
                 daysToKeepStats);
     }
     
@@ -91,8 +91,8 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     }
     
     @Bean
-    public EntryController entryController() {
-        return new EntryController(serviceConfig.groupService(), serviceConfig.feedEntryService());
+    public PostController postController() {
+        return new PostController(serviceConfig.groupService(), serviceConfig.postService());
     }
     
     @Bean
@@ -106,8 +106,8 @@ public class ControllerConfig extends WebMvcConfigurerAdapter {
     }
     
     @Bean
-    public ArchivedEntryController archivedEntryController() {
-        return new ArchivedEntryController(serviceConfig.archiveService());
+    public ArchivedPostController archivedPostController() {
+        return new ArchivedPostController(serviceConfig.archiveService());
     }
     
     @Bean

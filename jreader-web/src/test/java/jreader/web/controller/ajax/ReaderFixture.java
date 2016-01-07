@@ -26,11 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
 
-import jreader.dao.FeedEntryFilter.Selection;
+import jreader.dao.PostFilter.PostType;
 import jreader.domain.Role;
 import jreader.dto.ArchiveDto;
-import jreader.dto.ArchivedEntryDto;
-import jreader.dto.FeedEntryDto;
+import jreader.dto.ArchivedPostDto;
+import jreader.dto.PostDto;
 import jreader.dto.FeedStatDto;
 import jreader.dto.FeedStatsDto;
 import jreader.dto.SubscriptionDto;
@@ -42,8 +42,8 @@ import jreader.services.ServiceException;
 import jreader.services.StatService;
 import jreader.services.UserService;
 import jreader.services.impl.DateHelperImpl;
-import jreader.web.controller.ajax.dto.ArchivedEntry;
-import jreader.web.controller.ajax.dto.Entry;
+import jreader.web.controller.ajax.dto.ArchivedPost;
+import jreader.web.controller.ajax.dto.Post;
 import jreader.web.controller.ajax.dto.FeedStat;
 import jreader.web.controller.ajax.dto.Subscription;
 import jreader.web.controller.appengine.TaskController;
@@ -62,11 +62,11 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     @InjectMocks
     private SubscriptionController subscriptionController;
     @Autowired
-    private EntryController entryController;
+    private PostController postController;
     @Autowired
     private ArchiveController archiveController;
     @Autowired
-    private ArchivedEntryController archivedEntryController;
+    private ArchivedPostController archivedPostController;
     @Autowired
     @InjectMocks
     private TaskController taskController;
@@ -126,10 +126,10 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         doReturn(feed).when(feedFetcher).retrieveFeed(new URL(url));
     }
     
-    public void createEntry(String feedTitle, String uri, String title, String description, String author, String link, String publishDate)
+    public void createPost(String feedTitle, String uri, String title, String description, String author, String link, String publishDate)
             throws Exception {
         Date date = new SimpleDateFormat(DATE_FORMAT).parse(publishDate);
-        feedRegistry.registerEntry(feedTitle, uri, title, description, author, link, date);
+        feedRegistry.registerPost(feedTitle, uri, title, description, author, link, date);
         when(dateHelper.getFirstSecondOfDay(date.getTime())).thenReturn(new DateHelperImpl().getFirstSecondOfDay(date.getTime()));
     }
     
@@ -237,63 +237,63 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         }
     }
     
-    public String getEntryId(String title) {
-        List<FeedEntryDto> entries = (List<FeedEntryDto>) entryController.list(principal, Selection.ALL, 0, Integer.MAX_VALUE, true).getPayload();
-        for (FeedEntryDto entry : entries) {
-            if (title.equals(entry.getTitle())) {
-                return entry.getId();
+    public String getPostId(String title) {
+        List<PostDto> posts = (List<PostDto>) postController.list(principal, PostType.ALL, 0, Integer.MAX_VALUE, true).getPayload();
+        for (PostDto post : posts) {
+            if (title.equals(post.getTitle())) {
+                return post.getId();
             }
         }
         return null;
     }
     
-    public List<Entry> getEntries(String selection, int from, int to, String order) {
-        return convertEntries((List<FeedEntryDto>) entryController
-                .list(principal, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
+    public List<Post> getPosts(String selection, int from, int to, String order) {
+        return convertPosts((List<PostDto>) postController
+                .list(principal, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
     }
     
-    public List<Entry> getEntries(Long groupId, String selection, int from, int to, String order) {
-        return convertEntries((List<FeedEntryDto>) entryController
-                .list(principal, groupId, Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
+    public List<Post> getPosts(Long groupId, String selection, int from, int to, String order) {
+        return convertPosts((List<PostDto>) postController
+                .list(principal, groupId, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
     }
     
-    public List<Entry> getEntries(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
-        return convertEntries((List<FeedEntryDto>) entryController.list(principal, groupId, subscriptionId,
-                Selection.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
+    public List<Post> getPosts(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
+        return convertPosts((List<PostDto>) postController.list(principal, groupId, subscriptionId,
+                PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
     }
     
-    private static List<Entry> convertEntries(List<FeedEntryDto> dtos) {
-        List<Entry> entries = new ArrayList<Entry>();
-        for (FeedEntryDto dto : dtos) {
-            Entry entry = new Entry();
-            entry.setId(dto.getId());
-            entry.setTitle(dto.getTitle());
-            entry.setDescription(dto.getDescription());
-            entry.setAuthor(dto.getAuthor());
-            entry.setLink(dto.getLink());
-            entry.setPublishDate(dto.getPublishDate());
-            entry.setSubscriptionTitle(dto.getSubscriptionTitle());
-            entry.setGroupId(dto.getGroupId());
-            entry.setSubscriptionId(dto.getSubscriptionId());
-            entry.setRead(dto.isRead());
-            entry.setStarred(dto.isStarred());
-            entries.add(entry);
+    private static List<Post> convertPosts(List<PostDto> dtos) {
+        List<Post> posts = new ArrayList<Post>();
+        for (PostDto dto : dtos) {
+            Post post = new Post();
+            post.setId(dto.getId());
+            post.setTitle(dto.getTitle());
+            post.setDescription(dto.getDescription());
+            post.setAuthor(dto.getAuthor());
+            post.setLink(dto.getLink());
+            post.setPublishDate(dto.getPublishDate());
+            post.setSubscriptionTitle(dto.getSubscriptionTitle());
+            post.setGroupId(dto.getGroupId());
+            post.setSubscriptionId(dto.getSubscriptionId());
+            post.setRead(dto.isRead());
+            post.setStarred(dto.isStarred());
+            posts.add(post);
         }
-        return entries;
+        return posts;
     }
     
-    public void read(Long groupId, Long subscriptionId, Long entryId) {
+    public void read(Long groupId, Long subscriptionId, Long postId) {
         List<Long> idList = new ArrayList<Long>();
-        idList.add(entryId);
+        idList.add(postId);
         Map<Long, List<Long>> subscriptionMap = new HashMap<Long, List<Long>>();
         subscriptionMap.put(subscriptionId, idList);
         Map<Long, Map<Long, List<Long>>> ids = new HashMap<Long, Map<Long, List<Long>>>();
         ids.put(groupId, subscriptionMap);
-        entryController.readAll(principal, ids);
+        postController.readAll(principal, ids);
     }
     
-    public void markStarred(Long groupId, Long subscriptionId, Long entryId, String starred) {
-        entryController.setStarred(principal, groupId, subscriptionId, entryId, "starred".equals(starred));
+    public void markStarred(Long groupId, Long subscriptionId, Long postId, String starred) {
+        postController.setStarred(principal, groupId, subscriptionId, postId, "starred".equals(starred));
     }
     
     public int getArchiveCount() {
@@ -333,46 +333,46 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         }
     }
     
-    public List<ArchivedEntry> getArchivedEntries(int from, int to, String order) {
-        return convertArchivedEntries(
-                (List<ArchivedEntryDto>) archivedEntryController.list(principal, from, to - from, "ascending".equals(order)).getPayload());
+    public List<ArchivedPost> getArchivedPosts(int from, int to, String order) {
+        return convertArchivedPosts(
+                (List<ArchivedPostDto>) archivedPostController.list(principal, from, to - from, "ascending".equals(order)).getPayload());
     }
     
-    public List<ArchivedEntry> getArchivedEntries(Long archiveId, int from, int to, String order) {
-        return convertArchivedEntries(
-                (List<ArchivedEntryDto>) archivedEntryController.list(principal, archiveId, from, to - from, "ascending".equals(order)).getPayload());
+    public List<ArchivedPost> getArchivedPosts(Long archiveId, int from, int to, String order) {
+        return convertArchivedPosts(
+                (List<ArchivedPostDto>) archivedPostController.list(principal, archiveId, from, to - from, "ascending".equals(order)).getPayload());
     }
     
-    private static List<ArchivedEntry> convertArchivedEntries(List<ArchivedEntryDto> dtos) {
-        List<ArchivedEntry> entries = new ArrayList<ArchivedEntry>();
-        for (ArchivedEntryDto dto : dtos) {
-            ArchivedEntry entry = new ArchivedEntry();
-            entry.setId(dto.getId());
-            entry.setTitle(dto.getTitle());
-            entry.setDescription(dto.getDescription());
-            entry.setAuthor(dto.getAuthor());
-            entry.setLink(dto.getLink());
-            entry.setPublishDate(dto.getPublishDate());
-            entry.setArchiveId(dto.getArchiveId());
-            entry.setArchiveTitle(dto.getArchiveTitle());
-            entries.add(entry);
+    private static List<ArchivedPost> convertArchivedPosts(List<ArchivedPostDto> dtos) {
+        List<ArchivedPost> posts = new ArrayList<ArchivedPost>();
+        for (ArchivedPostDto dto : dtos) {
+            ArchivedPost post = new ArchivedPost();
+            post.setId(dto.getId());
+            post.setTitle(dto.getTitle());
+            post.setDescription(dto.getDescription());
+            post.setAuthor(dto.getAuthor());
+            post.setLink(dto.getLink());
+            post.setPublishDate(dto.getPublishDate());
+            post.setArchiveId(dto.getArchiveId());
+            post.setArchiveTitle(dto.getArchiveTitle());
+            posts.add(post);
         }
-        return entries;
+        return posts;
     }
     
-    public void archiveEntry(Long groupId, Long subscriptionId, Long entryId, Long archiveId) {
-        archivedEntryController.archive(principal, archiveId, groupId, subscriptionId, entryId);
+    public void archivePost(Long groupId, Long subscriptionId, Long postId, Long archiveId) {
+        archivedPostController.archive(principal, archiveId, groupId, subscriptionId, postId);
     }
     
-    public void deleteArchivedEntry(Long archiveId, Long entryId) {
-        archivedEntryController.delete(principal, archiveId, entryId);
+    public void deleteArchivedPost(Long archiveId, Long postId) {
+        archivedPostController.delete(principal, archiveId, postId);
     }
     
-    public String getArchivedEntryId(String title) {
-        List<ArchivedEntryDto> entries = (List<ArchivedEntryDto>) archivedEntryController.list(principal, 0, Integer.MAX_VALUE, true).getPayload();
-        for (ArchivedEntryDto entry : entries) {
-            if (title.equals(entry.getTitle())) {
-                return entry.getId();
+    public String getArchivedPostId(String title) {
+        List<ArchivedPostDto> posts = (List<ArchivedPostDto>) archivedPostController.list(principal, 0, Integer.MAX_VALUE, true).getPayload();
+        for (ArchivedPostDto post : posts) {
+            if (title.equals(post.getTitle())) {
+                return post.getId();
             }
         }
         return null;

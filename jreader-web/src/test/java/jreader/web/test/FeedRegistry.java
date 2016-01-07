@@ -17,18 +17,18 @@ public class FeedRegistry {
     
     private Map<String, String> feedUrls = new HashMap<String, String>();
     private Map<String, SyndFeed> feeds = new HashMap<String, SyndFeed>();
-    private Map<String, List<SyndEntry>> feedEntries = new HashMap<String, List<SyndEntry>>();
+    private Map<String, List<SyndEntry>> syndEntries = new HashMap<String, List<SyndEntry>>();
     
     public SyndFeed registerFeed(String title, String url) throws Exception {
         SyndFeed feed = mock(SyndFeed.class);
         when(feed.getTitle()).thenReturn(title);
         feedUrls.put(title, url);
         feeds.put(title, feed);
-        feedEntries.put(title, new ArrayList<SyndEntry>());
+        syndEntries.put(title, new ArrayList<SyndEntry>());
         return feed;
     }
     
-    public void registerEntry(String feedTitle, String uri, String title, String description, String author, String link, Date publishDate) {
+    public void registerPost(String feedTitle, String uri, String title, String description, String author, String link, Date publishDate) {
         SyndEntry entry = mock(SyndEntry.class);
         when(entry.getUri()).thenReturn(uri);
         when(entry.getTitle()).thenReturn(title);
@@ -38,8 +38,8 @@ public class FeedRegistry {
         when(entry.getAuthor()).thenReturn(author);
         when(entry.getLink()).thenReturn(link);
         when(entry.getPublishedDate()).thenReturn(publishDate);
-        feedEntries.get(feedTitle).add(entry);
-        when(feeds.get(feedTitle).getEntries()).thenReturn(feedEntries.get(feedTitle));
+        syndEntries.get(feedTitle).add(entry);
+        when(feeds.get(feedTitle).getEntries()).thenReturn(syndEntries.get(feedTitle));
     }
     
     public String getUrl(String title) {

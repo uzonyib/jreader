@@ -47,194 +47,194 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     $interval($scope.groups.refresh, 1000 * 60 * 5);
     $scope.groups.refresh();
 	
-	$scope.feedEntries = {};
-	$scope.feedEntries.items = [];
-	$scope.feedEntries.loading = false;
-	$scope.feedEntries.moreItemsAvailable = true;
-	$scope.feedEntries.visible = false;
+	$scope.posts = {};
+	$scope.posts.items = [];
+	$scope.posts.loading = false;
+	$scope.posts.moreItemsAvailable = true;
+	$scope.posts.visible = false;
 	
 	$scope.$watch("viewService.activeView", function() {
-		if ($scope.viewService.isEntriesSelected()) {
-			$scope.feedEntries.visible = true;
-			$scope.archivedEntries.visible = false;
-			$scope.feedEntries.refresh();
+		if ($scope.viewService.isPostsSelected()) {
+			$scope.posts.visible = true;
+			$scope.archivedPosts.visible = false;
+			$scope.posts.refresh();
 		} else if ($scope.viewService.isArchivesSelected()) {
-			$scope.feedEntries.visible = false;
-			$scope.archivedEntries.visible = true;
-			$scope.archivedEntries.refresh();
+			$scope.posts.visible = false;
+			$scope.archivedPosts.visible = true;
+			$scope.archivedPosts.refresh();
 		} else {
-			$scope.feedEntries.visible = false;
-			$scope.archivedEntries.visible = false;
+			$scope.posts.visible = false;
+			$scope.archivedPosts.visible = false;
 		}
 		$scope.menu.refreshSelection();
 	});
 	
-	$scope.feedEntries.append = function(entries) {
-		var copiedEntries = angular.copy(entries);
-		angular.forEach(copiedEntries, function(entry) {
-			entry.description = $sce.trustAsHtml(entry.description);
-			entry.archived = false;
-			entry.archive = $scope.archives[0];
-			$scope.feedEntries.items.push(entry);
+	$scope.posts.append = function(posts) {
+		var copiedPosts = angular.copy(posts);
+		angular.forEach(copiedPosts, function(post) {
+			post.description = $sce.trustAsHtml(post.description);
+			post.archived = false;
+			post.archive = $scope.archives[0];
+			$scope.posts.items.push(post);
 		});
 	};
 	
-	$scope.feedEntries.reset = function() {
-		$scope.feedEntries.items = [];
-		$scope.feedEntries.moreItemsAvailable = true;
+	$scope.posts.reset = function() {
+		$scope.posts.items = [];
+		$scope.posts.moreItemsAvailable = true;
 	};
 	
-	$scope.feedEntries.load = function() {
-    	if ($scope.feedEntries.loading) {
+	$scope.posts.load = function() {
+    	if ($scope.posts.loading) {
     		return;
     	}
-    	$scope.feedEntries.loading = true;
-    	var filter = $scope.viewService.entryFilter.get();
+    	$scope.posts.loading = true;
+    	var filter = $scope.viewService.postFilter.get();
     	if (filter.pageIndex === 0) {
-    		$scope.feedEntries.reset();
+    		$scope.posts.reset();
     	}
     	
     	filter.offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
     	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
     	
-    	$scope.ajaxService.loadEntries(filter).success(function(response) {
-    		$scope.feedEntries.moreItemsAvailable = response.payload.length === filter.count;
-    		$scope.feedEntries.append(response.payload);
-    		$scope.feedEntries.loading = false;
+    	$scope.ajaxService.loadPosts(filter).success(function(response) {
+    		$scope.posts.moreItemsAvailable = response.payload.length === filter.count;
+    		$scope.posts.append(response.payload);
+    		$scope.posts.loading = false;
         });
     };
 	
-	$scope.feedEntries.loadMore = function() {
-		if ($scope.feedEntries.moreItemsAvailable) {
-			$scope.viewService.entryFilter.incrementPageIndex();
-			$scope.feedEntries.load();
+	$scope.posts.loadMore = function() {
+		if ($scope.posts.moreItemsAvailable) {
+			$scope.viewService.postFilter.incrementPageIndex();
+			$scope.posts.load();
 		}
 	};
 	
-	$scope.feedEntries.markRead = function(entry) {
-		if (!entry.read) {
-			entry.read = true;
-			$scope.ajaxService.markRead(entry).success($scope.groups.setItemsFromPayLoad);
+	$scope.posts.markRead = function(post) {
+		if (!post.read) {
+			post.read = true;
+			$scope.ajaxService.markRead(post).success($scope.groups.setItemsFromPayLoad);
 		}
 	};
 	
-	$scope.feedEntries.markAllRead = function() {
+	$scope.posts.markAllRead = function() {
 		var unreads = [];
-		angular.forEach($scope.feedEntries.items, function(entry) {
-			if (!entry.read) {
-				entry.read = true;
-				unreads.push(entry);
+		angular.forEach($scope.posts.items, function(post) {
+			if (!post.read) {
+				post.read = true;
+				unreads.push(post);
 			}
 		});
 		if (unreads.length > 0) {
-			$scope.feedEntries.loading = true;
-			$scope.viewService.entryFilter.resetPageIndex();
-			$scope.ajaxService.markAllRead(unreads, $scope.viewService.entryFilter.get()).success(function(response) {
+			$scope.posts.loading = true;
+			$scope.viewService.postFilter.resetPageIndex();
+			$scope.ajaxService.markAllRead(unreads, $scope.viewService.postFilter.get()).success(function(response) {
 				$scope.groups.setItemsFromPayLoad(response);
-				$scope.feedEntries.loading = false;
-				$scope.feedEntries.load();
+				$scope.posts.loading = false;
+				$scope.posts.load();
 	        });
 		}
 	};
 	
-	$scope.feedEntries.refreshWithSubscriptions = function() {
-		$scope.feedEntries.refresh();
+	$scope.posts.refreshWithSubscriptions = function() {
+		$scope.posts.refresh();
 		$scope.groups.refresh();
 	};
 	
-	$scope.feedEntries.refresh = function() {
-		$scope.viewService.entryFilter.resetPageIndex();
-		$scope.feedEntries.load();
+	$scope.posts.refresh = function() {
+		$scope.viewService.postFilter.resetPageIndex();
+		$scope.posts.load();
 	};
 	
-	$scope.feedEntries.setOrderToAscending = function() {
-		$scope.feedEntries.setAscendingOrder(true);
+	$scope.posts.setOrderToAscending = function() {
+		$scope.posts.setAscendingOrder(true);
 	};
 	
-	$scope.feedEntries.setOrderToDescending = function() {
-		$scope.feedEntries.setAscendingOrder(false);
+	$scope.posts.setOrderToDescending = function() {
+		$scope.posts.setAscendingOrder(false);
 	};
 	
-	$scope.feedEntries.setAscendingOrder = function(ascending) {
-		if (!angular.equals($scope.viewService.entryFilter.ascendingOrder, ascending)) {
-			$scope.viewService.entryFilter.ascendingOrder = ascending;
-			$scope.feedEntries.refresh();
+	$scope.posts.setAscendingOrder = function(ascending) {
+		if (!angular.equals($scope.viewService.postFilter.ascendingOrder, ascending)) {
+			$scope.viewService.postFilter.ascendingOrder = ascending;
+			$scope.posts.refresh();
 		}
 	};
 	
-	$scope.feedEntries.setSelectionToAll = function() {
-		$scope.feedEntries.setSelection("all");
+	$scope.posts.setSelectionToAll = function() {
+		$scope.posts.setSelection("all");
 	};
 	
-	$scope.feedEntries.setSelectionToUnread = function() {
-		$scope.feedEntries.setSelection("unread");
+	$scope.posts.setSelectionToUnread = function() {
+		$scope.posts.setSelection("unread");
 	};
 	
-	$scope.feedEntries.setSelectionToStarred = function() {
-		$scope.feedEntries.setSelection("starred");
+	$scope.posts.setSelectionToStarred = function() {
+		$scope.posts.setSelection("starred");
 	};
 	
-	$scope.feedEntries.setSelection = function(s) {
-		if (!angular.equals($scope.viewService.entryFilter.selection, s)) {
-			$scope.viewService.entryFilter.selection = s;
-			$scope.feedEntries.refresh();
+	$scope.posts.setSelection = function(s) {
+		if (!angular.equals($scope.viewService.postFilter.selection, s)) {
+			$scope.viewService.postFilter.selection = s;
+			$scope.posts.refresh();
 		}
 	};
 	
-	$scope.archivedEntries = {};
-	$scope.archivedEntries.items = [];
-	$scope.archivedEntries.loading = false;
-	$scope.archivedEntries.moreItemsAvailable = true;
-	$scope.archivedEntries.visible = false;
+	$scope.archivedPosts = {};
+	$scope.archivedPosts.items = [];
+	$scope.archivedPosts.loading = false;
+	$scope.archivedPosts.moreItemsAvailable = true;
+	$scope.archivedPosts.visible = false;
 	
-	$scope.archivedEntries.loadMore = function() {
-		if ($scope.archivedEntries.moreItemsAvailable) {
+	$scope.archivedPosts.loadMore = function() {
+		if ($scope.archivedPosts.moreItemsAvailable) {
 			$scope.viewService.archiveFilter.incrementPageIndex();
-			$scope.archivedEntries.load();
+			$scope.archivedPosts.load();
 		}
 	};
 	
-	$scope.archivedEntries.refresh = function() {
+	$scope.archivedPosts.refresh = function() {
 		$scope.viewService.archiveFilter.resetPageIndex();
-		$scope.archivedEntries.load();
+		$scope.archivedPosts.load();
 	};
 	
-	$scope.archivedEntries.setOrderToAscending = function() {
-		$scope.archivedEntries.setAscendingOrder(true);
+	$scope.archivedPosts.setOrderToAscending = function() {
+		$scope.archivedPosts.setAscendingOrder(true);
 	};
 	
-	$scope.archivedEntries.setOrderToDescending = function() {
-		$scope.archivedEntries.setAscendingOrder(false);
+	$scope.archivedPosts.setOrderToDescending = function() {
+		$scope.archivedPosts.setAscendingOrder(false);
 	};
 	
-	$scope.archivedEntries.setAscendingOrder = function(ascending) {
+	$scope.archivedPosts.setAscendingOrder = function(ascending) {
 		if (!angular.equals($scope.viewService.archiveFilter.ascendingOrder, ascending)) {
 			$scope.viewService.archiveFilter.ascendingOrder = ascending;
-			$scope.archivedEntries.refresh();
+			$scope.archivedPosts.refresh();
 		}
 	};
 	
-	$scope.archivedEntries.append = function(entries) {
-		var copiedEntries = angular.copy(entries);
-		angular.forEach(copiedEntries, function(entry) {
-			entry.description = $sce.trustAsHtml(entry.description);
-			$scope.archivedEntries.items.push(entry);
+	$scope.archivedPosts.append = function(posts) {
+		var copiedPosts = angular.copy(posts);
+		angular.forEach(copiedPosts, function(post) {
+			post.description = $sce.trustAsHtml(post.description);
+			$scope.archivedPosts.items.push(post);
 		});
 	};
 	
-	$scope.archivedEntries.reset = function() {
-		$scope.archivedEntries.items = [];
-		$scope.archivedEntries.moreItemsAvailable = true;
+	$scope.archivedPosts.reset = function() {
+		$scope.archivedPosts.items = [];
+		$scope.archivedPosts.moreItemsAvailable = true;
 	};
     
-    $scope.archivedEntries.load = function() {
-    	if ($scope.archivedEntries.loading) {
+    $scope.archivedPosts.load = function() {
+    	if ($scope.archivedPosts.loading) {
     		return;
     	}
-    	$scope.archivedEntries.loading = true;
+    	$scope.archivedPosts.loading = true;
     	var filter = $scope.viewService.archiveFilter.get();
     	if (filter.pageIndex === 0) {
-    		$scope.archivedEntries.reset();
+    		$scope.archivedPosts.reset();
     	}
     	
     	var items = "";
@@ -245,10 +245,10 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     	filter.offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
     	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
     	
-    	$scope.ajaxService.loadArchivedEntries(filter).success(function(response) {
-    		$scope.archivedEntries.moreItemsAvailable = response.payload.length === filter.count;
-    		$scope.archivedEntries.append(response.payload);
-    		$scope.archivedEntries.loading = false;
+    	$scope.ajaxService.loadArchivedPosts(filter).success(function(response) {
+    		$scope.archivedPosts.moreItemsAvailable = response.payload.length === filter.count;
+    		$scope.archivedPosts.append(response.payload);
+    		$scope.archivedPosts.loading = false;
         });
     };
     

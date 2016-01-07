@@ -20,13 +20,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import jreader.dao.FeedDao;
-import jreader.dao.FeedEntryDao;
+import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 import jreader.domain.Subscription;
 import jreader.domain.Group;
 import jreader.domain.User;
@@ -57,7 +57,7 @@ public class SubscriptionServiceImplTest {
 	@Mock
 	private FeedDao feedDao;
 	@Mock
-	private FeedEntryDao feedEntryDao;
+	private PostDao postDao;
 	@Mock
 	private RssService rssService;
 	@Mock
@@ -82,9 +82,9 @@ public class SubscriptionServiceImplTest {
 	@Mock
 	private RssFetchResult fetchResult;
 	@Mock
-	private FeedEntry entry1;
+	private Post post1;
 	@Mock
-	private FeedEntry entry2;
+	private Post post2;
 	
 	@Mock
 	private SubscriptionDto subscriptionDto;
@@ -98,9 +98,9 @@ public class SubscriptionServiceImplTest {
 	public void subscribeToNewFeed() {
 		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry1, entry2));
-		when(entry1.getPublishDate()).thenReturn(1000L);
-		when(entry1.getPublishDate()).thenReturn(2000L);
+		when(fetchResult.getPosts()).thenReturn(Arrays.asList(post1, post2));
+		when(post1.getPublishDate()).thenReturn(1000L);
+		when(post1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
@@ -129,16 +129,16 @@ public class SubscriptionServiceImplTest {
 		verify(feedDao).save(feed);
 		verify(subscriptionDao).find(user, feed);
 		verify(subscriptionDao).save(subscription);
-		verifyZeroInteractions(feedEntryDao);
+		verifyZeroInteractions(postDao);
 	}
 	
 	@Test
 	public void subscribeToExistingFeed() {
 		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry1, entry2));
-		when(entry1.getPublishDate()).thenReturn(1000L);
-		when(entry1.getPublishDate()).thenReturn(2000L);
+		when(fetchResult.getPosts()).thenReturn(Arrays.asList(post1, post2));
+		when(post1.getPublishDate()).thenReturn(1000L);
+		when(post1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
@@ -164,16 +164,16 @@ public class SubscriptionServiceImplTest {
 		verify(feedDao, never()).save(feed);
 		verify(subscriptionDao).find(user, feed);
 		verify(subscriptionDao).save(subscription);
-		verifyZeroInteractions(feedEntryDao);
+		verifyZeroInteractions(postDao);
 	}
 	
 	@Test
 	public void subscribeExisting() {
 		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry1, entry2));
-		when(entry1.getPublishDate()).thenReturn(1000L);
-		when(entry1.getPublishDate()).thenReturn(2000L);
+		when(fetchResult.getPosts()).thenReturn(Arrays.asList(post1, post2));
+		when(post1.getPublishDate()).thenReturn(1000L);
+		when(post1.getPublishDate()).thenReturn(2000L);
 		
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
@@ -195,7 +195,7 @@ public class SubscriptionServiceImplTest {
 		verify(feedDao, never()).save(feed);
 		verify(subscriptionDao).find(user, feed);
 		verify(subscriptionDao, never()).save(subscription);
-		verifyZeroInteractions(feedEntryDao);
+		verifyZeroInteractions(postDao);
 	}
 	
 	@Test
@@ -203,12 +203,12 @@ public class SubscriptionServiceImplTest {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(subscriptionDao.find(group, SUBSCRIPTION_ID)).thenReturn(subscription);
-		List<FeedEntry> entries = Arrays.asList(entry1, entry2);
-		when(feedEntryDao.list(subscription)).thenReturn(entries);
+		List<Post> posts = Arrays.asList(post1, post2);
+		when(postDao.list(subscription)).thenReturn(posts);
 		
 		service.unsubscribe(USERNAME, GROUP_ID, SUBSCRIPTION_ID);
 		
-		verify(feedEntryDao).deleteAll(entries);
+		verify(postDao).deleteAll(posts);
 		verify(subscriptionDao).delete(subscription);
 	}
 	

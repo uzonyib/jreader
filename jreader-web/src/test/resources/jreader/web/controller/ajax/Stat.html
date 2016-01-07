@@ -25,9 +25,9 @@
 		</table>
 		
 		<p>
-			Given the feed entries are the followings:
+			Given the feed posts are the followings:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
+		<table concordion:execute="createPost(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
 			<tr>
 				<th concordion:set="#feedTitle">Feed title</th>
 				<th concordion:set="#uri">URI</th>
@@ -40,7 +40,7 @@
 			<tr>
 				<td>feed1</td>
 				<td>uri11</td>
-				<td>entry11</td>
+				<td>post11</td>
 				<td>description11</td>
 				<td>author11</td>
 				<td>http://www.link11.com/</td>
@@ -49,7 +49,7 @@
 			<tr>
 				<td>feed1</td>
 				<td>uri12</td>
-				<td>entry12</td>
+				<td>post12</td>
 				<td>description12</td>
 				<td>author12</td>
 				<td>http://www.link12.com/</td>
@@ -58,7 +58,7 @@
 			<tr>
 				<td>feed2</td>
 				<td>uri21</td>
-				<td>entry21</td>
+				<td>post21</td>
 				<td>description21</td>
 				<td>author21</td>
 				<td>http://www.link21.com/</td>
@@ -67,7 +67,7 @@
 			<tr>
 				<td>feed2</td>
 				<td>uri22</td>
-				<td>entry22</td>
+				<td>post22</td>
 				<td>description22</td>
 				<td>author22</td>
 				<td>http://www.link22.com/</td>
@@ -138,9 +138,9 @@
 	   	
 	   	<p>
 	   		Given the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-06 02:00:00 UTC</span><br/>
-			and the feeds are updated with the following entries:
+			and the feeds are updated with the following posts:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
+		<table concordion:execute="createPost(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
 			<tr>
 				<th concordion:set="#feedTitle">Feed title</th>
 				<th concordion:set="#uri">URI</th>
@@ -153,7 +153,7 @@
 			<tr>
 				<td>feed1</td>
 				<td>uri13</td>
-				<td>entry13</td>
+				<td>post13</td>
 				<td>description13</td>
 				<td>author13</td>
 				<td>http://www.link13.com/</td>
@@ -162,7 +162,7 @@
 			<tr>
 				<td>feed1</td>
 				<td>uri14</td>
-				<td>entry14</td>
+				<td>post14</td>
 				<td>description14</td>
 				<td>author14</td>
 				<td>http://www.link14.com/</td>
@@ -187,9 +187,9 @@
 	   	
 	   	<p>
 	   		Given the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-06-07 02:00:00 UTC</span><br/>
-			and the feeds are updated with the following entries:
+			and the feeds are updated with the following posts:
 		</p>
-		<table concordion:execute="createEntry(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
+		<table concordion:execute="createPost(#feedTitle, #uri, #title, #description, #author, #link, #publishDate)">
 			<tr>
 				<th concordion:set="#feedTitle">Feed title</th>
 				<th concordion:set="#uri">URI</th>
@@ -202,7 +202,7 @@
 			<tr>
 				<td>feed2</td>
 				<td>uri23</td>
-				<td>entry23</td>
+				<td>post23</td>
 				<td>description23</td>
 				<td>author23</td>
 				<td>http://www.link23.com/</td>

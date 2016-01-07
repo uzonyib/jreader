@@ -138,7 +138,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 		return angular.equals(this.activeView, view);
 	};
 	
-	service.isEntriesSelected = function() {
+	service.isPostsSelected = function() {
 		return angular.equals(service.activeView.type, "allItems") || angular.equals(service.activeView.type, "group") || angular.equals(service.activeView.type, "subscription");
 	};
 	
@@ -158,7 +158,7 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 		return this.activeView.archiveId;
 	};
 	
-	this.entryFilter = {
+	this.postFilter = {
 		selection: "unread",
 		pageIndex: 0,
 		ascendingOrder: true,
@@ -166,18 +166,18 @@ angular.module("jReaderApp").service("viewService", ["$window", function ($windo
 		initialPagesToLoad: 2
 	};
 	
-	this.entryFilter.get = function() {
+	this.postFilter.get = function() {
 		var filter = angular.copy(this);
 		filter.groupId = service.activeView.groupId;
 		filter.subscriptionId = service.activeView.subscriptionId;
 		return filter;
 	};
 	
-	this.entryFilter.resetPageIndex = function() {
+	this.postFilter.resetPageIndex = function() {
 		this.pageIndex = 0;
 	};
 	
-	this.entryFilter.incrementPageIndex = function() {
+	this.postFilter.incrementPageIndex = function() {
 		++this.pageIndex;
 	};
 	

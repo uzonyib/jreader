@@ -7,13 +7,13 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 
 import jreader.dao.FeedDao;
-import jreader.dao.FeedEntryDao;
+import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 import jreader.domain.Subscription;
 import jreader.domain.Group;
 import jreader.domain.User;
@@ -26,7 +26,7 @@ import jreader.services.SubscriptionService;
 public class SubscriptionServiceImpl extends AbstractService implements SubscriptionService {
 
     private FeedDao feedDao;
-    private FeedEntryDao feedEntryDao;
+    private PostDao postDao;
 
     private RssService rssService;
 
@@ -35,11 +35,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     private BuilderFactory builderFactory;
 
     public SubscriptionServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
-            final FeedDao feedDao, final FeedEntryDao feedEntryDao, final RssService rssService, final ConversionService conversionService,
+            final FeedDao feedDao, final PostDao postDao, final RssService rssService, final ConversionService conversionService,
             final BuilderFactory builderFactory) {
         super(userDao, groupDao, subscriptionDao);
         this.feedDao = feedDao;
-        this.feedEntryDao = feedEntryDao;
+        this.postDao = postDao;
         this.rssService = rssService;
         this.conversionService = conversionService;
         this.builderFactory = builderFactory;
@@ -76,8 +76,8 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
         final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
-        final List<FeedEntry> feedEntries = feedEntryDao.list(subscription);
-        feedEntryDao.deleteAll(feedEntries);
+        final List<Post> posts = postDao.list(subscription);
+        postDao.deleteAll(posts);
         subscriptionDao.delete(subscription);
     }
     

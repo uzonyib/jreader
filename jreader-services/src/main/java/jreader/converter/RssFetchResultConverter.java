@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jreader.domain.Feed;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 import jreader.dto.RssFetchResult;
 
 import org.springframework.core.convert.converter.Converter;
@@ -18,34 +18,34 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
     public RssFetchResult convert(final SyndFeed syndFeed) {
         final RssFetchResult result = new RssFetchResult();
         result.setFeed(new Feed());
-        result.setFeedEntries(new ArrayList<FeedEntry>());
+        result.setPosts(new ArrayList<Post>());
 
         result.getFeed().setTitle(syndFeed.getTitle());
         result.getFeed().setDescription(syndFeed.getDescription());
         result.getFeed().setFeedType(syndFeed.getFeedType());
         if (syndFeed.getEntries() != null) {
-            for (SyndEntry syndEntry : (List<SyndEntry>) syndFeed.getEntries()) {
-                result.getFeedEntries().add(convert(syndEntry));
+            for (SyndEntry entry : (List<SyndEntry>) syndFeed.getEntries()) {
+                result.getPosts().add(convert(entry));
             }
         }
         return result;
     }
 
-    private static FeedEntry convert(final SyndEntry syndEntry) {
-        final FeedEntry feedEntry = new FeedEntry();
-        feedEntry.setUri(syndEntry.getUri());
-        feedEntry.setTitle(syndEntry.getTitle());
-        if (syndEntry.getDescription() != null) {
-            feedEntry.setDescription(syndEntry.getDescription().getValue());
+    private static Post convert(final SyndEntry entry) {
+        final Post post = new Post();
+        post.setUri(entry.getUri());
+        post.setTitle(entry.getTitle());
+        if (entry.getDescription() != null) {
+            post.setDescription(entry.getDescription().getValue());
         }
-        feedEntry.setAuthor(syndEntry.getAuthor());
-        feedEntry.setLink(syndEntry.getLink());
-        if (syndEntry.getPublishedDate() != null) {
-            feedEntry.setPublishDate(syndEntry.getPublishedDate().getTime());
-        } else if (syndEntry.getUpdatedDate() != null) {
-            feedEntry.setPublishDate(syndEntry.getUpdatedDate().getTime());
+        post.setAuthor(entry.getAuthor());
+        post.setLink(entry.getLink());
+        if (entry.getPublishedDate() != null) {
+            post.setPublishDate(entry.getPublishedDate().getTime());
+        } else if (entry.getUpdatedDate() != null) {
+            post.setPublishDate(entry.getUpdatedDate().getTime());
         }
-        return feedEntry;
+        return post;
     }
 
 }

@@ -10,12 +10,12 @@ import java.util.logging.Logger;
 import org.springframework.core.convert.ConversionService;
 
 import jreader.dao.FeedDao;
-import jreader.dao.FeedEntryDao;
+import jreader.dao.PostDao;
 import jreader.dao.FeedStatDao;
 import jreader.dao.SubscriptionDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
 import jreader.dto.FeedDto;
@@ -32,7 +32,7 @@ public class CronServiceImpl implements CronService {
 
     private SubscriptionDao subscriptionDao;
     private FeedDao feedDao;
-    private FeedEntryDao feedEntryDao;
+    private PostDao postDao;
     private FeedStatDao feedStatDao;
 
     private RssService rssService;
@@ -42,11 +42,11 @@ public class CronServiceImpl implements CronService {
     
     private DateHelper dateHelper;
 
-    public CronServiceImpl(final SubscriptionDao subscriptionDao, final FeedDao feedDao, final FeedEntryDao feedEntryDao, final FeedStatDao feedStatDao,
+    public CronServiceImpl(final SubscriptionDao subscriptionDao, final FeedDao feedDao, final PostDao postDao, final FeedStatDao feedStatDao,
             final RssService rssService, final ConversionService conversionService, final BuilderFactory builderFactory, final DateHelper dateHelper) {
         this.subscriptionDao = subscriptionDao;
         this.feedDao = feedDao;
-        this.feedEntryDao = feedEntryDao;
+        this.postDao = postDao;
         this.feedStatDao = feedStatDao;
         this.rssService = rssService;
         this.conversionService = conversionService;
@@ -95,12 +95,12 @@ public class CronServiceImpl implements CronService {
     void updateFeed(final Feed feed, final long refreshDate, final RssFetchResult rssFetchResult) {
         Long updateDate = feed.getLastUpdateDate();
         final Map<Long, FeedStat> stats = new LinkedHashMap<Long, FeedStat>();
-        for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
-            if (!isNew(feedEntry, feed)) {
+        for (final Post post : rssFetchResult.getPosts()) {
+            if (!isNew(post, feed)) {
                 continue;
             }
             
-            final long refreshDay = dateHelper.getFirstSecondOfDay(feedEntry.getPublishDate());
+            final long refreshDay = dateHelper.getFirstSecondOfDay(post.getPublishDate());
             if (!stats.containsKey(refreshDay)) {
                 FeedStat stat = feedStatDao.find(feed, refreshDay);
                 if (stat == null) {
@@ -114,8 +114,8 @@ public class CronServiceImpl implements CronService {
                 stat.setCount(stat.getCount() + 1);
             }
             
-            if (updateDate == null || updateDate < feedEntry.getPublishDate()) {
-                updateDate = feedEntry.getPublishDate();
+            if (updateDate == null || updateDate < post.getPublishDate()) {
+                updateDate = post.getPublishDate();
             }
         }
         
@@ -133,16 +133,16 @@ public class CronServiceImpl implements CronService {
         }
     }
     
-    boolean isNew(final FeedEntry entry, final Feed feed) {
-        if (entry.getPublishDate() == null) {
+    boolean isNew(final Post post, final Feed feed) {
+        if (post.getPublishDate() == null) {
             LOG.warning("Published date is null. Feed: " + feed.getTitle());
             return false;
         }
-        if (entry.getUri() == null) {
+        if (post.getUri() == null) {
             LOG.warning("URI is null. Feed: " + feed.getTitle());
             return false;
         }
-        if (feed.getLastUpdateDate() != null && entry.getPublishDate() <= feed.getLastUpdateDate()) {
+        if (feed.getLastUpdateDate() != null && post.getPublishDate() <= feed.getLastUpdateDate()) {
             return false;
         }
         return true;
@@ -151,19 +151,19 @@ public class CronServiceImpl implements CronService {
     private void updateSubscription(final Feed feed, final long refreshDate, final RssFetchResult rssFetchResult, final Subscription subscription) {
         int counter = 0;
         Long newUpdateDate = subscription.getLastUpdateDate();
-        for (final FeedEntry feedEntry : rssFetchResult.getFeedEntries()) {
-            if (!isNew(feedEntry, subscription)) {
+        for (final Post post : rssFetchResult.getPosts()) {
+            if (!isNew(post, subscription)) {
                 continue;
             }
             
-            feedEntry.setSubscription(subscription);
-            if (feedEntry.getPublishDate() > refreshDate) {
-                feedEntry.setPublishDate(refreshDate);
+            post.setSubscription(subscription);
+            if (post.getPublishDate() > refreshDate) {
+                post.setPublishDate(refreshDate);
             }
-            feedEntryDao.save(feedEntry);
+            postDao.save(post);
             ++counter;
-            if (newUpdateDate == null || feedEntry.getPublishDate() > newUpdateDate) {
-                newUpdateDate = feedEntry.getPublishDate();
+            if (newUpdateDate == null || post.getPublishDate() > newUpdateDate) {
+                newUpdateDate = post.getPublishDate();
             }
         }
         
@@ -173,14 +173,14 @@ public class CronServiceImpl implements CronService {
         LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);
     }
     
-    boolean isNew(final FeedEntry feedEntry, final Subscription subscription) {
-        if (feedEntry.getPublishDate() == null || feedEntry.getUri() == null) {
+    boolean isNew(final Post post, final Subscription subscription) {
+        if (post.getPublishDate() == null || post.getUri() == null) {
             return false;
         }
-        if (subscription.getLastUpdateDate() != null && feedEntry.getPublishDate() < subscription.getLastUpdateDate()) {
+        if (subscription.getLastUpdateDate() != null && post.getPublishDate() < subscription.getLastUpdateDate()) {
             return false;
         }
-        if (feedEntryDao.find(subscription, feedEntry.getUri(), feedEntry.getPublishDate()) != null) {
+        if (postDao.find(subscription, post.getUri(), post.getPublishDate()) != null) {
             return false;
         }
         return true;
@@ -199,12 +199,12 @@ public class CronServiceImpl implements CronService {
             
             for (final Subscription subscription : subscriptions) {
                 int count = 0;
-                final FeedEntry e = feedEntryDao.find(subscription, keptCount);
+                final Post e = postDao.find(subscription, keptCount);
                 if (e != null) {
                     final long threshold = Math.min(date, e.getPublishDate());
-                    final List<FeedEntry> feedEntries = feedEntryDao.listUnstarredOlderThan(subscription, threshold);
-                    for (final FeedEntry feedEntry : feedEntries) {
-                        feedEntryDao.delete(feedEntry);
+                    final List<Post> posts = postDao.listUnstarredOlderThan(subscription, threshold);
+                    for (final Post post : posts) {
+                        postDao.delete(post);
                         ++count;
                     }
                     LOG.info("Deleted items older than " + new Date(threshold) + " (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl()

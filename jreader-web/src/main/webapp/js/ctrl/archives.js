@@ -8,12 +8,12 @@ angular.module("jReaderApp").controller("ArchivesCtrl", ["$scope", "ajaxService"
 		$scope.active = $scope.viewService.isArchivesSelected();
 	});
 	
-	$scope.toggleCollapsion = function(entry) {
-		entry.uncollapsed = !entry.uncollapsed;
+	$scope.toggleCollapsion = function(post) {
+		post.uncollapsed = !post.uncollapsed;
 	};
 	
-	$scope.deleteEntry = function(entry) {
-		$scope.ajaxService.deleteArchivedEntry(entry.archiveId, entry.id).success($scope.archivedEntries.refresh);
+	$scope.deletePost = function(post) {
+		$scope.ajaxService.deleteArchivedPost(post.archiveId, post.id).success($scope.archivedPosts.refresh);
 	};
 	
 }]);

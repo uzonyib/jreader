@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import jreader.dao.OfyDao;
 import jreader.domain.Archive;
-import jreader.domain.ArchivedEntry;
+import jreader.domain.ArchivedPost;
 import jreader.domain.Feed;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
 import jreader.domain.Group;
@@ -27,10 +27,10 @@ abstract class AbstractOfyDao<EntityType> implements OfyDao<EntityType> {
         factory.register(Group.class);
         factory.register(Subscription.class);
         factory.register(Feed.class);
-        factory.register(FeedEntry.class);
+        factory.register(Post.class);
         factory.register(FeedStat.class);
         factory.register(Archive.class);
-        factory.register(ArchivedEntry.class);
+        factory.register(ArchivedPost.class);
     }
 
     private static ObjectifyFactory factory() {

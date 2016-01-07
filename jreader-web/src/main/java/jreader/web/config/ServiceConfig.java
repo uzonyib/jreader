@@ -14,11 +14,11 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.rometools.fetcher.impl.HttpURLFeedFetcher;
 
 import jreader.converter.ArchiveDtoConverter;
-import jreader.converter.ArchivedEntryConverter;
-import jreader.converter.ArchivedEntryDtoConverter;
+import jreader.converter.ArchivedPostConverter;
+import jreader.converter.ArchivedPostDtoConverter;
 import jreader.converter.ConversionFactory;
 import jreader.converter.FeedDtoConverter;
-import jreader.converter.FeedEntryDtoConverter;
+import jreader.converter.PostDtoConverter;
 import jreader.converter.FeedStatDtoConverter;
 import jreader.converter.RssFetchResultConverter;
 import jreader.converter.SubscriptionDtoConverter;
@@ -28,7 +28,7 @@ import jreader.domain.BuilderFactory;
 import jreader.services.ArchiveService;
 import jreader.services.CronService;
 import jreader.services.DateHelper;
-import jreader.services.FeedEntryService;
+import jreader.services.PostService;
 import jreader.services.RssService;
 import jreader.services.StatService;
 import jreader.services.GroupService;
@@ -38,7 +38,7 @@ import jreader.services.UserService;
 import jreader.services.impl.ArchiveServiceImpl;
 import jreader.services.impl.CronServiceImpl;
 import jreader.services.impl.DateHelperImpl;
-import jreader.services.impl.FeedEntryServiceImpl;
+import jreader.services.impl.PostServiceImpl;
 import jreader.services.impl.RssServiceImpl;
 import jreader.services.impl.StatServiceImpl;
 import jreader.services.impl.GroupServiceImpl;
@@ -63,14 +63,14 @@ public class ServiceConfig {
         final Set<Converter<?, ?>> converters = new LinkedHashSet<>();
         converters.add(new RssFetchResultConverter());
         converters.add(new FeedDtoConverter());
-        converters.add(new FeedEntryDtoConverter());
+        converters.add(new PostDtoConverter());
         converters.add(new FeedStatDtoConverter());
         converters.add(new UserDtoConverter());
         converters.add(new GroupDtoConverter());
         converters.add(new SubscriptionDtoConverter());
         converters.add(new ArchiveDtoConverter());
-        converters.add(new ArchivedEntryConverter());
-        converters.add(new ArchivedEntryDtoConverter());
+        converters.add(new ArchivedPostConverter());
+        converters.add(new ArchivedPostDtoConverter());
         return new ConversionFactory(converters);
     }
     
@@ -101,19 +101,19 @@ public class ServiceConfig {
     
     @Bean
     public GroupService groupService() {
-        return new GroupServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
+        return new GroupServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.postDao(),
                 conversionService(), builderFactory());
     }
     
     @Bean
     public SubscriptionService subscriptionService() {
         return new SubscriptionServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedDao(),
-                daoConfig.feedEntryDao(), rssService(), conversionService(), builderFactory());
+                daoConfig.postDao(), rssService(), conversionService(), builderFactory());
     }
     
     @Bean
-    public FeedEntryService feedEntryService() {
-        return new FeedEntryServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
+    public PostService postService() {
+        return new PostServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.postDao(),
                 conversionService());
     }
     
@@ -125,13 +125,13 @@ public class ServiceConfig {
     
     @Bean
     public ArchiveService archiveService() {
-        return new ArchiveServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.feedEntryDao(),
-                daoConfig.archiveDao(), daoConfig.archivedEntryDao(), conversionService(), builderFactory());
+        return new ArchiveServiceImpl(daoConfig.userDao(), daoConfig.groupDao(), daoConfig.subscriptionDao(), daoConfig.postDao(),
+                daoConfig.archiveDao(), daoConfig.archivedPostDao(), conversionService(), builderFactory());
     }
     
     @Bean
     public CronService cronService() {
-        return new CronServiceImpl(daoConfig.subscriptionDao(), daoConfig.feedDao(), daoConfig.feedEntryDao(), daoConfig.feedStatDao(), rssService(),
+        return new CronServiceImpl(daoConfig.subscriptionDao(), daoConfig.feedDao(), daoConfig.postDao(), daoConfig.feedStatDao(), rssService(),
                 conversionService(), builderFactory(), dateHelper());
     }
     

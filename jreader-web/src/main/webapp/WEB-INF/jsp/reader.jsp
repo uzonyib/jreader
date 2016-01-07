@@ -32,8 +32,8 @@
 					<div id="settings-contents" data-ng-controller="SettingsCtrl" data-ng-show="active">
 						<jsp:include page="settings.jsp" />
 					</div>
-					<div id="items-contents" data-ng-controller="EntriesCtrl" data-ng-show="active">
-						<jsp:include page="entries.jsp" />
+					<div id="items-contents" data-ng-controller="PostsCtrl" data-ng-show="active">
+						<jsp:include page="posts.jsp" />
 					</div>
 					<div id="archive-contents" data-ng-controller="ArchivesCtrl" data-ng-show="active">
 						<jsp:include page="archives.jsp" />

@@ -30,17 +30,17 @@ public class TaskController {
     
     private UserService userService;
 
-    private final int daysToKeepEntries;
-    private final int entriesToKeep;
+    private final int daysToKeepPosts;
+    private final int postsToKeep;
     private final int statsToKeep;
 
-    public TaskController(final CronService cronService, final QueueService queueService, final UserService userService, final int daysToKeepEntries,
-            final int entriesToKeep, final int statsToKeep) {
+    public TaskController(final CronService cronService, final QueueService queueService, final UserService userService, final int daysToKeepPosts,
+            final int postsToKeep, final int statsToKeep) {
         this.cronService = cronService;
         this.queueService = queueService;
         this.userService = userService;
-        this.daysToKeepEntries = daysToKeepEntries;
-        this.entriesToKeep = entriesToKeep;
+        this.daysToKeepPosts = daysToKeepPosts;
+        this.postsToKeep = postsToKeep;
         this.statsToKeep = statsToKeep;
     }
 
@@ -93,7 +93,7 @@ public class TaskController {
     public ResponseEntity cleanup(final HttpServletRequest request, @RequestParam final String url) {
         final ResponseEntity result;
         if (isAuthorized(request)) {
-            cronService.cleanup(url, daysToKeepEntries, entriesToKeep, statsToKeep);
+            cronService.cleanup(url, daysToKeepPosts, postsToKeep, statsToKeep);
             result = new ResponseEntity();
         } else {
             result = new ResponseEntity(HttpStatus.FORBIDDEN.value());

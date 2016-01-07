@@ -20,21 +20,21 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import jreader.dao.ArchiveDao;
-import jreader.dao.ArchivedEntryDao;
-import jreader.dao.FeedEntryDao;
+import jreader.dao.ArchivedPostDao;
+import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.Archive;
-import jreader.domain.ArchivedEntry;
+import jreader.domain.ArchivedPost;
 import jreader.domain.BuilderFactory;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 import jreader.domain.Subscription;
 import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
-import jreader.dto.ArchivedEntryDto;
-import jreader.services.ArchivedEntryFilterData;
+import jreader.dto.ArchivedPostDto;
+import jreader.services.ArchivedPostFilterData;
 import jreader.services.ServiceException;
 
 public class ArchiveServiceImplTest {
@@ -42,11 +42,11 @@ public class ArchiveServiceImplTest {
 	private static final String USERNAME = "user";
 	private static final Long GROUP_ID = 1L;
 	private static final Long SUBSCRIPTION_ID = 11L;
-	private static final Long ENTRY_ID = 21L;
+	private static final Long POST_ID = 21L;
 	private static final String ARCHIVE_TITLE = "archive_title";
 	private static final int ARCHIVE_ORDER = 10;
 	private static final long ARCHIVE_ID = 123;
-	private static final long ARCHIVED_ENTRY_ID = 456;
+	private static final long ARCHIVED_POST_ID = 456;
 	
 	@InjectMocks
 	private ArchiveServiceImpl service;
@@ -58,11 +58,11 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private SubscriptionDao subscriptionDao;
 	@Mock
-	private FeedEntryDao feedEntryDao;
+	private PostDao postDao;
 	@Mock
 	private ArchiveDao archiveDao;
 	@Mock
-	private ArchivedEntryDao archivedEntryDao;
+	private ArchivedPostDao archivedPostDao;
 	@Mock
 	private ConversionService conversionService;
 	@Mock
@@ -75,7 +75,7 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private Subscription subscription;
 	@Mock
-	private FeedEntry entry;
+	private Post post;
 	@Mock
 	private Archive archive;
 	@Mock
@@ -83,11 +83,11 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private Archive archive2;
 	@Mock
-	private ArchivedEntry archivedEntry;
+	private ArchivedPost archivedPost;
 	@Mock
-	private ArchivedEntry archivedEntry1;
+	private ArchivedPost archivedPost1;
 	@Mock
-	private ArchivedEntry archivedEntry2;
+	private ArchivedPost archivedPost2;
 	@Mock
 	private Archive.Builder archiveBuilder;
 	
@@ -98,11 +98,11 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private ArchiveDto archiveDto2;
 	@Mock
-	private ArchivedEntryDto archivedEntryDto1;
+	private ArchivedPostDto archivedPostDto1;
 	@Mock
-	private ArchivedEntryDto archivedEntryDto2;
+	private ArchivedPostDto archivedPostDto2;
 	@Mock
-	private ArchivedEntryFilterData filter;
+	private ArchivedPostFilterData filter;
 	
 	@BeforeMethod
 	public void setup() {
@@ -232,57 +232,57 @@ public class ArchiveServiceImplTest {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		when(subscriptionDao.find(group, SUBSCRIPTION_ID)).thenReturn(subscription);
-		when(feedEntryDao.find(subscription, ENTRY_ID)).thenReturn(entry);
+		when(postDao.find(subscription, POST_ID)).thenReturn(post);
 		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);
-		when(conversionService.convert(entry, ArchivedEntry.class)).thenReturn(archivedEntry);
+		when(conversionService.convert(post, ArchivedPost.class)).thenReturn(archivedPost);
 		
-		service.archive(USERNAME, GROUP_ID, SUBSCRIPTION_ID, ENTRY_ID, ARCHIVE_ID);
+		service.archive(USERNAME, GROUP_ID, SUBSCRIPTION_ID, POST_ID, ARCHIVE_ID);
 		
-		verify(conversionService).convert(entry, ArchivedEntry.class);
-		verify(archivedEntry).setArchive(archive);
-		verify(archivedEntryDao).save(archivedEntry);
+		verify(conversionService).convert(post, ArchivedPost.class);
+		verify(archivedPost).setArchive(archive);
+		verify(archivedPostDao).save(archivedPost);
 	}
 	
 	@Test
-	public void listEntriesForUser() {
+	public void listPostsForUser() {
 		when(filter.getArchiveId()).thenReturn(null);
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(archivedEntryDao.list(user, filter)).thenReturn(Arrays.asList(archivedEntry1, archivedEntry2));
-		when(conversionService.convert(archivedEntry1, ArchivedEntryDto.class)).thenReturn(archivedEntryDto1);
-		when(conversionService.convert(archivedEntry2, ArchivedEntryDto.class)).thenReturn(archivedEntryDto2);
+		when(archivedPostDao.list(user, filter)).thenReturn(Arrays.asList(archivedPost1, archivedPost2));
+		when(conversionService.convert(archivedPost1, ArchivedPostDto.class)).thenReturn(archivedPostDto1);
+		when(conversionService.convert(archivedPost2, ArchivedPostDto.class)).thenReturn(archivedPostDto2);
 		
-		List<ArchivedEntryDto> result = service.listEntries(filter);
+		List<ArchivedPostDto> result = service.listPosts(filter);
 		
-		verify(archivedEntryDao).list(user, filter);
-		Assert.assertEquals(result, Arrays.asList(archivedEntryDto1, archivedEntryDto2));
+		verify(archivedPostDao).list(user, filter);
+		Assert.assertEquals(result, Arrays.asList(archivedPostDto1, archivedPostDto2));
 	}
 	
 	@Test
-	public void listEntriesForArchive() {
+	public void listPostsForArchive() {
 		when(filter.getArchiveId()).thenReturn(ARCHIVE_ID);
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);
-		when(archivedEntryDao.list(archive, filter)).thenReturn(Arrays.asList(archivedEntry1, archivedEntry2));
-		when(conversionService.convert(archivedEntry1, ArchivedEntryDto.class)).thenReturn(archivedEntryDto1);
-		when(conversionService.convert(archivedEntry2, ArchivedEntryDto.class)).thenReturn(archivedEntryDto2);
+		when(archivedPostDao.list(archive, filter)).thenReturn(Arrays.asList(archivedPost1, archivedPost2));
+		when(conversionService.convert(archivedPost1, ArchivedPostDto.class)).thenReturn(archivedPostDto1);
+		when(conversionService.convert(archivedPost2, ArchivedPostDto.class)).thenReturn(archivedPostDto2);
 		
-		List<ArchivedEntryDto> result = service.listEntries(filter);
+		List<ArchivedPostDto> result = service.listPosts(filter);
 		
-		verify(archivedEntryDao).list(archive, filter);
-		Assert.assertEquals(result, Arrays.asList(archivedEntryDto1, archivedEntryDto2));
+		verify(archivedPostDao).list(archive, filter);
+		Assert.assertEquals(result, Arrays.asList(archivedPostDto1, archivedPostDto2));
 	}
 	
 	@Test
 	public void unsubscribe() {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);
-		when(archivedEntryDao.find(archive, ARCHIVED_ENTRY_ID)).thenReturn(archivedEntry);
+		when(archivedPostDao.find(archive, ARCHIVED_POST_ID)).thenReturn(archivedPost);
 		
-		service.deleteEntry(USERNAME, ARCHIVE_ID, ARCHIVED_ENTRY_ID);
+		service.deletePost(USERNAME, ARCHIVE_ID, ARCHIVED_POST_ID);
 		
-		verify(archivedEntryDao).delete(archivedEntry);
+		verify(archivedPostDao).delete(archivedPost);
 	}
 
 }

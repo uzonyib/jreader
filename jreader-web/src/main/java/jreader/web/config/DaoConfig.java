@@ -4,17 +4,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import jreader.dao.ArchiveDao;
-import jreader.dao.ArchivedEntryDao;
+import jreader.dao.ArchivedPostDao;
 import jreader.dao.FeedDao;
-import jreader.dao.FeedEntryDao;
+import jreader.dao.PostDao;
 import jreader.dao.FeedStatDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.dao.impl.ArchiveDaoImpl;
-import jreader.dao.impl.ArchivedEntryDaoImpl;
+import jreader.dao.impl.ArchivedPostDaoImpl;
 import jreader.dao.impl.FeedDaoImpl;
-import jreader.dao.impl.FeedEntryDaoImpl;
+import jreader.dao.impl.PostDaoImpl;
 import jreader.dao.impl.FeedStatDaoImpl;
 import jreader.dao.impl.SubscriptionDaoImpl;
 import jreader.dao.impl.GroupDaoImpl;
@@ -44,8 +44,8 @@ public class DaoConfig {
     }
     
     @Bean
-    public FeedEntryDao feedEntryDao() {
-        return new FeedEntryDaoImpl();
+    public PostDao postDao() {
+        return new PostDaoImpl();
     }
     
     @Bean
@@ -59,8 +59,8 @@ public class DaoConfig {
     }
     
     @Bean
-    public ArchivedEntryDao archivedEntryDao() {
-        return new ArchivedEntryDaoImpl();
+    public ArchivedPostDao archivedPostDao() {
+        return new ArchivedPostDaoImpl();
     }
     
 }

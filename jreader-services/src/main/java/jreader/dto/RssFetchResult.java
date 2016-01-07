@@ -3,12 +3,12 @@ package jreader.dto;
 import java.util.List;
 
 import jreader.domain.Feed;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 
 public class RssFetchResult {
 
     private Feed feed;
-    private List<FeedEntry> feedEntries;
+    private List<Post> posts;
 
     public Feed getFeed() {
         return feed;
@@ -18,12 +18,12 @@ public class RssFetchResult {
         this.feed = feed;
     }
 
-    public List<FeedEntry> getFeedEntries() {
-        return feedEntries;
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    public void setFeedEntries(final List<FeedEntry> feedEntries) {
-        this.feedEntries = feedEntries;
+    public void setPosts(final List<Post> posts) {
+        this.posts = posts;
     }
 
 }

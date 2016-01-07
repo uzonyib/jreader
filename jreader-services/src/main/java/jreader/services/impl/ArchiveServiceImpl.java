@@ -7,41 +7,41 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 
 import jreader.dao.ArchiveDao;
-import jreader.dao.ArchivedEntryDao;
-import jreader.dao.FeedEntryDao;
+import jreader.dao.ArchivedPostDao;
+import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.Archive;
-import jreader.domain.ArchivedEntry;
+import jreader.domain.ArchivedPost;
 import jreader.domain.BuilderFactory;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 import jreader.domain.Subscription;
 import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
-import jreader.dto.ArchivedEntryDto;
+import jreader.dto.ArchivedPostDto;
 import jreader.services.ArchiveService;
-import jreader.services.ArchivedEntryFilterData;
+import jreader.services.ArchivedPostFilterData;
 import jreader.services.ServiceException;
 
 public class ArchiveServiceImpl extends AbstractService implements ArchiveService {
 
-    private FeedEntryDao feedEntryDao;
+    private PostDao postDao;
     private ArchiveDao archiveDao;
-    private ArchivedEntryDao archivedEntryDao;
+    private ArchivedPostDao archivedPostDao;
 
     private ConversionService conversionService;
 
     private BuilderFactory builderFactory;
 
     public ArchiveServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
-            final FeedEntryDao feedEntryDao, final ArchiveDao archiveDao, final ArchivedEntryDao archivedEntryDao, final ConversionService conversionService,
+            final PostDao postDao, final ArchiveDao archiveDao, final ArchivedPostDao archivedPostDao, final ConversionService conversionService,
             final BuilderFactory builderFactory) {
         super(userDao, groupDao, subscriptionDao);
-        this.feedEntryDao = feedEntryDao;
+        this.postDao = postDao;
         this.archiveDao = archiveDao;
-        this.archivedEntryDao = archivedEntryDao;
+        this.archivedPostDao = archivedPostDao;
         this.conversionService = conversionService;
         this.builderFactory = builderFactory;
     }
@@ -156,42 +156,42 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public void archive(final String username, final Long groupId, final Long subscriptionId, final Long entryId, final Long archiveId) {
+    public void archive(final String username, final Long groupId, final Long subscriptionId, final Long postId, final Long archiveId) {
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
-        final FeedEntry feedEntry = feedEntryDao.find(subscription, entryId);
+        final Post post = postDao.find(subscription, postId);
         final Archive archive = this.getArchive(user, archiveId);
 
-        final ArchivedEntry entity = conversionService.convert(feedEntry, ArchivedEntry.class);
+        final ArchivedPost entity = conversionService.convert(post, ArchivedPost.class);
         entity.setArchive(archive);
-        archivedEntryDao.save(entity);
+        archivedPostDao.save(entity);
     }
 
     @Override
-    public List<ArchivedEntryDto> listEntries(final ArchivedEntryFilterData filterData) {
+    public List<ArchivedPostDto> listPosts(final ArchivedPostFilterData filterData) {
         final User user = this.getUser(filterData.getUsername());
-        final List<ArchivedEntry> entries;
+        final List<ArchivedPost> posts;
         if (filterData.getArchiveId() == null) {
-            entries = archivedEntryDao.list(user, filterData);
+            posts = archivedPostDao.list(user, filterData);
         } else {
             final Archive archive = this.getArchive(user, filterData.getArchiveId());
-            entries = archivedEntryDao.list(archive, filterData);
+            posts = archivedPostDao.list(archive, filterData);
         }
-        final List<ArchivedEntryDto> dtos = new ArrayList<ArchivedEntryDto>();
-        for (final ArchivedEntry entry : entries) {
-            dtos.add(conversionService.convert(entry, ArchivedEntryDto.class));
+        final List<ArchivedPostDto> dtos = new ArrayList<ArchivedPostDto>();
+        for (final ArchivedPost post : posts) {
+            dtos.add(conversionService.convert(post, ArchivedPostDto.class));
         }
         return dtos;
     }
 
     @Override
-    public void deleteEntry(final String username, final Long archiveId, final Long entryId) {
+    public void deletePost(final String username, final Long archiveId, final Long postId) {
         final User user = this.getUser(username);
         final Archive archive = this.getArchive(user, archiveId);
-        final ArchivedEntry entry = archivedEntryDao.find(archive, entryId);
-        archivedEntryDao.delete(entry);
+        final ArchivedPost post = archivedPostDao.find(archive, postId);
+        archivedPostDao.delete(post);
     }
 
 }

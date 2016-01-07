@@ -16,64 +16,64 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-			    	<ul class="nav navbar-nav" data-ng-controller="EntriesNavbarCtrl" data-ng-show="active">
+			    	<ul class="nav navbar-nav" data-ng-controller="PostsNavbarCtrl" data-ng-show="active">
 			    		<li class="btn-group">
 							<button type="button" class="btn btn-default navbar-btn" title="Mark all as read (M)"
-								data-ng-init="shortcuts.register('m', viewService.isEntriesSelected, feedEntries.markAllRead)"
-								data-ng-click="feedEntries.markAllRead()">
+								data-ng-init="shortcuts.register('m', viewService.isPostsSelected, posts.markAllRead)"
+								data-ng-click="posts.markAllRead()">
 								<span class="glyphicon glyphicon-ok"></span>
 							</button>
 						</li>
 						<li class="btn-group">
 							<button type="button" class="btn btn-default navbar-btn" title="Refresh (R)"
-								data-ng-init="shortcuts.register('r', viewService.isEntriesSelected, feedEntries.refreshWithSubscriptions)"
-								data-ng-click="feedEntries.refreshWithSubscriptions()">
+								data-ng-init="shortcuts.register('r', viewService.isPostsSelected, posts.refreshWithSubscriptions)"
+								data-ng-click="posts.refreshWithSubscriptions()">
 								<span class="glyphicon glyphicon-refresh"></span>
 							</button>
 						</li>
 						<li class="btn-group" data-toggle="buttons">
 							<label class="btn btn-default navbar-btn" title="All (1)"
-								data-ng-class="{active: viewService.entryFilter.selection == 'all'}"
-								data-ng-init="shortcuts.register('1', viewService.isEntriesSelected, feedEntries.setSelectionToAll)"
-								data-ng-click="feedEntries.setSelectionToAll()">
-					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-th-list"></span>
+								data-ng-class="{active: viewService.postFilter.selection == 'all'}"
+								data-ng-init="shortcuts.register('1', viewService.isPostsSelected, posts.setSelectionToAll)"
+								data-ng-click="posts.setSelectionToAll()">
+					    		<input type="radio" name="posts-vertical"><span class="glyphicon glyphicon-th-list"></span>
 					  		</label>
 					  		<label class="btn btn-default navbar-btn" title="Unread (2)"
-					  			data-ng-class="{active: viewService.entryFilter.selection == 'unread'}"
-					  			data-ng-init="shortcuts.register('2', viewService.isEntriesSelected, feedEntries.setSelectionToUnread)"
-					  			data-ng-click="feedEntries.setSelectionToUnread()">
-					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-unchecked"></span>
+					  			data-ng-class="{active: viewService.postFilter.selection == 'unread'}"
+					  			data-ng-init="shortcuts.register('2', viewService.isPostsSelected, posts.setSelectionToUnread)"
+					  			data-ng-click="posts.setSelectionToUnread()">
+					    		<input type="radio" name="posts-vertical"><span class="glyphicon glyphicon-unchecked"></span>
 					  		</label>
 					  		<label class="btn btn-default navbar-btn" title="Starred (3)"
-					  			data-ng-class="{active: viewService.entryFilter.selection == 'starred'}"
-					  			data-ng-init="shortcuts.register('3', viewService.isEntriesSelected, feedEntries.setSelectionToStarred)"
-					  			data-ng-click="feedEntries.setSelectionToStarred()">
-					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-star"></span>
+					  			data-ng-class="{active: viewService.postFilter.selection == 'starred'}"
+					  			data-ng-init="shortcuts.register('3', viewService.isPostsSelected, posts.setSelectionToStarred)"
+					  			data-ng-click="posts.setSelectionToStarred()">
+					    		<input type="radio" name="posts-vertical"><span class="glyphicon glyphicon-star"></span>
 					  		</label>
 						</li>
 						<li class="btn-group" data-toggle="buttons">
 							<label class="btn btn-default navbar-btn" title="Ascending (A)"
-								data-ng-class="{active: viewService.entryFilter.ascendingOrder}"
-								data-ng-init="shortcuts.register('a', viewService.isEntriesSelected, feedEntries.setOrderToAscending)"
-								data-ng-click="feedEntries.setOrderToAscending()">
-					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-chevron-down"></span>
+								data-ng-class="{active: viewService.postFilter.ascendingOrder}"
+								data-ng-init="shortcuts.register('a', viewService.isPostsSelected, posts.setOrderToAscending)"
+								data-ng-click="posts.setOrderToAscending()">
+					    		<input type="radio" name="posts-order"><span class="glyphicon glyphicon-chevron-down"></span>
 					  		</label>
 					  		<label class="btn btn-default navbar-btn" title="Descending (D)"
-					  			data-ng-class="{active: !viewService.entryFilter.ascendingOrder}"
-					  			data-ng-init="shortcuts.register('d', viewService.isEntriesSelected, feedEntries.setOrderToDescending)"
-					  			data-ng-click="feedEntries.setOrderToDescending()">
-					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-chevron-up"></span>
+					  			data-ng-class="{active: !viewService.postFilter.ascendingOrder}"
+					  			data-ng-init="shortcuts.register('d', viewService.isPostsSelected, posts.setOrderToDescending)"
+					  			data-ng-click="posts.setOrderToDescending()">
+					    		<input type="radio" name="posts-order"><span class="glyphicon glyphicon-chevron-up"></span>
 					  		</label>
 						</li>
-						<li data-ng-show="!feedEntries.loading">
+						<li data-ng-show="!posts.loading">
 							<p class="navbar-text">
 								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>
-								<ng-pluralize count="feedEntries.items.length"
+								<ng-pluralize count="posts.items.length"
 									when="{'1': '1 item', 'other': '{} items'}">
 								</ng-pluralize>
 							</p>
 						</li>
-						<li data-ng-show="feedEntries.loading">
+						<li data-ng-show="posts.loading">
 							<p class="navbar-text">
 								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>Loading...
 							</p>
@@ -82,35 +82,35 @@
 			    	<ul class="nav navbar-nav" data-ng-controller="ArchivesNavbarCtrl" data-ng-show="active">
 						<li class="btn-group">
 							<button type="button" class="btn btn-default navbar-btn" title="Refresh (R)"
-								data-ng-init="shortcuts.register('r', viewService.isArchivesSelected, archivedEntries.refresh)"
-								data-ng-click="archivedEntries.refresh()">
+								data-ng-init="shortcuts.register('r', viewService.isArchivesSelected, archivedPosts.refresh)"
+								data-ng-click="archivedPosts.refresh()">
 								<span class="glyphicon glyphicon-refresh"></span>
 							</button>
 						</li>
 						<li class="btn-group" data-toggle="buttons">
 							<label class="btn btn-default navbar-btn" title="Ascending (A)"
 								data-ng-class="{active: viewService.archiveFilter.ascendingOrder}"
-								data-ng-init="shortcuts.register('a', viewService.isArchivesSelected, archivedEntries.setOrderToAscending)"
-								data-ng-click="archivedEntries.setAscendingOrder(true)">
-					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-chevron-down"></span>
+								data-ng-init="shortcuts.register('a', viewService.isArchivesSelected, archivedPosts.setOrderToAscending)"
+								data-ng-click="archivedPosts.setAscendingOrder(true)">
+					    		<input type="radio" name="posts-order"><span class="glyphicon glyphicon-chevron-down"></span>
 					  		</label>
 					  		<label class="btn btn-default navbar-btn" title="Descending (D)"
 					  			data-ng-class="{active: !viewService.archiveFilter.ascendingOrder}"
-					  			data-ng-init="shortcuts.register('d', viewService.isArchivesSelected, archivedEntries.setOrderToDescending)"
-					  			data-ng-click="archivedEntries.setAscendingOrder(false)">
-					    		<input type="radio" name="entries-order"><span class="glyphicon glyphicon-chevron-up"></span>
+					  			data-ng-init="shortcuts.register('d', viewService.isArchivesSelected, archivedPosts.setOrderToDescending)"
+					  			data-ng-click="archivedPosts.setAscendingOrder(false)">
+					    		<input type="radio" name="posts-order"><span class="glyphicon glyphicon-chevron-up"></span>
 					  		</label>
 						</li>
-						<li data-ng-show="!archivedEntries.loading">
-							<p class="navbar-text" data-ng-show="!archivedEntries.loading">
+						<li data-ng-show="!archivedPosts.loading">
+							<p class="navbar-text" data-ng-show="!archivedPosts.loading">
 								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>
-								<ng-pluralize count="archivedEntries.items.length"
+								<ng-pluralize count="archivedPosts.items.length"
 									when="{'1': '1 item', 'other': '{} items'}">
 								</ng-pluralize>
 							</p>
 						</li>
-						<li data-ng-show="archivedEntries.loading">
-							<p class="navbar-text" data-ng-show="archivedEntries.loading">
+						<li data-ng-show="archivedPosts.loading">
+							<p class="navbar-text" data-ng-show="archivedPosts.loading">
 								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>Loading...
 							</p>
 						</li>
@@ -202,11 +202,11 @@
 			</div>
 			<div class="modal-body">
 				<h4>Keyboard shortcuts</h4>
-				<p>M - Mark all entries as read</p>
-				<p>R - Refresh entries</p>
-				<p>1 - Show all entries</p>
-				<p>2 - Show unread entries</p>
-				<p>3 - Show starred entries</p>
+				<p>M - Mark all posts read</p>
+				<p>R - Refresh posts</p>
+				<p>1 - Show all posts</p>
+				<p>2 - Show unread posts</p>
+				<p>3 - Show starred posts</p>
 				<p>A - Ascending order</p>
 				<p>D - Descending order</p>
 				<hr>

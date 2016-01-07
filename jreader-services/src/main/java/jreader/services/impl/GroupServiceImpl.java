@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 
-import jreader.dao.FeedEntryDao;
+import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
@@ -21,16 +21,16 @@ import jreader.services.GroupService;
 
 public class GroupServiceImpl extends AbstractService implements GroupService {
 
-    private FeedEntryDao feedEntryDao;
+    private PostDao postDao;
 
     private ConversionService conversionService;
 
     private BuilderFactory builderFactory;
 
     public GroupServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
-            final FeedEntryDao feedEntryDao, final ConversionService conversionService, final BuilderFactory builderFactory) {
+            final PostDao postDao, final ConversionService conversionService, final BuilderFactory builderFactory) {
         super(userDao, groupDao, subscriptionDao);
-        this.feedEntryDao = feedEntryDao;
+        this.postDao = postDao;
         this.conversionService = conversionService;
         this.builderFactory = builderFactory;
     }
@@ -47,7 +47,7 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
             int groupUnreadCount = 0;
             for (Subscription subscription : subscriptions) {
                 final SubscriptionDto subscriptionDto = conversionService.convert(subscription, SubscriptionDto.class);
-                final int unreadCount = feedEntryDao.countUnread(subscription);
+                final int unreadCount = postDao.countUnread(subscription);
                 subscriptionDto.setUnreadCount(unreadCount);
                 dto.getSubscriptions().add(subscriptionDto);
                 groupUnreadCount += unreadCount;

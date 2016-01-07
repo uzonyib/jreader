@@ -3,7 +3,7 @@ package jreader.services;
 import java.util.List;
 
 import jreader.dto.ArchiveDto;
-import jreader.dto.ArchivedEntryDto;
+import jreader.dto.ArchivedPostDto;
 
 public interface ArchiveService {
 
@@ -19,10 +19,10 @@ public interface ArchiveService {
 
     void entitle(String username, Long archiveId, String title);
 
-    void archive(String username, Long groupId, Long subscriptionId, Long entryId, Long archiveId);
+    void archive(String username, Long groupId, Long subscriptionId, Long postId, Long archiveId);
 
-    List<ArchivedEntryDto> listEntries(ArchivedEntryFilterData filterData);
+    List<ArchivedPostDto> listPosts(ArchivedPostFilterData filterData);
 
-    void deleteEntry(String username, Long archiveId, Long entryId);
+    void deletePost(String username, Long archiveId, Long postId);
 
 }

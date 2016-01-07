@@ -9,15 +9,15 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
     	return $http.get("/reader/archives");
     };
     
-    this.loadEntries = function(filter) {
-    	var items = "";
+    this.loadPosts = function(filter) {
+    	var url = "";
     	if (filter.groupId != null) {
-    		items = "/groups/" + filter.groupId;
+    		url = "/groups/" + filter.groupId;
     		if (filter.subscriptionId != null) {
-    			items += "/subscriptions/" + filter.subscriptionId;
+    			url += "/subscriptions/" + filter.subscriptionId;
     		}
     	}
-    	items += "/entries";
+    	url += "/posts";
     	
     	var params = {
 			"offset": filter.offset,
@@ -27,20 +27,20 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
     	
     	return $http({
     		method: "GET",
-    		url: "/reader" + items + "/" + filter.selection,
+    		url: "/reader" + url + "/" + filter.selection,
     		params: params
         });
     };
     
-    this.loadArchivedEntries = function(filter) {
-    	var items = "";
+    this.loadArchivedPosts = function(filter) {
+    	var url = "";
     	if (filter.archiveId != null) {
-    		items = "/" + filter.archiveId;
+    		url = "/" + filter.archiveId;
     	}
     	
     	return $http({
     		method: "GET",
-    		url: "/reader/archives" + items + "/entries",
+    		url: "/reader/archives" + url + "/posts",
     		params: {
     			"offset": filter.offset,
     			"count": filter.count,
@@ -166,72 +166,72 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 		return service.moveArchive(id, false);
 	};
 	
-	this.markRead = function(entry) {
+	this.markRead = function(post) {
 		var map = {};
-		map[entry.groupId] = {};
-		map[entry.groupId][entry.subscriptionId] = [entry.id];
+		map[post.groupId] = {};
+		map[post.groupId][post.subscriptionId] = [post.id];
 		
 		return $http({
 			method: "POST",
-			url: "/reader/entries",
+			url: "/reader/posts",
             data: map,
             headers: { "Content-Type": "application/json" }
         });
 	};
 	
-	this.markAllRead = function(entries, filter) {
+	this.markAllRead = function(posts, filter) {
 		var map = {};
-		angular.forEach(entries, function(entry) {
-			if (!angular.isDefined(map[entry.groupId])) {
-				map[entry.groupId] = {};
+		angular.forEach(posts, function(post) {
+			if (!angular.isDefined(map[post.groupId])) {
+				map[post.groupId] = {};
 			}
-			if (!angular.isDefined(map[entry.groupId][entry.subscriptionId])) {
-				map[entry.groupId][entry.subscriptionId] = [];
+			if (!angular.isDefined(map[post.groupId][post.subscriptionId])) {
+				map[post.groupId][post.subscriptionId] = [];
 			}
-			map[entry.groupId][entry.subscriptionId].push(entry.id);
+			map[post.groupId][post.subscriptionId].push(post.id);
 		});
 
 		return $http({
 			method: "POST",
-			url: "/reader/entries",
+			url: "/reader/posts",
             data: map,
             headers: { "Content-Type": "application/json" }
         });
 	};
 	
-	this.setStarred = function(entry, starred) {
+	this.setStarred = function(post, starred) {
 		$http({
 			method: "PUT",
-			url: "/reader/groups/" + entry.groupId + "/subscriptions/" + entry.subscriptionId + "/entries/" + entry.id + "/starred",
+			url: "/reader/groups/" + post.groupId + "/subscriptions/" + post.subscriptionId + "/posts/" + post.id + "/starred",
             params: { "value": starred }
         });
 	};
 	
-	this.star = function(entry) {
-		service.setStarred(entry, true);
+	this.star = function(post) {
+		service.setStarred(post, true);
 	};
 	
-	this.unstar = function(entry) {
-		service.setStarred(entry, false);
+	this.unstar = function(post) {
+		service.setStarred(post, false);
 	};
 	
-	this.archive = function(entry, archive) {
+	this.archive = function(post, archive) {
 		$http({
 			method: "POST",
-			url: "/reader/archives/" + archive.id + "/entries",
+			url: "/reader/archives/" + archive.id + "/posts",
             params: {
-            	"groupId": entry.groupId,
-            	"subscriptionId": entry.subscriptionId,
-            	"entryId": entry.id,
+            	"groupId": post.groupId,
+            	"subscriptionId": post.subscriptionId,
+            	"postId": post.id,
             },
             headers: { "Content-Type": "application/json" }
         });
 	};
 	
-	this.deleteArchivedEntry = function(archiveId, entryId) {
+	this.deleteArchivedPost = function(archiveId, postId) {
 		return $http({
 			method: "DELETE",
-			url: "/reader/archives/" + archiveId + "/entries/" + entryId
+			url: "/reader/archives/" + archiveId + "/posts/" + postId
         });
 	};
 	

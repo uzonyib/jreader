@@ -17,37 +17,37 @@
         <property name="order" direction="desc"/>
     </datastore-index>
     
-    <datastore-index kind="FeedEntry" ancestor="true" source="auto">
+    <datastore-index kind="Post" ancestor="true" source="auto">
         <property name="uri" direction="asc"/>
-        <property name="publishedDate" direction="asc"/>
+        <property name="publishDate" direction="asc"/>
     </datastore-index>
 
-    <datastore-index kind="FeedEntry" ancestor="true" source="auto">
-        <property name="publishedDate" direction="asc"/>
+    <datastore-index kind="Post" ancestor="true" source="auto">
+        <property name="publishDate" direction="asc"/>
     </datastore-index>
 
-    <datastore-index kind="FeedEntry" ancestor="true" source="auto">
-        <property name="publishedDate" direction="desc"/>
+    <datastore-index kind="Post" ancestor="true" source="auto">
+        <property name="publishDate" direction="desc"/>
     </datastore-index>
 
-	<datastore-index kind="FeedEntry" ancestor="true" source="auto">
+	<datastore-index kind="Post" ancestor="true" source="auto">
         <property name="read" direction="asc"/>
-        <property name="publishedDate" direction="asc"/>
+        <property name="publishDate" direction="asc"/>
     </datastore-index>
 
-    <datastore-index kind="FeedEntry" ancestor="true" source="auto">
+    <datastore-index kind="Post" ancestor="true" source="auto">
         <property name="read" direction="asc"/>
-        <property name="publishedDate" direction="desc"/>
+        <property name="publishDate" direction="desc"/>
     </datastore-index>
 
-    <datastore-index kind="FeedEntry" ancestor="true" source="auto">
+    <datastore-index kind="Post" ancestor="true" source="auto">
         <property name="starred" direction="asc"/>
-        <property name="publishedDate" direction="asc"/>
+        <property name="publishDate" direction="asc"/>
     </datastore-index>
 
-    <datastore-index kind="FeedEntry" ancestor="true" source="auto">
+    <datastore-index kind="Post" ancestor="true" source="auto">
         <property name="starred" direction="asc"/>
-        <property name="publishedDate" direction="desc"/>
+        <property name="publishDate" direction="desc"/>
     </datastore-index>
     
     <datastore-index kind="FeedStat" ancestor="true" source="auto">
@@ -62,12 +62,12 @@
         <property name="order" direction="desc"/>
     </datastore-index>
 
-    <datastore-index kind="ArchivedEntry" ancestor="true" source="auto">
-        <property name="publishedDate" direction="asc"/>
+    <datastore-index kind="ArchivedPost" ancestor="true" source="auto">
+        <property name="publishDate" direction="asc"/>
     </datastore-index>
 
-    <datastore-index kind="ArchivedEntry" ancestor="true" source="auto">
-        <property name="publishedDate" direction="desc"/>
+    <datastore-index kind="ArchivedPost" ancestor="true" source="auto">
+        <property name="publishDate" direction="desc"/>
     </datastore-index>
 
 </datastore-indexes> 

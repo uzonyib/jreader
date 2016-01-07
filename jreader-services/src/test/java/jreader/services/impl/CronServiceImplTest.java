@@ -28,12 +28,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import jreader.dao.FeedDao;
-import jreader.dao.FeedEntryDao;
+import jreader.dao.PostDao;
 import jreader.dao.FeedStatDao;
 import jreader.dao.SubscriptionDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
-import jreader.domain.FeedEntry;
+import jreader.domain.Post;
 import jreader.domain.FeedStat;
 import jreader.domain.Subscription;
 import jreader.domain.Group;
@@ -57,7 +57,7 @@ public class CronServiceImplTest {
 	@Mock
 	private FeedDao feedDao;
 	@Mock
-	private FeedEntryDao feedEntryDao;
+	private PostDao postDao;
 	@Mock
     private FeedStatDao feedStatDao;
 	
@@ -86,17 +86,17 @@ public class CronServiceImplTest {
 	private Subscription subscription2;
 	
 	@Mock
-	private FeedEntry entry11;
+	private Post post11;
 	@Mock
-	private FeedEntry entry12;
+	private Post post12;
 	@Mock
-    private FeedEntry entry13;
+    private Post post13;
 	@Mock
-	private FeedEntry entry21;
+	private Post post21;
 	@Mock
-	private FeedEntry entry22;
+	private Post post22;
 	@Spy
-    private FeedEntry entrySpy;
+    private Post postSpy;
 	
 	@Mock
 	private FeedStat.Builder builder;
@@ -143,7 +143,7 @@ public class CronServiceImplTest {
     }
 	
 	@Test
-	public void refreshFeeds_NewEntries() {
+	public void refreshFeeds_NewPosts() {
 	    when(feedDao.find(FEED_URL)).thenReturn(feed1);
 		when(feed1.getUrl()).thenReturn(FEED_URL);
 		when(feed1.getTitle()).thenReturn(FEED_TITLE);
@@ -157,25 +157,25 @@ public class CronServiceImplTest {
 		
 		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
 		
-		when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12, entry13));
+		when(fetchResult.getPosts()).thenReturn(Arrays.asList(post11, post12, post13));
 		
 		when(subscription1.getLastUpdateDate()).thenReturn(date - 1000 * 60 * 20);
 		when(subscription2.getLastUpdateDate()).thenReturn(date - 1000 * 60 * 20);
 		
 		DateHelper dh = new DateHelperImpl();
 		long pubDate1 = date - 1000 * 60 * 30;
-        when(entry11.getPublishDate()).thenReturn(pubDate1);
-		when(entry11.getUri()).thenReturn("uri1");
+        when(post11.getPublishDate()).thenReturn(pubDate1);
+		when(post11.getUri()).thenReturn("uri1");
 		long day = dh.getFirstSecondOfDay(pubDate1);
         when(dateHelper.getFirstSecondOfDay(pubDate1)).thenReturn(day);
 		
 		long pubDate2 = date - 1000 * 60 * 10;
-        when(entry12.getPublishDate()).thenReturn(pubDate2);
-		when(entry12.getUri()).thenReturn("uri2");
+        when(post12.getPublishDate()).thenReturn(pubDate2);
+		when(post12.getUri()).thenReturn("uri2");
 		when(dateHelper.getFirstSecondOfDay(pubDate2)).thenReturn(dh.getFirstSecondOfDay(pubDate2));
 		
-		when(entry13.getPublishDate()).thenReturn(pubDate2);
-		when(entry13.getUri()).thenReturn("uri3");
+		when(post13.getPublishDate()).thenReturn(pubDate2);
+		when(post13.getUri()).thenReturn("uri3");
 		
 		when(subscription1.getGroup()).thenReturn(group);
 		when(subscription2.getGroup()).thenReturn(group);
@@ -196,15 +196,15 @@ public class CronServiceImplTest {
 		
 		verify(subscriptionDao).listSubscriptions(feed1);
 		
-		verify(feedEntryDao, never()).save(entry11);
+		verify(postDao, never()).save(post11);
 		
-		verify(entry12).setSubscription(subscription1);
-		verify(entry12).setSubscription(subscription2);
-		verify(feedEntryDao, times(2)).save(entry12);
+		verify(post12).setSubscription(subscription1);
+		verify(post12).setSubscription(subscription2);
+		verify(postDao, times(2)).save(post12);
 		
-		verify(entry13).setSubscription(subscription1);
-        verify(entry13).setSubscription(subscription2);
-        verify(feedEntryDao, times(2)).save(entry13);
+		verify(post13).setSubscription(subscription1);
+        verify(post13).setSubscription(subscription2);
+        verify(postDao, times(2)).save(post13);
 		
 		verify(subscription1).setLastUpdateDate(pubDate2);
 		verify(subscriptionDao).save(subscription1);
@@ -224,7 +224,7 @@ public class CronServiceImplTest {
 	}
 	
 	@Test
-    public void refreshFeeds_NewEntryInTheFuture() {
+    public void refreshFeeds_NewPostInTheFuture() {
         when(feedDao.find(FEED_URL)).thenReturn(feed1);
         when(feed1.getUrl()).thenReturn(FEED_URL);
         when(feed1.getTitle()).thenReturn(FEED_TITLE);
@@ -238,18 +238,18 @@ public class CronServiceImplTest {
         
         when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1));
         
-        when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entrySpy));
+        when(fetchResult.getPosts()).thenReturn(Arrays.asList(postSpy));
         
         when(subscription1.getLastUpdateDate()).thenReturn(date - 1000 * 60 * 20);
         
         DateHelper dh = new DateHelperImpl();
         long pubDate1 = date + 1000 * 60 * 30;
-        entrySpy.setPublishDate(pubDate1);
-        when(entrySpy.getUri()).thenReturn("uri1");
+        postSpy.setPublishDate(pubDate1);
+        when(postSpy.getUri()).thenReturn("uri1");
         long day = dh.getFirstSecondOfDay(pubDate1);
         when(dateHelper.getFirstSecondOfDay(pubDate1)).thenReturn(day);
         
-        doNothing().when(entrySpy).setSubscription(subscription1);
+        doNothing().when(postSpy).setSubscription(subscription1);
         
         when(subscription1.getGroup()).thenReturn(group);
         when(group.getUser()).thenReturn(user);
@@ -269,8 +269,8 @@ public class CronServiceImplTest {
         
         verify(subscriptionDao).listSubscriptions(feed1);
         
-        verify(entrySpy).setPublishDate(date);
-        verify(feedEntryDao).save(entrySpy);
+        verify(postSpy).setPublishDate(date);
+        verify(postDao).save(postSpy);
         
         verify(subscription1).setLastUpdateDate(date);
         verify(subscriptionDao).save(subscription1);
@@ -339,129 +339,129 @@ public class CronServiceImplTest {
 	
 	@Test
 	public void isNew_Feed_PublishDateIsNull() {
-	    when(entry11.getPublishDate()).thenReturn(null);
+	    when(post11.getPublishDate()).thenReturn(null);
 	    
-	    boolean isNew = service.isNew(entry11, feed1);
+	    boolean isNew = service.isNew(post11, feed1);
 	    
 	    assertFalse(isNew);
 	}
 	
 	@Test
     public void isNew_Feed_UriIsNull() {
-        when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn(null);
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, feed1);
+        boolean isNew = service.isNew(post11, feed1);
         
         assertFalse(isNew);
     }
 	
 	@Test
     public void isNew_Feed_FeedLastUpdateDateIsLarger() {
-        when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn("uri");
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
         when(feed1.getLastUpdateDate()).thenReturn(1100L);
         
-        boolean isNew = service.isNew(entry11, feed1);
+        boolean isNew = service.isNew(post11, feed1);
         
         assertFalse(isNew);
     }
 	
 	@Test
     public void isNew_Feed_FeedLastUpdateDateIsNull() {
-	    when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn("uri");
+	    when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
         when(feed1.getLastUpdateDate()).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, feed1);
+        boolean isNew = service.isNew(post11, feed1);
         
         assertTrue(isNew);
     }
 	
 	@Test
     public void isNew_Feed_PublishDateIsEqualToLastUpdateDate() {
-        when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn("uri");
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
         when(feed1.getLastUpdateDate()).thenReturn(1000L);
         
-        boolean isNew = service.isNew(entry11, feed1);
+        boolean isNew = service.isNew(post11, feed1);
         
         assertFalse(isNew);
     }
 	
 	@Test
     public void isNew_Feed_PublishDateIsLargerThanUpdatedDate() {
-        when(entry11.getPublishDate()).thenReturn(1001L);
-        when(entry11.getUri()).thenReturn("uri");
+        when(post11.getPublishDate()).thenReturn(1001L);
+        when(post11.getUri()).thenReturn("uri");
         when(feed1.getLastUpdateDate()).thenReturn(1000L);
         
-        boolean isNew = service.isNew(entry11, feed1);
+        boolean isNew = service.isNew(post11, feed1);
         
         assertTrue(isNew);
     }
 	
 	@Test
     public void isNew_Subscription_PublishDateIsNull() {
-        when(entry11.getPublishDate()).thenReturn(null);
+        when(post11.getPublishDate()).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1);
         
         assertFalse(isNew);
     }
 	
 	@Test
     public void isNew_Subscription_UriIsNull() {
-        when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn(null);
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1);
         
         assertFalse(isNew);
     }
 	
 	@Test
     public void isNew_Subscription_PublishDateIsSmaller() {
-        when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn("uri");
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
         when(subscription1.getLastUpdateDate()).thenReturn(1100L);
         
-        boolean isNew = service.isNew(entry11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1);
         
         assertFalse(isNew);
     }
 	
 	@Test
     public void isNew_Subscription_PublishDateIsEqual() {
-        when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn("uri");
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
         when(subscription1.getLastUpdateDate()).thenReturn(1000L);
-        when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(null);
+        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1);
         
         assertTrue(isNew);
     }
 	
 	@Test
-    public void isNew_Subscription_EntryFound() {
-        when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn("uri");
+    public void isNew_Subscription_PostFound() {
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
         when(subscription1.getLastUpdateDate()).thenReturn(900L);
-        when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(entry11);
+        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(post11);
         
-        boolean isNew = service.isNew(entry11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1);
         
         assertFalse(isNew);
     }
 	
 	@Test
-    public void isNew_Subscription_EntryNotFound() {
-        when(entry11.getPublishDate()).thenReturn(1000L);
-        when(entry11.getUri()).thenReturn("uri");
+    public void isNew_Subscription_PostNotFound() {
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
         when(subscription1.getLastUpdateDate()).thenReturn(900L);
-        when(feedEntryDao.find(subscription1, "uri", 1000L)).thenReturn(null);
+        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(null);
         
-        boolean isNew = service.isNew(entry11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1);
         
         assertTrue(isNew);
     }
@@ -469,23 +469,23 @@ public class CronServiceImplTest {
 	@Test
 	public void updateFeed_SameDay() {
 	    when(feed1.getLastUpdateDate()).thenReturn(850L);
-	    when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12, entry13));
+	    when(fetchResult.getPosts()).thenReturn(Arrays.asList(post11, post12, post13));
 	    
 	    long currentDate = 1000L;
 	    
 	    long pubDate1 = 700L;
-        when(entry11.getPublishDate()).thenReturn(pubDate1);
-        when(entry11.getUri()).thenReturn("uri1");
+        when(post11.getPublishDate()).thenReturn(pubDate1);
+        when(post11.getUri()).thenReturn("uri1");
         
 	    long pubDate2 = 900L;
-        when(entry12.getPublishDate()).thenReturn(pubDate2);
-        when(entry12.getUri()).thenReturn("uri2");
+        when(post12.getPublishDate()).thenReturn(pubDate2);
+        when(post12.getUri()).thenReturn("uri2");
         long day = 800L;
         when(dateHelper.getFirstSecondOfDay(pubDate2)).thenReturn(day);
         
         long pubDate3 = 900L;
-        when(entry13.getPublishDate()).thenReturn(pubDate3);
-        when(entry13.getUri()).thenReturn("uri3");
+        when(post13.getPublishDate()).thenReturn(pubDate3);
+        when(post13.getUri()).thenReturn("uri3");
         when(dateHelper.getFirstSecondOfDay(pubDate3)).thenReturn(day);
 	    
         when(builderFactory.createFeedStatBuilder()).thenReturn(builder);
@@ -511,23 +511,23 @@ public class CronServiceImplTest {
 	@Test
     public void updateFeed_DifferentDay() {
         when(feed1.getLastUpdateDate()).thenReturn(850L);
-        when(fetchResult.getFeedEntries()).thenReturn(Arrays.asList(entry11, entry12, entry13));
+        when(fetchResult.getPosts()).thenReturn(Arrays.asList(post11, post12, post13));
         
         long currentDate = 1000L;
         
         long pubDate1 = 700L;
-        when(entry11.getPublishDate()).thenReturn(pubDate1);
-        when(entry11.getUri()).thenReturn("uri1");
+        when(post11.getPublishDate()).thenReturn(pubDate1);
+        when(post11.getUri()).thenReturn("uri1");
         
         long pubDate2 = 900L;
-        when(entry12.getPublishDate()).thenReturn(pubDate2);
-        when(entry12.getUri()).thenReturn("uri2");
+        when(post12.getPublishDate()).thenReturn(pubDate2);
+        when(post12.getUri()).thenReturn("uri2");
         long day2 = 800L;
         when(dateHelper.getFirstSecondOfDay(pubDate2)).thenReturn(day2);
         
         long pubDate3 = 950L;
-        when(entry13.getPublishDate()).thenReturn(pubDate3);
-        when(entry13.getUri()).thenReturn("uri3");
+        when(post13.getPublishDate()).thenReturn(pubDate3);
+        when(post13.getUri()).thenReturn("uri3");
         long day3 = 900L;
         when(dateHelper.getFirstSecondOfDay(pubDate3)).thenReturn(day3);
         
@@ -563,8 +563,8 @@ public class CronServiceImplTest {
 		
 		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
 		
-		when(feedEntryDao.find(subscription1, 1)).thenReturn(entry12);
-		when(feedEntryDao.find(subscription2, 1)).thenReturn(entry22);
+		when(postDao.find(subscription1, 1)).thenReturn(post12);
+		when(postDao.find(subscription2, 1)).thenReturn(post22);
 		
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		cal.set(2015, 6, 6, 0, 25, 0);
@@ -572,17 +572,17 @@ public class CronServiceImplTest {
 		when(dateHelper.substractDaysFromCurrentDate(30)).thenReturn(threshold);
 		
         cal.set(2015, 6, 6, 0, 0, 0);
-		when(entry11.getPublishDate()).thenReturn(cal.getTimeInMillis());
+		when(post11.getPublishDate()).thenReturn(cal.getTimeInMillis());
 		cal.set(2015, 6, 6, 0, 10, 0);
 		long publishDate12 = cal.getTimeInMillis();
-		when(entry12.getPublishDate()).thenReturn(publishDate12);
+		when(post12.getPublishDate()).thenReturn(publishDate12);
 		cal.set(2015, 6, 6, 0, 20, 0);
-		when(entry21.getPublishDate()).thenReturn(cal.getTimeInMillis());
+		when(post21.getPublishDate()).thenReturn(cal.getTimeInMillis());
 		cal.set(2015, 6, 6, 0, 30, 0);
-		when(entry22.getPublishDate()).thenReturn(cal.getTimeInMillis());
+		when(post22.getPublishDate()).thenReturn(cal.getTimeInMillis());
 		
-		when(feedEntryDao.listUnstarredOlderThan(eq(subscription1), anyLong())).thenReturn(Arrays.asList(entry12));
-		when(feedEntryDao.listUnstarredOlderThan(eq(subscription2), anyLong())).thenReturn(Arrays.asList(entry22));
+		when(postDao.listUnstarredOlderThan(eq(subscription1), anyLong())).thenReturn(Arrays.asList(post12));
+		when(postDao.listUnstarredOlderThan(eq(subscription2), anyLong())).thenReturn(Arrays.asList(post22));
 		
 		when(subscription1.getGroup()).thenReturn(group);
 		when(subscription2.getGroup()).thenReturn(group);
@@ -598,15 +598,15 @@ public class CronServiceImplTest {
 		
 		verify(subscriptionDao).listSubscriptions(feed1);
 		
-		verify(feedEntryDao).find(subscription1, 1);
-		verify(feedEntryDao).find(subscription2, 1);
+		verify(postDao).find(subscription1, 1);
+		verify(postDao).find(subscription2, 1);
 		
-		verify(feedEntryDao).listUnstarredOlderThan(eq(subscription1), eq(publishDate12));
-		verify(feedEntryDao).delete(entry12);
+		verify(postDao).listUnstarredOlderThan(eq(subscription1), eq(publishDate12));
+		verify(postDao).delete(post12);
 		
-		verify(feedEntryDao).listUnstarredOlderThan(eq(subscription2), eq(threshold));
-		verify(feedEntryDao).delete(entry22);
-		verifyNoMoreInteractions(feedEntryDao);
+		verify(postDao).listUnstarredOlderThan(eq(subscription2), eq(threshold));
+		verify(postDao).delete(post22);
+		verifyNoMoreInteractions(postDao);
 		
 		verify(feedStatDao).deleteAll(feedStats);
 	}

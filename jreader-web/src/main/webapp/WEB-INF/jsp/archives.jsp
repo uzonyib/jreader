@@ -1,36 +1,36 @@
-<div id="feed-entries-container"
-	data-infinite-scroll="archivedEntries.loadMore()"
+<div id="posts-container"
+	data-infinite-scroll="archivedPosts.loadMore()"
 	data-infinite-scroll-distance="1"
-	data-infinite-scroll-disabled="!archivedEntries.visible || archivedEntries.loading || !archivedEntries.moreItemsAvailable"
+	data-infinite-scroll-disabled="!archivedPosts.visible || archivedPosts.loading || !archivedPosts.moreItemsAvailable"
 	data-infinite-scroll-immediate-check="false">
-	<table id="feed-entries" class="table">
+	<table id="posts" class="table">
 		<tr class="article-breadcrumb"
-			data-ng-repeat-start="entry in archivedEntries.items">
+			data-ng-repeat-start="post in archivedPosts.items">
 			<td class="action-buttons">
-				<button class="btn btn-default delete" title="Delete" data-ng-click="deleteEntry(entry)">
+				<button class="btn btn-default delete" title="Delete" data-ng-click="deletePost(psot)">
 					<span class="glyphicon glyphicon-remove"></span>
 				</button>
 			</td>
-			<td class="title" data-ng-click="toggleCollapsion(entry)">{{entry.title}}</td>
-			<td class="date hidden-sm hidden-xs" data-ng-click="toggleCollapsion(entry)">{{entry.publishDate | moment}}</td>
+			<td class="title" data-ng-click="toggleCollapsion(post)">{{post.title}}</td>
+			<td class="date hidden-sm hidden-xs" data-ng-click="toggleCollapsion(post)">{{post.publishDate | moment}}</td>
 		</tr>
 		<tr class="article-detail"
-			data-ng-if="entry.uncollapsed"
+			data-ng-if="post.uncollapsed"
 			data-ng-repeat-end="">
 			<td colspan="4">
 				<div class="header">
 					<div>
-						<a target=_blank href="{{entry.link}}" title="Open">
+						<a target=_blank href="{{post.link}}" title="Open">
 							<span class="glyphicon glyphicon-new-window"></span>
-							<span class="title">{{entry.title}}</span>
+							<span class="title">{{post.title}}</span>
 						</a>
 					</div>
 					<div>
-						<span data-ng-if="entry.author">by {{entry.author}}<span class="hidden-lg hidden-md">,</span></span>
-						<span class="hidden-lg hidden-md">{{entry.publishDate | moment}}</span>
+						<span data-ng-if="post.author">by {{post.author}}<span class="hidden-lg hidden-md">,</span></span>
+						<span class="hidden-lg hidden-md">{{post.publishDate | moment}}</span>
 					</div>
 				</div>
-				<div class="description" data-ng-bind-html="entry.description"></div>
+				<div class="description" data-ng-bind-html="post.description"></div>
 			</td>
 		</tr>
 	</table>

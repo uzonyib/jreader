@@ -20,7 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import jreader.dao.FeedEntryDao;
+import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
@@ -49,7 +49,7 @@ public class GroupServiceImplTest {
 	@Mock
 	private SubscriptionDao subscriptionDao;
 	@Mock
-	private FeedEntryDao feedEntryDao;
+	private PostDao postDao;
 	@Mock
 	private ConversionService conversionService;
 	@Mock
@@ -201,9 +201,9 @@ public class GroupServiceImplTest {
 		when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription));
 		when(subscriptionDao.list(group1)).thenReturn(Arrays.asList(subscription1, subscription2));
 		when(subscriptionDao.list(group2)).thenReturn(Collections.<Subscription>emptyList());
-		when(feedEntryDao.countUnread(subscription)).thenReturn(1);
-		when(feedEntryDao.countUnread(subscription1)).thenReturn(2);
-		when(feedEntryDao.countUnread(subscription2)).thenReturn(3);
+		when(postDao.countUnread(subscription)).thenReturn(1);
+		when(postDao.countUnread(subscription1)).thenReturn(2);
+		when(postDao.countUnread(subscription2)).thenReturn(3);
 		
 		when(conversionService.convert(group, GroupDto.class)).thenReturn(groupDto);
 		when(conversionService.convert(group1, GroupDto.class)).thenReturn(groupDto1);

@@ -7,11 +7,11 @@
     <js>/js/service/view.js</js>
     <js>/js/service/ajax.js</js>
     <js>/js/ctrl/reader.js</js>
-    <js>/js/ctrl/entries-navbar.js</js>
+    <js>/js/ctrl/posts-navbar.js</js>
     <js>/js/ctrl/archives-navbar.js</js>
     <js>/js/ctrl/home.js</js>
     <js>/js/ctrl/settings.js</js>
-    <js>/js/ctrl/entries.js</js>
+    <js>/js/ctrl/posts.js</js>
     <js>/js/ctrl/archives.js</js>
   </group>
 </groups>
