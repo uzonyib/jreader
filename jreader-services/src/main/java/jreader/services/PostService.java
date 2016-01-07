@@ -9,9 +9,9 @@ public interface PostService {
 
     void markRead(String username, Map<Long, Map<Long, List<Long>>> ids);
 
-    void star(String username, Long groupId, Long subscriptionId, Long postId);
+    void bookmark(String username, Long groupId, Long subscriptionId, Long postId);
 
-    void unstar(String username, Long groupId, Long subscriptionId, Long postId);
+    void deleteBookmark(String username, Long groupId, Long subscriptionId, Long postId);
 
     List<PostDto> list(PostFilterData filterData);
 

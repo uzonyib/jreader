@@ -123,7 +123,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 				<td>subscription1</td>
@@ -214,7 +214,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 				<td>subscription1</td>
@@ -315,7 +315,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 				<td>subscription1</td>
@@ -393,7 +393,7 @@
 	   		Given the ID of <span concordion:execute="#postId11 = getPostId(#TEXT)">post11</span> is <span concordion:echo="#postId11"></span><br/>
 	   		and the ID of <span concordion:execute="#postId21 = getPostId(#TEXT)">post21</span> is <span concordion:echo="#postId21"></span><br/>
 	   		and the user marked post #<span concordion:echo="#postId11"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="read(#groupId, #subscriptionId1, #postId11)">read</span><br/>
-	   		and the user marked post #<span concordion:echo="#postId21"></span> of subscription #<span concordion:echo="#subscriptionId2"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="markStarred(#groupId, #subscriptionId2, #postId21, #TEXT)">starred</span><br/> 
+	   		and the user marked post #<span concordion:echo="#postId21"></span> of subscription #<span concordion:echo="#subscriptionId2"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="updateBookmarked(#groupId, #subscriptionId2, #postId21, #TEXT)">bookmarked</span><br/> 
 	   		and the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-07-06 00:20:00  UTC</span><br/>
 	   		when <span concordion:execute="cleanupFeed(#TEXT)">feed1</span> is cleaned up<br/>
 	   		and <span concordion:execute="cleanupFeed(#TEXT)">feed2</span> is cleaned up<br/>
@@ -409,7 +409,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 				<td>subscription2</td>
@@ -474,7 +474,7 @@
 	   	</table>
 	   	
 	   	<p>
-	   		Given the user marked post #<span concordion:echo="#postId21"></span> of subscription #<span concordion:echo="#subscriptionId2"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="markStarred(#groupId, #subscriptionId2, #postId21, #TEXT)">unstarred</span><br/> 
+	   		Given the user marked post #<span concordion:echo="#postId21"></span> of subscription #<span concordion:echo="#subscriptionId2"></span> of group #<span concordion:echo="#groupId"></span> <span concordion:execute="updateBookmarked(#groupId, #subscriptionId2, #postId21, #TEXT)">not bookmarked</span><br/> 
 	   		and the current date and time is <span concordion:execute="setCurrentDate(#TEXT)">2015-07-06 00:50:00 UTC</span><br/>
 	   		when <span concordion:execute="cleanupFeed(#TEXT)">feed1</span> is cleaned up<br/>
 	   		and <span concordion:execute="cleanupFeed(#TEXT)">feed2</span> is cleaned up<br/>
@@ -490,7 +490,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 			<tr>
 				<td>subscription1</td>
@@ -578,7 +578,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 			<tr>
 				<td>subscription1</td>

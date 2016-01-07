@@ -41,12 +41,12 @@
     </datastore-index>
 
     <datastore-index kind="Post" ancestor="true" source="auto">
-        <property name="starred" direction="asc"/>
+        <property name="bookmarked" direction="asc"/>
         <property name="publishDate" direction="asc"/>
     </datastore-index>
 
     <datastore-index kind="Post" ancestor="true" source="auto">
-        <property name="starred" direction="asc"/>
+        <property name="bookmarked" direction="asc"/>
         <property name="publishDate" direction="desc"/>
     </datastore-index>
     

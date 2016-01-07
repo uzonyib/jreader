@@ -581,8 +581,8 @@ public class CronServiceImplTest {
 		cal.set(2015, 6, 6, 0, 30, 0);
 		when(post22.getPublishDate()).thenReturn(cal.getTimeInMillis());
 		
-		when(postDao.listUnstarredOlderThan(eq(subscription1), anyLong())).thenReturn(Arrays.asList(post12));
-		when(postDao.listUnstarredOlderThan(eq(subscription2), anyLong())).thenReturn(Arrays.asList(post22));
+		when(postDao.listNotBookmarkedAndOlderThan(eq(subscription1), anyLong())).thenReturn(Arrays.asList(post12));
+		when(postDao.listNotBookmarkedAndOlderThan(eq(subscription2), anyLong())).thenReturn(Arrays.asList(post22));
 		
 		when(subscription1.getGroup()).thenReturn(group);
 		when(subscription2.getGroup()).thenReturn(group);
@@ -601,10 +601,10 @@ public class CronServiceImplTest {
 		verify(postDao).find(subscription1, 1);
 		verify(postDao).find(subscription2, 1);
 		
-		verify(postDao).listUnstarredOlderThan(eq(subscription1), eq(publishDate12));
+		verify(postDao).listNotBookmarkedAndOlderThan(eq(subscription1), eq(publishDate12));
 		verify(postDao).delete(post12);
 		
-		verify(postDao).listUnstarredOlderThan(eq(subscription2), eq(threshold));
+		verify(postDao).listNotBookmarkedAndOlderThan(eq(subscription2), eq(threshold));
 		verify(postDao).delete(post22);
 		verifyNoMoreInteractions(postDao);
 		

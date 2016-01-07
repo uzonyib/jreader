@@ -46,7 +46,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
     private static final String[] POST_AUTHORS = { "author_1", "author_2", "author_3", "author_4" };
     private static final long[] POST_PUBLISHED_DATES = { 103L, 102L, 101L, 104L };
     private static final boolean[] POST_READ_FLAGS = { true, true, false, false };
-    private static final boolean[] POST_STARRED_FLAGS = { false, true, true, false };
+    private static final boolean[] POST_BOOKMARKED_FLAGS = { false, true, true, false };
     private static List<Post> savedPosts;
     
     private static final String NEW_URI = "new_uri";
@@ -56,7 +56,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
     private static final String NEW_AUTHOR = "new_author";
     private static final long NEW_PUBLISHED_DATE = 105L;
     private static final boolean NEW_READ_FLAG = false;
-    private static final boolean NEW_STARRED_FLAG = false;
+    private static final boolean NEW_BOOKMARKED_FLAG = false;
     
     private UserDao userDao;
     private FeedDao feedDao;
@@ -119,7 +119,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
             post.setLink(POST_LINKS[i]);
             post.setPublishDate(POST_PUBLISHED_DATES[i]);
             post.setRead(POST_READ_FLAGS[i]);
-            post.setStarred(POST_STARRED_FLAGS[i]);
+            post.setBookmarked(POST_BOOKMARKED_FLAGS[i]);
             post.setSubscription(savedSubscriptions.get(0));
             savedPosts.add(sut.save(post));
         }
@@ -142,7 +142,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
         post.setAuthor(NEW_AUTHOR);
         post.setPublishDate(NEW_PUBLISHED_DATE);
         post.setRead(NEW_READ_FLAG);
-        post.setStarred(NEW_STARRED_FLAG);
+        post.setBookmarked(NEW_BOOKMARKED_FLAG);
         post.setSubscription(savedSubscriptions.get(1));
 
         post = sut.save(post);
@@ -157,7 +157,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
         assertEquals(post.getAuthor(), NEW_AUTHOR);
         assertEquals(post.getPublishDate().longValue(), NEW_PUBLISHED_DATE);
         assertEquals(post.isRead(), NEW_READ_FLAG);
-        assertEquals(post.isStarred(), NEW_STARRED_FLAG);
+        assertEquals(post.isBookMarked(), NEW_BOOKMARKED_FLAG);
     }
     
     @Test
@@ -181,7 +181,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
         assertEquals(post.getAuthor(), POST_AUTHORS[0]);
         assertEquals(post.getPublishDate().longValue(), POST_PUBLISHED_DATES[0]);
         assertEquals(post.isRead(), POST_READ_FLAGS[0]);
-        assertEquals(post.isStarred(), POST_STARRED_FLAGS[0]);
+        assertEquals(post.isBookMarked(), POST_BOOKMARKED_FLAGS[0]);
     }
     
     @Test
@@ -198,7 +198,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
         assertEquals(post.getAuthor(), POST_AUTHORS[0]);
         assertEquals(post.getPublishDate().longValue(), POST_PUBLISHED_DATES[0]);
         assertEquals(post.isRead(), POST_READ_FLAGS[0]);
-        assertEquals(post.isStarred(), POST_STARRED_FLAGS[0]);
+        assertEquals(post.isBookMarked(), POST_BOOKMARKED_FLAGS[0]);
     }
     
     @Test
@@ -240,7 +240,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
     
     @Test
     public void listForSubscription_IfPostsExist_ShouldReturnPosts() {
-        PostFilter filter = new PostFilter(PostType.STARRED, true, 0, 5);
+        PostFilter filter = new PostFilter(PostType.BOOKMARKED, true, 0, 5);
         
         List<Post> posts = sut.list(savedSubscriptions.get(0), filter);
         
@@ -252,8 +252,8 @@ public class PostDaoImplTest extends AbstractDaoTest {
     }
     
     @Test
-    public void listUnstarredOlderThan_IfPostsExist_ShouldReturnPosts() {
-        List<Post> posts = sut.listUnstarredOlderThan(savedSubscriptions.get(0), 104);
+    public void listNotBookmarkedAndOlderThan_IfPostsExist_ShouldReturnPosts() {
+        List<Post> posts = sut.listNotBookmarkedAndOlderThan(savedSubscriptions.get(0), 104);
         
         assertNotNull(posts);
         assertEquals(posts.size(), 1);

@@ -105,30 +105,30 @@ public class PostServiceImplTest {
 	}
 	
 	@Test
-	public void star() {
+	public void bookmark() {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		when(postDao.find(subscription1, POST_ID_1)).thenReturn(post1);
-		when(post1.isStarred()).thenReturn(false);
+		when(post1.isBookMarked()).thenReturn(false);
 		
-		service.star(USERNAME, GROUP_ID_1, SUBSCRIPTION_ID_1, POST_ID_1);
+		service.bookmark(USERNAME, GROUP_ID_1, SUBSCRIPTION_ID_1, POST_ID_1);
 		
-		verify(post1).setStarred(true);
+		verify(post1).setBookmarked(true);
 		verify(postDao).save(post1);
 	}
 	
 	@Test
-	public void unstar() {
+	public void deleteBookmark() {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		when(postDao.find(subscription1, POST_ID_1)).thenReturn(post1);
-		when(post1.isStarred()).thenReturn(true);
+		when(post1.isBookMarked()).thenReturn(true);
 		
-		service.unstar(USERNAME, GROUP_ID_1, SUBSCRIPTION_ID_1, POST_ID_1);
+		service.deleteBookmark(USERNAME, GROUP_ID_1, SUBSCRIPTION_ID_1, POST_ID_1);
 		
-		verify(post1).setStarred(false);
+		verify(post1).setBookmarked(false);
 		verify(postDao).save(post1);
 	}
 	

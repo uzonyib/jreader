@@ -16,7 +16,7 @@ public class PostDtoConverter implements Converter<Post, PostDto> {
         dto.setLink(entity.getLink());
         dto.setPublishDate(entity.getPublishDate());
         dto.setRead(entity.isRead());
-        dto.setStarred(entity.isStarred());
+        dto.setBookmarked(entity.isBookMarked());
         dto.setId(String.valueOf(entity.getId()));
         if (entity.getSubscription() != null) {
             dto.setSubscriptionTitle(entity.getSubscription().getTitle());

@@ -28,7 +28,7 @@ public class Post {
     @Index
     private boolean read;
     @Index
-    private boolean starred;
+    private boolean bookmarked;
 
     public Long getId() {
         return id;
@@ -102,12 +102,12 @@ public class Post {
         this.read = read;
     }
 
-    public boolean isStarred() {
-        return starred;
+    public boolean isBookMarked() {
+        return bookmarked;
     }
 
-    public void setStarred(final boolean starred) {
-        this.starred = starred;
+    public void setBookmarked(final boolean bookmarked) {
+        this.bookmarked = bookmarked;
     }
 
     public Subscription getSubscription() {

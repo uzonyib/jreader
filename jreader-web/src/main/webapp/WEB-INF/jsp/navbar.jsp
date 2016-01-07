@@ -44,11 +44,11 @@
 					  			data-ng-click="posts.setSelectionToUnread()">
 					    		<input type="radio" name="posts-vertical"><span class="glyphicon glyphicon-unchecked"></span>
 					  		</label>
-					  		<label class="btn btn-default navbar-btn" title="Starred (3)"
-					  			data-ng-class="{active: viewService.postFilter.selection == 'starred'}"
-					  			data-ng-init="shortcuts.register('3', viewService.isPostsSelected, posts.setSelectionToStarred)"
-					  			data-ng-click="posts.setSelectionToStarred()">
-					    		<input type="radio" name="posts-vertical"><span class="glyphicon glyphicon-star"></span>
+					  		<label class="btn btn-default navbar-btn" title="Bookmarked (3)"
+					  			data-ng-class="{active: viewService.postFilter.selection == 'bookmarked'}"
+					  			data-ng-init="shortcuts.register('3', viewService.isPostsSelected, posts.setSelectionToBookmarked)"
+					  			data-ng-click="posts.setSelectionToBookmarked()">
+					    		<input type="radio" name="posts-vertical"><span class="glyphicon glyphicon-bookmark"></span>
 					  		</label>
 						</li>
 						<li class="btn-group" data-toggle="buttons">
@@ -206,7 +206,7 @@
 				<p>R - Refresh posts</p>
 				<p>1 - Show all posts</p>
 				<p>2 - Show unread posts</p>
-				<p>3 - Show starred posts</p>
+				<p>3 - Show bookmarked posts</p>
 				<p>A - Ascending order</p>
 				<p>D - Descending order</p>
 				<hr>

@@ -21,7 +21,7 @@ public interface PostDao extends OfyDao<Post> {
 
     List<Post> list(Subscription subscription, PostFilter filter);
 
-    List<Post> listUnstarredOlderThan(Subscription subscription, long date);
+    List<Post> listNotBookmarkedAndOlderThan(Subscription subscription, long date);
 
     List<Post> list(Subscription subscription);
 

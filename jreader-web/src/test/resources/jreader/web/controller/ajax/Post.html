@@ -134,7 +134,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 	       		<td>subscription1</td>
@@ -373,7 +373,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 				<td>subscription1</td>
@@ -450,7 +450,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 				<td>subscription3</td>
@@ -508,7 +508,7 @@
 	   		Given the ID of <span concordion:execute="#postId = getPostId(#TEXT)">post12</span> is <span concordion:echo="#postId"></span>
 	   	</p>
 		<p>
-			when the user marks post #<span concordion:echo="#postId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="markStarred(#groupId1, #subscriptionId1, #postId, #TEXT)">starred</span><br/>
+			when the user marks post #<span concordion:echo="#postId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="updateBookmarked(#groupId1, #subscriptionId1, #postId, #TEXT)">bookmarked</span><br/>
 			and he lists <span concordion:set="#selection">all</span> posts from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
@@ -521,7 +521,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 				<td>subscription3</td>
@@ -586,7 +586,7 @@
 	   	</table>
 	   	
 		<p>
-			When the user lists <span concordion:set="#selection">starred</span> posts from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
+			When the user lists <span concordion:set="#selection">bookmarked</span> posts from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
 		<table concordion:verifyRows="#post : getPosts(#selection, #from, #to, #order)">
@@ -598,7 +598,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	       	<tr>
 	       		<td>subscription1</td>
@@ -614,8 +614,8 @@
 	   	
 	   	<p>
 	   		Given the ID of <span concordion:execute="#postId = getPostId(#TEXT)">post12</span> is <span concordion:echo="#postId"></span>
-			when the user marks post #<span concordion:echo="#postId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="markStarred(#groupId1, #subscriptionId1, #postId, #TEXT)">unstarred</span><br/>
-			and he lists <span concordion:set="#selection">starred</span> posts from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
+			when the user marks post #<span concordion:echo="#postId"></span> of subscription #<span concordion:echo="#subscriptionId1"></span> of group #<span concordion:echo="#groupId1"></span> <span concordion:execute="updateBookmarked(#groupId1, #subscriptionId1, #postId, #TEXT)">not bookmarked</span><br/>
+			and he lists <span concordion:set="#selection">bookmarked</span> posts from <span concordion:set="#from">0</span> to <span concordion:set="#to">10</span> in <span concordion:set="#order">descending</span> order<br/>
 			then the list contains:
 		</p>
 		<table concordion:verifyRows="#post : getPosts(#selection, #from, #to, #order)">
@@ -627,7 +627,7 @@
 	       		<th concordion:assertEquals="#post.link">Link</th>
 	       		<th concordion:assertEquals="#post.formattedPublishDate">Publish date</th>
 	       		<th concordion:assertEquals="#post.read">Read</th>
-	       		<th concordion:assertEquals="#post.starred">Starred</th>
+	       		<th concordion:assertEquals="#post.bookmarked">Bookmarked</th>
 	       	</tr>
 	   	</table>
 	   	

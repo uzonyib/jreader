@@ -50,8 +50,8 @@ public class PostDaoImpl extends AbstractOfyDao<Post> implements PostDao {
             case UNREAD:
                 query = query.filter("read", false);
                 break;
-            case STARRED:
-                query = query.filter("starred", true);
+            case BOOKMARKED:
+                query = query.filter("bookmarked", true);
                 break;
             default:
                 break;
@@ -61,8 +61,8 @@ public class PostDaoImpl extends AbstractOfyDao<Post> implements PostDao {
     }
 
     @Override
-    public List<Post> listUnstarredOlderThan(final Subscription subscription, final long date) {
-        return getOfy().load().type(Post.class).ancestor(subscription).filter("starred", false)
+    public List<Post> listNotBookmarkedAndOlderThan(final Subscription subscription, final long date) {
+        return getOfy().load().type(Post.class).ancestor(subscription).filter("bookmarked", false)
                 .filter("publishDate <", date).list();
     }
 

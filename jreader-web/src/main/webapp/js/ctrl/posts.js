@@ -12,14 +12,14 @@ angular.module("jReaderApp").controller("PostsCtrl", ["$scope", "ajaxService", "
 		post.uncollapsed = !post.uncollapsed;
 	};
 	
-	$scope.star = function(post) {
-		post.starred = true;
-		$scope.ajaxService.star(post);
+	$scope.bookmark = function(post) {
+		post.bookmarked = true;
+		$scope.ajaxService.bookmark(post);
 	};
 	
-	$scope.unstar = function(post) {
-		post.starred = false;
-		$scope.ajaxService.unstar(post);
+	$scope.deleteBookmark = function(post) {
+		post.bookmarked = false;
+		$scope.ajaxService.deleteBookmark(post);
 	};
 	
 	$scope.archive = function(post) {

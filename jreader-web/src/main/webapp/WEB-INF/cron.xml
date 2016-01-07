@@ -9,7 +9,7 @@
 	</cron>
 	<cron>
 		<url>/cron/cleanup</url>
-		<description>Delete old non-starred posts</description>
+		<description>Delete old non-bookmarked posts</description>
 		<schedule>every day 23:00</schedule>
 		<timezone>Europe/Budapest</timezone>
 		<target>default</target>

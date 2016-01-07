@@ -202,7 +202,7 @@ public class CronServiceImpl implements CronService {
                 final Post e = postDao.find(subscription, keptCount);
                 if (e != null) {
                     final long threshold = Math.min(date, e.getPublishDate());
-                    final List<Post> posts = postDao.listUnstarredOlderThan(subscription, threshold);
+                    final List<Post> posts = postDao.listNotBookmarkedAndOlderThan(subscription, threshold);
                     for (final Post post : posts) {
                         postDao.delete(post);
                         ++count;

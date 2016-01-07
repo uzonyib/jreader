@@ -199,20 +199,20 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
         });
 	};
 	
-	this.setStarred = function(post, starred) {
+	this.setBookmarked = function(post, bookmarked) {
 		$http({
 			method: "PUT",
-			url: "/reader/groups/" + post.groupId + "/subscriptions/" + post.subscriptionId + "/posts/" + post.id + "/starred",
-            params: { "value": starred }
+			url: "/reader/groups/" + post.groupId + "/subscriptions/" + post.subscriptionId + "/posts/" + post.id + "/bookmarked",
+            params: { "value": bookmarked }
         });
 	};
 	
-	this.star = function(post) {
-		service.setStarred(post, true);
+	this.bookmark = function(post) {
+		service.setBookmarked(post, true);
 	};
 	
-	this.unstar = function(post) {
-		service.setStarred(post, false);
+	this.deleteBookmark = function(post) {
+		service.setBookmarked(post, false);
 	};
 	
 	this.archive = function(post, archive) {

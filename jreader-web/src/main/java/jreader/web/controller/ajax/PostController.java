@@ -62,13 +62,13 @@ public class PostController {
         return new ResponseEntity(groupService.list(principal.getName()));
     }
 
-    @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/posts/{id}/starred", method = RequestMethod.PUT)
-    public ResponseEntity setStarred(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
+    @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/posts/{id}/bookmarked", method = RequestMethod.PUT)
+    public ResponseEntity setBookmarked(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
             @PathVariable final Long id, @RequestParam final boolean value) {
         if (value) {
-            postService.star(principal.getName(), groupId, subscriptionId, id);
+            postService.bookmark(principal.getName(), groupId, subscriptionId, id);
         } else {
-            postService.unstar(principal.getName(), groupId, subscriptionId, id);
+            postService.deleteBookmark(principal.getName(), groupId, subscriptionId, id);
         }
         return new ResponseEntity();
     }

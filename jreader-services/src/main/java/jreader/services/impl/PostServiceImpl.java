@@ -59,27 +59,27 @@ public class PostServiceImpl extends AbstractService implements PostService {
     }
 
     @Override
-    public void star(final String username, final Long groupId, final Long subscriptionId, final Long postId) {
+    public void bookmark(final String username, final Long groupId, final Long subscriptionId, final Long postId) {
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
         final Post post = postDao.find(subscription, postId);
-        if (post != null && !post.isStarred()) {
-            post.setStarred(true);
+        if (post != null && !post.isBookMarked()) {
+            post.setBookmarked(true);
             postDao.save(post);
         }
     }
 
     @Override
-    public void unstar(final String username, final Long groupId, final Long subscriptionId, final Long postId) {
+    public void deleteBookmark(final String username, final Long groupId, final Long subscriptionId, final Long postId) {
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
         final Post post = postDao.find(subscription, postId);
-        if (post != null && post.isStarred()) {
-            post.setStarred(false);
+        if (post != null && post.isBookMarked()) {
+            post.setBookmarked(false);
             postDao.save(post);
         }
     }

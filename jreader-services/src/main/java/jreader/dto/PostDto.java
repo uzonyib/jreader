@@ -12,7 +12,7 @@ public class PostDto {
     private String author;
     private Long publishDate;
     private boolean read;
-    private boolean starred;
+    private boolean bookmarked;
 
     public String getId() {
         return id;
@@ -94,12 +94,12 @@ public class PostDto {
         this.read = read;
     }
 
-    public boolean isStarred() {
-        return starred;
+    public boolean isBookmarked() {
+        return bookmarked;
     }
 
-    public void setStarred(final boolean starred) {
-        this.starred = starred;
+    public void setBookmarked(final boolean bookmarked) {
+        this.bookmarked = bookmarked;
     }
 
 }

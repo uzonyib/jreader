@@ -8,11 +8,11 @@
 			data-ng-class="{info: !post.read}"
 			data-ng-repeat-start="post in posts.items">
 			<td class="action-buttons">
-				<button class="btn btn-default star" title="Star" data-ng-show="!post.starred" data-ng-click="star(post)">
-					<span class="glyphicon glyphicon-star-empty"></span>
+				<button class="btn btn-default bookmark" title="Bookmark" data-ng-show="!post.bookmarked" data-ng-click="bookmark(post)">
+					<span class="glyphicon glyphicon-bookmark"></span>
 				</button>
-				<button class="btn btn-default unstar" title="Unstar" data-ng-show="post.starred" data-ng-click="unstar(post)">
-					<span class="glyphicon glyphicon-star"></span>
+				<button class="btn btn-default delete-bookmark" title="Delete bookmark" data-ng-show="post.bookmarked" data-ng-click="deleteBookmark(post)">
+					<span class="glyphicon glyphicon-bookmark"></span>
 				</button>
 			</td>
 			<td class="feed-title" data-ng-click="toggleCollapsion(post);posts.markRead(post);">{{post.subscriptionTitle}}</td>

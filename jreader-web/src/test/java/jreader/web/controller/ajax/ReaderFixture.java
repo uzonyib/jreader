@@ -276,7 +276,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
             post.setGroupId(dto.getGroupId());
             post.setSubscriptionId(dto.getSubscriptionId());
             post.setRead(dto.isRead());
-            post.setStarred(dto.isStarred());
+            post.setBookmarked(dto.isBookmarked());
             posts.add(post);
         }
         return posts;
@@ -292,8 +292,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         postController.readAll(principal, ids);
     }
     
-    public void markStarred(Long groupId, Long subscriptionId, Long postId, String starred) {
-        postController.setStarred(principal, groupId, subscriptionId, postId, "starred".equals(starred));
+    public void updateBookmarked(Long groupId, Long subscriptionId, Long postId, String bookmarked) {
+        postController.setBookmarked(principal, groupId, subscriptionId, postId, "bookmarked".equals(bookmarked));
     }
     
     public int getArchiveCount() {

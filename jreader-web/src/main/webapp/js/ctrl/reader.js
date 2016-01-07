@@ -170,8 +170,8 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		$scope.posts.setSelection("unread");
 	};
 	
-	$scope.posts.setSelectionToStarred = function() {
-		$scope.posts.setSelection("starred");
+	$scope.posts.setSelectionToBookmarked = function() {
+		$scope.posts.setSelection("bookmarked");
 	};
 	
 	$scope.posts.setSelection = function(s) {

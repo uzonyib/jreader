@@ -3,7 +3,7 @@ package jreader.dao;
 public class PostFilter {
 
     public enum PostType {
-        ALL, UNREAD, STARRED;
+        ALL, UNREAD, BOOKMARKED;
     }
 
     private PostType postType;
