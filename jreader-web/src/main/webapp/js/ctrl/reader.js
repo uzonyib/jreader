@@ -35,7 +35,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		}
 		
 		$scope.menu.refreshSelection();
-		$scope.menu.refreshCollapsion();
+		$scope.menu.refreshExpansion();
 	};
 	
 	$scope.groups.refresh = function() {
@@ -269,12 +269,12 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     $scope.refreshArchives();
     
     $scope.menu = {};
-    $scope.menu.uncollapsedItems = [];
+    $scope.menu.expandedItems = [];
 	$scope.menu.homeSelected = true;
 	$scope.menu.settingsSelected = false;
 	$scope.menu.allItemsSelected = false;
 	$scope.menu.archivedItemsSelected = false;
-	$scope.menu.archivedItemsCollapsed = true;
+	$scope.menu.archivedItemsExpanded = false;
 	
 	$scope.menu.refreshSelection = function() {
 		$scope.menu.homeSelected = $scope.viewService.isHomeSelected();
@@ -294,37 +294,37 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		});
 	};
 	
-	$scope.menu.refreshCollapsion = function() {
+	$scope.menu.refreshExpansion = function() {
 		angular.forEach($scope.groups.items, function(group) {
-			group.collapsed = $scope.menu.uncollapsedItems.indexOf(group.id) < 0;
+			group.expanded = $scope.menu.expandedItems.indexOf(group.id) >= 0;
 		});
 	};
 	
 	$scope.menu.collapse = function(groupId, $event) {
-		var index = $scope.menu.uncollapsedItems.indexOf(groupId);
+		var index = $scope.menu.expandedItems.indexOf(groupId);
 		if (index >= 0) {
-			$scope.menu.uncollapsedItems.splice(index, 1);
+			$scope.menu.expandedItems.splice(index, 1);
 		}
-		$scope.menu.refreshCollapsion();
+		$scope.menu.refreshExpansion();
 		$event.stopPropagation();
 	};
 	
-	$scope.menu.uncollapse = function(groupId, $event) {
-		var index = $scope.menu.uncollapsedItems.indexOf(groupId);
+	$scope.menu.expand = function(groupId, $event) {
+		var index = $scope.menu.expandedItems.indexOf(groupId);
 		if (index < 0) {
-			$scope.menu.uncollapsedItems.push(groupId);
+			$scope.menu.expandedItems.push(groupId);
 		}
-		$scope.menu.refreshCollapsion();
+		$scope.menu.refreshExpansion();
 		$event.stopPropagation();
 	};
 	
 	$scope.menu.collapseArchivedItems = function($event) {
-		$scope.menu.archivedItemsCollapsed = true;
+		$scope.menu.archivedItemsExpanded = false;
 		$event.stopPropagation();
 	};
 	
-	$scope.menu.uncollapseArchivedItems = function($event) {
-		$scope.menu.archivedItemsCollapsed = false;
+	$scope.menu.expandArchivedItems = function($event) {
+		$scope.menu.archivedItemsExpanded = true;
 		$event.stopPropagation();
 	};
 	

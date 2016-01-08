@@ -8,8 +8,8 @@ angular.module("jReaderApp").controller("PostsCtrl", ["$scope", "ajaxService", "
 		$scope.active = $scope.viewService.isPostsSelected();
 	});
 	
-	$scope.toggleCollapsion = function(post) {
-		post.uncollapsed = !post.uncollapsed;
+	$scope.toggleExpansion = function(post) {
+		post.expanded = !post.expanded;
 	};
 	
 	$scope.bookmark = function(post) {

@@ -15,12 +15,12 @@
 					<span class="glyphicon glyphicon-bookmark"></span>
 				</button>
 			</td>
-			<td class="feed-title" data-ng-click="toggleCollapsion(post);posts.markRead(post);">{{post.subscriptionTitle}}</td>
-			<td class="title" data-ng-click="toggleCollapsion(post);posts.markRead(post);">{{post.title}}</td>
-			<td class="date hidden-sm hidden-xs" data-ng-click="toggleCollapsion(post);posts.markRead(post);">{{post.publishDate | moment}}</td>
+			<td class="feed-title" data-ng-click="toggleExpansion(post);posts.markRead(post);">{{post.subscriptionTitle}}</td>
+			<td class="title" data-ng-click="toggleExpansion(post);posts.markRead(post);">{{post.title}}</td>
+			<td class="date hidden-sm hidden-xs" data-ng-click="toggleExpansion(post);posts.markRead(post);">{{post.publishDate | moment}}</td>
 		</tr>
 		<tr class="article-detail"
-			data-ng-if="post.uncollapsed"
+			data-ng-if="post.expanded"
 			data-ng-repeat-end="">
 			<td colspan="4">
 				<div class="header">
