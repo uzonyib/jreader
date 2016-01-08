@@ -13,6 +13,6 @@ public interface PostService {
 
     void deleteBookmark(String username, Long groupId, Long subscriptionId, Long postId);
 
-    List<PostDto> list(PostFilterData filterData);
+    List<PostDto> list(PostFilter filter);
 
 }

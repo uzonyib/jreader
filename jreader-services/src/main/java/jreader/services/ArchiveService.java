@@ -21,7 +21,7 @@ public interface ArchiveService {
 
     void archive(String username, Long groupId, Long subscriptionId, Long postId, Long archiveId);
 
-    List<ArchivedPostDto> listPosts(ArchivedPostFilterData filterData);
+    List<ArchivedPostDto> listPosts(ArchivedPostFilter filter);
 
     void deletePost(String username, Long archiveId, Long postId);
 

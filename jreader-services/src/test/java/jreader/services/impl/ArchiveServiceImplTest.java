@@ -34,7 +34,7 @@ import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedPostDto;
-import jreader.services.ArchivedPostFilterData;
+import jreader.services.ArchivedPostFilter;
 import jreader.services.ServiceException;
 
 public class ArchiveServiceImplTest {
@@ -102,7 +102,7 @@ public class ArchiveServiceImplTest {
 	@Mock
 	private ArchivedPostDto archivedPostDto2;
 	@Mock
-	private ArchivedPostFilterData filter;
+	private ArchivedPostFilter filter;
 	
 	@BeforeMethod
 	public void setup() {

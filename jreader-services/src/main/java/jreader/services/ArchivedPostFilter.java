@@ -1,18 +1,16 @@
 package jreader.services;
 
-import jreader.dao.ArchivedPostFilter;
-
-public class ArchivedPostFilterData extends ArchivedPostFilter {
+public class ArchivedPostFilter extends jreader.dao.ArchivedPostFilter {
 
     private String username;
     private Long archiveId;
 
-    public ArchivedPostFilterData(final String username, final boolean ascending, final int offset, final int count) {
+    public ArchivedPostFilter(final String username, final boolean ascending, final int offset, final int count) {
         super(ascending, offset, count);
         this.username = username;
     }
 
-    public ArchivedPostFilterData(final String username, final Long archiveId, final boolean ascending, final int offset, final int count) {
+    public ArchivedPostFilter(final String username, final Long archiveId, final boolean ascending, final int offset, final int count) {
         super(ascending, offset, count);
         this.username = username;
         this.archiveId = archiveId;

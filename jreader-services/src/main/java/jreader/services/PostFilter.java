@@ -1,38 +1,44 @@
 package jreader.services;
 
-import jreader.dao.PostFilter;
+public class PostFilter extends jreader.dao.PostFilter {
 
-public class PostFilterData extends PostFilter {
-
-    public enum Vertical {
+    public static enum Vertical {
         ALL, GROUP, SUBSCRIPTION;
     }
 
-    private String username;
     private Vertical vertical;
+    private String username;
     private Long groupId;
     private Long subscriptionId;
 
-    public PostFilterData(final String username, final PostType postType, final boolean ascending, final int offset, final int count) {
+    public PostFilter(final String username, final PostType postType, final boolean ascending, final int offset, final int count) {
         super(postType, ascending, offset, count);
-        this.username = username;
         this.vertical = Vertical.ALL;
+        this.username = username;
     }
 
-    public PostFilterData(final String username, final Long groupId, final PostType postType, final boolean ascending, final int offset, final int count) {
+    public PostFilter(final String username, final Long groupId, final PostType postType, final boolean ascending, final int offset, final int count) {
         super(postType, ascending, offset, count);
+        this.vertical = Vertical.GROUP;
         this.username = username;
         this.groupId = groupId;
-        this.vertical = Vertical.GROUP;
     }
 
-    public PostFilterData(final String username, final Long groupId, final Long subscriptionId, final PostType postType, final boolean ascending,
+    public PostFilter(final String username, final Long groupId, final Long subscriptionId, final PostType postType, final boolean ascending,
             final int offset, final int count) {
         super(postType, ascending, offset, count);
+        this.vertical = Vertical.SUBSCRIPTION;
         this.username = username;
         this.groupId = groupId;
         this.subscriptionId = subscriptionId;
-        this.vertical = Vertical.SUBSCRIPTION;
+    }
+    
+    public Vertical getVertical() {
+        return vertical;
+    }
+    
+    public void setVertical(final Vertical type) {
+        this.vertical = type;
     }
 
     public String getUsername() {
@@ -41,14 +47,6 @@ public class PostFilterData extends PostFilter {
 
     public void setUsername(final String username) {
         this.username = username;
-    }
-
-    public Vertical getVertical() {
-        return vertical;
-    }
-
-    public void setVertical(final Vertical type) {
-        this.vertical = type;
     }
 
     public Long getGroupId() {

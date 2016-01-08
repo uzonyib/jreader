@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jreader.services.ArchiveService;
-import jreader.services.ArchivedPostFilterData;
+import jreader.services.ArchivedPostFilter;
 import jreader.web.controller.ResponseEntity;
 
 @RestController
@@ -32,13 +32,13 @@ public class ArchivedPostController {
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
     public ResponseEntity list(final Principal principal, @RequestParam final int offset, @RequestParam final int count,
             @RequestParam final boolean ascending) {
-        return new ResponseEntity(archiveService.listPosts(new ArchivedPostFilterData(principal.getName(), ascending, offset, count)));
+        return new ResponseEntity(archiveService.listPosts(new ArchivedPostFilter(principal.getName(), ascending, offset, count)));
     }
 
     @RequestMapping(value = "/{archiveId}/posts", method = RequestMethod.GET)
     public ResponseEntity list(final Principal principal, @PathVariable final Long archiveId, @RequestParam final int offset,
             @RequestParam final int count, @RequestParam final boolean ascending) {
-        return new ResponseEntity(archiveService.listPosts(new ArchivedPostFilterData(principal.getName(), archiveId, ascending, offset, count)));
+        return new ResponseEntity(archiveService.listPosts(new ArchivedPostFilter(principal.getName(), archiveId, ascending, offset, count)));
     }
 
     @RequestMapping(value = "/{archiveId}/posts/{postId}", method = RequestMethod.DELETE)

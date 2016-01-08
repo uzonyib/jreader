@@ -25,8 +25,8 @@ import jreader.domain.Post;
 import jreader.domain.Subscription;
 import jreader.domain.User;
 import jreader.dto.PostDto;
-import jreader.services.PostFilterData;
-import jreader.services.PostFilterData.Vertical;
+import jreader.services.PostFilter;
+import jreader.services.PostFilter.Vertical;
 
 public class PostServiceImplTest {
 	
@@ -67,7 +67,7 @@ public class PostServiceImplTest {
 	@Mock
 	private Post post2;
 	@Mock
-	private PostFilterData filter;
+	private PostFilter filter;
 	@Mock
 	private PostDto postDto1;
 	@Mock

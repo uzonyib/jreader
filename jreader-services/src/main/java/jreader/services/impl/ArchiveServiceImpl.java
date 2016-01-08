@@ -22,7 +22,7 @@ import jreader.domain.User;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedPostDto;
 import jreader.services.ArchiveService;
-import jreader.services.ArchivedPostFilterData;
+import jreader.services.ArchivedPostFilter;
 import jreader.services.ServiceException;
 
 public class ArchiveServiceImpl extends AbstractService implements ArchiveService {
@@ -170,14 +170,14 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
-    public List<ArchivedPostDto> listPosts(final ArchivedPostFilterData filterData) {
-        final User user = this.getUser(filterData.getUsername());
+    public List<ArchivedPostDto> listPosts(final ArchivedPostFilter filter) {
+        final User user = this.getUser(filter.getUsername());
         final List<ArchivedPost> posts;
-        if (filterData.getArchiveId() == null) {
-            posts = archivedPostDao.list(user, filterData);
+        if (filter.getArchiveId() == null) {
+            posts = archivedPostDao.list(user, filter);
         } else {
-            final Archive archive = this.getArchive(user, filterData.getArchiveId());
-            posts = archivedPostDao.list(archive, filterData);
+            final Archive archive = this.getArchive(user, filter.getArchiveId());
+            posts = archivedPostDao.list(archive, filter);
         }
         final List<ArchivedPostDto> dtos = new ArrayList<ArchivedPostDto>();
         for (final ArchivedPost post : posts) {

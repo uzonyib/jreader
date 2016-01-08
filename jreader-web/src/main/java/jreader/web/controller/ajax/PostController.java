@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jreader.dao.PostFilter.PostType;
-import jreader.services.PostFilterData;
+import jreader.services.PostFilter;
 import jreader.services.PostService;
 import jreader.services.GroupService;
 import jreader.web.controller.ResponseEntity;
@@ -40,20 +40,20 @@ public class PostController {
     @RequestMapping(value = "/posts/{selection}", method = RequestMethod.GET)
     public ResponseEntity list(final Principal principal, @PathVariable final PostType selection, @RequestParam final int offset,
             @RequestParam final int count, @RequestParam final boolean ascending) {
-        return new ResponseEntity(postService.list(new PostFilterData(principal.getName(), selection, ascending, offset, count)));
+        return new ResponseEntity(postService.list(new PostFilter(principal.getName(), selection, ascending, offset, count)));
     }
 
     @RequestMapping(value = "/groups/{groupId}/posts/{selection}", method = RequestMethod.GET)
     public ResponseEntity list(final Principal principal, @PathVariable final Long groupId, @PathVariable final PostType selection,
             @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
-        return new ResponseEntity(postService.list(new PostFilterData(principal.getName(), groupId, selection, ascending, offset, count)));
+        return new ResponseEntity(postService.list(new PostFilter(principal.getName(), groupId, selection, ascending, offset, count)));
     }
 
     @RequestMapping(value = "/groups/{groupId}/subscriptions/{subscriptionId}/posts/{selection}", method = RequestMethod.GET)
     public ResponseEntity list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
             @PathVariable final PostType selection, @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
         return new ResponseEntity(
-                postService.list(new PostFilterData(principal.getName(), groupId, subscriptionId, selection, ascending, offset, count)));
+                postService.list(new PostFilter(principal.getName(), groupId, subscriptionId, selection, ascending, offset, count)));
     }
 
     @RequestMapping(value = "/posts", method = RequestMethod.POST)

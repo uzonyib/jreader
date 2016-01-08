@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import jreader.dao.PostDao;
-import jreader.dao.PostFilter;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
@@ -15,7 +14,7 @@ import jreader.domain.Subscription;
 import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.PostDto;
-import jreader.services.PostFilterData;
+import jreader.services.PostFilter;
 import jreader.services.PostService;
 
 import org.springframework.core.convert.ConversionService;
@@ -85,14 +84,14 @@ public class PostServiceImpl extends AbstractService implements PostService {
     }
 
     @Override
-    public List<PostDto> list(final PostFilterData filterData) {
-        switch (filterData.getVertical()) {
+    public List<PostDto> list(final PostFilter filter) {
+        switch (filter.getVertical()) {
         case GROUP:
-            return listForGroup(filterData.getUsername(), filterData.getGroupId(), filterData);
+            return listForGroup(filter.getUsername(), filter.getGroupId(), filter);
         case SUBSCRIPTION:
-            return listForSubscription(filterData.getUsername(), filterData.getGroupId(), filterData.getSubscriptionId(), filterData);
+            return listForSubscription(filter.getUsername(), filter.getGroupId(), filter.getSubscriptionId(), filter);
         default:
-            return listAll(filterData.getUsername(), filterData);
+            return listAll(filter.getUsername(), filter);
         }
     }
 
