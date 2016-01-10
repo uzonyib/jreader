@@ -32,11 +32,11 @@ public class ArchivedPost {
         this.id = id;
     }
 
-    public Ref<Archive> getArchiveRef() {
+    Ref<Archive> getArchiveRef() {
         return archiveRef;
     }
 
-    public void setArchiveRef(final Ref<Archive> archiveRef) {
+    void setArchiveRef(final Ref<Archive> archiveRef) {
         this.archiveRef = archiveRef;
     }
 

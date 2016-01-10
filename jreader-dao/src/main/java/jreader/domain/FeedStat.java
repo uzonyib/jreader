@@ -39,20 +39,12 @@ public class FeedStat {
         this.id = id;
     }
 
-    public Ref<Feed> getFeedRef() {
+    Ref<Feed> getFeedRef() {
         return feedRef;
     }
 
-    public void setFeedRef(final Ref<Feed> feedRef) {
+    void setFeedRef(final Ref<Feed> feedRef) {
         this.feedRef = feedRef;
-    }
-
-    public Feed getFeed() {
-        return getFeedRef() == null ? null : getFeedRef().get();
-    }
-
-    public void setFeed(final Feed feed) {
-        this.setFeedRef(feed == null ? null : Ref.create(feed));
     }
 
     public Long getRefreshDate() {
@@ -69,6 +61,14 @@ public class FeedStat {
 
     public void setCount(final int count) {
         this.count = count;
+    }
+    
+    public Feed getFeed() {
+        return getFeedRef() == null ? null : getFeedRef().get();
+    }
+    
+    public void setFeed(final Feed feed) {
+        this.setFeedRef(feed == null ? null : Ref.create(feed));
     }
 
     public static class Builder {

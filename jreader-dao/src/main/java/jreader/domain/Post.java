@@ -38,11 +38,11 @@ public class Post {
         this.id = id;
     }
 
-    public Ref<Subscription> getSubscriptionRef() {
+    Ref<Subscription> getSubscriptionRef() {
         return subscriptionRef;
     }
 
-    public void setSubscriptionRef(final Ref<Subscription> subscriptionRef) {
+    void setSubscriptionRef(final Ref<Subscription> subscriptionRef) {
         this.subscriptionRef = subscriptionRef;
     }
     

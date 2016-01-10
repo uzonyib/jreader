@@ -47,19 +47,19 @@ public class Subscription {
         this.id = id;
     }
 
-    public Ref<Group> getGroupRef() {
+    Ref<Group> getGroupRef() {
         return groupRef;
     }
 
-    public void setGroupRef(final Ref<Group> groupRef) {
+    void setGroupRef(final Ref<Group> groupRef) {
         this.groupRef = groupRef;
     }
 
-    public Ref<Feed> getFeedRef() {
+    Ref<Feed> getFeedRef() {
         return feedRef;
     }
 
-    public void setFeedRef(final Ref<Feed> feedRef) {
+    void setFeedRef(final Ref<Feed> feedRef) {
         this.feedRef = feedRef;
     }
 
@@ -69,22 +69,6 @@ public class Subscription {
 
     public void setTitle(final String title) {
         this.title = title;
-    }
-
-    public Group getGroup() {
-        return getGroupRef() == null ? null : getGroupRef().get();
-    }
-
-    public void setGroup(final Group group) {
-        this.setGroupRef(group == null ? null : Ref.create(group));
-    }
-
-    public Feed getFeed() {
-        return getFeedRef() == null ? null : getFeedRef().get();
-    }
-
-    public void setFeed(final Feed feed) {
-        this.setFeedRef(feed == null ? null : Ref.create(feed));
     }
 
     public int getOrder() {
@@ -101,6 +85,22 @@ public class Subscription {
 
     public void setLastUpdateDate(final Long lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+    
+    public Group getGroup() {
+        return getGroupRef() == null ? null : getGroupRef().get();
+    }
+    
+    public void setGroup(final Group group) {
+        this.setGroupRef(group == null ? null : Ref.create(group));
+    }
+    
+    public Feed getFeed() {
+        return getFeedRef() == null ? null : getFeedRef().get();
+    }
+    
+    public void setFeed(final Feed feed) {
+        this.setFeedRef(feed == null ? null : Ref.create(feed));
     }
 
     public static class Builder {

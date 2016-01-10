@@ -41,11 +41,11 @@ public class Group {
         this.id = id;
     }
 
-    public Ref<User> getUserRef() {
+    Ref<User> getUserRef() {
         return userRef;
     }
 
-    public void setUserRef(final Ref<User> userRef) {
+    void setUserRef(final Ref<User> userRef) {
         this.userRef = userRef;
     }
 
@@ -57,20 +57,20 @@ public class Group {
         this.title = title;
     }
 
-    public User getUser() {
-        return getUserRef() == null ? null : getUserRef().get();
-    }
-
-    public void setUser(final User user) {
-        this.setUserRef(user == null ? null : Ref.create(user));
-    }
-
     public int getOrder() {
         return order;
     }
 
     public void setOrder(final int order) {
         this.order = order;
+    }
+    
+    public User getUser() {
+        return getUserRef() == null ? null : getUserRef().get();
+    }
+    
+    public void setUser(final User user) {
+        this.setUserRef(user == null ? null : Ref.create(user));
     }
     
     public static class Builder {
