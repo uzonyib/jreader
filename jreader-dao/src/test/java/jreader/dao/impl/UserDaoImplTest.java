@@ -18,8 +18,10 @@ public class UserDaoImplTest extends AbstractDaoTest {
     
     private static final String[] NEW_USERNAMES = { "new_user_1", "new_user_2" };
     private static final Role[] NEW_ROLES = { Role.ADMIN, Role.USER };
+    private static final Long[] NEW_REGISTRATION_DATES = { 5L, 6L };
     private static final String[] EXISTING_USERNAMES = { "existing_user_1", "existing_user_2", "existing_user_4", "existing_user_3" };
     private static final Role[] EXISTING_ROLES = { Role.ADMIN, Role.USER, Role.UNAUTHORIZED, Role.UNAUTHORIZED };
+    private static final Long[] EXISTING_REGISTRATION_DATES = { 1L, 2L, 3L, 4L };
     
     private UserDao sut;
     
@@ -31,6 +33,7 @@ public class UserDaoImplTest extends AbstractDaoTest {
             User user = new User();
             user.setUsername(EXISTING_USERNAMES[i]);
             user.setRole(EXISTING_ROLES[i]);
+            user.setRegistrationDate(EXISTING_REGISTRATION_DATES[i]);
             sut.save(user);
         }
     }
@@ -40,12 +43,14 @@ public class UserDaoImplTest extends AbstractDaoTest {
         User user = new User();
         user.setUsername(NEW_USERNAMES[0]);
         user.setRole(NEW_ROLES[0]);
+        user.setRegistrationDate(NEW_REGISTRATION_DATES[0]);
         
         user = sut.save(user);
         
         assertNotNull(user);
         assertEquals(user.getUsername(), NEW_USERNAMES[0]);
         assertEquals(user.getRole(), NEW_ROLES[0]);
+        assertEquals(user.getRegistrationDate(), NEW_REGISTRATION_DATES[0]);
     }
     
     @Test
@@ -62,6 +67,7 @@ public class UserDaoImplTest extends AbstractDaoTest {
         assertNotNull(user);
         assertEquals(user.getUsername(), EXISTING_USERNAMES[0]);
         assertEquals(user.getRole(), EXISTING_ROLES[0]);
+        assertEquals(user.getRegistrationDate(), EXISTING_REGISTRATION_DATES[0]);
     }
     
     @Test
@@ -81,6 +87,7 @@ public class UserDaoImplTest extends AbstractDaoTest {
             User user = new User();
             user.setUsername(NEW_USERNAMES[i]);
             user.setRole(NEW_ROLES[i]);
+            user.setRegistrationDate(NEW_REGISTRATION_DATES[i]);
             users.add(user);
         }
         
@@ -91,6 +98,7 @@ public class UserDaoImplTest extends AbstractDaoTest {
             assertNotNull(user);
             assertEquals(user.getUsername(), NEW_USERNAMES[i]);
             assertEquals(user.getRole(), NEW_ROLES[i]);
+            assertEquals(user.getRegistrationDate(), NEW_REGISTRATION_DATES[i]);
         }
     }
     
@@ -119,12 +127,16 @@ public class UserDaoImplTest extends AbstractDaoTest {
         assertEquals(users.size(), 4);
         assertEquals(users.get(0).getUsername(), EXISTING_USERNAMES[0]);
         assertEquals(users.get(0).getRole(), EXISTING_ROLES[0]);
+        assertEquals(users.get(0).getRegistrationDate(), EXISTING_REGISTRATION_DATES[0]);
         assertEquals(users.get(1).getUsername(), EXISTING_USERNAMES[1]);
         assertEquals(users.get(1).getRole(), EXISTING_ROLES[1]);
+        assertEquals(users.get(1).getRegistrationDate(), EXISTING_REGISTRATION_DATES[1]);
         assertEquals(users.get(2).getUsername(), EXISTING_USERNAMES[3]);
         assertEquals(users.get(2).getRole(), EXISTING_ROLES[3]);
+        assertEquals(users.get(2).getRegistrationDate(), EXISTING_REGISTRATION_DATES[3]);
         assertEquals(users.get(3).getUsername(), EXISTING_USERNAMES[2]);
         assertEquals(users.get(3).getRole(), EXISTING_ROLES[2]);
+        assertEquals(users.get(3).getRegistrationDate(), EXISTING_REGISTRATION_DATES[2]);
     }
     
     @Test
@@ -135,8 +147,10 @@ public class UserDaoImplTest extends AbstractDaoTest {
         assertEquals(users.size(), 2);
         assertEquals(users.get(0).getUsername(), EXISTING_USERNAMES[1]);
         assertEquals(users.get(0).getRole(), EXISTING_ROLES[1]);
+        assertEquals(users.get(0).getRegistrationDate(), EXISTING_REGISTRATION_DATES[1]);
         assertEquals(users.get(1).getUsername(), EXISTING_USERNAMES[3]);
         assertEquals(users.get(1).getRole(), EXISTING_ROLES[3]);
+        assertEquals(users.get(1).getRegistrationDate(), EXISTING_REGISTRATION_DATES[3]);
     }
 
 }

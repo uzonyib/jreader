@@ -96,7 +96,7 @@ public class ServiceConfig {
     
     @Bean
     public UserService userService() {
-        return new UserServiceImpl(daoConfig.userDao());
+        return new UserServiceImpl(daoConfig.userDao(), dateHelper());
     }
     
     @Bean

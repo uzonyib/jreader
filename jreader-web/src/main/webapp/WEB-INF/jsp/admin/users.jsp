@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,6 +14,7 @@
 				<tr>
 					<th>Username</th>
 					<th>Role</th>
+					<th>Registration date</th>
 					<th>Action</th>
 				</tr>
 			</thead>
@@ -21,6 +23,7 @@
 					<tr>
 						<td class="username"><c:out value="${user.username}"/></td>
 						<td class="role"><c:out value="${user.role}"/></td>
+						<td class="registrationDate"><fmt:formatDate value="${user.registrationDateAsDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 						<td class="action">
 							<c:if test="${user.role ne 'ADMIN'}">
 								<form action="/admin/users" method="POST" class="admin">

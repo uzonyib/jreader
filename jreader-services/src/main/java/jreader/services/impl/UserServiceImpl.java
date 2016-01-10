@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import jreader.dao.UserDao;
 import jreader.domain.Role;
 import jreader.domain.User;
+import jreader.services.DateHelper;
 import jreader.services.ServiceException;
 import jreader.services.UserService;
 
@@ -12,8 +13,11 @@ public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
     
-    public UserServiceImpl(final UserDao userDao) {
+    private DateHelper dateHelper;
+    
+    public UserServiceImpl(final UserDao userDao, final DateHelper dateHelper) {
         this.userDao = userDao;
+        this.dateHelper = dateHelper;
     }
     
     @Override
@@ -29,6 +33,7 @@ public class UserServiceImpl implements UserService {
         final User user = new User();
         user.setUsername(username);
         user.setRole(role);
+        user.setRegistrationDate(dateHelper.getCurrentDate());
         userDao.save(user);
     }
     

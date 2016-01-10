@@ -21,18 +21,23 @@ import org.testng.annotations.Test;
 import jreader.dao.UserDao;
 import jreader.domain.Role;
 import jreader.domain.User;
+import jreader.services.DateHelper;
 import jreader.services.ServiceException;
 
 public class UserServiceImplTest {
 	
 	private static final String NEW_USER = "new_user";
 	private static final String EXISTING_USER = "existing_user";
+	private static final Long REGISTRATION_DATE = 123L;
 	
 	@InjectMocks
 	private UserServiceImpl service;
 	
 	@Mock
 	private UserDao userDao;
+	
+	@Mock
+	private DateHelper dateHelper;
 	
 	@Mock
 	private User user;
@@ -48,23 +53,27 @@ public class UserServiceImplTest {
 	@Test
 	public void registerNewUser() {
 		when(userDao.find(NEW_USER)).thenReturn(null);
+		when(dateHelper.getCurrentDate()).thenReturn(REGISTRATION_DATE);
 		
 		service.register(NEW_USER, Role.UNAUTHORIZED);
 		
 		verify(userDao).save(userCaptor.capture());
 		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
 		assertEquals(userCaptor.getValue().getRole(), Role.UNAUTHORIZED);
+		assertEquals(userCaptor.getValue().getRegistrationDate(), REGISTRATION_DATE);
 	}
 	
 	@Test
 	public void registerNewAdmin() {
 		when(userDao.find(NEW_USER)).thenReturn(null);
+		when(dateHelper.getCurrentDate()).thenReturn(REGISTRATION_DATE);
 		
 		service.register(NEW_USER, Role.ADMIN);
 		
 		verify(userDao).save(userCaptor.capture());
 		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
 		assertEquals(userCaptor.getValue().getRole(), Role.ADMIN);
+		assertEquals(userCaptor.getValue().getRegistrationDate(), REGISTRATION_DATE);
 	}
 	
 	@Test

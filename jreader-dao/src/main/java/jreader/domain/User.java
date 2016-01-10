@@ -11,6 +11,7 @@ public class User {
     @Id
     private String username;
     private Role role;
+    private Long registrationDate;
 
     public String getUsername() {
         return username;
@@ -26,6 +27,14 @@ public class User {
 
     public void setRole(final Role role) {
         this.role = role;
+    }
+
+    public Long getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Long registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
 }
