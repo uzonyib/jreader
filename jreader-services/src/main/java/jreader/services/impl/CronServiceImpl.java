@@ -95,7 +95,7 @@ public class CronServiceImpl implements CronService {
         Long updateDate = feed.getLastUpdateDate();
         final Map<Long, FeedStat> stats = new LinkedHashMap<Long, FeedStat>();
         for (final Post post : rssFetchResult.getPosts()) {
-            if (!isNew(post, feed)) {
+            if (!isNew(post, feed, refreshDate)) {
                 continue;
             }
             
@@ -132,13 +132,17 @@ public class CronServiceImpl implements CronService {
         }
     }
     
-    boolean isNew(final Post post, final Feed feed) {
+    boolean isNew(final Post post, final Feed feed, final long refreshDate) {
         if (post.getPublishDate() == null) {
             LOG.warning("Published date is null. Feed: " + feed.getTitle());
             return false;
         }
         if (post.getUri() == null) {
             LOG.warning("URI is null. Feed: " + feed.getTitle());
+            return false;
+        }
+        if (post.getPublishDate() > refreshDate) {
+            LOG.warning("Published date " + post.getPublishDate() + " is in the future. Feed: " + feed.getTitle());
             return false;
         }
         if (feed.getLastUpdateDate() != null && post.getPublishDate() <= feed.getLastUpdateDate()) {
@@ -151,7 +155,7 @@ public class CronServiceImpl implements CronService {
         int counter = 0;
         Long newUpdateDate = subscription.getLastUpdateDate();
         for (final Post post : rssFetchResult.getPosts()) {
-            if (!isNew(post, subscription)) {
+            if (!isNew(post, subscription, refreshDate)) {
                 continue;
             }
             
@@ -172,8 +176,11 @@ public class CronServiceImpl implements CronService {
         LOG.info("New items (" + subscription.getGroup().getUser().getUsername() + " - " + feed.getUrl() + "): " + counter);
     }
     
-    boolean isNew(final Post post, final Subscription subscription) {
+    boolean isNew(final Post post, final Subscription subscription, final long refreshDate) {
         if (post.getPublishDate() == null || post.getUri() == null) {
+            return false;
+        }
+        if (post.getPublishDate() > refreshDate) {
             return false;
         }
         if (subscription.getLastUpdateDate() != null && post.getPublishDate() < subscription.getLastUpdateDate()) {

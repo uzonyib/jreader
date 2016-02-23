@@ -3,7 +3,6 @@ package jreader.services.impl;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,22 +21,21 @@ import java.util.TimeZone;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import jreader.dao.FeedDao;
-import jreader.dao.PostDao;
 import jreader.dao.FeedStatDao;
+import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
-import jreader.domain.Post;
 import jreader.domain.FeedStat;
-import jreader.domain.Subscription;
 import jreader.domain.Group;
+import jreader.domain.Post;
+import jreader.domain.Subscription;
 import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.RssFetchResult;
@@ -96,8 +94,6 @@ public class CronServiceImplTest {
 	private Post post21;
 	@Mock
 	private Post post22;
-	@Spy
-    private Post postSpy;
 	
 	@Mock
 	private FeedStat.Builder builder;
@@ -242,30 +238,20 @@ public class CronServiceImplTest {
         
         when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1));
         
-        when(fetchResult.getPosts()).thenReturn(Arrays.asList(postSpy));
+        when(fetchResult.getPosts()).thenReturn(Arrays.asList(post11));
         
         when(subscription1.getLastUpdateDate()).thenReturn(date - 1000 * 60 * 20);
         
         DateHelper dh = new DateHelperImpl();
         long pubDate1 = date + 1000 * 60 * 30;
-        postSpy.setPublishDate(pubDate1);
-        when(postSpy.getUri()).thenReturn("uri1");
+        when(post11.getPublishDate()).thenReturn(pubDate1);
+        when(post11.getUri()).thenReturn("uri1");
         long day = dh.getFirstSecondOfDay(pubDate1);
         when(dateHelper.getFirstSecondOfDay(pubDate1)).thenReturn(day);
-        
-        doNothing().when(postSpy).setSubscription(subscription1);
         
         when(subscription1.getGroup()).thenReturn(group);
         when(group.getUser()).thenReturn(user);
         when(user.getUsername()).thenReturn(USERNAME);
-        
-        when(builderFactory.createFeedStatBuilder()).thenReturn(builder);
-        when(builder.feed(feed1)).thenReturn(builder);
-        when(builder.refreshDate(anyLong())).thenReturn(builder);
-        when(builder.count(anyInt())).thenReturn(builder);
-        when(builder.build()).thenReturn(feedStat1);
-        
-        when(feedStat1.getCount()).thenReturn(1);
         
         service.refresh(FEED_URL);
         
@@ -273,21 +259,8 @@ public class CronServiceImplTest {
         
         verify(subscriptionDao).listSubscriptions(feed1);
         
-        verify(postSpy).setPublishDate(date);
-        verify(postDao).save(postSpy);
+        verifyNoMoreInteractions(postDao);
         
-        verify(subscription1).setLastUpdateDate(date);
-        verify(subscriptionDao).save(subscription1);
-        
-        verify(feed1).setLastRefreshDate(date);
-        verify(feed1).setStatus(1);
-        verify(feedDao).save(feed1);
-        
-        verify(builder).feed(feed1);
-        verify(builder).refreshDate(day);
-        verify(builder).count(1);
-        verify(builder).build();
-        verify(feedStatDao).saveAll(Arrays.asList(feedStat1));
     }
 	
 	@Test
@@ -345,7 +318,7 @@ public class CronServiceImplTest {
 	public void isNew_Feed_PublishDateIsNull() {
 	    when(post11.getPublishDate()).thenReturn(null);
 	    
-	    boolean isNew = service.isNew(post11, feed1);
+	    boolean isNew = service.isNew(post11, feed1, 1100L);
 	    
 	    assertFalse(isNew);
 	}
@@ -355,7 +328,17 @@ public class CronServiceImplTest {
         when(post11.getPublishDate()).thenReturn(1000L);
         when(post11.getUri()).thenReturn(null);
         
-        boolean isNew = service.isNew(post11, feed1);
+        boolean isNew = service.isNew(post11, feed1, 1100L);
+        
+        assertFalse(isNew);
+    }
+	
+	@Test
+    public void isNew_Feed_PublishedDateIsInFuture() {
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
+        
+        boolean isNew = service.isNew(post11, feed1, 999L);
         
         assertFalse(isNew);
     }
@@ -366,7 +349,7 @@ public class CronServiceImplTest {
         when(post11.getUri()).thenReturn("uri");
         when(feed1.getLastUpdateDate()).thenReturn(1100L);
         
-        boolean isNew = service.isNew(post11, feed1);
+        boolean isNew = service.isNew(post11, feed1, 1000L);
         
         assertFalse(isNew);
     }
@@ -377,7 +360,7 @@ public class CronServiceImplTest {
         when(post11.getUri()).thenReturn("uri");
         when(feed1.getLastUpdateDate()).thenReturn(null);
         
-        boolean isNew = service.isNew(post11, feed1);
+        boolean isNew = service.isNew(post11, feed1, 1100L);
         
         assertTrue(isNew);
     }
@@ -388,7 +371,7 @@ public class CronServiceImplTest {
         when(post11.getUri()).thenReturn("uri");
         when(feed1.getLastUpdateDate()).thenReturn(1000L);
         
-        boolean isNew = service.isNew(post11, feed1);
+        boolean isNew = service.isNew(post11, feed1, 1100L);
         
         assertFalse(isNew);
     }
@@ -399,7 +382,7 @@ public class CronServiceImplTest {
         when(post11.getUri()).thenReturn("uri");
         when(feed1.getLastUpdateDate()).thenReturn(1000L);
         
-        boolean isNew = service.isNew(post11, feed1);
+        boolean isNew = service.isNew(post11, feed1, 1100L);
         
         assertTrue(isNew);
     }
@@ -408,7 +391,7 @@ public class CronServiceImplTest {
     public void isNew_Subscription_PublishDateIsNull() {
         when(post11.getPublishDate()).thenReturn(null);
         
-        boolean isNew = service.isNew(post11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1, 1100L);
         
         assertFalse(isNew);
     }
@@ -418,7 +401,17 @@ public class CronServiceImplTest {
         when(post11.getPublishDate()).thenReturn(1000L);
         when(post11.getUri()).thenReturn(null);
         
-        boolean isNew = service.isNew(post11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1, 1100L);
+        
+        assertFalse(isNew);
+    }
+	
+	@Test
+    public void isNew_Subscription_PublishDateIsInFuture() {
+        when(post11.getPublishDate()).thenReturn(1000L);
+        when(post11.getUri()).thenReturn("uri");
+        
+        boolean isNew = service.isNew(post11, subscription1, 999L);
         
         assertFalse(isNew);
     }
@@ -429,7 +422,7 @@ public class CronServiceImplTest {
         when(post11.getUri()).thenReturn("uri");
         when(subscription1.getLastUpdateDate()).thenReturn(1100L);
         
-        boolean isNew = service.isNew(post11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1, 1000L);
         
         assertFalse(isNew);
     }
@@ -441,7 +434,7 @@ public class CronServiceImplTest {
         when(subscription1.getLastUpdateDate()).thenReturn(1000L);
         when(postDao.find(subscription1, "uri", 1000L)).thenReturn(null);
         
-        boolean isNew = service.isNew(post11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1, 1100L);
         
         assertTrue(isNew);
     }
@@ -453,7 +446,7 @@ public class CronServiceImplTest {
         when(subscription1.getLastUpdateDate()).thenReturn(900L);
         when(postDao.find(subscription1, "uri", 1000L)).thenReturn(post11);
         
-        boolean isNew = service.isNew(post11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1, 1100L);
         
         assertFalse(isNew);
     }
@@ -465,7 +458,7 @@ public class CronServiceImplTest {
         when(subscription1.getLastUpdateDate()).thenReturn(900L);
         when(postDao.find(subscription1, "uri", 1000L)).thenReturn(null);
         
-        boolean isNew = service.isNew(post11, subscription1);
+        boolean isNew = service.isNew(post11, subscription1, 1100L);
         
         assertTrue(isNew);
     }
