@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -217,11 +218,12 @@ public class ArchiveServiceImplTest {
 	@Test
 	public void list() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(archiveDao.list(user)).thenReturn(Arrays.asList(archive, archive1, archive2));
+		List<Archive> entities = Arrays.asList(archive, archive1, archive2);
+        when(archiveDao.list(user)).thenReturn(entities);
 		
-		when(conversionService.convert(archive, ArchiveDto.class)).thenReturn(archiveDto);
-		when(conversionService.convert(archive1, ArchiveDto.class)).thenReturn(archiveDto1);
-		when(conversionService.convert(archive2, ArchiveDto.class)).thenReturn(archiveDto2);
+        when(conversionService.convert(entities, TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Archive.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(ArchiveDto.class))))
+                        .thenReturn(Arrays.asList(archiveDto, archiveDto1, archiveDto2));
 		
 		List<ArchiveDto> result = service.list(USERNAME);
 		Assert.assertEquals(result, Arrays.asList(archiveDto, archiveDto1, archiveDto2));
@@ -248,9 +250,12 @@ public class ArchiveServiceImplTest {
 		when(filter.getArchiveId()).thenReturn(null);
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(archivedPostDao.list(user, filter)).thenReturn(Arrays.asList(archivedPost1, archivedPost2));
-		when(conversionService.convert(archivedPost1, ArchivedPostDto.class)).thenReturn(archivedPostDto1);
-		when(conversionService.convert(archivedPost2, ArchivedPostDto.class)).thenReturn(archivedPostDto2);
+		List<ArchivedPost> entities = Arrays.asList(archivedPost1, archivedPost2);
+        when(archivedPostDao.list(user, filter)).thenReturn(entities);
+		
+        when(conversionService.convert(entities, TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(ArchivedPost.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(ArchivedPostDto.class))))
+                        .thenReturn(Arrays.asList(archivedPostDto1, archivedPostDto2));
 		
 		List<ArchivedPostDto> result = service.listPosts(filter);
 		
@@ -264,9 +269,12 @@ public class ArchiveServiceImplTest {
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);
-		when(archivedPostDao.list(archive, filter)).thenReturn(Arrays.asList(archivedPost1, archivedPost2));
-		when(conversionService.convert(archivedPost1, ArchivedPostDto.class)).thenReturn(archivedPostDto1);
-		when(conversionService.convert(archivedPost2, ArchivedPostDto.class)).thenReturn(archivedPostDto2);
+		List<ArchivedPost> entities = Arrays.asList(archivedPost1, archivedPost2);
+        when(archivedPostDao.list(archive, filter)).thenReturn(entities);
+		
+        when(conversionService.convert(entities, TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(ArchivedPost.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(ArchivedPostDto.class))))
+                        .thenReturn(Arrays.asList(archivedPostDto1, archivedPostDto2));
 		
 		List<ArchivedPostDto> result = service.listPosts(filter);
 		

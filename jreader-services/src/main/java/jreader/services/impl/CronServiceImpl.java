@@ -8,15 +8,16 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 
 import jreader.dao.FeedDao;
-import jreader.dao.PostDao;
 import jreader.dao.FeedStatDao;
+import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
-import jreader.domain.Post;
 import jreader.domain.FeedStat;
+import jreader.domain.Post;
 import jreader.domain.Subscription;
 import jreader.dto.FeedDto;
 import jreader.dto.RssFetchResult;
@@ -55,13 +56,11 @@ public class CronServiceImpl implements CronService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<FeedDto> listFeeds() {
-        final List<Feed> feeds = feedDao.listAll();
-        final List<FeedDto> dtos = new ArrayList<FeedDto>();
-        for (final Feed feed : feeds) {
-            dtos.add(conversionService.convert(feed, FeedDto.class));
-        }
-        return dtos;
+        return (List<FeedDto>) conversionService.convert(feedDao.listAll(),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Feed.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedDto.class)));
     }
 
     @Override

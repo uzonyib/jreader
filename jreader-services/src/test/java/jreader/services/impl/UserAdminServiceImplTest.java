@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -52,9 +53,11 @@ public class UserAdminServiceImplTest {
     
     @Test
     public void list() {
-        when(userDao.list(anyInt(), anyInt())).thenReturn(Arrays.asList(user1, user2));
-        when(conversionService.convert(user1, UserDto.class)).thenReturn(dto1);
-        when(conversionService.convert(user2, UserDto.class)).thenReturn(dto2);
+        List<User> entities = Arrays.asList(user1, user2);
+        when(userDao.list(anyInt(), anyInt())).thenReturn(entities);
+        when(conversionService.convert(entities,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(User.class)), 
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(UserDto.class)))).thenReturn(Arrays.asList(dto1, dto2));
         
         List<UserDto> dtos = service.list(0, 10);
         

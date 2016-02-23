@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
 
 import jreader.dao.PostDao;
@@ -36,25 +37,31 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public List<GroupDto> list(final String username) {
         final User user = this.getUser(username);
-        final List<GroupDto> dtos = new ArrayList<GroupDto>();
-        for (Group group : groupDao.list(user)) {
-            final GroupDto dto = conversionService.convert(group, GroupDto.class);
-            dto.setSubscriptions(new ArrayList<SubscriptionDto>());
-            dtos.add(dto);
-            final List<Subscription> subscriptions = subscriptionDao.list(group);
+        List<Group> groups = groupDao.list(user);
+        final List<GroupDto> groupDtos = (List<GroupDto>) conversionService.convert(groups,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Group.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(GroupDto.class)));
+        
+        for (int i = 0; i < groups.size(); ++i) {
+            final List<Subscription> subscriptions = subscriptionDao.list(groups.get(i));
+            List<SubscriptionDto> subscriptionDtos = (List<SubscriptionDto>) conversionService.convert(subscriptions,
+                    TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Subscription.class)),
+                    TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(SubscriptionDto.class)));
+            groupDtos.get(i).setSubscriptions(subscriptionDtos);
+            
             int groupUnreadCount = 0;
-            for (Subscription subscription : subscriptions) {
-                final SubscriptionDto subscriptionDto = conversionService.convert(subscription, SubscriptionDto.class);
-                final int unreadCount = postDao.countUnread(subscription);
-                subscriptionDto.setUnreadCount(unreadCount);
-                dto.getSubscriptions().add(subscriptionDto);
+            for (int j = 0; j < subscriptions.size(); ++j) {
+                final int unreadCount = postDao.countUnread(subscriptions.get(j));
+                subscriptionDtos.get(j).setUnreadCount(unreadCount);
                 groupUnreadCount += unreadCount;
             }
-            dto.setUnreadCount(groupUnreadCount);
+            groupDtos.get(i).setUnreadCount(groupUnreadCount);
         }
-        return dtos;
+        
+        return groupDtos;
     }
 
     @Override

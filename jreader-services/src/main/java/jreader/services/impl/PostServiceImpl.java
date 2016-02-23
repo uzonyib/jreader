@@ -18,6 +18,7 @@ import jreader.services.PostFilter;
 import jreader.services.PostService;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 
 public class PostServiceImpl extends AbstractService implements PostService {
 
@@ -114,12 +115,11 @@ public class PostServiceImpl extends AbstractService implements PostService {
         return convert(postDao.list(subscription, filter));
     }
 
+    @SuppressWarnings("unchecked")
     private List<PostDto> convert(final List<Post> posts) {
-        final List<PostDto> dtos = new ArrayList<PostDto>();
-        for (final Post post : posts) {
-            dtos.add(conversionService.convert(post, PostDto.class));
-        }
-        return dtos;
+        return (List<PostDto>) conversionService.convert(posts,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(PostDto.class)));
     }
 
 }

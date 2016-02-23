@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -137,9 +138,11 @@ public class PostServiceImplTest {
 		when(filter.getVertical()).thenReturn(Vertical.ALL);
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(postDao.list(user, filter)).thenReturn(Arrays.asList(post1, post2));
-		when(conversionService.convert(post1, PostDto.class)).thenReturn(postDto1);
-		when(conversionService.convert(post2, PostDto.class)).thenReturn(postDto2);
+		List<Post> entities = Arrays.asList(post1, post2);
+        when(postDao.list(user, filter)).thenReturn(entities);
+        when(conversionService.convert(entities,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(PostDto.class)))).thenReturn(Arrays.asList(postDto1, postDto2));
 		
 		List<PostDto> result = service.list(filter);
 		
@@ -154,9 +157,11 @@ public class PostServiceImplTest {
 		when(filter.getGroupId()).thenReturn(GROUP_ID_1);
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
-		when(postDao.list(group1, filter)).thenReturn(Arrays.asList(post1, post2));
-		when(conversionService.convert(post1, PostDto.class)).thenReturn(postDto1);
-		when(conversionService.convert(post2, PostDto.class)).thenReturn(postDto2);
+		List<Post> entities = Arrays.asList(post1, post2);
+        when(postDao.list(group1, filter)).thenReturn(entities);
+		when(conversionService.convert(entities,
+		        TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(PostDto.class)))).thenReturn(Arrays.asList(postDto1, postDto2));
 		
 		List<PostDto> result = service.list(filter);
 		
@@ -173,9 +178,11 @@ public class PostServiceImplTest {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
-		when(postDao.list(subscription1, filter)).thenReturn(Arrays.asList(post1, post2));
-		when(conversionService.convert(post1, PostDto.class)).thenReturn(postDto1);
-		when(conversionService.convert(post2, PostDto.class)).thenReturn(postDto2);
+		List<Post> entities = Arrays.asList(post1, post2);
+        when(postDao.list(subscription1, filter)).thenReturn(entities);
+        when(conversionService.convert(entities,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(PostDto.class)))).thenReturn(Arrays.asList(postDto1, postDto2));
 		
 		List<PostDto> result = service.list(filter);
 		

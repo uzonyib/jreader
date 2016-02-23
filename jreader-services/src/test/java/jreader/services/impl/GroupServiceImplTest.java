@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -197,20 +198,35 @@ public class GroupServiceImplTest {
 	@Test
 	public void list() {
 		when(userDao.find(USERNAME)).thenReturn(user);
-		when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
-		when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription));
-		when(subscriptionDao.list(group1)).thenReturn(Arrays.asList(subscription1, subscription2));
-		when(subscriptionDao.list(group2)).thenReturn(Collections.<Subscription>emptyList());
+		List<Group> groups = Arrays.asList(group, group1, group2);
+        when(groupDao.list(user)).thenReturn(groups);
+		List<Subscription> subscriptions = Arrays.asList(subscription);
+        when(subscriptionDao.list(group)).thenReturn(subscriptions);
+		List<Subscription> subscriptions1 = Arrays.asList(subscription1, subscription2);
+        when(subscriptionDao.list(group1)).thenReturn(subscriptions1);
+		List<Subscription> subscriptions2 = Collections.emptyList();
+        when(subscriptionDao.list(group2)).thenReturn(subscriptions2);
 		when(postDao.countUnread(subscription)).thenReturn(1);
 		when(postDao.countUnread(subscription1)).thenReturn(2);
 		when(postDao.countUnread(subscription2)).thenReturn(3);
 		
-		when(conversionService.convert(group, GroupDto.class)).thenReturn(groupDto);
-		when(conversionService.convert(group1, GroupDto.class)).thenReturn(groupDto1);
-		when(conversionService.convert(group2, GroupDto.class)).thenReturn(groupDto2);
-		when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
-		when(conversionService.convert(subscription1, SubscriptionDto.class)).thenReturn(subscriptionDto1);
-		when(conversionService.convert(subscription2, SubscriptionDto.class)).thenReturn(subscriptionDto2);
+		when(conversionService.convert(groups,
+		        TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Group.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(GroupDto.class)))).thenReturn(Arrays.asList(groupDto, groupDto1, groupDto2));
+		
+		List<SubscriptionDto> dtos = Arrays.asList(subscriptionDto);
+        when(conversionService.convert(subscriptions,
+		        TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Subscription.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(SubscriptionDto.class)))).thenReturn(dtos);
+		List<SubscriptionDto> dtos1 = Arrays.asList(subscriptionDto1, subscriptionDto2);
+        when(conversionService.convert(subscriptions1,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Subscription.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(SubscriptionDto.class))))
+		    .thenReturn(dtos1);
+		List<SubscriptionDto> dtos2 = Collections.emptyList();
+        when(conversionService.convert(subscriptions2,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Subscription.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(SubscriptionDto.class)))).thenReturn(dtos2);
 		
 		List<GroupDto> result = service.list(USERNAME);
 		Assert.assertEquals(result, Arrays.asList(groupDto, groupDto1, groupDto2));
@@ -218,6 +234,9 @@ public class GroupServiceImplTest {
 		verify(subscriptionDto).setUnreadCount(1);
 		verify(subscriptionDto1).setUnreadCount(2);
 		verify(subscriptionDto2).setUnreadCount(3);
+		verify(groupDto).setSubscriptions(dtos);
+        verify(groupDto1).setSubscriptions(dtos1);
+        verify(groupDto2).setSubscriptions(dtos2);
 		verify(groupDto).setUnreadCount(1);
 		verify(groupDto1).setUnreadCount(5);
 		verify(groupDto2).setUnreadCount(0);

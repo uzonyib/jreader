@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
 
 import jreader.dao.ArchiveDao;
@@ -131,13 +132,12 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ArchiveDto> list(final String username) {
         final User user = this.getUser(username);
-        final List<ArchiveDto> dtos = new ArrayList<ArchiveDto>();
-        for (final Archive archive : archiveDao.list(user)) {
-            dtos.add(conversionService.convert(archive, ArchiveDto.class));
-        }
-        return dtos;
+        return (List<ArchiveDto>) conversionService.convert(archiveDao.list(user),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Archive.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(ArchiveDto.class)));
     }
 
     @Override
@@ -170,6 +170,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ArchivedPostDto> listPosts(final ArchivedPostFilter filter) {
         final User user = this.getUser(filter.getUsername());
         final List<ArchivedPost> posts;
@@ -179,11 +180,10 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
             final Archive archive = this.getArchive(user, filter.getArchiveId());
             posts = archivedPostDao.list(archive, filter);
         }
-        final List<ArchivedPostDto> dtos = new ArrayList<ArchivedPostDto>();
-        for (final ArchivedPost post : posts) {
-            dtos.add(conversionService.convert(post, ArchivedPostDto.class));
-        }
-        return dtos;
+        
+        return (List<ArchivedPostDto>) conversionService.convert(posts,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(ArchivedPost.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(ArchivedPostDto.class)));
     }
 
     @Override

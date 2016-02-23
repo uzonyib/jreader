@@ -1,9 +1,9 @@
 package jreader.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 
 import jreader.dao.UserDao;
 import jreader.domain.Role;
@@ -23,13 +23,11 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<UserDto> list(final int offset, final int count) {
-        final List<User> users = userDao.list(offset, count);
-        final List<UserDto> dtos = new ArrayList<UserDto>();
-        for (User user : users) {
-            dtos.add(conversionService.convert(user, UserDto.class));
-        }
-        return dtos;
+        return (List<UserDto>) conversionService.convert(userDao.list(offset, count),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(User.class)), 
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(UserDto.class)));
     }
     
     @Override

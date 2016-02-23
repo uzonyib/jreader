@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 
 import jreader.dao.FeedStatDao;
-import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
+import jreader.dao.SubscriptionDao;
 import jreader.dao.UserDao;
-import jreader.domain.Feed;
 import jreader.domain.FeedStat;
-import jreader.domain.Subscription;
 import jreader.domain.Group;
+import jreader.domain.Subscription;
 import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.FeedStatDto;
@@ -37,6 +37,7 @@ public class StatServiceImpl extends AbstractService implements StatService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<FeedStatsDto> list(final String username, final int days) {
         final User user = this.getUser(username);
         
@@ -46,19 +47,14 @@ public class StatServiceImpl extends AbstractService implements StatService {
         for (final Group group : groupDao.list(user)) {
             for (final Subscription subscription : subscriptionDao.list(group)) {
                 final List<FeedStat> feedStats = feedStatDao.listAfter(subscription.getFeed(), dateAfter);
-                stats.add(convert(subscription.getFeed(), feedStats));
+                stats.add(new FeedStatsDto(conversionService.convert(subscription.getFeed(), FeedDto.class),
+                        (List<FeedStatDto>) conversionService.convert(feedStats,
+                                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedStat.class)),
+                                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedStatDto.class)))));
             }
         }
         
         return stats;
-    }
-
-    private FeedStatsDto convert(final Feed feed, final List<FeedStat> feedStats) {
-        final FeedStatsDto statsDto = new FeedStatsDto(conversionService.convert(feed, FeedDto.class), new ArrayList<FeedStatDto>());
-        for (final FeedStat feedStat : feedStats) {
-            statsDto.getStats().add(conversionService.convert(feedStat, FeedStatDto.class));
-        }
-        return statsDto;
     }
 
 }

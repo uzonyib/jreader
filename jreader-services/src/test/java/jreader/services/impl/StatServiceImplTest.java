@@ -8,6 +8,7 @@ import static org.testng.Assert.assertSame;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -129,8 +131,13 @@ public class StatServiceImplTest {
         when(stat22.getCount()).thenReturn(2);
         when(stat22.getRefreshDate()).thenReturn(date22.getTimeInMillis());
         
-        when(conversionService.convert(stat21, FeedStatDto.class)).thenReturn(statDto21);
-        when(conversionService.convert(stat22, FeedStatDto.class)).thenReturn(statDto22);
+        when(conversionService.convert(Collections.emptyList(),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedStat.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedStatDto.class)))).thenReturn(Collections.emptyList());
+        
+        when(conversionService.convert(Arrays.asList(stat21, stat22),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedStat.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedStatDto.class)))).thenReturn(Arrays.asList(statDto21, statDto22));
         
         List<FeedStatsDto> stats = sut.list(USERNAME, 5);
         

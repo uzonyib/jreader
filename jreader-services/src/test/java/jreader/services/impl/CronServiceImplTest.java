@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -126,16 +127,19 @@ public class CronServiceImplTest {
 	
 	@Test
     public void listFeeds() {
-        when(feedDao.listAll()).thenReturn(Arrays.asList(feed1, feed2));
-        when(conversionService.convert(feed1, FeedDto.class)).thenReturn(dto1);
-        when(conversionService.convert(feed2, FeedDto.class)).thenReturn(dto2);
+        List<Feed> entities = Arrays.asList(feed1, feed2);
+        when(feedDao.listAll()).thenReturn(entities);
+        when(conversionService.convert(entities,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Feed.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedDto.class)))).thenReturn(Arrays.asList(dto1, dto2));
         
         List<FeedDto> dtos = service.listFeeds();
         
         verify(feedDao).listAll();
         
-        verify(conversionService).convert(feed1, FeedDto.class);
-        verify(conversionService).convert(feed2, FeedDto.class);
+        verify(conversionService).convert(entities,
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Feed.class)),
+                TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedDto.class)));
         
         assertEquals(dtos.size(), 2);
         assertEquals(dtos.get(0), dto1);
