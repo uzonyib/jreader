@@ -2,7 +2,7 @@ package jreader.services;
 
 public class PostFilter extends jreader.dao.PostFilter {
 
-    public static enum Vertical {
+    public enum Vertical {
         ALL, GROUP, SUBSCRIPTION;
     }
 

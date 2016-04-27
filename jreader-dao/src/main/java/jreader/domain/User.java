@@ -33,7 +33,7 @@ public class User {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Long registrationDate) {
+    public void setRegistrationDate(final Long registrationDate) {
         this.registrationDate = registrationDate;
     }
 

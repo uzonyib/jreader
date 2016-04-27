@@ -40,14 +40,14 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
     @SuppressWarnings("unchecked")
     public List<GroupDto> list(final String username) {
         final User user = this.getUser(username);
-        List<Group> groups = groupDao.list(user);
+        final List<Group> groups = groupDao.list(user);
         final List<GroupDto> groupDtos = (List<GroupDto>) conversionService.convert(groups,
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Group.class)),
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(GroupDto.class)));
         
         for (int i = 0; i < groups.size(); ++i) {
             final List<Subscription> subscriptions = subscriptionDao.list(groups.get(i));
-            List<SubscriptionDto> subscriptionDtos = (List<SubscriptionDto>) conversionService.convert(subscriptions,
+            final List<SubscriptionDto> subscriptionDtos = (List<SubscriptionDto>) conversionService.convert(subscriptions,
                     TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Subscription.class)),
                     TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(SubscriptionDto.class)));
             groupDtos.get(i).setSubscriptions(subscriptionDtos);

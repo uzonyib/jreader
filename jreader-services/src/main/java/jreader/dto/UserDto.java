@@ -29,12 +29,12 @@ public class UserDto {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Long registrationDate) {
+    public void setRegistrationDate(final Long registrationDate) {
         this.registrationDate = registrationDate;
     }
     
     public Date getRegistrationDateAsDate() {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(registrationDate);
         return calendar.getTime();
     }

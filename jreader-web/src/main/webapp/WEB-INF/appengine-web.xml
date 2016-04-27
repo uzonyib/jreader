@@ -20,9 +20,5 @@
     </system-properties>
     
     <sessions-enabled>true</sessions-enabled>
-
-<!-- 	<admin-console> -->
-<!-- 		<page name="Appstats" url="/appstats" /> -->
-<!-- 	</admin-console> -->
     
 </appengine-web-app>
