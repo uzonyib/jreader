@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
@@ -21,16 +20,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jreader.dao.DaoFacade;
+import jreader.dao.GroupDao;
 import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
-import jreader.domain.Subscription;
 import jreader.domain.Group;
+import jreader.domain.Subscription;
 import jreader.domain.User;
-import jreader.dto.SubscriptionDto;
 import jreader.dto.GroupDto;
+import jreader.dto.SubscriptionDto;
 import jreader.services.ServiceException;
 
 public class GroupServiceImplTest {
@@ -40,7 +40,6 @@ public class GroupServiceImplTest {
 	private static final int GROUP_ORDER = 10;
 	private static final long GROUP_ID = 123;
 	
-	@InjectMocks
 	private GroupServiceImpl service;
 
 	@Mock
@@ -89,6 +88,8 @@ public class GroupServiceImplTest {
 	@BeforeMethod
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+        DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).build();
+        service = new GroupServiceImpl(daoFacade, conversionService, builderFactory);
 	}
 	
 	@Test

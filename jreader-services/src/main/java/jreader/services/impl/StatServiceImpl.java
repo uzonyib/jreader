@@ -6,10 +6,8 @@ import java.util.List;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 
+import jreader.dao.DaoFacade;
 import jreader.dao.FeedStatDao;
-import jreader.dao.GroupDao;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.UserDao;
 import jreader.domain.FeedStat;
 import jreader.domain.Group;
 import jreader.domain.Subscription;
@@ -28,10 +26,9 @@ public class StatServiceImpl extends AbstractService implements StatService {
     
     private DateHelper dateHelper;
 
-    public StatServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
-            final FeedStatDao feedStatDao, final ConversionService conversionService, final DateHelper dateHelper) {
-        super(userDao, groupDao, subscriptionDao);
-        this.feedStatDao = feedStatDao;
+    public StatServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService, final DateHelper dateHelper) {
+        super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
+        this.feedStatDao = daoFacade.getFeedStatDao();
         this.conversionService = conversionService;
         this.dateHelper = dateHelper;
     }

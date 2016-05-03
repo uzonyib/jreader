@@ -11,7 +11,6 @@ import static org.testng.Assert.fail;
 import java.util.Arrays;
 import java.util.List;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
@@ -19,16 +18,17 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
+import jreader.dao.GroupDao;
 import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
+import jreader.domain.Group;
 import jreader.domain.Post;
 import jreader.domain.Subscription;
-import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.RssFetchResult;
 import jreader.dto.SubscriptionDto;
@@ -45,7 +45,6 @@ public class SubscriptionServiceImplTest {
 	private static final long SUBSCRIPTION_ID = 456;
 	private static final String SUBSCRIPTION_TITLE = "subscription_title";
 	
-	@InjectMocks
 	private SubscriptionServiceImpl service;
 
 	@Mock
@@ -92,6 +91,9 @@ public class SubscriptionServiceImplTest {
 	@BeforeMethod
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+        DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao)
+                .build();
+        service = new SubscriptionServiceImpl(daoFacade, rssService, conversionService, builderFactory);
 	}
 	
 	@Test

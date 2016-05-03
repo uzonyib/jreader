@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 
+import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedStatDao;
 import jreader.dao.PostDao;
@@ -43,12 +44,12 @@ public class CronServiceImpl implements CronService {
     
     private DateHelper dateHelper;
 
-    public CronServiceImpl(final SubscriptionDao subscriptionDao, final FeedDao feedDao, final PostDao postDao, final FeedStatDao feedStatDao,
-            final RssService rssService, final ConversionService conversionService, final BuilderFactory builderFactory, final DateHelper dateHelper) {
-        this.subscriptionDao = subscriptionDao;
-        this.feedDao = feedDao;
-        this.postDao = postDao;
-        this.feedStatDao = feedStatDao;
+    public CronServiceImpl(final DaoFacade daoFacade, final RssService rssService, final ConversionService conversionService,
+            final BuilderFactory builderFactory, final DateHelper dateHelper) {
+        this.subscriptionDao = daoFacade.getSubscriptionDao();
+        this.feedDao = daoFacade.getFeedDao();
+        this.postDao = daoFacade.getPostDao();
+        this.feedStatDao = daoFacade.getFeedStatDao();
         this.rssService = rssService;
         this.conversionService = conversionService;
         this.builderFactory = builderFactory;

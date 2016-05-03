@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
@@ -26,6 +25,7 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
 import jreader.dao.FeedStatDao;
 import jreader.dao.PostDao;
@@ -48,7 +48,6 @@ public class CronServiceImplTest {
 	private static final String FEED_URL = "url";
 	private static final String FEED_TITLE = "title";
 
-	@InjectMocks
 	private CronServiceImpl service;
 	
 	@Mock
@@ -119,6 +118,8 @@ public class CronServiceImplTest {
 	@BeforeMethod
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+		DaoFacade daoFacade = DaoFacade.builder().subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao).feedStatDao(feedStatDao).build();
+		service = new CronServiceImpl(daoFacade, rssService, conversionService, builderFactory, dateHelper);
 	}
 	
 	@Test

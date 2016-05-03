@@ -6,16 +6,14 @@ import java.util.List;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 
+import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
 import jreader.dao.PostDao;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
-import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
+import jreader.domain.Group;
 import jreader.domain.Post;
 import jreader.domain.Subscription;
-import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.RssFetchResult;
 import jreader.dto.SubscriptionDto;
@@ -34,12 +32,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     private BuilderFactory builderFactory;
 
-    public SubscriptionServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
-            final FeedDao feedDao, final PostDao postDao, final RssService rssService, final ConversionService conversionService,
+    public SubscriptionServiceImpl(final DaoFacade daoFacade, final RssService rssService, final ConversionService conversionService,
             final BuilderFactory builderFactory) {
-        super(userDao, groupDao, subscriptionDao);
-        this.feedDao = feedDao;
-        this.postDao = postDao;
+        super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
+        this.feedDao = daoFacade.getFeedDao();
+        this.postDao = daoFacade.getPostDao();
         this.rssService = rssService;
         this.conversionService = conversionService;
         this.builderFactory = builderFactory;

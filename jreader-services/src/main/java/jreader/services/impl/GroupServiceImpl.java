@@ -7,18 +7,16 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
 
+import jreader.dao.DaoFacade;
 import jreader.dao.PostDao;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
-import jreader.dao.UserDao;
 import jreader.domain.BuilderFactory;
-import jreader.domain.Subscription;
 import jreader.domain.Group;
+import jreader.domain.Subscription;
 import jreader.domain.User;
-import jreader.dto.SubscriptionDto;
 import jreader.dto.GroupDto;
-import jreader.services.ServiceException;
+import jreader.dto.SubscriptionDto;
 import jreader.services.GroupService;
+import jreader.services.ServiceException;
 
 public class GroupServiceImpl extends AbstractService implements GroupService {
 
@@ -28,10 +26,9 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
 
     private BuilderFactory builderFactory;
 
-    public GroupServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
-            final PostDao postDao, final ConversionService conversionService, final BuilderFactory builderFactory) {
-        super(userDao, groupDao, subscriptionDao);
-        this.postDao = postDao;
+    public GroupServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService, final BuilderFactory builderFactory) {
+        super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
+        this.postDao = daoFacade.getPostDao();
         this.conversionService = conversionService;
         this.builderFactory = builderFactory;
     }

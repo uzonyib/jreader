@@ -9,16 +9,14 @@ import org.springframework.http.HttpStatus;
 
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedPostDao;
+import jreader.dao.DaoFacade;
 import jreader.dao.PostDao;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
-import jreader.dao.UserDao;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedPost;
 import jreader.domain.BuilderFactory;
+import jreader.domain.Group;
 import jreader.domain.Post;
 import jreader.domain.Subscription;
-import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedPostDto;
@@ -36,13 +34,12 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
     private BuilderFactory builderFactory;
 
-    public ArchiveServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
-            final PostDao postDao, final ArchiveDao archiveDao, final ArchivedPostDao archivedPostDao, final ConversionService conversionService,
+    public ArchiveServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService,
             final BuilderFactory builderFactory) {
-        super(userDao, groupDao, subscriptionDao);
-        this.postDao = postDao;
-        this.archiveDao = archiveDao;
-        this.archivedPostDao = archivedPostDao;
+        super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
+        this.postDao = daoFacade.getPostDao();
+        this.archiveDao = daoFacade.getArchiveDao();
+        this.archivedPostDao = daoFacade.getArchivedPostDao();
         this.conversionService = conversionService;
         this.builderFactory = builderFactory;
     }

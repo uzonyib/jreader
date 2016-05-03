@@ -10,7 +10,6 @@ import static org.testng.Assert.fail;
 import java.util.Arrays;
 import java.util.List;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
@@ -22,16 +21,17 @@ import org.testng.annotations.Test;
 
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedPostDao;
+import jreader.dao.DaoFacade;
+import jreader.dao.GroupDao;
 import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedPost;
 import jreader.domain.BuilderFactory;
+import jreader.domain.Group;
 import jreader.domain.Post;
 import jreader.domain.Subscription;
-import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedPostDto;
@@ -49,7 +49,6 @@ public class ArchiveServiceImplTest {
 	private static final long ARCHIVE_ID = 123;
 	private static final long ARCHIVED_POST_ID = 456;
 	
-	@InjectMocks
 	private ArchiveServiceImpl service;
 
 	@Mock
@@ -108,6 +107,9 @@ public class ArchiveServiceImplTest {
 	@BeforeMethod
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+        DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).archiveDao(archiveDao)
+                .archivedPostDao(archivedPostDao).build();
+        service = new ArchiveServiceImpl(daoFacade, conversionService, builderFactory);
 	}
 	
 	@Test

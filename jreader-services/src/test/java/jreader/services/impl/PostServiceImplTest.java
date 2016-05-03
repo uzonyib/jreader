@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
@@ -17,6 +16,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jreader.dao.DaoFacade;
 import jreader.dao.GroupDao;
 import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
@@ -39,7 +39,6 @@ public class PostServiceImplTest {
 	private static final Long POST_ID_1 = 21L;
 	private static final Long POST_ID_2 = 22L;
 	
-	@InjectMocks
 	private PostServiceImpl service;
 
 	@Mock
@@ -76,7 +75,9 @@ public class PostServiceImplTest {
 	
 	@BeforeMethod
 	public void setup() {
-		MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
+        DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).build();
+        service = new PostServiceImpl(daoFacade, conversionService);
 	}
 	
 	@Test

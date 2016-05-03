@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
@@ -20,14 +19,15 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jreader.dao.DaoFacade;
 import jreader.dao.FeedStatDao;
-import jreader.dao.SubscriptionDao;
 import jreader.dao.GroupDao;
+import jreader.dao.SubscriptionDao;
 import jreader.dao.UserDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedStat;
-import jreader.domain.Subscription;
 import jreader.domain.Group;
+import jreader.domain.Subscription;
 import jreader.domain.User;
 import jreader.dto.FeedDto;
 import jreader.dto.FeedStatDto;
@@ -38,7 +38,6 @@ public class StatServiceImplTest {
     
     private static final String USERNAME = "test_user";
 
-    @InjectMocks
     private StatServiceImpl sut;
     
     @Mock
@@ -96,6 +95,8 @@ public class StatServiceImplTest {
     @BeforeMethod
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).feedStatDao(feedStatDao).build();
+        sut = new StatServiceImpl(daoFacade, conversionService, dateHelper);
     }
     
     @Test

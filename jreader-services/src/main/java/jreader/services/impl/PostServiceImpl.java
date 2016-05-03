@@ -5,20 +5,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
+
+import jreader.dao.DaoFacade;
 import jreader.dao.PostDao;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
-import jreader.dao.UserDao;
+import jreader.domain.Group;
 import jreader.domain.Post;
 import jreader.domain.Subscription;
-import jreader.domain.Group;
 import jreader.domain.User;
 import jreader.dto.PostDto;
 import jreader.services.PostFilter;
 import jreader.services.PostService;
-
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.TypeDescriptor;
 
 public class PostServiceImpl extends AbstractService implements PostService {
 
@@ -26,10 +24,9 @@ public class PostServiceImpl extends AbstractService implements PostService {
 
     private ConversionService conversionService;
 
-    public PostServiceImpl(final UserDao userDao, final GroupDao groupDao, final SubscriptionDao subscriptionDao,
-            final PostDao postDao, final ConversionService conversionService) {
-        super(userDao, groupDao, subscriptionDao);
-        this.postDao = postDao;
+    public PostServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService) {
+        super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
+        this.postDao = daoFacade.getPostDao();
         this.conversionService = conversionService;
     }
 

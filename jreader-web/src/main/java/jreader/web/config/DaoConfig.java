@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedPostDao;
+import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
 import jreader.dao.PostDao;
 import jreader.dao.FeedStatDao;
@@ -61,6 +62,12 @@ public class DaoConfig {
     @Bean
     public ArchivedPostDao archivedPostDao() {
         return new ArchivedPostDaoImpl();
+    }
+    
+    @Bean
+    public DaoFacade daoFacade() {
+        return DaoFacade.builder().userDao(userDao()).groupDao(groupDao()).subscriptionDao(subscriptionDao()).feedDao(feedDao())
+                .postDao(postDao()).feedStatDao(feedStatDao()).archiveDao(archiveDao()).archivedPostDao(archivedPostDao()).build();
     }
     
 }
