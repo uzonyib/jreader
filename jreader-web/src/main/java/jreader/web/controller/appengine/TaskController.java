@@ -20,7 +20,7 @@ import jreader.web.service.QueueService;
 
 @RestController
 @RequestMapping(value = "/tasks")
-public class TaskController {
+public class TaskController extends AppengineController {
 
     private static final Logger LOG = Logger.getLogger(TaskController.class.getName());
 
@@ -28,17 +28,15 @@ public class TaskController {
     
     private QueueService queueService;
     
-    private UserService userService;
-
     private final int daysToKeepPosts;
     private final int postsToKeep;
     private final int statsToKeep;
 
     public TaskController(final CronService cronService, final QueueService queueService, final UserService userService, final int daysToKeepPosts,
             final int postsToKeep, final int statsToKeep) {
+        super(userService);
         this.cronService = cronService;
         this.queueService = queueService;
-        this.userService = userService;
         this.daysToKeepPosts = daysToKeepPosts;
         this.postsToKeep = postsToKeep;
         this.statsToKeep = statsToKeep;
@@ -47,7 +45,7 @@ public class TaskController {
     @RequestMapping(value = "/refresh", method = RequestMethod.POST)
     public ResponseEntity refreshFeeds(final HttpServletRequest request) {
         final ResponseEntity result;
-        if (isAuthorized(request)) {
+        if (isAppengineTaskRequest(request) || isUserAuthorized()) {
             final List<FeedDto> feeds = cronService.listFeeds();
             for (final FeedDto feed : feeds) {
                 queueService.refresh(feed.getUrl());
@@ -63,7 +61,7 @@ public class TaskController {
     @RequestMapping(value = "/refresh/feed", method = RequestMethod.POST)
     public ResponseEntity refreshFeed(final HttpServletRequest request, @RequestParam final String url) {
         final ResponseEntity result;
-        if (isAuthorized(request)) {
+        if (isAppengineTaskRequest(request) || isUserAuthorized()) {
             cronService.refresh(url);
             result = new ResponseEntity();
         } else {
@@ -76,7 +74,7 @@ public class TaskController {
     @RequestMapping(value = "/cleanup", method = RequestMethod.POST)
     public ResponseEntity cleanup(final HttpServletRequest request) {
         final ResponseEntity result;
-        if (isAuthorized(request)) {
+        if (isAppengineTaskRequest(request) || isUserAuthorized()) {
             final List<FeedDto> feeds = cronService.listFeeds();
             for (FeedDto feed : feeds) {
                 queueService.cleanup(feed.getUrl());
@@ -92,7 +90,7 @@ public class TaskController {
     @RequestMapping(value = "/cleanup/feed", method = RequestMethod.POST)
     public ResponseEntity cleanup(final HttpServletRequest request, @RequestParam final String url) {
         final ResponseEntity result;
-        if (isAuthorized(request)) {
+        if (isAppengineTaskRequest(request) || isUserAuthorized()) {
             cronService.cleanup(url, daysToKeepPosts, postsToKeep, statsToKeep);
             result = new ResponseEntity();
         } else {
@@ -100,10 +98,6 @@ public class TaskController {
             LOG.warning("Cleanup prevented.");
         }
         return result;
-    }
-
-    private boolean isAuthorized(final HttpServletRequest request) {
-        return request.getHeader("X-AppEngine-TaskName") != null || (userService.isUserLoggedIn() && userService.isUserAdmin());
     }
 
 }

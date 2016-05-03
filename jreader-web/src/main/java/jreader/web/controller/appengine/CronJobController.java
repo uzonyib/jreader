@@ -16,23 +16,21 @@ import jreader.web.service.QueueService;
 
 @RestController
 @RequestMapping(value = "/cron")
-public class CronJobController {
+public class CronJobController extends AppengineController {
 
     private static final Logger LOG = Logger.getLogger(CronJobController.class.getName());
     
     private QueueService queueService;
     
-    private UserService userService;
-    
     public CronJobController(final QueueService queueService, final UserService userService) {
+        super(userService);
         this.queueService = queueService;
-        this.userService = userService;
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public ResponseEntity refreshFeeds(final HttpServletRequest request) {
         final ResponseEntity result;
-        if (isAuthorized(request)) {
+        if (isAppengineCronRequest(request) || isUserAuthorized()) {
             queueService.refresh();
             result = new ResponseEntity();
             LOG.info("Refresh job added to queue.");
@@ -46,7 +44,7 @@ public class CronJobController {
     @RequestMapping(value = "/cleanup", method = RequestMethod.GET)
     public ResponseEntity cleanup(final HttpServletRequest request) {
         final ResponseEntity result;
-        if (isAuthorized(request)) {
+        if (isAppengineCronRequest(request) || isUserAuthorized()) {
             queueService.cleanup();
             result = new ResponseEntity();
             LOG.info("Cleanup job added to queue.");
@@ -55,10 +53,6 @@ public class CronJobController {
             LOG.warning("Cleanup job skipped.");
         }
         return result;
-    }
-    
-    private boolean isAuthorized(final HttpServletRequest request) {
-        return request.getHeader("X-AppEngine-Cron") != null || (userService.isUserLoggedIn() && userService.isUserAdmin());
     }
 
 }

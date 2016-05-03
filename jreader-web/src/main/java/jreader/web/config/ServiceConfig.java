@@ -71,7 +71,8 @@ public class ServiceConfig {
     
     @Bean
     public CronService cronService() {
-        return new CronServiceImpl(daoConfig.daoFacade(), utilConfig.rssService(), utilConfig.conversionService(), utilConfig.builderFactory(), utilConfig.dateHelper());
+        return new CronServiceImpl(daoConfig.daoFacade(), utilConfig.rssService(), utilConfig.conversionService(), utilConfig.builderFactory(),
+                utilConfig.dateHelper());
     }
     
     @Bean
