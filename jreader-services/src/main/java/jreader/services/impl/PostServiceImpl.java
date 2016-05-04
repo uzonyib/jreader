@@ -83,7 +83,7 @@ public class PostServiceImpl extends AbstractService implements PostService {
 
     @Override
     public List<PostDto> list(final PostFilter filter) {
-        switch (filter.getVertical()) {
+        switch (filter.getParentType()) {
         case GROUP:
             return listForGroup(filter.getUsername(), filter.getGroupId(), filter);
         case SUBSCRIPTION:

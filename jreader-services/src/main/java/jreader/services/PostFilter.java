@@ -4,25 +4,25 @@ import jreader.dao.PostFilter.PostType;
 
 public class PostFilter {
 
-    public enum Vertical {
-        ALL, GROUP, SUBSCRIPTION;
+    public enum ParentType {
+        USER, GROUP, SUBSCRIPTION;
     }
 
     private jreader.dao.PostFilter entityFilter;
-    private Vertical vertical;
+    private ParentType parentType;
     private String username;
     private Long groupId;
     private Long subscriptionId;
 
     public PostFilter(final String username, final PostType postType, final boolean ascending, final int offset, final int count) {
         this.entityFilter = new jreader.dao.PostFilter(postType, ascending, offset, count);
-        this.vertical = Vertical.ALL;
+        this.parentType = ParentType.USER;
         this.username = username;
     }
 
     public PostFilter(final String username, final Long groupId, final PostType postType, final boolean ascending, final int offset, final int count) {
         this.entityFilter = new jreader.dao.PostFilter(postType, ascending, offset, count);
-        this.vertical = Vertical.GROUP;
+        this.parentType = ParentType.GROUP;
         this.username = username;
         this.groupId = groupId;
     }
@@ -30,7 +30,7 @@ public class PostFilter {
     public PostFilter(final String username, final Long groupId, final Long subscriptionId, final PostType postType, final boolean ascending,
             final int offset, final int count) {
         this.entityFilter = new jreader.dao.PostFilter(postType, ascending, offset, count);
-        this.vertical = Vertical.SUBSCRIPTION;
+        this.parentType = ParentType.SUBSCRIPTION;
         this.username = username;
         this.groupId = groupId;
         this.subscriptionId = subscriptionId;
@@ -40,8 +40,8 @@ public class PostFilter {
         return entityFilter;
     }
     
-    public Vertical getVertical() {
-        return vertical;
+    public ParentType getParentType() {
+        return parentType;
     }
 
     public String getUsername() {

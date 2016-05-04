@@ -27,7 +27,7 @@ import jreader.domain.Subscription;
 import jreader.domain.User;
 import jreader.dto.PostDto;
 import jreader.services.PostFilter;
-import jreader.services.PostFilter.Vertical;
+import jreader.services.PostFilter.ParentType;
 
 public class PostServiceImplTest {
 	
@@ -139,7 +139,7 @@ public class PostServiceImplTest {
 	@Test
 	public void listForUser() {
 	    when(filter.getEntityFilter()).thenReturn(entityFilter);
-	    when(filter.getVertical()).thenReturn(Vertical.ALL);
+	    when(filter.getParentType()).thenReturn(ParentType.USER);
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(userDao.find(USERNAME)).thenReturn(user);
 		List<Post> entities = Arrays.asList(post1, post2);
@@ -157,7 +157,7 @@ public class PostServiceImplTest {
 	@Test
 	public void listForGroup() {
 	    when(filter.getEntityFilter()).thenReturn(entityFilter);
-		when(filter.getVertical()).thenReturn(Vertical.GROUP);
+		when(filter.getParentType()).thenReturn(ParentType.GROUP);
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(filter.getGroupId()).thenReturn(GROUP_ID_1);
 		when(userDao.find(USERNAME)).thenReturn(user);
@@ -177,7 +177,7 @@ public class PostServiceImplTest {
 	@Test
 	public void listForSubscription() {
 	    when(filter.getEntityFilter()).thenReturn(entityFilter);
-		when(filter.getVertical()).thenReturn(Vertical.SUBSCRIPTION);
+		when(filter.getParentType()).thenReturn(ParentType.SUBSCRIPTION);
 		when(filter.getUsername()).thenReturn(USERNAME);
 		when(filter.getGroupId()).thenReturn(GROUP_ID_1);
 		when(filter.getSubscriptionId()).thenReturn(SUBSCRIPTION_ID_1);
