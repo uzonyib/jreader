@@ -8,7 +8,7 @@ abstract class AppengineController {
     
     private UserService userService;
 
-    public AppengineController(final UserService userService) {
+    AppengineController(final UserService userService) {
         this.userService = userService;
     }
     

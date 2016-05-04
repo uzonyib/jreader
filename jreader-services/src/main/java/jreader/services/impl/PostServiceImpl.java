@@ -95,13 +95,13 @@ public class PostServiceImpl extends AbstractService implements PostService {
 
     private List<PostDto> listAll(final String username, final PostFilter filter) {
         final User user = this.getUser(username);
-        return convert(postDao.list(user, filter));
+        return convert(postDao.list(user, filter.getEntityFilter()));
     }
 
     private List<PostDto> listForGroup(final String username, final Long groupId, final PostFilter filter) {
         final User user = this.getUser(username);
         final Group group = getGroup(user, groupId);
-        return convert(postDao.list(group, filter));
+        return convert(postDao.list(group, filter.getEntityFilter()));
     }
 
     private List<PostDto> listForSubscription(final String username, final Long groupId, final Long subscriptionId,
@@ -109,7 +109,7 @@ public class PostServiceImpl extends AbstractService implements PostService {
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
-        return convert(postDao.list(subscription, filter));
+        return convert(postDao.list(subscription, filter.getEntityFilter()));
     }
 
     @SuppressWarnings("unchecked")
