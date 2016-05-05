@@ -144,7 +144,7 @@ public class ArchivedPostDaoImplTest extends AbstractDaoTest {
     }
     
     @Test
-    public void listForArchive_IfPostsNotExist_ShouldReturnEmptyList() {
+    public void listForArchiveAndFilter_IfPostsNotExist_ShouldReturnEmptyList() {
         List<ArchivedPost> posts = sut.list(SAVED_ARCHIVES.get(1), new ArchivedPostFilter(true, 0, 10));
         
         assertNotNull(posts);
@@ -152,7 +152,7 @@ public class ArchivedPostDaoImplTest extends AbstractDaoTest {
     }
     
     @Test
-    public void listForArchive_IfOffsetIsNotZero_ShouldReturnSubList() {
+    public void listForArchiveAndFilter_IfOffsetIsNotZero_ShouldReturnSubList() {
         List<ArchivedPost> posts = sut.list(SAVED_ARCHIVES.get(0), new ArchivedPostFilter(true, 1, 10));
         
         assertNotNull(posts);
@@ -161,7 +161,7 @@ public class ArchivedPostDaoImplTest extends AbstractDaoTest {
     }
     
     @Test
-    public void listForArchive_IfOffsetIsOverPostCount_ShouldReturnSubList() {
+    public void listForArchiveAndFilter_IfOffsetIsOverPostCount_ShouldReturnSubList() {
         List<ArchivedPost> posts = sut.list(SAVED_ARCHIVES.get(0), new ArchivedPostFilter(true, 2, 10));
         
         assertNotNull(posts);
@@ -169,12 +169,30 @@ public class ArchivedPostDaoImplTest extends AbstractDaoTest {
     }
     
     @Test
-    public void listForArchive_IfLimitIsNotZero_ShouldReturnSubList() {
+    public void listForArchiveAndFilter_IfLimitIsNotZero_ShouldReturnSubList() {
         List<ArchivedPost> posts = sut.list(SAVED_ARCHIVES.get(0), new ArchivedPostFilter(true, 0, 1));
         
         assertNotNull(posts);
         assertEquals(posts.size(), 1);
         assertEquals(posts.get(0).getId(), SAVED_POSTS.get(0).getId());
+    }
+    
+    @Test
+    public void listForArchive_IfPostsNotExist_ShouldReturnEmptyList() {
+        List<ArchivedPost> posts = sut.list(SAVED_ARCHIVES.get(1));
+        
+        assertNotNull(posts);
+        assertTrue(posts.isEmpty());
+    }
+    
+    @Test
+    public void listForArchive_IfPostsExist_ShouldReturnAll() {
+        List<ArchivedPost> posts = sut.list(SAVED_ARCHIVES.get(0));
+        
+        assertNotNull(posts);
+        assertEquals(posts.size(), 2);
+        assertEquals(posts.get(0).getId(), SAVED_POSTS.get(0).getId());
+        assertEquals(posts.get(1).getId(), SAVED_POSTS.get(1).getId());
     }
 
 }

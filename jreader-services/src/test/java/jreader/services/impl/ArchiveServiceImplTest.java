@@ -157,11 +157,14 @@ public class ArchiveServiceImplTest {
 	public void deleteArchive() {
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(archiveDao.find(user, ARCHIVE_ID)).thenReturn(archive);
+		List<ArchivedPost> archivedPosts = Arrays.asList(archivedPost1, archivedPost2);
+        when(archivedPostDao.list(archive)).thenReturn(archivedPosts);
 		
 		service.deleteArchive(USERNAME, ARCHIVE_ID);
 		
 		verify(userDao).find(USERNAME);
 		verify(archiveDao).delete(archive);
+		verify(archivedPostDao).deleteAll(archivedPosts);
 	}
 	
 	@Test

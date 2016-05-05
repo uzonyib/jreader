@@ -69,6 +69,8 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     public void deleteArchive(final String username, final Long archiveId) {
         final User user = this.getUser(username);
         final Archive archive = this.getArchive(user, archiveId);
+        List<ArchivedPost> archivedPosts = archivedPostDao.list(archive);
+        archivedPostDao.deleteAll(archivedPosts);
         archiveDao.delete(archive);
     }
 

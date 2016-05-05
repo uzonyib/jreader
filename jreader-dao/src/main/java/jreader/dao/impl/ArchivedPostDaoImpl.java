@@ -30,5 +30,10 @@ public class ArchivedPostDaoImpl extends AbstractOfyDao<ArchivedPost> implements
                 .order(filter.isAscending() ? "publishDate" : "-publishDate")
                 .offset(filter.getOffset()).limit(filter.getCount()).list();
     }
+    
+    @Override
+    public List<ArchivedPost> list(final Archive archive) {
+        return getOfy().load().type(ArchivedPost.class).ancestor(archive).list();
+    }
 
 }

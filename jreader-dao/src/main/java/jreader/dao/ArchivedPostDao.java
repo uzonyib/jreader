@@ -13,5 +13,7 @@ public interface ArchivedPostDao extends OfyDao<ArchivedPost> {
     List<ArchivedPost> list(User user, ArchivedPostFilter filter);
 
     List<ArchivedPost> list(Archive archive, ArchivedPostFilter filter);
+    
+    List<ArchivedPost> list(Archive archive);
 
 }
