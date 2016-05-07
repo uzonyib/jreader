@@ -11,10 +11,7 @@
 			<div id="nav-main" class="col-lg-10 col-md-10 col-sm-9 col-xs-12 col-lg-offset-2 col-md-offset-2 col-sm-offset-3">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
+						<span class="glyphicon glyphicon-menu-hamburger"></span>
 					</button>
 			    	<ul class="nav navbar-nav" data-ng-controller="PostsNavbarCtrl" data-ng-show="active">
 			    		<li class="btn-group">
@@ -141,8 +138,8 @@
 						<li class="menu-item group-item"
 							data-ng-class="{selected: group.selected}"
 							data-ng-click="viewService.selectGroup(group.id)">
-							<span class="glyphicon glyphicon-chevron-right" data-ng-show="!group.expanded" data-ng-click="menu.expand(group.id, $event)"></span>
-							<span class="glyphicon glyphicon-chevron-down" data-ng-show="group.expanded" data-ng-click="menu.collapse(group.id, $event)"></span>
+							<span class="glyphicon glyphicon-plus" data-ng-show="!group.expanded" data-ng-click="menu.expand(group.id, $event)"></span>
+							<span class="glyphicon glyphicon-minus" data-ng-show="group.expanded" data-ng-click="menu.collapse(group.id, $event)"></span>
 							<span class="title">{{group.title}}</span>
 							<span data-ng-show="group.unreadCount > 0" class="unread-count badge">{{group.unreadCount}}</span>
 						</li>
@@ -160,11 +157,11 @@
 							data-ng-class="{selected: menu.archivedItemsSelected}"
 							data-ng-show="archives.length > 0"
 							data-ng-click="viewService.selectArchivedItems()">
-							<span class="glyphicon glyphicon-chevron-right" data-ng-show="!menu.archivedItemsExpanded" data-ng-click="menu.expandArchivedItems($event)"></span>
-							<span class="glyphicon glyphicon-chevron-down" data-ng-show="menu.archivedItemsExpanded" data-ng-click="menu.collapseArchivedItems($event)"></span>
+							<span class="glyphicon glyphicon-plus" data-ng-show="!menu.archivedItemsExpanded" data-ng-click="menu.expandArchivedItems($event)"></span>
+							<span class="glyphicon glyphicon-minus" data-ng-show="menu.archivedItemsExpanded" data-ng-click="menu.collapseArchivedItems($event)"></span>
 							<span class="title">Archives</span>
 						</li>
-						<li data-ng-show="!menu.archivedItemsExpanded"
+						<li data-ng-show="menu.archivedItemsExpanded"
 							data-ng-repeat="archive in archives"
 							class="menu-item feed-item"
 							data-ng-class="{selected: archive.selected}"

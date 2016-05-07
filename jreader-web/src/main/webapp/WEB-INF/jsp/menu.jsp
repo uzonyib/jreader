@@ -22,8 +22,8 @@
 	<li class="menu-item group-item"
 		data-ng-class="{selected: group.selected}"
 		data-ng-click="viewService.selectGroup(group.id)">
-		<span class="glyphicon glyphicon-chevron-right" data-ng-show="!group.expanded" data-ng-click="menu.expand(group.id, $event)"></span>
-		<span class="glyphicon glyphicon-chevron-down" data-ng-show="group.expanded" data-ng-click="menu.collapse(group.id, $event)"></span>
+		<span class="glyphicon glyphicon-plus" data-ng-show="!group.expanded" data-ng-click="menu.expand(group.id, $event)"></span>
+		<span class="glyphicon glyphicon-minus" data-ng-show="group.expanded" data-ng-click="menu.collapse(group.id, $event)"></span>
 		<span class="title">{{group.title}}</span>
 		<span data-ng-show="group.unreadCount > 0" class="unread-count badge">{{group.unreadCount}}</span>
 	</li>
@@ -41,8 +41,8 @@
 		data-ng-class="{selected: menu.archivedItemsSelected}"
 		data-ng-show="archives.length > 0"
 		data-ng-click="viewService.selectArchivedItems()">
-		<span class="glyphicon glyphicon-chevron-right" data-ng-show="!menu.archivedItemsExpanded" data-ng-click="menu.expandArchivedItems($event)"></span>
-		<span class="glyphicon glyphicon-chevron-down" data-ng-show="menu.archivedItemsExpanded" data-ng-click="menu.collapseArchivedItems($event)"></span>
+		<span class="glyphicon glyphicon-plus" data-ng-show="!menu.archivedItemsExpanded" data-ng-click="menu.expandArchivedItems($event)"></span>
+		<span class="glyphicon glyphicon-minus" data-ng-show="menu.archivedItemsExpanded" data-ng-click="menu.collapseArchivedItems($event)"></span>
 		<span class="title">Archives</span>
 	</li>
 	<li data-ng-show="menu.archivedItemsExpanded"
