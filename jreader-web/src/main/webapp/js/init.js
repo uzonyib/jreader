@@ -1,1 +1,1 @@
-angular.module("jReaderApp", ["ngSanitize", "jReaderFilters", "infinite-scroll", "chart.js"]);
+angular.module("jReaderApp", ["jReaderFilters", "infinite-scroll", "chart.js"]);
