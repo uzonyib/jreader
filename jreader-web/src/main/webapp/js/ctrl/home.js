@@ -1,35 +1,50 @@
 angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "viewService", function ($scope, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
-	
+
 	$scope.active = true;
-	
+
 	$scope.stats = [];
-	$scope.chartOptions = {
-		scaleBeginAtZero: true,
-		responsive: true,
-		animation: false,
-		maintainAspectRatio: false
+	$scope.chart = {
+		options: {
+			scaleBeginAtZero: true,
+			responsive: true,
+			animation: false,
+			maintainAspectRatio: false,
+			scales: {
+				xAxes: [{
+					ticks: {
+						fontColor: "#d4d4d4"
+					}
+				}],
+				yAxes: [{
+					ticks: {
+						fontColor: "#d4d4d4"
+					}
+				}]
+			}
+		}
 	};
 	
+
 	$scope.$watch("viewService.activeView", function() {
 		$scope.active = $scope.viewService.isHomeSelected();
 		if ($scope.active) {
 			$scope.refreshStats();
 		}
 	});
-	
+
 	$scope.$watch("groups.items", function() {
 		$scope.populateStats();
 	});
-	
+
 	$scope.refreshStats = function() {
 		$scope.ajaxService.loadStats().success(function(response) {
 			$scope.stats = response.payload;
 			$scope.populateStats();
 		});
 	};
-	
+
 	$scope.populateStats = function() {
 		angular.forEach($scope.groups.items, function(group) {
 			angular.forEach(group.subscriptions, function(subscription) {
@@ -38,7 +53,7 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 						subscription.stats = {};
 						subscription.stats.labels = [];
 						subscription.stats.data = [[]];
-						
+
 						var last = null;
 						var dayMillis = 24 * 60 * 60 * 1000;
 
@@ -80,5 +95,5 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 			});
 		});
 	};
-	
+
 }]);

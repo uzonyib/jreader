@@ -5,7 +5,7 @@
 	data-infinite-scroll-immediate-check="false">
 	<table id="posts" class="table">
 		<tr class="article-breadcrumb"
-			data-ng-class="{info: !post.read}"
+			data-ng-class="{info: !post.read, selected: post.expanded}"
 			data-ng-repeat-start="post in posts.items">
 			<td class="action-buttons">
 				<button class="btn btn-default bookmark" title="Bookmark" data-ng-show="!post.bookmarked" data-ng-click="bookmark(post)">

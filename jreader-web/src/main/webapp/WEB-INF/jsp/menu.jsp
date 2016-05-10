@@ -14,7 +14,7 @@
 		data-ng-click="viewService.selectAllItems()">
 		<span class="glyphicon glyphicon-th-list"></span>
 		<span class="title">All feeds</span>
-		<span class="unread-count badge" data-ng-show="groups.unreadCount">{{groups.unreadCount}}</span>
+		<span class="badge count" data-ng-show="groups.unreadCount">{{groups.unreadCount}}</span>
 	</li>
 </ul>
 <ul data-ng-repeat="group in groups.items"
@@ -25,7 +25,7 @@
 		<span class="glyphicon glyphicon-plus" data-ng-show="!group.expanded" data-ng-click="menu.expand(group.id, $event)"></span>
 		<span class="glyphicon glyphicon-minus" data-ng-show="group.expanded" data-ng-click="menu.collapse(group.id, $event)"></span>
 		<span class="title">{{group.title}}</span>
-		<span data-ng-show="group.unreadCount > 0" class="unread-count badge">{{group.unreadCount}}</span>
+		<span data-ng-show="group.unreadCount > 0" class="badge count">{{group.unreadCount}}</span>
 	</li>
 	<li data-ng-repeat="subscription in group.subscriptions"
 		class="menu-item feed-item"
@@ -33,7 +33,7 @@
 		data-ng-show="group.expanded"
 		data-ng-click="viewService.selectSubscription(group.id, subscription.id)">
 		<span class="title">{{subscription.title}}</span>
-		<span data-ng-show="subscription.unreadCount > 0" class="unread-count badge">{{subscription.unreadCount}}</span>
+		<span data-ng-show="subscription.unreadCount > 0" class="badge count">{{subscription.unreadCount}}</span>
 	</li>
 </ul>
 <ul class="nav nav-pills nav-stacked">

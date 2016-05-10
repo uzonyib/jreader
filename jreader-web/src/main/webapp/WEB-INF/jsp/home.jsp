@@ -15,7 +15,7 @@
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<canvas class="chart chart-line"
 						data-ng-if="active"
-						data-chart-options="chartOptions"
+						data-chart-options="chart.options"
 						data-chart-data="subscription.stats.data"
 						data-chart-labels="subscription.stats.labels">
 					</canvas>

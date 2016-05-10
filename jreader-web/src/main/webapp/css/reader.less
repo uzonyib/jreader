@@ -1,18 +1,22 @@
-@clr-default: #000;
-
 @clr-soft: #ececec;
-@clr-main: #d2d7d3;
+
+@clr-bg: #3e4651;
+@clr-bg-hl: #60646d;
+@clr-txt-def: #d4d4d4;
+@clr-txt-hl: #ecf0f1;
 
 :focus {
 	outline: none !important;
 }
 ::-moz-focus-inner {
 	border: 0;
-} 
+}
 
 body {
 	font-size: 120%;
 	padding-top: 53px;
+	background-color: @clr-bg;
+	color: @clr-txt-def;
 }
 
 #menu, #main-area, #nav-brand, #nav-main {
@@ -35,10 +39,12 @@ body {
 		padding: 3px 5px;
 		cursor: pointer;
 		&:hover {
-			background-color: @clr-main;
+			background-color: @clr-bg-hl;
 		}
 		&.selected {
-			background-color: @clr-main;
+			background-color: @clr-bg-hl;
+			color: @clr-txt-hl;
+			font-weight: bolder;
 		}
 		.title {
 			padding-left: 8px;
@@ -46,13 +52,9 @@ body {
 		&.feed-item .title {
 			padding-left: 32px;
 		}
-	}
-	#logout-menu-item {
-		a {
-			text-decoration: none;
-			color: @clr-default;
-			padding: 0px 0px;
-			background: none;
+		.badge.count {
+			color: @clr-txt-hl;
+			background-color: #c0392b;
 		}
 	}
 }
@@ -66,12 +68,18 @@ body {
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			background-color: @clr-bg;
 		}
-		&.info td {
-			background-color: @clr-soft;
+		&.selected td {
+			background-color: @clr-bg-hl;
+		}
+		&.info td.title {
+			color: @clr-txt-hl;
+			font-weight: bolder;
 		}
 		&:hover td {
-			background-color: @clr-main;
+			background-color: @clr-bg-hl;
+			color: @clr-txt-hl;
 		}
 		.action-buttons {
 			width: 32px;
@@ -84,21 +92,21 @@ body {
 					box-shadow: none;
 				}
 				&.bookmark {
-					color: #a3b1b2;
+					color: @clr-txt-def;
 					&:hover {
-						color: #f14233;
+						color: @clr-txt-hl;
 					}
 				}
 				&.delete-bookmark {
-					color: #d14233;
+					color: #c0392b;
 					&:hover {
-						color: #f14233;
+						color: @clr-txt-hl;
 					}
 				}
 				&.delete {
-					color: #a3b1b2;
+					color: @clr-txt-def;
 					&:hover {
-						color: #d14233;
+						color: #c0392b;
 					}
 				}
 			}
@@ -112,14 +120,23 @@ body {
 		}
 	}
 	tr.article-detail td {
+		background-color: @clr-bg-hl;
 		padding: 5px 30px;
+		.header a {
+			color: #3498db;
+		}
 		.title {
 			font-weight: bolder;
 		}
-		.description img {
-			max-width: 100%;
+		.description {
+			img {
+				max-width: 100%;
+			}
+			background-color: #ffffff;
+			color: #000000;
+			padding: 5px 5px;
 		}
-		.header, .description, .footer {
+		.header, .footer {
 			padding: 5px 0px;
 		}
 	}
@@ -136,15 +153,18 @@ body {
 	.subscription-stat {
 		text-align: center;
 		padding: 20px 0px;
+		.subtitle a {
+			color: #3498db;
+		}
 		.status {
 			&.ok {
-				color: green;
+				color: #27ae60;
 			}
 			&.warning {
-				color: orange;
+				color: #e67e22;
 			}
 			&.error {
-				color: red;
+				color: #c0392b;
 			}
 		}
 		.title {
@@ -160,7 +180,7 @@ body {
 		    	font-weight: bold;
 		    }
 		}
-	}	
+	}
 }
 
 .settings-group {
@@ -191,6 +211,7 @@ body {
 }
 
 nav.navbar.navbar-default.navbar-fixed-top {
+	background-color: #ecf0f1;
 	.btn-group>.btn:first-child {
 		margin-left: 5px;
 	}
@@ -205,11 +226,27 @@ nav.navbar.navbar-default.navbar-fixed-top {
 		.nav.navbar-nav {
 			margin: 1.5px 0px;
 		}
+		.badge.count {
+			font-size: 16px;
+		}
+	}
+	@media (max-width: 768px) {
+		#navbar-collapse ul {
+			background-color: @clr-bg;
+		}
 	}
 }
 
 .navbar-toggle, .navbar-btn {
 	z-index: 1;
+}
+
+.navbar-toggle {
+	color: #333;
+}
+
+#about-modal {
+	color: #333;
 }
 
 .form-inline {

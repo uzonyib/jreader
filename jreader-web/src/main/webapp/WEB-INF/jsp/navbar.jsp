@@ -65,14 +65,13 @@
 						<li data-ng-show="!posts.loading">
 							<p class="navbar-text">
 								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>
-								<ng-pluralize count="posts.items.length"
-									when="{'1': '1 item', 'other': '{} items'}">
-								</ng-pluralize>
+								<span class="badge count">{{posts.items.length}}</span>
 							</p>
 						</li>
 						<li data-ng-show="posts.loading">
 							<p class="navbar-text">
-								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>Loading...
+								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>
+								<span class="glyphicon glyphicon-hourglass"></span>
 							</p>
 						</li>
 					</ul>
@@ -101,14 +100,13 @@
 						<li data-ng-show="!archivedPosts.loading">
 							<p class="navbar-text" data-ng-show="!archivedPosts.loading">
 								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>
-								<ng-pluralize count="archivedPosts.items.length"
-									when="{'1': '1 item', 'other': '{} items'}">
-								</ng-pluralize>
+								<span class="badge count">{{archivedPosts.items.length}}</span>
 							</p>
 						</li>
 						<li data-ng-show="archivedPosts.loading">
 							<p class="navbar-text" data-ng-show="archivedPosts.loading">
-								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>Loading...
+								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>
+								<span class="glyphicon glyphicon-hourglass"></span>
 							</p>
 						</li>
 					</ul>
@@ -130,7 +128,7 @@
 							data-ng-click="viewService.selectAllItems()">
 							<span class="glyphicon glyphicon-th-list"></span>
 							<span class="title">All feeds</span>
-							<span class="unread-count badge" data-ng-show="groups.unreadCount">{{groups.unreadCount}}</span>
+							<span class="badge count" data-ng-show="groups.unreadCount">{{groups.unreadCount}}</span>
 						</li>
 					</ul>
 					<ul data-ng-repeat="group in groups.items"
@@ -141,7 +139,7 @@
 							<span class="glyphicon glyphicon-plus" data-ng-show="!group.expanded" data-ng-click="menu.expand(group.id, $event)"></span>
 							<span class="glyphicon glyphicon-minus" data-ng-show="group.expanded" data-ng-click="menu.collapse(group.id, $event)"></span>
 							<span class="title">{{group.title}}</span>
-							<span data-ng-show="group.unreadCount > 0" class="unread-count badge">{{group.unreadCount}}</span>
+							<span data-ng-show="group.unreadCount > 0" class="badge count">{{group.unreadCount}}</span>
 						</li>
 						<li data-ng-repeat="subscription in group.subscriptions"
 							class="menu-item feed-item"
@@ -149,7 +147,7 @@
 							data-ng-show="group.expanded"
 							data-ng-click="viewService.selectSubscription(group.id, subscription.id)">
 							<span class="title">{{subscription.title}}</span>
-							<span data-ng-show="subscription.unreadCount > 0" class="unread-count badge">{{subscription.unreadCount}}</span>
+							<span data-ng-show="subscription.unreadCount > 0" class="badge count">{{subscription.unreadCount}}</span>
 						</li>
 					</ul>
 					<ul class="nav navbar-nav hidden-lg hidden-md hidden-sm">
@@ -171,12 +169,13 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li class="btn-group">
-							<button type="button" class="btn btn-default navbar-btn" title="About" data-toggle="modal" data-target="#aboutModal">
+							<button type="button" class="btn btn-default navbar-btn" title="About" data-toggle="modal" data-target="#about-modal">
 								<span class="glyphicon glyphicon-info-sign"></span>
 							</button>
 						</li>
 						<li>
 							<a id="logout-button" href="${logoutUrl}" title="Logout">
+								<span class="hidden-lg hidden-md hidden-sm">&nbsp;</span>
 								<span class="glyphicon glyphicon-log-out"></span>
 								<span class="hidden-lg hidden-md hidden-sm">Logout</span>
 							</a>
@@ -188,14 +187,14 @@
 	</div>
 </nav>
 
-<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+<div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h3 class="modal-title" id="aboutModalLabel">Welcome to jReader!</h3>
+				<h3 class="modal-title" id="about-modal-label">Welcome to jReader!</h3>
 			</div>
 			<div class="modal-body">
 				<h4>Keyboard shortcuts</h4>
