@@ -19,13 +19,14 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 				}],
 				yAxes: [{
 					ticks: {
-						fontColor: "#d4d4d4"
+						fontColor: "#d4d4d4",
+						beginAtZero: true
 					}
 				}]
 			}
 		}
 	};
-	
+
 
 	$scope.$watch("viewService.activeView", function() {
 		$scope.active = $scope.viewService.isHomeSelected();
