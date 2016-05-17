@@ -13,13 +13,19 @@ angular.module("jReaderApp").controller("PostsCtrl", ["$scope", "ajaxService", "
 	};
 	
 	$scope.bookmark = function(post) {
-		post.bookmarked = true;
-		$scope.ajaxService.bookmark(post);
+		post.bookmarking = true;
+		$scope.ajaxService.bookmark(post).then(function() {
+			post.bookmarking = false;
+			post.bookmarked = true;
+		});
 	};
 	
 	$scope.deleteBookmark = function(post) {
-		post.bookmarked = false;
-		$scope.ajaxService.deleteBookmark(post);
+		post.bookmarking = true;
+		$scope.ajaxService.deleteBookmark(post).then(function() {
+			post.bookmarking = false;
+			post.bookmarked = false;
+		});
 	};
 	
 	$scope.archive = function(post) {

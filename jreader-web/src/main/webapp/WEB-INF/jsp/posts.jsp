@@ -8,12 +8,13 @@
 			data-ng-class="{info: !post.read, selected: post.expanded}"
 			data-ng-repeat-start="post in posts.items">
 			<td class="action-buttons">
-				<button class="btn btn-default bookmark" title="Bookmark" data-ng-show="!post.bookmarked" data-ng-click="bookmark(post)">
+				<button class="btn btn-default bookmark" title="Bookmark" data-ng-show="!post.bookmarked && !post.bookmarking" data-ng-click="bookmark(post)">
 					<span class="glyphicon glyphicon-bookmark"></span>
 				</button>
-				<button class="btn btn-default delete-bookmark" title="Delete bookmark" data-ng-show="post.bookmarked" data-ng-click="deleteBookmark(post)">
+				<button class="btn btn-default delete-bookmark" title="Delete bookmark" data-ng-show="post.bookmarked && !post.bookmarking" data-ng-click="deleteBookmark(post)">
 					<span class="glyphicon glyphicon-bookmark"></span>
 				</button>
+				<span class="glyphicon glyphicon-hourglass" data-ng-show="post.bookmarking"></span>
 			</td>
 			<td class="feed-title" data-ng-click="toggleExpansion(post);posts.markRead(post);">{{post.subscriptionTitle}}</td>
 			<td class="title" data-ng-click="toggleExpansion(post);posts.markRead(post);">{{post.title}}</td>

@@ -200,7 +200,7 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	};
 	
 	this.setBookmarked = function(post, bookmarked) {
-		$http({
+		return $http({
 			method: "PUT",
 			url: "/reader/groups/" + post.groupId + "/subscriptions/" + post.subscriptionId + "/posts/" + post.id + "/bookmarked",
             params: { "value": bookmarked }
@@ -208,11 +208,11 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	};
 	
 	this.bookmark = function(post) {
-		service.setBookmarked(post, true);
+		return service.setBookmarked(post, true);
 	};
 	
 	this.deleteBookmark = function(post) {
-		service.setBookmarked(post, false);
+		return service.setBookmarked(post, false);
 	};
 	
 	this.archive = function(post, archive) {
