@@ -38,7 +38,7 @@
 				</div>
 				<div class="description" data-ng-bind-html="post.description"></div>
 				<div class="footer" data-ng-if="archives.length > 0">
-					<form class="form-inline" data-ng-if="!post.archived" data-ng-submit="archive(post)">
+					<form class="form-inline" data-ng-if="!post.archived && !post.archiving" data-ng-submit="archive(post)">
 						<span>Archive to</span>
 						<div class="form-group">
 							<div class="dropdown">
@@ -56,7 +56,8 @@
 							<span class="glyphicon glyphicon-ok"></span>
 						</button>
 					</form>
-					<span data-ng-if="post.archived">Archived to {{post.archive.title}}</span>
+					<span data-ng-if="post.archived && !post.archiving">Archived to {{post.archive.title}}</span>
+					<span class="glyphicon glyphicon-hourglass" data-ng-show="post.archiving"></span>
 				</div>
 			</td>
 		</tr>

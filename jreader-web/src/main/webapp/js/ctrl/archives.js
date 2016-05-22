@@ -13,7 +13,11 @@ angular.module("jReaderApp").controller("ArchivesCtrl", ["$scope", "ajaxService"
 	};
 	
 	$scope.deletePost = function(post) {
-		$scope.ajaxService.deleteArchivedPost(post.archiveId, post.id).success($scope.archivedPosts.refresh);
+		post.deleting = true;
+		$scope.ajaxService.deleteArchivedPost(post.archiveId, post.id).then($scope.archivedPosts.refresh, function() {
+			post.deleting = false;
+			$scope.alertService.add("Error occured while deleting '" + post.title + "'.");
+		});
 	};
 	
 }]);

@@ -216,7 +216,7 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	};
 	
 	this.archive = function(post, archive) {
-		$http({
+		return $http({
 			method: "POST",
 			url: "/reader/archives/" + archive.id + "/posts",
             params: {

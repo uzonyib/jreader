@@ -7,9 +7,10 @@
 		<tr class="article-breadcrumb"
 			data-ng-repeat-start="post in archivedPosts.items">
 			<td class="action-buttons">
-				<button class="btn btn-default delete" title="Delete" data-ng-click="deletePost(psot)">
+				<button class="btn btn-default delete" title="Delete" data-ng-click="deletePost(post)" data-ng-show="!post.deleting">
 					<span class="glyphicon glyphicon-remove"></span>
 				</button>
+				<span class="glyphicon glyphicon-hourglass" data-ng-show="post.deleting"></span>
 			</td>
 			<td class="title" data-ng-click="toggleExpansion(post)">{{post.title}}</td>
 			<td class="date hidden-sm hidden-xs" data-ng-click="toggleExpansion(post)">{{post.publishDate | moment}}</td>
