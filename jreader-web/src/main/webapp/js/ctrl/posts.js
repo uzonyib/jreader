@@ -1,6 +1,7 @@
-angular.module("jReaderApp").controller("PostsCtrl", ["$scope", "ajaxService", "viewService", function ($scope, ajaxService, viewService) {
+angular.module("jReaderApp").controller("PostsCtrl", ["$scope", "ajaxService", "viewService", "alertService", function ($scope, ajaxService, viewService, alertService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
+	$scope.alertService = alertService;
 	
 	$scope.active = false;
 	
@@ -17,6 +18,9 @@ angular.module("jReaderApp").controller("PostsCtrl", ["$scope", "ajaxService", "
 		$scope.ajaxService.bookmark(post).then(function() {
 			post.bookmarking = false;
 			post.bookmarked = true;
+		}, function(e) {
+			$scope.alertService.add("Error occured while bookmarking '" + post.title + "'.");
+			console.log(e)
 		});
 	};
 	
@@ -25,6 +29,8 @@ angular.module("jReaderApp").controller("PostsCtrl", ["$scope", "ajaxService", "
 		$scope.ajaxService.deleteBookmark(post).then(function() {
 			post.bookmarking = false;
 			post.bookmarked = false;
+		}, function() {
+			$scope.alertService.add("Error occured while removing bookmark '" + post.title + "'.");
 		});
 	};
 	

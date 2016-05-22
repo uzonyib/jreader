@@ -1,6 +1,7 @@
-angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$interval", "ajaxService", "viewService", function ($scope, $sce, $interval, ajaxService, viewService) {
+angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$interval", "ajaxService", "viewService", "alertService", function ($scope, $sce, $interval, ajaxService, viewService, alertService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
+	$scope.alertService = alertService;
 	
 	$scope.head = {};
 	$scope.head.titlePrefix = "jReader";

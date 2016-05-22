@@ -6,6 +6,7 @@
     <js>/js/init.js</js>
     <js>/js/service/view.js</js>
     <js>/js/service/ajax.js</js>
+    <js>/js/service/alert.js</js>
     <js>/js/ctrl/reader.js</js>
     <js>/js/ctrl/posts-navbar.js</js>
     <js>/js/ctrl/archives-navbar.js</js>

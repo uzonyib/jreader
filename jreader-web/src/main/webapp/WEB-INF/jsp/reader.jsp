@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ngInfiniteScroll/1.2.2/ng-infinite-scroll.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.0/Chart.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-chart.js/1.0.0-alpha6/angular-chart.min.js"></script>
@@ -19,6 +20,7 @@
 		<div id="navbar">
 			<jsp:include page="navbar.jsp" />
 		</div>
+		<jsp:include page="alerts.jsp" />
 		<div class="container-fluid">
 			<div class="row">
 				<div id="menu" class="reader-menu col-lg-2 col-md-2 col-sm-3 hidden-xs">
@@ -31,10 +33,10 @@
 					<div id="settings-contents" data-ng-controller="SettingsCtrl" data-ng-show="active">
 						<jsp:include page="settings.jsp" />
 					</div>
-					<div id="items-contents" data-ng-controller="PostsCtrl" data-ng-show="active">
+					<div id="posts-contents" data-ng-controller="PostsCtrl" data-ng-show="active">
 						<jsp:include page="posts.jsp" />
 					</div>
-					<div id="archive-contents" data-ng-controller="ArchivesCtrl" data-ng-show="active">
+					<div id="archives-contents" data-ng-controller="ArchivesCtrl" data-ng-show="active">
 						<jsp:include page="archives.jsp" />
 					</div>
 				</div>

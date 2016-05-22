@@ -276,3 +276,45 @@ nav.navbar.navbar-default.navbar-fixed-top {
 		color: #16a085;
 	}
 }
+
+#alerts-container {
+	display: inline-block;
+	margin: 0px auto;
+	position: fixed;
+	z-index: 1031;
+	top: 20px;
+	left: 0px;
+	right: 0px;
+}
+
+.alert {
+	text-align: center;
+	width: 100%;
+	opacity: 0;
+	&.animate {
+		opacity: 1;
+	}
+	&.animate-add {
+		transition: opacity 1s ease-in-out;
+		-webkit-transition: opacity 1s ease-in-out;
+		opacity: 0;
+	}
+	&.animate-add-active {
+		opacity: 1;
+	}
+	&.animate-remove {
+		transition: opacity 1s ease-in-out;
+		-webkit-transition: opacity 1s ease-in-out;
+		opacity: 1;
+	}
+	&.animate-remove-active {
+		opacity: 0;
+	}
+}
+
+.alert-danger {
+	background-color: #e74c3c;
+	color: #ecf0f1;
+	border-color: #333;
+}
+
