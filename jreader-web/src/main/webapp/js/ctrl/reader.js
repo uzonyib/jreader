@@ -98,10 +98,13 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     	filter.offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
     	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
     	
-    	$scope.ajaxService.loadPosts(filter).success(function(response) {
-    		$scope.posts.moreItemsAvailable = response.payload.length === filter.count;
-    		$scope.posts.append(response.payload);
+    	$scope.ajaxService.loadPosts(filter).then(function(response) {
+    		$scope.posts.moreItemsAvailable = response.data.payload.length === filter.count;
+    		$scope.posts.append(response.data.payload);
     		$scope.posts.loading = false;
+        }, function() {
+        	$scope.posts.loading = false;
+        	$scope.alertService.add("Error occured while loading posts.");
         });
     };
 	
@@ -115,7 +118,12 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	$scope.posts.markRead = function(post) {
 		if (!post.read) {
 			post.read = true;
-			$scope.ajaxService.markRead(post).success($scope.groups.setItemsFromPayLoad);
+			$scope.ajaxService.markRead(post).then(function(response) {
+				$scope.groups.setItemsFromPayLoad(response.data);
+			}, function() {
+	        	$scope.posts.loading = false;
+	        	$scope.alertService.add("Error occured while marking post '" + post.title + "' read.");
+	        });
 		}
 	};
 	
@@ -130,10 +138,13 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		if (unreads.length > 0) {
 			$scope.posts.loading = true;
 			$scope.viewService.postFilter.resetPageIndex();
-			$scope.ajaxService.markAllRead(unreads, $scope.viewService.postFilter.get()).success(function(response) {
-				$scope.groups.setItemsFromPayLoad(response);
+			$scope.ajaxService.markAllRead(unreads, $scope.viewService.postFilter.get()).then(function(response) {
+				$scope.groups.setItemsFromPayLoad(response.data);
 				$scope.posts.loading = false;
 				$scope.posts.load();
+	        }, function() {
+	        	$scope.posts.loading = false;
+	        	$scope.alertService.add("Error occured while marking posts read.");
 	        });
 		}
 	};
@@ -246,10 +257,13 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     	filter.offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
     	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
     	
-    	$scope.ajaxService.loadArchivedPosts(filter).success(function(response) {
-    		$scope.archivedPosts.moreItemsAvailable = response.payload.length === filter.count;
-    		$scope.archivedPosts.append(response.payload);
+    	$scope.ajaxService.loadArchivedPosts(filter).then(function(response) {
+    		$scope.archivedPosts.moreItemsAvailable = response.data.payload.length === filter.count;
+    		$scope.archivedPosts.append(response.data.payload);
     		$scope.archivedPosts.loading = false;
+        }, function() {
+        	$scope.archivedPosts.loading = false;
+        	$scope.alertService.add("Error occured while loading archived posts.");
         });
     };
     
