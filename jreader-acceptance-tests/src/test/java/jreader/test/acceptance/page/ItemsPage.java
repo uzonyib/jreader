@@ -8,7 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class ItemsPage {
     
-    @FindBy(id = "items-contents")
+    @FindBy(id = "posts-contents")
     @CacheLookup
     private WebElement mainContent;
     
