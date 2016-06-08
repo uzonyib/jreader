@@ -7,9 +7,6 @@ import static org.testng.Assert.assertNull;
 import java.io.IOException;
 import java.net.URL;
 
-import jreader.domain.Feed;
-import jreader.dto.RssFetchResult;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -19,6 +16,9 @@ import org.testng.annotations.Test;
 
 import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
+
+import jreader.domain.Feed;
+import jreader.dto.RssFetchResult;
 
 public class RssServiceImplTest {
 	
@@ -33,8 +33,6 @@ public class RssServiceImplTest {
 	private RssServiceImpl service;
 	
 	@Mock
-	private RssFetchResult rssFetchResult;
-	@Mock
 	private Feed feed;
 	@Mock
 	private SyndFeed syndFeed;
@@ -46,10 +44,10 @@ public class RssServiceImplTest {
 	
 	@Test
 	public void fetchSuccessfully() throws Exception {
+	    RssFetchResult rssFetchResult = new RssFetchResult(feed, null);
 		URL url = new URL(RSS_URL);
 		when(feedFetcher.retrieveFeed(url)).thenReturn(syndFeed);
 		when(conversionService.convert(syndFeed, RssFetchResult.class)).thenReturn(rssFetchResult);
-		when(rssFetchResult.getFeed()).thenReturn(feed);
 		
 		service.fetch(RSS_URL);
 		verify(feedFetcher).retrieveFeed(url);

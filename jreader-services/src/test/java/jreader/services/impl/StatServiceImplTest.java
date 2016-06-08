@@ -87,10 +87,8 @@ public class StatServiceImplTest {
     @Mock
     private FeedDto feedDto3;
     
-    @Mock
-    private FeedStatDto statDto21;
-    @Mock
-    private FeedStatDto statDto22;
+    private FeedStatDto statDto21 = new FeedStatDto(1000L, 2);
+    private FeedStatDto statDto22 = new FeedStatDto(1100L, 3);
     
     @BeforeMethod
     public void setup() {

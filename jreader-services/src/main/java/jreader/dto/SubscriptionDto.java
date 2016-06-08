@@ -1,5 +1,8 @@
 package jreader.dto;
 
+import lombok.Data;
+
+@Data
 public class SubscriptionDto {
 
     private String id;
@@ -8,53 +11,5 @@ public class SubscriptionDto {
     private int unreadCount;
     private Long lastUpdateDate;
     private int order;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public FeedDto getFeed() {
-        return feed;
-    }
-
-    public void setFeed(final FeedDto feed) {
-        this.feed = feed;
-    }
-
-    public int getUnreadCount() {
-        return unreadCount;
-    }
-
-    public void setUnreadCount(final int unreadCount) {
-        this.unreadCount = unreadCount;
-    }
-
-    public Long getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(final Long lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(final int order) {
-        this.order = order;
-    }
 
 }

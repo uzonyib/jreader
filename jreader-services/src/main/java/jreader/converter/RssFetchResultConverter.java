@@ -16,9 +16,7 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
 
     @Override
     public RssFetchResult convert(final SyndFeed syndFeed) {
-        final RssFetchResult result = new RssFetchResult();
-        result.setFeed(new Feed());
-        result.setPosts(new ArrayList<Post>());
+        final RssFetchResult result = new RssFetchResult(new Feed(), new ArrayList<Post>());
 
         result.getFeed().setTitle(syndFeed.getTitle());
         result.getFeed().setDescription(syndFeed.getDescription());

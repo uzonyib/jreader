@@ -75,7 +75,6 @@ public class CronServiceImplTest {
 	@Mock
 	private Feed feed2;
 	
-	@Mock
 	private RssFetchResult fetchResult;
 	
 	@Mock
@@ -118,6 +117,9 @@ public class CronServiceImplTest {
 	@BeforeMethod
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+		
+		fetchResult = new RssFetchResult(null, Arrays.asList(post11, post12, post13));
+		
 		DaoFacade daoFacade = DaoFacade.builder().subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao).feedStatDao(feedStatDao).build();
 		service = new CronServiceImpl(daoFacade, rssService, conversionService, builderFactory, dateHelper);
 	}
@@ -157,8 +159,6 @@ public class CronServiceImplTest {
 		when(rssService.fetch(FEED_URL)).thenReturn(fetchResult);
 		
 		when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
-		
-		when(fetchResult.getPosts()).thenReturn(Arrays.asList(post11, post12, post13));
 		
 		when(subscription1.getLastUpdateDate()).thenReturn(date - 1000 * 60 * 20);
 		when(subscription2.getLastUpdateDate()).thenReturn(date - 1000 * 60 * 20);
@@ -235,11 +235,9 @@ public class CronServiceImplTest {
         when(feed1.getLastRefreshDate()).thenReturn(date - 1000 * 60 * 20);
         when(dateHelper.getCurrentDate()).thenReturn(date);
         
-        when(rssService.fetch(FEED_URL)).thenReturn(fetchResult);
+        when(rssService.fetch(FEED_URL)).thenReturn(new RssFetchResult(null, Arrays.asList(post11)));
         
         when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1));
-        
-        when(fetchResult.getPosts()).thenReturn(Arrays.asList(post11));
         
         when(subscription1.getLastUpdateDate()).thenReturn(date - 1000 * 60 * 20);
         
@@ -467,7 +465,6 @@ public class CronServiceImplTest {
 	@Test
 	public void updateFeed_SameDay() {
 	    when(feed1.getLastUpdateDate()).thenReturn(850L);
-	    when(fetchResult.getPosts()).thenReturn(Arrays.asList(post11, post12, post13));
 	    
 	    long currentDate = 1000L;
 	    
@@ -509,7 +506,6 @@ public class CronServiceImplTest {
 	@Test
     public void updateFeed_DifferentDay() {
         when(feed1.getLastUpdateDate()).thenReturn(850L);
-        when(fetchResult.getPosts()).thenReturn(Arrays.asList(post11, post12, post13));
         
         long currentDate = 1000L;
         

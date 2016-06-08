@@ -78,7 +78,6 @@ public class SubscriptionServiceImplTest {
 	private Subscription subscription2;
 	@Mock
 	private Feed feed;
-	@Mock
 	private RssFetchResult fetchResult;
 	@Mock
 	private Post post1;
@@ -91,16 +90,17 @@ public class SubscriptionServiceImplTest {
 	@BeforeMethod
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-        DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao)
+        
+		fetchResult = new RssFetchResult(feed, Arrays.asList(post1, post2));
+		
+		DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao)
                 .build();
         service = new SubscriptionServiceImpl(daoFacade, rssService, conversionService, builderFactory);
 	}
 	
 	@Test
 	public void subscribeToNewFeed() {
-		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(fetchResult.getPosts()).thenReturn(Arrays.asList(post1, post2));
 		when(post1.getPublishDate()).thenReturn(1000L);
 		when(post1.getPublishDate()).thenReturn(2000L);
 		
@@ -136,9 +136,7 @@ public class SubscriptionServiceImplTest {
 	
 	@Test
 	public void subscribeToExistingFeed() {
-		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(fetchResult.getPosts()).thenReturn(Arrays.asList(post1, post2));
 		when(post1.getPublishDate()).thenReturn(1000L);
 		when(post1.getPublishDate()).thenReturn(2000L);
 		
@@ -171,9 +169,7 @@ public class SubscriptionServiceImplTest {
 	
 	@Test
 	public void subscribeExisting() {
-		when(fetchResult.getFeed()).thenReturn(feed);
 		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(fetchResult.getPosts()).thenReturn(Arrays.asList(post1, post2));
 		when(post1.getPublishDate()).thenReturn(1000L);
 		when(post1.getPublishDate()).thenReturn(2000L);
 		

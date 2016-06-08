@@ -9,10 +9,7 @@ public class FeedStatDtoConverter implements Converter<FeedStat, FeedStatDto> {
 
     @Override
     public FeedStatDto convert(final FeedStat entity) {
-        final FeedStatDto dto = new FeedStatDto();
-        dto.setDate(entity.getRefreshDate());
-        dto.setCount(entity.getCount());
-        return dto;
+        return new FeedStatDto(entity.getRefreshDate(), entity.getCount());
     }
 
 }
