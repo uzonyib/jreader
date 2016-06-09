@@ -5,6 +5,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.fail;
 
 import java.util.Arrays;
@@ -72,22 +73,26 @@ public class GroupServiceImplTest {
 	@Mock
 	private Subscription subscription2;
 	
-	@Mock
 	private GroupDto groupDto;
-	@Mock
 	private GroupDto groupDto1;
-	@Mock
 	private GroupDto groupDto2;
-	@Mock
+	
 	private SubscriptionDto subscriptionDto;
-	@Mock
 	private SubscriptionDto subscriptionDto1;
-	@Mock
 	private SubscriptionDto subscriptionDto2;
 	
 	@BeforeMethod
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+		
+		groupDto = new GroupDto("0", "group", 1);
+		groupDto1 = new GroupDto("1", "group1", 2);
+		groupDto2 = new GroupDto("2", "group2", 3);
+		
+		subscriptionDto = new SubscriptionDto("0", "subscription", null, 1000L, 1);
+		subscriptionDto1 = new SubscriptionDto("1", "subscription1", null, 2000L, 2);
+		subscriptionDto2 = new SubscriptionDto("2", "subscription2", null, 3000L, 3);
+		
         DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).build();
         service = new GroupServiceImpl(daoFacade, conversionService, builderFactory);
 	}
@@ -232,15 +237,17 @@ public class GroupServiceImplTest {
 		List<GroupDto> result = service.list(USERNAME);
 		Assert.assertEquals(result, Arrays.asList(groupDto, groupDto1, groupDto2));
 		
-		verify(subscriptionDto).setUnreadCount(1);
-		verify(subscriptionDto1).setUnreadCount(2);
-		verify(subscriptionDto2).setUnreadCount(3);
-		verify(groupDto).setSubscriptions(dtos);
-        verify(groupDto1).setSubscriptions(dtos1);
-        verify(groupDto2).setSubscriptions(dtos2);
-		verify(groupDto).setUnreadCount(1);
-		verify(groupDto1).setUnreadCount(5);
-		verify(groupDto2).setUnreadCount(0);
+		assertSame(groupDto.getSubscriptions(), dtos);
+		assertSame(groupDto1.getSubscriptions(), dtos1);
+		assertSame(groupDto2.getSubscriptions(), dtos2);
+		
+		assertSame(groupDto.getUnreadCount(), 1);
+		assertSame(groupDto1.getUnreadCount(), 5);
+		assertSame(groupDto2.getUnreadCount(), 0);
+		
+		assertSame(subscriptionDto.getUnreadCount(), 1);
+		assertSame(subscriptionDto1.getUnreadCount(), 2);
+		assertSame(subscriptionDto2.getUnreadCount(), 3);
 	}
 
 }

@@ -25,7 +25,7 @@ import jreader.dto.UserDto;
 
 public class UserAdminServiceImplTest {
 	
-	private static final String USERNAME = "user";
+	private static final String USERNAME = "user1";
 
     @InjectMocks
 	private UserAdminServiceImpl service;
@@ -38,9 +38,7 @@ public class UserAdminServiceImplTest {
 	@Mock
     private User user2;
 	
-	@Mock
     private UserDto dto1;
-	@Mock
     private UserDto dto2;
 	
 	@Mock
@@ -55,6 +53,9 @@ public class UserAdminServiceImplTest {
     public void list() {
         List<User> entities = Arrays.asList(user1, user2);
         when(userDao.list(anyInt(), anyInt())).thenReturn(entities);
+        
+        dto1 = new UserDto(USERNAME, Role.ADMIN.name(), 1000L);
+        dto2 = new UserDto("user2", Role.USER.name(), 2000L);
         when(conversionService.convert(entities,
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(User.class)), 
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(UserDto.class)))).thenReturn(Arrays.asList(dto1, dto2));

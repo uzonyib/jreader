@@ -9,11 +9,7 @@ public class GroupDtoConverter implements Converter<Group, GroupDto> {
 
     @Override
     public GroupDto convert(final Group entity) {
-        final GroupDto dto = new GroupDto();
-        dto.setId(String.valueOf(entity.getId()));
-        dto.setTitle(entity.getTitle());
-        dto.setOrder(entity.getOrder());
-        return dto;
+        return new GroupDto(String.valueOf(entity.getId()), entity.getTitle(), entity.getOrder());
     }
 
 }

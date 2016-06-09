@@ -9,11 +9,7 @@ public class UserDtoConverter implements Converter<User, UserDto> {
 
     @Override
     public UserDto convert(final User entity) {
-        final UserDto dto = new UserDto();
-        dto.setUsername(entity.getUsername());
-        dto.setRole(entity.getRole().name());
-        dto.setRegistrationDate(entity.getRegistrationDate());
-        return dto;
+        return new UserDto(entity.getUsername(), entity.getRole().name(), entity.getRegistrationDate());
     }
 
 }

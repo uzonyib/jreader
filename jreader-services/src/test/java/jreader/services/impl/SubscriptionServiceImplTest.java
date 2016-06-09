@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.fail;
 
 import java.util.Arrays;
@@ -84,7 +85,6 @@ public class SubscriptionServiceImplTest {
 	@Mock
 	private Post post2;
 	
-	@Mock
 	private SubscriptionDto subscriptionDto;
 	
 	@BeforeMethod
@@ -92,6 +92,7 @@ public class SubscriptionServiceImplTest {
 		MockitoAnnotations.initMocks(this);
         
 		fetchResult = new RssFetchResult(feed, Arrays.asList(post1, post2));
+		subscriptionDto = new SubscriptionDto("0", "subscription", null, 1000L, 1);
 		
 		DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao)
                 .build();
@@ -122,7 +123,7 @@ public class SubscriptionServiceImplTest {
 		when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
 		
 		SubscriptionDto result = service.subscribe(USERNAME, GROUP_ID, URL);
-		assertEquals(result, subscriptionDto);
+		assertSame(result, subscriptionDto);
 		
 		verify(userDao).find(USERNAME);
 		verify(groupDao).find(user, GROUP_ID);

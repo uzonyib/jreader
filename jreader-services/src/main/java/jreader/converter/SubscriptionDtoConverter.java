@@ -13,15 +13,11 @@ public class SubscriptionDtoConverter implements Converter<Subscription, Subscri
 
     @Override
     public SubscriptionDto convert(final Subscription entity) {
-        final SubscriptionDto dto = new SubscriptionDto();
-        dto.setId(String.valueOf(entity.getId()));
-        dto.setTitle(entity.getTitle());
-        dto.setLastUpdateDate(entity.getLastUpdateDate());
-        dto.setOrder(entity.getOrder());
+        FeedDto feed = null;
         if (conversionService != null) {
-            dto.setFeed(conversionService.convert(entity.getFeed(), FeedDto.class));
+            feed = conversionService.convert(entity.getFeed(), FeedDto.class);
         }
-        return dto;
+        return new SubscriptionDto(String.valueOf(entity.getId()), entity.getTitle(), feed, entity.getLastUpdateDate(), entity.getOrder());
     }
 
     @Override

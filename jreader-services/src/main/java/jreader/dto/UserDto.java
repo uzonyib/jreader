@@ -3,9 +3,9 @@ package jreader.dto;
 import java.util.Calendar;
 import java.util.Date;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class UserDto {
 
     private String username;
