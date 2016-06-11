@@ -9,18 +9,23 @@ public class ArchivedPostDtoConverter implements Converter<ArchivedPost, Archive
 
     @Override
     public ArchivedPostDto convert(final ArchivedPost entity) {
-        final ArchivedPostDto dto = new ArchivedPostDto();
-        dto.setId(String.valueOf(entity.getId()));
-        dto.setTitle(entity.getTitle());
-        dto.setDescription(entity.getDescription());
-        dto.setAuthor(entity.getAuthor());
-        dto.setLink(entity.getLink());
-        dto.setPublishDate(entity.getPublishDate());
+        String archiveId = null;
+        String archiveTitle = null;
         if (entity.getArchive() != null) {
-            dto.setArchiveId(String.valueOf(entity.getArchive().getId()));
-            dto.setArchiveTitle(entity.getArchive().getTitle());
+            archiveId = String.valueOf(entity.getArchive().getId());
+            archiveTitle = entity.getArchive().getTitle();
         }
-        return dto;
+        
+        return ArchivedPostDto.builder()
+                .id(String.valueOf(entity.getId()))
+                .archiveId(archiveId)
+                .archiveTitle(archiveTitle)
+                .title(entity.getTitle())
+                .description(entity.getDescription())
+                .author(entity.getAuthor())
+                .link(entity.getLink())
+                .publishDate(entity.getPublishDate())
+                .build();
     }
 
 }

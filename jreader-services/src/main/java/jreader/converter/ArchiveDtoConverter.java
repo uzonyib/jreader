@@ -9,11 +9,7 @@ public class ArchiveDtoConverter implements Converter<Archive, ArchiveDto> {
 
     @Override
     public ArchiveDto convert(final Archive entity) {
-        final ArchiveDto dto = new ArchiveDto();
-        dto.setId(String.valueOf(entity.getId()));
-        dto.setTitle(entity.getTitle());
-        dto.setOrder(entity.getOrder());
-        return dto;
+        return new ArchiveDto(String.valueOf(entity.getId()), entity.getTitle(), entity.getOrder());
     }
 
 }

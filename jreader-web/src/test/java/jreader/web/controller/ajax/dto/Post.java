@@ -5,18 +5,44 @@ import java.util.Date;
 
 import jreader.dto.PostDto;
 
-public class Post extends PostDto {
+public class Post {
     
-    private String formattedPublishDate;
+    private final PostDto dto;
     
-    public String getFormattedPublishDate() {
-        return formattedPublishDate;
+    public Post(PostDto dto) {
+        this.dto = dto;
     }
     
-    @Override
-    public void setPublishDate(Long publishDate) {
-        super.setPublishDate(publishDate);
-        this.formattedPublishDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z").format(new Date(publishDate));
+    public String getSubscriptionTitle() {
+        return dto.getSubscriptionTitle();
+    }
+    
+    public String getTitle() {
+        return dto.getTitle();
+    }
+    
+    public String getDescription() {
+        return dto.getDescription();
+    }
+    
+    public String getAuthor() {
+        return dto.getAuthor();
+    }
+    
+    public String getLink() {
+        return dto.getLink();
+    }
+    
+    public boolean isRead() {
+        return dto.isRead();
+    }
+    
+    public boolean isBookmarked() {
+        return dto.isBookmarked();
+    }
+
+    public String getFormattedPublishDate() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z").format(new Date(dto.getPublishDate()));
     }
     
 }

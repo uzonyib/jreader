@@ -9,23 +9,30 @@ public class PostDtoConverter implements Converter<Post, PostDto> {
 
     @Override
     public PostDto convert(final Post entity) {
-        final PostDto dto = new PostDto();
-        dto.setTitle(entity.getTitle());
-        dto.setDescription(entity.getDescription());
-        dto.setAuthor(entity.getAuthor());
-        dto.setLink(entity.getLink());
-        dto.setPublishDate(entity.getPublishDate());
-        dto.setRead(entity.isRead());
-        dto.setBookmarked(entity.isBookMarked());
-        dto.setId(String.valueOf(entity.getId()));
+        String subscriptionId = null;
+        String subscriptionTitle = null;
+        String groupId = null;
         if (entity.getSubscription() != null) {
-            dto.setSubscriptionTitle(entity.getSubscription().getTitle());
-            dto.setSubscriptionId(String.valueOf(entity.getSubscription().getId()));
+            subscriptionId = String.valueOf(entity.getSubscription().getId());
+            subscriptionTitle = entity.getSubscription().getTitle();
             if (entity.getSubscription().getGroup() != null) {
-                dto.setGroupId(String.valueOf(entity.getSubscription().getGroup().getId()));
+                groupId = String.valueOf(entity.getSubscription().getGroup().getId());
             }
         }
-        return dto;
+        
+        return PostDto.builder()
+                .groupId(groupId)
+                .subscriptionId(subscriptionId)
+                .subscriptionTitle(subscriptionTitle)
+                .title(entity.getTitle())
+                .description(entity.getDescription())
+                .author(entity.getAuthor())
+                .link(entity.getLink())
+                .publishDate(entity.getPublishDate())
+                .read(entity.isRead())
+                .bookmarked(entity.isBookMarked())
+                .id(String.valueOf(entity.getId()))
+                .build();
     }
 
 }

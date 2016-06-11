@@ -9,15 +9,15 @@ public class FeedDtoConverter implements Converter<Feed, FeedDto> {
 
     @Override
     public FeedDto convert(final Feed entity) {
-        final FeedDto dto = new FeedDto();
-        dto.setTitle(entity.getTitle());
-        dto.setUrl(entity.getUrl());
-        dto.setDescription(entity.getDescription());
-        dto.setFeedType(entity.getFeedType());
-        dto.setLastUpdateDate(entity.getLastUpdateDate());
-        dto.setLastRefreshDate(entity.getLastRefreshDate());
-        dto.setStatus(entity.getStatus());
-        return dto;
+        return FeedDto.builder()
+                .url(entity.getUrl())
+                .title(entity.getTitle())
+                .description(entity.getDescription())
+                .feedType(entity.getFeedType())
+                .lastUpdateDate(entity.getLastUpdateDate())
+                .lastRefreshDate(entity.getLastRefreshDate())
+                .status(entity.getStatus())
+                .build();
     }
 
 }

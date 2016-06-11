@@ -109,9 +109,7 @@ public class CronServiceImplTest {
 	@Mock
 	private User user;
 	
-    @Mock
     private FeedDto dto1;
-    @Mock
     private FeedDto dto2;
 	
 	@BeforeMethod
@@ -119,6 +117,9 @@ public class CronServiceImplTest {
 		MockitoAnnotations.initMocks(this);
 		
 		fetchResult = new RssFetchResult(null, Arrays.asList(post11, post12, post13));
+		
+		dto1 = FeedDto.builder().title("feed1").build();
+		dto2 = FeedDto.builder().title("feed2").build();
 		
 		DaoFacade daoFacade = DaoFacade.builder().subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao).feedStatDao(feedStatDao).build();
 		service = new CronServiceImpl(daoFacade, rssService, conversionService, builderFactory, dateHelper);

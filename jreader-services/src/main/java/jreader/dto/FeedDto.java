@@ -1,12 +1,14 @@
 package jreader.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
+@Value
+@Builder
 public class FeedDto {
 
-    private String title;
     private String url;
+    private String title;
     private String description;
     private String feedType;
     private Long lastUpdateDate;

@@ -7,7 +7,7 @@ import jreader.dto.FeedStatDto;
 
 public class FeedStat {
     
-    private FeedStatDto dto;
+    private final FeedStatDto dto;
 
     public FeedStat(FeedStatDto dto) {
         this.dto = dto;

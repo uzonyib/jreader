@@ -1,32 +1,22 @@
 package jreader.services;
 
-public class ArchivedPostFilter {
+import lombok.Getter;
 
-    private jreader.dao.ArchivedPostFilter entityFilter;
-    private String username;
-    private Long archiveId;
+@Getter
+public final class ArchivedPostFilter {
 
-    public ArchivedPostFilter(final String username, final boolean ascending, final int offset, final int count) {
-        this.entityFilter = new jreader.dao.ArchivedPostFilter(ascending, offset, count);
-        this.username = username;
-    }
-
+    private final jreader.dao.ArchivedPostFilter entityFilter;
+    private final String username;
+    private final Long archiveId;
+    
     public ArchivedPostFilter(final String username, final Long archiveId, final boolean ascending, final int offset, final int count) {
         this.entityFilter = new jreader.dao.ArchivedPostFilter(ascending, offset, count);
         this.username = username;
         this.archiveId = archiveId;
     }
-    
-    public jreader.dao.ArchivedPostFilter getEntityFilter() {
-        return entityFilter;
-    }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public Long getArchiveId() {
-        return archiveId;
+    public ArchivedPostFilter(final String username, final boolean ascending, final int offset, final int count) {
+        this(username, null, ascending, offset, count);
     }
 
 }

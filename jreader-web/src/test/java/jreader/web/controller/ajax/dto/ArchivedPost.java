@@ -5,18 +5,36 @@ import java.util.Date;
 
 import jreader.dto.ArchivedPostDto;
 
-public class ArchivedPost extends ArchivedPostDto {
+public class ArchivedPost {
     
-    private String formattedPublishDate;
+    private final ArchivedPostDto dto;
     
-    public String getFormattedPublishDate() {
-        return formattedPublishDate;
+    public ArchivedPost(ArchivedPostDto dto) {
+        this.dto = dto;
     }
     
-    @Override
-    public void setPublishDate(Long publishDate) {
-        super.setPublishDate(publishDate);
-        this.formattedPublishDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z").format(new Date(publishDate));
+    public String getArchiveTitle() {
+        return dto.getArchiveTitle();
+    }
+    
+    public String getTitle() {
+        return dto.getTitle();
+    }
+    
+    public String getDescription() {
+        return dto.getDescription();
+    }
+    
+    public String getAuthor() {
+        return dto.getAuthor();
+    }
+    
+    public String getLink() {
+        return dto.getLink();
+    }
+
+    public String getFormattedPublishDate() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z").format(new Date(dto.getPublishDate()));
     }
     
 }

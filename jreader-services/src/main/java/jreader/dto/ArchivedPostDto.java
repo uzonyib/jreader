@@ -1,8 +1,10 @@
 package jreader.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
+@Value
+@Builder
 public class ArchivedPostDto {
 
     private String id;

@@ -1,14 +1,16 @@
 package jreader.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
+@Value
+@Builder
 public class PostDto {
 
     private String id;
     private String subscriptionId;
-    private String groupId;
     private String subscriptionTitle;
+    private String groupId;
     private String link;
     private String title;
     private String description;

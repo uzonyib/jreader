@@ -80,12 +80,8 @@ public class StatServiceImplTest {
     @Mock
     private FeedStat stat33;
     
-    @Mock
     private FeedDto feedDto1;
-    @Mock
     private FeedDto feedDto2;
-    @Mock
-    private FeedDto feedDto3;
     
     private FeedStatDto statDto21 = new FeedStatDto(1000L, 2);
     private FeedStatDto statDto22 = new FeedStatDto(1100L, 3);
@@ -93,6 +89,10 @@ public class StatServiceImplTest {
     @BeforeMethod
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        
+        feedDto1 = FeedDto.builder().title("feed1").build();
+        feedDto2 = FeedDto.builder().title("feed2").build();
+        
         DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).feedStatDao(feedStatDao).build();
         sut = new StatServiceImpl(daoFacade, conversionService, dateHelper);
     }

@@ -30,11 +30,11 @@ import jreader.dao.PostFilter.PostType;
 import jreader.domain.Role;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedPostDto;
-import jreader.dto.PostDto;
 import jreader.dto.FeedStatDto;
 import jreader.dto.FeedStatsDto;
-import jreader.dto.SubscriptionDto;
 import jreader.dto.GroupDto;
+import jreader.dto.PostDto;
+import jreader.dto.SubscriptionDto;
 import jreader.services.CronService;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
@@ -43,8 +43,8 @@ import jreader.services.StatService;
 import jreader.services.UserService;
 import jreader.services.impl.DateHelperImpl;
 import jreader.web.controller.ajax.dto.ArchivedPost;
-import jreader.web.controller.ajax.dto.Post;
 import jreader.web.controller.ajax.dto.FeedStat;
+import jreader.web.controller.ajax.dto.Post;
 import jreader.web.controller.ajax.dto.Subscription;
 import jreader.web.controller.appengine.TaskController;
 import jreader.web.service.QueueService;
@@ -265,19 +265,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private static List<Post> convertPosts(List<PostDto> dtos) {
         List<Post> posts = new ArrayList<Post>();
         for (PostDto dto : dtos) {
-            Post post = new Post();
-            post.setId(dto.getId());
-            post.setTitle(dto.getTitle());
-            post.setDescription(dto.getDescription());
-            post.setAuthor(dto.getAuthor());
-            post.setLink(dto.getLink());
-            post.setPublishDate(dto.getPublishDate());
-            post.setSubscriptionTitle(dto.getSubscriptionTitle());
-            post.setGroupId(dto.getGroupId());
-            post.setSubscriptionId(dto.getSubscriptionId());
-            post.setRead(dto.isRead());
-            post.setBookmarked(dto.isBookmarked());
-            posts.add(post);
+            posts.add(new Post(dto));
         }
         return posts;
     }
@@ -346,16 +334,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private static List<ArchivedPost> convertArchivedPosts(List<ArchivedPostDto> dtos) {
         List<ArchivedPost> posts = new ArrayList<ArchivedPost>();
         for (ArchivedPostDto dto : dtos) {
-            ArchivedPost post = new ArchivedPost();
-            post.setId(dto.getId());
-            post.setTitle(dto.getTitle());
-            post.setDescription(dto.getDescription());
-            post.setAuthor(dto.getAuthor());
-            post.setLink(dto.getLink());
-            post.setPublishDate(dto.getPublishDate());
-            post.setArchiveId(dto.getArchiveId());
-            post.setArchiveTitle(dto.getArchiveTitle());
-            posts.add(post);
+            posts.add(new ArchivedPost(dto));
         }
         return posts;
     }

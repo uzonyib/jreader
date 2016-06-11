@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 import jreader.dao.DaoFacade;
 import jreader.dao.GroupDao;
 import jreader.dao.PostDao;
+import jreader.dao.PostFilter.PostType;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.UserDao;
 import jreader.domain.Group;
@@ -27,7 +28,6 @@ import jreader.domain.Subscription;
 import jreader.domain.User;
 import jreader.dto.PostDto;
 import jreader.services.PostFilter;
-import jreader.services.PostFilter.ParentType;
 
 public class PostServiceImplTest {
 	
@@ -66,18 +66,21 @@ public class PostServiceImplTest {
 	private Post post1;
 	@Mock
 	private Post post2;
-	@Mock
+	
 	private PostFilter filter;
 	@Mock
     private jreader.dao.PostFilter entityFilter;
-	@Mock
+	
 	private PostDto postDto1;
-	@Mock
 	private PostDto postDto2;
 	
 	@BeforeMethod
 	public void setup() {
         MockitoAnnotations.initMocks(this);
+        
+        postDto1 = PostDto.builder().id("0").build();
+        postDto2 = PostDto.builder().id("1").build();
+        
         DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).build();
         service = new PostServiceImpl(daoFacade, conversionService);
 	}
@@ -138,61 +141,52 @@ public class PostServiceImplTest {
 	
 	@Test
 	public void listForUser() {
-	    when(filter.getEntityFilter()).thenReturn(entityFilter);
-	    when(filter.getParentType()).thenReturn(ParentType.USER);
-		when(filter.getUsername()).thenReturn(USERNAME);
+	    filter = new PostFilter(USERNAME, PostType.ALL, true, 0, 10);
 		when(userDao.find(USERNAME)).thenReturn(user);
 		List<Post> entities = Arrays.asList(post1, post2);
-        when(postDao.list(user, entityFilter)).thenReturn(entities);
+        when(postDao.list(user, filter.getEntityFilter())).thenReturn(entities);
         when(conversionService.convert(entities,
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(PostDto.class)))).thenReturn(Arrays.asList(postDto1, postDto2));
 		
 		List<PostDto> result = service.list(filter);
 		
-		verify(postDao).list(user, entityFilter);
+		verify(postDao).list(user, filter.getEntityFilter());
 		Assert.assertEquals(result, Arrays.asList(postDto1, postDto2));
 	}
 	
 	@Test
 	public void listForGroup() {
-	    when(filter.getEntityFilter()).thenReturn(entityFilter);
-		when(filter.getParentType()).thenReturn(ParentType.GROUP);
-		when(filter.getUsername()).thenReturn(USERNAME);
-		when(filter.getGroupId()).thenReturn(GROUP_ID_1);
+	    filter = new PostFilter(USERNAME, GROUP_ID_1, PostType.ALL, true, 0, 10);
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		List<Post> entities = Arrays.asList(post1, post2);
-        when(postDao.list(group1, entityFilter)).thenReturn(entities);
+        when(postDao.list(group1, filter.getEntityFilter())).thenReturn(entities);
 		when(conversionService.convert(entities,
 		        TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(PostDto.class)))).thenReturn(Arrays.asList(postDto1, postDto2));
 		
 		List<PostDto> result = service.list(filter);
 		
-		verify(postDao).list(group1, entityFilter);
+		verify(postDao).list(group1, filter.getEntityFilter());
 		Assert.assertEquals(result, Arrays.asList(postDto1, postDto2));
 	}
 	
 	@Test
 	public void listForSubscription() {
-	    when(filter.getEntityFilter()).thenReturn(entityFilter);
-		when(filter.getParentType()).thenReturn(ParentType.SUBSCRIPTION);
-		when(filter.getUsername()).thenReturn(USERNAME);
-		when(filter.getGroupId()).thenReturn(GROUP_ID_1);
-		when(filter.getSubscriptionId()).thenReturn(SUBSCRIPTION_ID_1);
+	    filter = new PostFilter(USERNAME, GROUP_ID_1, SUBSCRIPTION_ID_1, PostType.ALL, true, 0, 10);
 		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		List<Post> entities = Arrays.asList(post1, post2);
-        when(postDao.list(subscription1, entityFilter)).thenReturn(entities);
+        when(postDao.list(subscription1, filter.getEntityFilter())).thenReturn(entities);
         when(conversionService.convert(entities,
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(PostDto.class)))).thenReturn(Arrays.asList(postDto1, postDto2));
 		
 		List<PostDto> result = service.list(filter);
 		
-		verify(postDao).list(subscription1, entityFilter);
+		verify(postDao).list(subscription1, filter.getEntityFilter());
 		Assert.assertEquals(result, Arrays.asList(postDto1, postDto2));
 	}
 	

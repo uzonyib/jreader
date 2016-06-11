@@ -1,8 +1,8 @@
 package jreader.dto;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class ArchiveDto {
 
     private String id;
