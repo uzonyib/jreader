@@ -189,7 +189,11 @@
 				<version>3.6</version>
 				<configuration>
 					<excludes>
+						<exclude>jreader/domain/*.java</exclude>
+						<exclude>jreader/dao/*Filter.java</exclude>
+						<exclude>jreader/dao/DaoFacade.java</exclude>
 						<exclude>jreader/dto/*.java</exclude>
+						<exclude>jreader/services/*Filter.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

@@ -43,6 +43,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>jreader</groupId>
+			<artifactId>jreader-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<scope>test</scope>

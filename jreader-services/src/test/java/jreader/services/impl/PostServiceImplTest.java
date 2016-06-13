@@ -68,8 +68,6 @@ public class PostServiceImplTest {
 	private Post post2;
 	
 	private PostFilter filter;
-	@Mock
-    private jreader.dao.PostFilter entityFilter;
 	
 	private PostDto postDto1;
 	private PostDto postDto2;
