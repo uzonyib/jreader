@@ -8,63 +8,43 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Cache
+@Data
+@NoArgsConstructor
 public class Group {
 
     @Id
     private Long id;
     @Load
     @Parent
+    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.PACKAGE)
     private Ref<User> userRef;
     @Index
     private String title;
     @Index
     private int order;
     
-    public Group() {
-        
-    }
-
-    private Group(final Builder builder) {
-        this.setId(builder.id);
-        this.setUser(builder.user);
-        this.setTitle(builder.title);
-        this.setOrder(builder.order);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    Ref<User> getUserRef() {
-        return userRef;
-    }
-
-    void setUserRef(final Ref<User> userRef) {
-        this.userRef = userRef;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
+    public Group(final User user, final String title, final int order) {
+        this.setUser(user);
         this.title = title;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(final int order) {
         this.order = order;
     }
     
+    public Group(Builder builder) {
+        this.id = builder.id;
+        this.setUser(builder.user);
+        this.title = builder.title;
+        this.order = builder.order;
+    }
+
     public User getUser() {
         return getUserRef() == null ? null : getUserRef().get();
     }
@@ -72,7 +52,7 @@ public class Group {
     public void setUser(final User user) {
         this.setUserRef(user == null ? null : Ref.create(user));
     }
-    
+
     public static class Builder {
 
         private Long id;
@@ -99,7 +79,7 @@ public class Group {
             this.order = order;
             return this;
         }
-        
+
         public Group build() {
             return new Group(this);
         }
