@@ -17,9 +17,7 @@ public class User {
 
     @Id
     private String username;
-    
     private Role role;
-    
     private Long registrationDate;
 
 }
