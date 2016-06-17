@@ -1,97 +1,68 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import jreader.dao.FeedDao;
-import jreader.domain.Feed;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jreader.dao.FeedDao;
+import jreader.domain.Feed;
+
 public class FeedDaoImplTest extends AbstractDaoTest {
-    
-    private static final String[] URLS = { "url_1", "url_2" };
-    private static final String[] TITLES = { "title_1", "title_2" };
-    private static final String[] DESCRIPTIONS = { "desc_1", "desc_2" };
-    private static final String[] FEED_TYPES = { "feed_type_1", "feed_type_2" };
-    private static final Long[] UPDATE_DATES = { 100L, 200L };
-    private static List<Feed> SAVED_FEEDS;
-    
-    private static final String NEW_URL = "new_url";
-    private static final String NEW_TITLE = "new_title";
-    private static final String NEW_DESCRIPTION = "new_desc";
-    private static final String NEW_FEED_TYPE = "new_feed_type";
-    private static final Long NEW_PUBLISHED_DATE = 1000L;
-    
+
     private FeedDao sut;
-    
+
+    private static List<Feed> feeds;
+
     @BeforeMethod
     public void init() {
         sut = new FeedDaoImpl();
         
-        SAVED_FEEDS = new ArrayList<Feed>();
-        for (int i = 0; i < URLS.length; ++i) {
-            Feed feed = new Feed();
-            feed.setUrl(URLS[i]);
-            feed.setTitle(TITLES[i]);
-            feed.setDescription(DESCRIPTIONS[i]);
-            feed.setFeedType(FEED_TYPES[i]);
-            feed.setLastUpdateDate(UPDATE_DATES[i]);
-            SAVED_FEEDS.add(sut.save(feed));
+        List<Feed> feedsToBeSaved = Arrays.asList(
+                Feed.builder().url("url_1").title("title_1").description("desc_1").feedType("feed_type_1").lastUpdateDate(100L).lastRefreshDate(200L)
+                        .status(0).build(),
+                        Feed.builder().url("url_2").title("title_2").description("desc_2").feedType("feed_type_2").lastUpdateDate(300L).lastRefreshDate(400L)
+                        .status(1).build());
+        feeds = new ArrayList<Feed>();
+        for (Feed feed : feedsToBeSaved) {
+            feeds.add(sut.save(feed));
         }
     }
 
     @Test
     public void find_IfFeedNotExists_ShouldReturnNull() {
-        Feed feed = sut.find("url");
+        Feed actual = sut.find("url");
         
-        assertNull(feed);
+        assertNull(actual);
     }
     
     @Test
     public void save_IfFeedIsNew_ShouldReturnFeed() {
-        Feed feed = new Feed();
-        feed.setUrl(NEW_URL);
-        feed.setTitle(NEW_TITLE);
-        feed.setDescription(NEW_DESCRIPTION);
-        feed.setFeedType(NEW_FEED_TYPE);
-        feed.setLastUpdateDate(NEW_PUBLISHED_DATE);
+        Feed feed = Feed.builder().url("new_url").title("new_title").description("new_desc").feedType("new_feed_type").lastUpdateDate(1000L)
+                .lastRefreshDate(2000L).status(2).build();
 
-        feed = sut.save(feed);
+        Feed actual = sut.save(feed);
         
-        assertNotNull(feed);
-        assertEquals(feed.getUrl(), NEW_URL);
-        assertEquals(feed.getTitle(), NEW_TITLE);
-        assertEquals(feed.getDescription(), NEW_DESCRIPTION);
-        assertEquals(feed.getFeedType(), NEW_FEED_TYPE);
-        assertEquals(feed.getLastUpdateDate(), NEW_PUBLISHED_DATE);
+        assertEquals(actual, feed);
     }
     
     @Test
     public void find_IfFeedExists_ShouldReturnFeed() {
-        Feed feed = sut.find(URLS[0]);
+        Feed actual = sut.find(feeds.get(0).getUrl());
         
-        assertNotNull(feed);
-        assertEquals(feed.getUrl(), URLS[0]);
-        assertEquals(feed.getTitle(), TITLES[0]);
-        assertEquals(feed.getDescription(), DESCRIPTIONS[0]);
-        assertEquals(feed.getFeedType(), FEED_TYPES[0]);
-        assertEquals(feed.getLastUpdateDate(), UPDATE_DATES[0]);
+        assertEquals(actual, feeds.get(0));
     }
     
     @Test
     public void listAll_IfFeedsExist_ShouldReturnAll() {
-        List<Feed> feeds = sut.listAll();
+        List<Feed> actual = sut.listAll();
         
-        assertNotNull(feeds);
-        assertEquals(feeds.size(), 2);
-        assertEquals(feeds.get(0).getUrl(), URLS[0]);
-        assertEquals(feeds.get(1).getUrl(), URLS[1]);
+        assertEquals(actual, feeds);
     }
 
 }

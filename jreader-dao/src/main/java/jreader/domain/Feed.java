@@ -4,8 +4,17 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Cache
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Feed {
 
     @Id
@@ -16,61 +25,5 @@ public class Feed {
     private Long lastUpdateDate;
     private Long lastRefreshDate;
     private Integer status;
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(final String url) {
-        this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public String getFeedType() {
-        return feedType;
-    }
-
-    public void setFeedType(final String feedType) {
-        this.feedType = feedType;
-    }
-
-    public Long getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(final Long lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public Long getLastRefreshDate() {
-        return lastRefreshDate;
-    }
-    
-    public void setLastRefreshDate(final Long lastRefreshDate) {
-        this.lastRefreshDate = lastRefreshDate;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Integer status) {
-        this.status = status;
-    }
 
 }
