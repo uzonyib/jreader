@@ -1,9 +1,9 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
@@ -11,93 +11,64 @@ import org.testng.annotations.Test;
 
 import jreader.dao.FeedDao;
 import jreader.dao.FeedStatDao;
-import jreader.dao.UserDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedStat;
-import jreader.domain.User;
 
 public class FeedStatDaoImplTest extends AbstractDaoTest {
     
-    private static final String USERNAME = "test_user";
-    
-    private static final String FEED_URL = "url";
-    private static Feed savedFeed;
-    
-    private static final int[] COUNTS = { 1, 2, 3, 4 };
-    private static final long[] REFRESH_DATES = { 100L, 110L, 120L, 130L };
-    private static List<FeedStat> savedStats;
-    
-    private UserDao userDao;
     private FeedDao feedDao;
 
     private FeedStatDao sut;
     
+    private static Feed feed;
+    private static List<FeedStat> stats;
+    
     @BeforeMethod
     public void init() {
-        userDao = new UserDaoImpl();
         feedDao = new FeedDaoImpl();
         sut = new FeedStatDaoImpl();
         
-        User user = new User();
-        user.setUsername(USERNAME);
-        userDao.save(user);
+        Feed feedToBeSaved = Feed.builder().url("url").title("title").description("description").feedType("feedType").lastUpdateDate(1000L)
+                .lastRefreshDate(2000L).status(1).build();
+        feed = feedDao.save(feedToBeSaved);
         
-        Feed feed = new Feed();
-        feed.setUrl(FEED_URL);
-        feed.setTitle("title");
-        feed.setDescription("description");
-        feed.setFeedType("feedType");
-        feed.setLastUpdateDate(1000L);
-        savedFeed = feedDao.save(feed);
-        
-        savedStats = new ArrayList<FeedStat>();
-        for (int i = 0; i < COUNTS.length; ++ i) {
-            FeedStat stat = new FeedStat();
-            stat.setFeed(savedFeed);
-            stat.setRefreshDate(REFRESH_DATES[i]);
-            stat.setCount(COUNTS[i]);
-            savedStats.add(sut.save(stat));
+        List<FeedStat> statsToBeSaved = Arrays.asList(
+                new FeedStat(feed, 100L, 1),
+                new FeedStat(feed, 110L, 2),
+                new FeedStat(feed, 120L, 3),
+                new FeedStat(feed, 130L, 4));
+        stats = new ArrayList<FeedStat>();
+        for (FeedStat stat : statsToBeSaved) {
+            stats.add(sut.save(stat));
         }
     }
     
     @Test
     public void list_ShouldReturnAll() {
-        List<FeedStat> stats = sut.list(savedFeed);
+        List<FeedStat> actual = sut.list(feed);
         
-        assertNotNull(stats);
-        assertEquals(stats.size(), 4);
-        assertEquals(stats.get(0).getCount(), 1);
-        assertEquals(stats.get(1).getCount(), 2);
-        assertEquals(stats.get(2).getCount(), 3);
-        assertEquals(stats.get(3).getCount(), 4);
+        assertEquals(actual, stats);
     }
     
     @Test
     public void find_ShouldReturnMatchingStat() {
-        FeedStat stat = sut.find(savedFeed, 110L);
+        FeedStat actual = sut.find(feed, 110L);
         
-        assertNotNull(stat);
-        assertEquals(stat.getCount(), 2);
+        assertEquals(actual, stats.get(1));
     }
 
     @Test
     public void listAfter_ShouldReturnMatchingStats() {
-        List<FeedStat> stats = sut.listAfter(savedFeed, 115L);
+        List<FeedStat> actual = sut.listAfter(feed, 115L);
         
-        assertNotNull(stats);
-        assertEquals(stats.size(), 2);
-        assertEquals(stats.get(0).getCount(), 3);
-        assertEquals(stats.get(1).getCount(), 4);
+        assertEquals(actual, Arrays.asList(stats.get(2), stats.get(3)));
     }
     
     @Test
     public void listBefore_ShouldReturnMatchingStats() {
-        List<FeedStat> stats = sut.listBefore(savedFeed, 115L);
+        List<FeedStat> actual = sut.listBefore(feed, 115L);
         
-        assertNotNull(stats);
-        assertEquals(stats.size(), 2);
-        assertEquals(stats.get(0).getCount(), 1);
-        assertEquals(stats.get(1).getCount(), 2);
+        assertEquals(actual, Arrays.asList(stats.get(0), stats.get(1)));
     }
 
 }

@@ -8,59 +8,39 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Cache
+@Data
+@NoArgsConstructor
 public class FeedStat {
 
     @Id
     private Long id;
     @Load
     @Parent
+    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.PACKAGE)
     private Ref<Feed> feedRef;
     @Index
     private Long refreshDate;
     private int count;
     
-    public FeedStat() {
-        
+    public FeedStat(final Feed feed, final Long refreshDate, final int count) {
+        this.setFeed(feed);
+        this.refreshDate = refreshDate;
+        this.count = count;
     }
 
     private FeedStat(final Builder builder) {
         this.setFeed(builder.feed);
         this.setRefreshDate(builder.refreshDate);
         this.setCount(builder.count);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    Ref<Feed> getFeedRef() {
-        return feedRef;
-    }
-
-    void setFeedRef(final Ref<Feed> feedRef) {
-        this.feedRef = feedRef;
-    }
-
-    public Long getRefreshDate() {
-        return refreshDate;
-    }
-
-    public void setRefreshDate(final Long refreshDate) {
-        this.refreshDate = refreshDate;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(final int count) {
-        this.count = count;
     }
     
     public Feed getFeed() {
