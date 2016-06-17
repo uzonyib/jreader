@@ -8,22 +8,34 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Cache
+@Data
+@NoArgsConstructor
 public class Archive {
 
     @Id
     private Long id;
     @Load
     @Parent
+    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.PACKAGE)
     private Ref<User> userRef;
     @Index
     private String title;
     @Index
     private int order;
     
-    public Archive() {
-        
+    public Archive(final User user, final String title, final int order) {
+        this.setUser(user);
+        this.title = title;
+        this.order = order;
     }
 
     public Archive(final Builder builder) {
@@ -33,38 +45,6 @@ public class Archive {
         this.setOrder(builder.order);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    Ref<User> getUserRef() {
-        return userRef;
-    }
-
-    void setUserRef(final Ref<User> userRef) {
-        this.userRef = userRef;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(final int order) {
-        this.order = order;
-    }
-    
     public User getUser() {
         return getUserRef() == null ? null : getUserRef().get();
     }
