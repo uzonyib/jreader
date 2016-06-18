@@ -39,11 +39,11 @@ public class GroupDaoImplTest extends AbstractDaoTest {
             users.add(userDao.save(user));
         }
         
-        List<Group> groupToBeSaved = Arrays.asList(
+        List<Group> groupsToBeSaved = Arrays.asList(
                 new Group(users.get(0), "title_1", 10),
                 new Group(users.get(0), "title_2", 5));
         groups = new ArrayList<Group>();
-        for (Group group : groupToBeSaved) {
+        for (Group group : groupsToBeSaved) {
             groups.add(sut.save(group));
         }
     }

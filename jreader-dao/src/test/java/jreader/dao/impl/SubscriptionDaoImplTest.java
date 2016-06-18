@@ -1,50 +1,38 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import jreader.dao.FeedDao;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
-import jreader.dao.UserDao;
-import jreader.domain.Feed;
-import jreader.domain.Subscription;
-import jreader.domain.Group;
-import jreader.domain.User;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jreader.dao.FeedDao;
+import jreader.dao.GroupDao;
+import jreader.dao.SubscriptionDao;
+import jreader.dao.UserDao;
+import jreader.domain.Feed;
+import jreader.domain.Group;
+import jreader.domain.Role;
+import jreader.domain.Subscription;
+import jreader.domain.User;
+
 public class SubscriptionDaoImplTest extends AbstractDaoTest {
-    
-    private static final String[] USERNAMES = { "test_user_1", "test_user_2" };
-    
-    private static final String[] GROUP_TITLES = { "group_1", "group_2" };
-    private static final int[] GROUP_ORDERS = { 10, 5 };
-    private static List<Group> savedGroups;
-    
-    private static final String[] FEED_URLS = { "url_1", "url_2" };
-    private static List<Feed> savedFeeds;
-    
-    private static final String[] SUBSCRIPTION_TITLES = { "title_1", "title_2" };
-    private static final int[] SUBSCRIPTION_ORDERS = { 11, 6 };
-    private static final long[] SUBSCRIPTION_UPDATED_DATES = { 10L, 11L };
-    private static List<Subscription> savedSubscriptions;
-    
-    private static final String NEW_TITLE = "new_title";
-    private static final int NEW_ORDER = 7;
-    private static final long NEW_UPDATED_DATE = 4L;
     
     private UserDao userDao;
     private FeedDao feedDao;
     private GroupDao groupDao;
 
     private SubscriptionDao sut;
+    
+    private List<User> users;
+    private List<Group> groups;
+    private List<Feed> feeds;
+    private List<Subscription> subscriptions;
     
     @BeforeMethod
     public void init() {
@@ -53,176 +41,147 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
         groupDao = new GroupDaoImpl();
         sut = new SubscriptionDaoImpl();
         
-        for (String username : USERNAMES) {
-            User user = new User();
-            user.setUsername(username);
-            userDao.save(user);
+        List<User> usersToBeSaved = Arrays.asList(
+                new User("test_user_1", Role.USER, 1L),
+                new User("test_user_2", Role.ADMIN, 2L));
+        users = new ArrayList<User>();
+        for (User user : usersToBeSaved) {
+            users.add(userDao.save(user));
         }
         
-        savedFeeds = new ArrayList<Feed>();
-        for (int i = 0; i < FEED_URLS.length; ++i) {
-            Feed feed = new Feed();
-            feed.setUrl(FEED_URLS[i]);
-            feed.setTitle("title_" + i);
-            feed.setDescription("description_" + i);
-            feed.setFeedType("feedType_" + i);
-            feed.setLastUpdateDate(1000L);
-            savedFeeds.add(feedDao.save(feed));
+        List<Feed> feedsToBeSaved = Arrays.asList(
+                Feed.builder().url("url_1").title("title_1").description("desc_1").feedType("feed_type_1").lastUpdateDate(100L).lastRefreshDate(200L)
+                        .status(0).build(),
+                        Feed.builder().url("url_2").title("title_2").description("desc_2").feedType("feed_type_2").lastUpdateDate(300L).lastRefreshDate(400L)
+                        .status(1).build());
+        feeds = new ArrayList<Feed>();
+        for (Feed feed : feedsToBeSaved) {
+            feeds.add(feedDao.save(feed));
         }
         
-        savedGroups = new ArrayList<Group>();
-        for (int i = 0; i < USERNAMES.length; ++i) {
-            User user = new User();
-            user.setUsername(USERNAMES[i]);
-            for (int j = 0; j < GROUP_TITLES.length; ++j) {
-                Group group = new Group();
-                group.setUser(user);
-                group.setTitle(GROUP_TITLES[j]);
-                group.setOrder(GROUP_ORDERS[j]);
-                savedGroups.add(groupDao.save(group));
-            }
+        List<Group> groupsToBeSaved = Arrays.asList(
+                new Group(users.get(0), "group_1", 10),
+                new Group(users.get(0), "group_2", 5),
+                new Group(users.get(1), "group_1", 10),
+                new Group(users.get(1), "group_2", 5));
+        groups = new ArrayList<Group>();
+        for (Group group : groupsToBeSaved) {
+            groups.add(groupDao.save(group));
         }
         
-        savedSubscriptions = new ArrayList<Subscription>();
-        for (int i = 0; i < SUBSCRIPTION_TITLES.length; ++ i) {
-            Subscription subscription = new Subscription();
-            subscription.setTitle(SUBSCRIPTION_TITLES[i]);
-            subscription.setOrder(SUBSCRIPTION_ORDERS[i]);
-            subscription.setLastUpdateDate(SUBSCRIPTION_UPDATED_DATES[i]);
-            subscription.setFeed(savedFeeds.get(i));
-            subscription.setGroup(savedGroups.get(i));
-            savedSubscriptions.add(sut.save(subscription));
-        }
+        subscriptions = new ArrayList<Subscription>();
+        Subscription subscription1 = new Subscription();
+        subscription1.setTitle("title_1");
+        subscription1.setOrder(11);
+        subscription1.setLastUpdateDate(10L);
+        subscription1.setFeed(feeds.get(0));
+        subscription1.setGroup(groups.get(0));
+        subscriptions.add(sut.save(subscription1));
+        Subscription subscription2 = new Subscription();
+        subscription2.setTitle("title_2");
+        subscription2.setOrder(6);
+        subscription2.setLastUpdateDate(11L);
+        subscription2.setFeed(feeds.get(1));
+        subscription2.setGroup(groups.get(1));
+        subscriptions.add(sut.save(subscription2));
     }
 
     @Test
     public void findForUserAndFeed_IfSubscriptionNotExists_ShouldReturnNull() {
-        User user = new User();
-        user.setUsername(USERNAMES[1]);
+        Subscription actual = sut.find(users.get(1), feeds.get(0));
         
-        Subscription subscription = sut.find(user, savedFeeds.get(0));
-        
-        assertNull(subscription);
+        assertNull(actual);
     }
     
     @Test
     public void save_IfSubscriptionIsNew_ShouldReturnSubscription() {
         Subscription subscription = new Subscription();
-        subscription.setTitle(NEW_TITLE);
-        subscription.setOrder(NEW_ORDER);
-        subscription.setLastUpdateDate(NEW_UPDATED_DATE);
-        subscription.setGroup(savedGroups.get(2));
-        subscription.setFeed(savedFeeds.get(0));
+        subscription.setTitle("new_title");
+        subscription.setOrder(7);
+        subscription.setLastUpdateDate(4L);
+        subscription.setGroup(groups.get(2));
+        subscription.setFeed(feeds.get(0));
 
-        subscription = sut.save(subscription);
+        Subscription actual = sut.save(subscription);
         
-        assertNotNull(subscription);
-        assertNotNull(subscription.getId());
-        assertEquals(subscription.getGroup().getTitle(), GROUP_TITLES[0]);
-        assertEquals(subscription.getGroup().getUser().getUsername(), USERNAMES[1]);
-        assertEquals(subscription.getTitle(), NEW_TITLE);
-        assertEquals(subscription.getOrder(), NEW_ORDER);
-        assertEquals(subscription.getLastUpdateDate().longValue(), NEW_UPDATED_DATE);
+        assertEquals(actual, subscription);
     }
     
     @Test
     public void findForUserAndFeed_IfSubscriptionExists_ShouldReturnSubscription() {
-        User user = new User();
-        user.setUsername(USERNAMES[0]);
+        Subscription actual = sut.find(users.get(0), feeds.get(0));
         
-        Subscription subscription = sut.find(user, savedFeeds.get(0));
-        
-        assertNotNull(subscription);
-        assertEquals(subscription.getId(), savedSubscriptions.get(0).getId());
-        assertEquals(subscription.getTitle(), SUBSCRIPTION_TITLES[0]);
-        assertEquals(subscription.getOrder(), SUBSCRIPTION_ORDERS[0]);
-        assertEquals(subscription.getGroup().getTitle(), GROUP_TITLES[0]);
-        assertEquals(subscription.getGroup().getUser().getUsername(), USERNAMES[0]);
+        assertEquals(actual, subscriptions.get(0));
     }
     
     @Test
     public void findForGroup_IfSubscriptionNotExists_ShouldReturnNull() {
-        Subscription subscription = sut.find(savedGroups.get(2), 1L);
+        Subscription actual = sut.find(groups.get(2), 1L);
         
-        assertNull(subscription);
+        assertNull(actual);
     }
     
     @Test
     public void findForGroup_IfSubscriptionExists_ShouldReturnSubscription() {
-        Subscription subscription = sut.find(savedGroups.get(0), savedSubscriptions.get(0).getId());
+        Subscription subscription = sut.find(groups.get(0), subscriptions.get(0).getId());
         
-        assertNotNull(subscription);
-        assertEquals(subscription.getId(), savedSubscriptions.get(0).getId());
-        assertEquals(subscription.getTitle(), SUBSCRIPTION_TITLES[0]);
-        assertEquals(subscription.getOrder(), SUBSCRIPTION_ORDERS[0]);
-        assertEquals(subscription.getGroup().getTitle(), GROUP_TITLES[0]);
-        assertEquals(subscription.getGroup().getUser().getUsername(), USERNAMES[0]);
+        assertEquals(subscription, subscriptions.get(0));
     }
     
     @Test
     public void findForGroupAndTitle_IfSubscriptionNotExists_ShouldReturnNull() {
-        Subscription subscription = sut.find(savedGroups.get(2), "title_not_found");
+        Subscription actual = sut.find(groups.get(2), "title_not_found");
         
-        assertNull(subscription);
+        assertNull(actual);
     }
     
     @Test
     public void findForGroupAndTitle_IfSubscriptionExists_ShouldReturnSubscription() {
-        Subscription subscription = sut.find(savedGroups.get(0), savedSubscriptions.get(0).getTitle());
+        Subscription actual = sut.find(groups.get(0), subscriptions.get(0).getTitle());
         
-        assertNotNull(subscription);
-        assertEquals(subscription.getId(), savedSubscriptions.get(0).getId());
-        assertEquals(subscription.getTitle(), SUBSCRIPTION_TITLES[0]);
-        assertEquals(subscription.getOrder(), SUBSCRIPTION_ORDERS[0]);
-        assertEquals(subscription.getGroup().getTitle(), GROUP_TITLES[0]);
-        assertEquals(subscription.getGroup().getUser().getUsername(), USERNAMES[0]);
+        assertEquals(actual, subscriptions.get(0));
     }
     
     @Test
     public void listSubscriptions_IfSubscriptionsExist_ShouldReturnSubscriptions() {
-        List<Subscription> subscriptions = sut.listSubscriptions(savedFeeds.get(0));
+        List<Subscription> actual = sut.listSubscriptions(feeds.get(0));
         
-        assertNotNull(subscriptions);
-        assertEquals(subscriptions.size(), 1);
-        assertEquals(subscriptions.get(0).getTitle(), SUBSCRIPTION_TITLES[0]);
+        assertEquals(actual, Arrays.asList(subscriptions.get(0)));
     }
     
     @Test
     public void list_IfSubscriptionsExist_ShouldReturnSubscriptions() {
-        List<Subscription> subscriptions = sut.list(savedGroups.get(0));
+        List<Subscription> actual = sut.list(groups.get(0));
         
-        assertNotNull(subscriptions);
-        assertEquals(subscriptions.size(), 1);
-        assertEquals(subscriptions.get(0).getTitle(), SUBSCRIPTION_TITLES[0]);
+        assertEquals(actual, Arrays.asList(subscriptions.get(0)));
     }
     
     @Test
     public void list_IfSubscriptionsNotExist_ShouldReturnEmpty() {
-        List<Subscription> subscriptions = sut.list(savedGroups.get(2));
+        List<Subscription> actual = sut.list(groups.get(2));
         
-        assertNotNull(subscriptions);
-        assertTrue(subscriptions.isEmpty());
+        assertTrue(actual.isEmpty());
     }
     
     @Test
     public void countSubscribers_IfSubscriptionsExist_ShouldReturnCount() {
-        int count = sut.countSubscribers(savedFeeds.get(0));
+        int actual = sut.countSubscribers(feeds.get(0));
         
-        assertEquals(count, 1);
+        assertEquals(actual, 1);
     }
     
     @Test
     public void getMaxOrder_IfThereAreNoSubscriptions_ShouldReturnDefault() {
-        int maxOrder = sut.getMaxOrder(savedGroups.get(2));
+        int actual = sut.getMaxOrder(groups.get(2));
         
-        assertEquals(maxOrder, -1);
+        assertEquals(actual, -1);
     }
     
     @Test
     public void getMaxOrder_IfThereAreSubscriptions_ShouldReturnMaxOrder() {
-        int maxOrder = sut.getMaxOrder(savedGroups.get(0));
+        int actual = sut.getMaxOrder(groups.get(0));
         
-        assertEquals(maxOrder, SUBSCRIPTION_ORDERS[0]);
+        assertEquals(actual, subscriptions.get(0).getOrder());
     }
 
 }

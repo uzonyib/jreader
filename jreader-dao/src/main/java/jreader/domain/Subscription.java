@@ -8,27 +8,35 @@ import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 import com.googlecode.objectify.annotation.Parent;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Cache
+@Data
+@NoArgsConstructor
 public class Subscription {
 
     @Id
     private Long id;
     @Load
     @Parent
+    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.PACKAGE)
     private Ref<Group> groupRef;
     @Load
     @Index
+    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.PACKAGE)
     private Ref<Feed> feedRef;
     @Index
     private String title;
     @Index
     private int order;
     private Long lastUpdateDate;
-    
-    public Subscription() {
-        
-    }
 
     private Subscription(final Builder builder) {
         this.setId(builder.id);
@@ -37,54 +45,6 @@ public class Subscription {
         this.setTitle(builder.title);
         this.setOrder(builder.order);
         this.setLastUpdateDate(builder.lastUpdateDate);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    Ref<Group> getGroupRef() {
-        return groupRef;
-    }
-
-    void setGroupRef(final Ref<Group> groupRef) {
-        this.groupRef = groupRef;
-    }
-
-    Ref<Feed> getFeedRef() {
-        return feedRef;
-    }
-
-    void setFeedRef(final Ref<Feed> feedRef) {
-        this.feedRef = feedRef;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(final int order) {
-        this.order = order;
-    }
-
-    public Long getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(final Long lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
     }
     
     public Group getGroup() {
