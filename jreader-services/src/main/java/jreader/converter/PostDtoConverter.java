@@ -30,7 +30,7 @@ public class PostDtoConverter implements Converter<Post, PostDto> {
                 .link(entity.getLink())
                 .publishDate(entity.getPublishDate())
                 .read(entity.isRead())
-                .bookmarked(entity.isBookMarked())
+                .bookmarked(entity.isBookmarked())
                 .id(String.valueOf(entity.getId()))
                 .build();
     }

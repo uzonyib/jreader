@@ -115,7 +115,7 @@ public class PostServiceImplTest {
 		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		when(postDao.find(subscription1, POST_ID_1)).thenReturn(post1);
-		when(post1.isBookMarked()).thenReturn(false);
+		when(post1.isBookmarked()).thenReturn(false);
 		
 		service.bookmark(USERNAME, GROUP_ID_1, SUBSCRIPTION_ID_1, POST_ID_1);
 		
@@ -129,7 +129,7 @@ public class PostServiceImplTest {
 		when(groupDao.find(user, GROUP_ID_1)).thenReturn(group1);
 		when(subscriptionDao.find(group1, SUBSCRIPTION_ID_1)).thenReturn(subscription1);
 		when(postDao.find(subscription1, POST_ID_1)).thenReturn(post1);
-		when(post1.isBookMarked()).thenReturn(true);
+		when(post1.isBookmarked()).thenReturn(true);
 		
 		service.deleteBookmark(USERNAME, GROUP_ID_1, SUBSCRIPTION_ID_1, POST_ID_1);
 		

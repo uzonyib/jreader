@@ -62,7 +62,7 @@ public class PostServiceImpl extends AbstractService implements PostService {
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
         final Post post = postDao.find(subscription, postId);
-        if (post != null && !post.isBookMarked()) {
+        if (post != null && !post.isBookmarked()) {
             post.setBookmarked(true);
             postDao.save(post);
         }
@@ -75,7 +75,7 @@ public class PostServiceImpl extends AbstractService implements PostService {
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
         final Post post = postDao.find(subscription, postId);
-        if (post != null && post.isBookMarked()) {
+        if (post != null && post.isBookmarked()) {
             post.setBookmarked(false);
             postDao.save(post);
         }

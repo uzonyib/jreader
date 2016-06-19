@@ -1,62 +1,30 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import jreader.dao.FeedDao;
-import jreader.dao.PostDao;
-import jreader.dao.PostFilter;
-import jreader.dao.SubscriptionDao;
-import jreader.dao.GroupDao;
-import jreader.dao.UserDao;
-import jreader.dao.PostFilter.PostType;
-import jreader.domain.Feed;
-import jreader.domain.Post;
-import jreader.domain.Subscription;
-import jreader.domain.Group;
-import jreader.domain.User;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import jreader.dao.FeedDao;
+import jreader.dao.GroupDao;
+import jreader.dao.PostDao;
+import jreader.dao.PostFilter;
+import jreader.dao.PostFilter.PostType;
+import jreader.dao.SubscriptionDao;
+import jreader.dao.UserDao;
+import jreader.domain.Feed;
+import jreader.domain.Group;
+import jreader.domain.Post;
+import jreader.domain.Role;
+import jreader.domain.Subscription;
+import jreader.domain.User;
+
 public class PostDaoImplTest extends AbstractDaoTest {
-    
-    private static final String USERNAME = "test_user";
-    
-    private static final String[] GROUP_TITLES = { "group_1", "group_2" };
-    private static final int[] GROUP_ORDERS = { 10, 5 };
-    private static List<Group> savedGroups;
-    
-    private static final String[] FEED_URLS = { "url_1", "url_2" };
-    private static List<Feed> savedFeeds;
-    
-    private static final String[] SUBSCRIPTION_TITLES = { "title_1", "title_2" };
-    private static final int[] SUBSCRIPTION_ORDERS = { 11, 6 };
-    private static final long[] SUBSCRIPTION_UPDATED_DATES = { 10L, 11L };
-    private static List<Subscription> savedSubscriptions;
-    
-    private static final String[] POST_URIS = { "uri_1", "uri_2", "uri_3", "uri_4" };
-    private static final String[] POST_LINKS = { "link_1", "link_2", "link_3", "link_4" };
-    private static final String[] POST_TITLES = { "title_1", "title_2", "title_3", "title_4" };
-    private static final String[] POST_DESCRIPTIONS = { "description_1", "description_2", "description_3", "description_4" };
-    private static final String[] POST_AUTHORS = { "author_1", "author_2", "author_3", "author_4" };
-    private static final long[] POST_PUBLISHED_DATES = { 103L, 102L, 101L, 104L };
-    private static final boolean[] POST_READ_FLAGS = { true, true, false, false };
-    private static final boolean[] POST_BOOKMARKED_FLAGS = { false, true, true, false };
-    private static List<Post> savedPosts;
-    
-    private static final String NEW_URI = "new_uri";
-    private static final String NEW_LINK = "new_link";
-    private static final String NEW_TITLE = "new_title";
-    private static final String NEW_DESCRIPTION = "new_description";
-    private static final String NEW_AUTHOR = "new_author";
-    private static final long NEW_PUBLISHED_DATE = 105L;
-    private static final boolean NEW_READ_FLAG = false;
-    private static final boolean NEW_BOOKMARKED_FLAG = false;
     
     private UserDao userDao;
     private FeedDao feedDao;
@@ -64,6 +32,12 @@ public class PostDaoImplTest extends AbstractDaoTest {
     private SubscriptionDao subscriptionDao;
 
     private PostDao sut;
+    
+    private User user;
+    private List<Feed> feeds;
+    private List<Group> groups;
+    private List<Subscription> subscriptions;
+    private List<Post> posts;
     
     @BeforeMethod
     public void init() {
@@ -73,207 +47,155 @@ public class PostDaoImplTest extends AbstractDaoTest {
         subscriptionDao = new SubscriptionDaoImpl();
         sut = new PostDaoImpl();
         
-        User user = new User();
-        user.setUsername(USERNAME);
-        userDao.save(user);
+        user = userDao.save(new User("test_user", Role.USER, 10L));
         
-        savedFeeds = new ArrayList<Feed>();
-        for (int i = 0; i < FEED_URLS.length; ++i) {
-            Feed feed = new Feed();
-            feed.setUrl(FEED_URLS[i]);
-            feed.setTitle("title_" + i);
-            feed.setDescription("description_" + i);
-            feed.setFeedType("feedType_" + i);
-            feed.setLastUpdateDate(1000L);
-            savedFeeds.add(feedDao.save(feed));
+        List<Feed> feedsToBeSaved = Arrays.asList(
+                Feed.builder().url("url_1").title("title_1").description("desc_1").feedType("feed_type_1").lastUpdateDate(100L).lastRefreshDate(200L)
+                        .status(0).build(),
+                        Feed.builder().url("url_2").title("title_2").description("desc_2").feedType("feed_type_2").lastUpdateDate(300L).lastRefreshDate(400L)
+                        .status(1).build());
+        feeds = new ArrayList<Feed>();
+        for (Feed feed : feedsToBeSaved) {
+            feeds.add(feedDao.save(feed));
         }
         
-        savedGroups = new ArrayList<Group>();
-        for (int i = 0; i < GROUP_TITLES.length; ++i) {
-            Group group = new Group();
-            group.setUser(user);
-            group.setTitle(GROUP_TITLES[i]);
-            group.setOrder(GROUP_ORDERS[i]);
-            savedGroups.add(groupDao.save(group));
+        List<Group> groupsToBeSaved = Arrays.asList(
+                new Group(user, "group_1", 10),
+                new Group(user, "group_2", 5));
+        groups = new ArrayList<Group>();
+        for (Group group : groupsToBeSaved) {
+            groups.add(groupDao.save(group));
         }
         
-        savedSubscriptions = new ArrayList<Subscription>();
-        for (int i = 0; i < SUBSCRIPTION_TITLES.length; ++ i) {
-            Subscription subscription = new Subscription();
-            subscription.setTitle(SUBSCRIPTION_TITLES[i]);
-            subscription.setOrder(SUBSCRIPTION_ORDERS[i]);
-            subscription.setLastUpdateDate(SUBSCRIPTION_UPDATED_DATES[i]);
-            subscription.setFeed(savedFeeds.get(i));
-            subscription.setGroup(savedGroups.get(0));
-            savedSubscriptions.add(subscriptionDao.save(subscription));
-        }
+        subscriptions = new ArrayList<Subscription>();
+        Subscription subscription1 = new Subscription();
+        subscription1.setTitle("title_1");
+        subscription1.setOrder(11);
+        subscription1.setLastUpdateDate(10L);
+        subscription1.setFeed(feeds.get(0));
+        subscription1.setGroup(groups.get(0));
+        subscriptions.add(subscriptionDao.save(subscription1));
+        Subscription subscription2 = new Subscription();
+        subscription2.setTitle("title_2");
+        subscription2.setOrder(6);
+        subscription2.setLastUpdateDate(11L);
+        subscription2.setFeed(feeds.get(1));
+        subscription2.setGroup(groups.get(0));
+        subscriptions.add(subscriptionDao.save(subscription2));
         
-        savedPosts = new ArrayList<Post>();
-        for (int i = 0; i < POST_TITLES.length; ++ i) {
+        long[] publishDates = { 103L, 102L, 101L, 104L };
+        boolean[] readFlags = { true, true, false, false };
+        boolean[] bookmarkedFlags = { false, true, true, false };
+        
+        posts = new ArrayList<Post>();
+        for (int i = 0; i < publishDates.length; ++ i) {
             Post post = new Post();
-            post.setUri(POST_URIS[i]);
-            post.setLink(POST_LINKS[i]);
-            post.setTitle(POST_TITLES[i]);
-            post.setDescription(POST_DESCRIPTIONS[i]);
-            post.setAuthor(POST_AUTHORS[i]);
-            post.setLink(POST_LINKS[i]);
-            post.setPublishDate(POST_PUBLISHED_DATES[i]);
-            post.setRead(POST_READ_FLAGS[i]);
-            post.setBookmarked(POST_BOOKMARKED_FLAGS[i]);
-            post.setSubscription(savedSubscriptions.get(0));
-            savedPosts.add(sut.save(post));
+            post.setUri("uri_" + i);
+            post.setLink("link_" + i);
+            post.setTitle("title_" + i);
+            post.setDescription("description_" + i);
+            post.setAuthor("author_" + i);
+            post.setPublishDate(publishDates[i]);
+            post.setRead(readFlags[i]);
+            post.setBookmarked(bookmarkedFlags[i]);
+            post.setSubscription(subscriptions.get(0));
+            posts.add(sut.save(post));
         }
     }
 
     @Test
     public void findById_IfPostNotExists_ShouldReturnNull() {
-        Post post = sut.find(savedSubscriptions.get(1), 1L);
+        Post actual = sut.find(subscriptions.get(1), 1L);
         
-        assertNull(post);
+        assertNull(actual);
     }
     
     @Test
     public void save_IfSubscriptionIsNew_ShouldReturnSubscription() {
         Post post = new Post();
-        post.setUri(NEW_URI);
-        post.setLink(NEW_LINK);
-        post.setTitle(NEW_TITLE);
-        post.setDescription(NEW_DESCRIPTION);
-        post.setAuthor(NEW_AUTHOR);
-        post.setPublishDate(NEW_PUBLISHED_DATE);
-        post.setRead(NEW_READ_FLAG);
-        post.setBookmarked(NEW_BOOKMARKED_FLAG);
-        post.setSubscription(savedSubscriptions.get(1));
+        post.setUri("new_uri");
+        post.setLink("new_link");
+        post.setTitle("new_title");
+        post.setDescription("new_description");
+        post.setAuthor("new_author");
+        post.setPublishDate(21L);
+        post.setRead(false);
+        post.setBookmarked(false);
+        post.setSubscription(subscriptions.get(1));
 
-        post = sut.save(post);
+        Post actual = sut.save(post);
         
-        assertNotNull(post);
-        assertNotNull(post.getId());
-        assertEquals(post.getSubscription().getTitle(), SUBSCRIPTION_TITLES[1]);
-        assertEquals(post.getUri(), NEW_URI);
-        assertEquals(post.getLink(), NEW_LINK);
-        assertEquals(post.getTitle(), NEW_TITLE);
-        assertEquals(post.getDescription(), NEW_DESCRIPTION);
-        assertEquals(post.getAuthor(), NEW_AUTHOR);
-        assertEquals(post.getPublishDate().longValue(), NEW_PUBLISHED_DATE);
-        assertEquals(post.isRead(), NEW_READ_FLAG);
-        assertEquals(post.isBookMarked(), NEW_BOOKMARKED_FLAG);
+        assertEquals(actual, post);
     }
     
     @Test
     public void findByUri_IfPostNotExists_ShouldReturnNull() {
-        Post post = sut.find(savedSubscriptions.get(1), "not_found", 1L);
+        Post actual = sut.find(subscriptions.get(1), "not_found", 1L);
         
-        assertNull(post);
+        assertNull(actual);
     }
     
     @Test
     public void findByUri_IfPostExists_ShouldReturnPost() {
-        Post post = sut.find(savedSubscriptions.get(0), savedPosts.get(0).getUri(), savedPosts.get(0).getPublishDate());
+        Post actual = sut.find(subscriptions.get(0), posts.get(0).getUri(), posts.get(0).getPublishDate());
         
-        assertNotNull(post);
-        assertNotNull(post.getId());
-        assertEquals(post.getSubscription().getTitle(), SUBSCRIPTION_TITLES[0]);
-        assertEquals(post.getUri(), POST_URIS[0]);
-        assertEquals(post.getLink(), POST_LINKS[0]);
-        assertEquals(post.getTitle(), POST_TITLES[0]);
-        assertEquals(post.getDescription(), POST_DESCRIPTIONS[0]);
-        assertEquals(post.getAuthor(), POST_AUTHORS[0]);
-        assertEquals(post.getPublishDate().longValue(), POST_PUBLISHED_DATES[0]);
-        assertEquals(post.isRead(), POST_READ_FLAGS[0]);
-        assertEquals(post.isBookMarked(), POST_BOOKMARKED_FLAGS[0]);
+        assertEquals(actual, posts.get(0));
     }
     
     @Test
     public void findById_IfPostExists_ShouldReturnPost() {
-        Post post = sut.find(savedSubscriptions.get(0), savedPosts.get(0).getId());
+        Post actual = sut.find(subscriptions.get(0), posts.get(0).getId());
         
-        assertNotNull(post);
-        assertNotNull(post.getId());
-        assertEquals(post.getSubscription().getTitle(), SUBSCRIPTION_TITLES[0]);
-        assertEquals(post.getUri(), POST_URIS[0]);
-        assertEquals(post.getLink(), POST_LINKS[0]);
-        assertEquals(post.getTitle(), POST_TITLES[0]);
-        assertEquals(post.getDescription(), POST_DESCRIPTIONS[0]);
-        assertEquals(post.getAuthor(), POST_AUTHORS[0]);
-        assertEquals(post.getPublishDate().longValue(), POST_PUBLISHED_DATES[0]);
-        assertEquals(post.isRead(), POST_READ_FLAGS[0]);
-        assertEquals(post.isBookMarked(), POST_BOOKMARKED_FLAGS[0]);
+        assertEquals(actual, posts.get(0));
     }
     
     @Test
     public void findByOrdinal_IfPostExists_ShouldReturnPost() {
-        Post post = sut.find(savedSubscriptions.get(0), 2);
+        Post actual = sut.find(subscriptions.get(0), 2);
         
-        assertNotNull(post);
-        assertNotNull(post.getId());
-        assertEquals(post.getId(), savedPosts.get(0).getId());
+        assertEquals(actual, posts.get(0));
     }
     
     @Test
     public void listForUser_IfPostsExist_ShouldReturnPosts() {
-        User user = new User();
-        user.setUsername(USERNAME);
-        PostFilter filter = new PostFilter(PostType.ALL, true, 1, 2);
+        List<Post> actual = sut.list(user, new PostFilter(PostType.ALL, true, 1, 2));
         
-        List<Post> posts = sut.list(user, filter);
-        
-        assertNotNull(posts);
-        assertEquals(posts.size(), 2);
-        assertEquals(posts.get(0).getId(), savedPosts.get(1).getId());
-        assertEquals(posts.get(1).getId(), savedPosts.get(0).getId());
-        
+        assertEquals(actual, Arrays.asList(posts.get(1), posts.get(0)));
     }
     
     @Test
     public void listForGroup_IfPostsExist_ShouldReturnPosts() {
-        PostFilter filter = new PostFilter(PostType.UNREAD, false, 0, 5);
+        List<Post> actual = sut.list(groups.get(0), new PostFilter(PostType.UNREAD, false, 0, 5));
         
-        List<Post> posts = sut.list(savedGroups.get(0), filter);
-        
-        assertNotNull(posts);
-        assertEquals(posts.size(), 2);
-        assertEquals(posts.get(0).getId(), savedPosts.get(3).getId());
-        assertEquals(posts.get(1).getId(), savedPosts.get(2).getId());
-        
+        assertEquals(actual, Arrays.asList(posts.get(3), posts.get(2)));
     }
     
     @Test
     public void listForSubscription_IfPostsExist_ShouldReturnPosts() {
-        PostFilter filter = new PostFilter(PostType.BOOKMARKED, true, 0, 5);
+        List<Post> actual = sut.list(subscriptions.get(0), new PostFilter(PostType.BOOKMARKED, true, 0, 5));
         
-        List<Post> posts = sut.list(savedSubscriptions.get(0), filter);
-        
-        assertNotNull(posts);
-        assertEquals(posts.size(), 2);
-        assertEquals(posts.get(0).getId(), savedPosts.get(2).getId());
-        assertEquals(posts.get(1).getId(), savedPosts.get(1).getId());
-        
+        assertEquals(actual, Arrays.asList(posts.get(2), posts.get(1)));
     }
     
     @Test
     public void listNotBookmarkedAndOlderThan_IfPostsExist_ShouldReturnPosts() {
-        List<Post> posts = sut.listNotBookmarkedAndOlderThan(savedSubscriptions.get(0), 104);
+        List<Post> actual = sut.listNotBookmarkedAndOlderThan(subscriptions.get(0), 104);
         
-        assertNotNull(posts);
-        assertEquals(posts.size(), 1);
-        assertEquals(posts.get(0).getId(), savedPosts.get(0).getId());
-        
+        assertEquals(actual, Arrays.asList(posts.get(0)));
     }
     
     @Test
     public void list_IfPostsExist_ShouldReturnPosts() {
-        List<Post> posts = sut.list(savedSubscriptions.get(0));
+        List<Post> actual = sut.list(subscriptions.get(0));
         
-        assertNotNull(posts);
-        assertEquals(posts.size(), 4);
+        assertEquals(actual, Arrays.asList(posts.get(0), posts.get(1), posts.get(2), posts.get(3)));
     }
     
     @Test
     public void countUnread_IfPostsExist_ShouldReturnCount() {
-        int count = sut.countUnread(savedSubscriptions.get(0));
+        int actual = sut.countUnread(subscriptions.get(0));
         
-        assertEquals(count, 2);
+        assertEquals(actual, 2);
     }
 
 }
