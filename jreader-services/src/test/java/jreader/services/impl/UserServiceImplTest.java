@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -28,7 +29,7 @@ public class UserServiceImplTest {
 	
 	private static final String NEW_USER = "new_user";
 	private static final String EXISTING_USER = "existing_user";
-	private static final Long REGISTRATION_DATE = 123L;
+	private static final Long CURRENT_DATE = 123L;
 	
 	@InjectMocks
 	private UserServiceImpl service;
@@ -48,38 +49,35 @@ public class UserServiceImplTest {
 	@BeforeMethod
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+		
+		when(user.getRole()).thenReturn(Role.USER);
+		when(userDao.find(NEW_USER)).thenReturn(null);
+		when(userDao.find(EXISTING_USER)).thenReturn(user);
+		when(dateHelper.getCurrentDate()).thenReturn(CURRENT_DATE);
 	}
 	
 	@Test
-	public void registerNewUser() {
-		when(userDao.find(NEW_USER)).thenReturn(null);
-		when(dateHelper.getCurrentDate()).thenReturn(REGISTRATION_DATE);
-		
+	public void register_IfUserIsNew_ShouldSaveUser() {
 		service.register(NEW_USER, Role.UNAUTHORIZED);
 		
 		verify(userDao).save(userCaptor.capture());
 		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
 		assertEquals(userCaptor.getValue().getRole(), Role.UNAUTHORIZED);
-		assertEquals(userCaptor.getValue().getRegistrationDate(), REGISTRATION_DATE);
+		assertEquals(userCaptor.getValue().getRegistrationDate(), CURRENT_DATE);
 	}
 	
 	@Test
-	public void registerNewAdmin() {
-		when(userDao.find(NEW_USER)).thenReturn(null);
-		when(dateHelper.getCurrentDate()).thenReturn(REGISTRATION_DATE);
-		
+	public void register_IfUserIsNewAdmin_ShouldSaveUser() {
 		service.register(NEW_USER, Role.ADMIN);
 		
 		verify(userDao).save(userCaptor.capture());
 		assertEquals(userCaptor.getValue().getUsername(), NEW_USER);
 		assertEquals(userCaptor.getValue().getRole(), Role.ADMIN);
-		assertEquals(userCaptor.getValue().getRegistrationDate(), REGISTRATION_DATE);
+		assertEquals(userCaptor.getValue().getRegistrationDate(), CURRENT_DATE);
 	}
 	
 	@Test
-	public void registerExistingUser() {
-		when(userDao.find(EXISTING_USER)).thenReturn(user);
-
+	public void register_IfUserExists_ShouldThrowException() {
 		try {
 			service.register(EXISTING_USER, Role.UNAUTHORIZED);
 			fail();
@@ -91,40 +89,31 @@ public class UserServiceImplTest {
 	}
 	
 	@Test
-    public void isRegisteredNewUser() {
-        when(userDao.find(NEW_USER)).thenReturn(null);
+    public void isRegistered_IfUserIsNew_ShouldReturnFalse() {
+        boolean actual = service.isRegistered(NEW_USER);
         
-        boolean registered = service.isRegistered(NEW_USER);
-        
-        assertFalse(registered);
+        assertFalse(actual);
     }
 	
 	@Test
-    public void isRegisteredExistingUser() {
-        when(userDao.find(EXISTING_USER)).thenReturn(user);
+    public void isRegistered_IfUserExists_ShouldReturnTrue() {
+        boolean actual = service.isRegistered(EXISTING_USER);
         
-        boolean registered = service.isRegistered(EXISTING_USER);
-        
-        assertTrue(registered);
+        assertTrue(actual);
     }
     
     @Test
-    public void roleIsUnauthorizedForUnregisteredUsers() {
-        when(userDao.find(NEW_USER)).thenReturn(null);
+    public void getRole_IfUserIsNew_ShouldReturnNull() {
+        Role actual = service.getRole(NEW_USER);
         
-        Role role = service.getRole(NEW_USER);
-        
-        assertEquals(role, null);
+        assertNull(actual, null);
     }
     
     @Test
-    public void roleReturnedForUsersWithRole() {
-        when(userDao.find(EXISTING_USER)).thenReturn(user);
-        when(user.getRole()).thenReturn(Role.USER);
+    public void getRole_IfUserExists_ShouldReturnRole() {
+        Role actual = service.getRole(EXISTING_USER);
         
-        Role role = service.getRole(EXISTING_USER);
-        
-        assertEquals(role, Role.USER);
+        assertEquals(actual, Role.USER);
     }
 
 }

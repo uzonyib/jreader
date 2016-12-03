@@ -95,11 +95,12 @@ public class GroupServiceImplTest {
 		
         DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).build();
         service = new GroupServiceImpl(daoFacade, conversionService, builderFactory);
+        
+        when(userDao.find(USERNAME)).thenReturn(user);
 	}
 	
 	@Test
 	public void createNewGroup() {
-		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_TITLE)).thenReturn(null);
 		when(groupDao.getMaxOrder(user)).thenReturn(GROUP_ORDER - 1);
 		when(builderFactory.createGroupBuilder()).thenReturn(groupBuilder);
@@ -121,7 +122,6 @@ public class GroupServiceImplTest {
 	
 	@Test
 	public void createExistingGroup() {
-		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_TITLE)).thenReturn(group);
 		
 		try {
@@ -138,7 +138,6 @@ public class GroupServiceImplTest {
 	
 	@Test
 	public void deleteGroup() {
-		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		
 		service.delete(USERNAME, GROUP_ID);
@@ -149,7 +148,6 @@ public class GroupServiceImplTest {
 	
 	@Test
 	public void entitleGroup() {
-		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
 		
 		service.entitle(USERNAME, GROUP_ID, GROUP_TITLE);
@@ -161,7 +159,6 @@ public class GroupServiceImplTest {
 	
 	@Test
 	public void moveGroupUp() {
-		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
 		final long id = 100L;
 		when(group.getId()).thenReturn(GROUP_ID);
@@ -182,7 +179,6 @@ public class GroupServiceImplTest {
 	
 	@Test
 	public void moveGroupDown() {
-		when(userDao.find(USERNAME)).thenReturn(user);
 		when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
 		final long id = 100L;
 		when(group.getId()).thenReturn(GROUP_ID);
@@ -203,7 +199,6 @@ public class GroupServiceImplTest {
 	
 	@Test
 	public void list() {
-		when(userDao.find(USERNAME)).thenReturn(user);
 		List<Group> groups = Arrays.asList(group, group1, group2);
         when(groupDao.list(user)).thenReturn(groups);
 		List<Subscription> subscriptions = Arrays.asList(subscription);
@@ -241,13 +236,13 @@ public class GroupServiceImplTest {
 		assertSame(groupDto1.getSubscriptions(), dtos1);
 		assertSame(groupDto2.getSubscriptions(), dtos2);
 		
-		assertSame(groupDto.getUnreadCount(), 1);
-		assertSame(groupDto1.getUnreadCount(), 5);
-		assertSame(groupDto2.getUnreadCount(), 0);
+		assertEquals(groupDto.getUnreadCount(), 1);
+		assertEquals(groupDto1.getUnreadCount(), 5);
+		assertEquals(groupDto2.getUnreadCount(), 0);
 		
-		assertSame(subscriptionDto.getUnreadCount(), 1);
-		assertSame(subscriptionDto1.getUnreadCount(), 2);
-		assertSame(subscriptionDto2.getUnreadCount(), 3);
+		assertEquals(subscriptionDto.getUnreadCount(), 1);
+		assertEquals(subscriptionDto1.getUnreadCount(), 2);
+		assertEquals(subscriptionDto2.getUnreadCount(), 3);
 	}
 
 }
