@@ -12,7 +12,7 @@
 				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">Refreshed<br /><span>{{subscription.feed.lastRefreshDate | moment}}</span></div>
 				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">Updated<br /><span>{{subscription.feed.lastUpdateDate | moment}}</span></div>
 				<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">Unread<br /><span>{{subscription.unreadCount}}</span></div>
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div data-ng-if="chartsEnabled" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 					<canvas class="chart chart-line"
 						data-ng-if="active"
 						data-chart-options="chart.options"

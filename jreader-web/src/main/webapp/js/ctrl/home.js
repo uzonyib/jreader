@@ -1,4 +1,4 @@
-angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "viewService", function ($scope, ajaxService, viewService) {
+angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "$window", "ajaxService", "viewService", function ($scope, $window, ajaxService, viewService) {
 	$scope.ajaxService = ajaxService;
 	$scope.viewService = viewService;
 
@@ -27,6 +27,7 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 		}
 	};
 
+	$scope.chartsEnabled = $window.innerWidth >= 992;
 
 	$scope.$watch("viewService.activeView", function() {
 		$scope.active = $scope.viewService.isHomeSelected();
@@ -40,10 +41,12 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "ajaxService", "v
 	});
 
 	$scope.refreshStats = function() {
-		$scope.ajaxService.loadStats().success(function(response) {
-			$scope.stats = response.payload;
-			$scope.populateStats();
-		});
+		if ($scope.chartsEnabled) {
+			$scope.ajaxService.loadStats().success(function(response) {
+				$scope.stats = response.payload;
+				$scope.populateStats();
+			});
+		}
 	};
 
 	$scope.populateStats = function() {
