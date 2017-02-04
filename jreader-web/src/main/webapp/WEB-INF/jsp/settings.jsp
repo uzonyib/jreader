@@ -21,7 +21,7 @@
 			</button>
 			<ul class="dropdown-menu">
 				<li data-ng-repeat="group in groups.items" data-ng-click="newSubscription.group=group">
-					<a tabindex="-1" href="">{{group.title}}</a>
+					<a tabindex="-1" href="">{{::group.title}}</a>
 				</li>
 			</ul>
 		</div>
@@ -37,7 +37,7 @@
 	<tbody class="settings-group" data-ng-repeat="group in groups.items">
 		<tr class="group-title">
 			<td>
-				<span class="title" data-ng-show="!group.editingTitle" data-ng-click="editTitle(group)">{{group.title}}</span>
+				<span class="title" data-ng-show="!group.editingTitle" data-ng-click="editTitle(group)">{{::group.title}}</span>
 				<form class="form-inline" data-ng-show="group.editingTitle" data-ng-submit="entitleGroup(group)">
 					<input class="form-control" type="text" placeholder="title" data-ng-model="group.newTitle" />
 					<button type="submit" class="btn btn-default" title="Update">
@@ -69,7 +69,7 @@
 		</tr>
 		<tr class="settings-item" data-ng-repeat="subscription in group.subscriptions">
 			<td class="title">
-				<span data-ng-show="!subscription.editingTitle" data-ng-click="editTitle(subscription)">{{subscription.title}}</span>
+				<span data-ng-show="!subscription.editingTitle" data-ng-click="editTitle(subscription)">{{::subscription.title}}</span>
 				<form class="form-inline set-item-title" data-ng-show="subscription.editingTitle" data-ng-submit="entitleSubscription(group, subscription)">
 					<input class="form-control" type="text" placeholder="name" data-ng-model="subscription.newTitle" />
 					<button type="submit" class="btn btn-default" title="Update">
@@ -116,7 +116,7 @@
 	<tbody class="settings-group" data-ng-repeat="archive in archives">
 		<tr class="settings-item">
 			<td class="title">
-				<span data-ng-show="!archive.editingTitle" data-ng-click="editTitle(archive)">{{archive.title}}</span>
+				<span data-ng-show="!archive.editingTitle" data-ng-click="editTitle(archive)">{{::archive.title}}</span>
 				<form class="form-inline set-group-title" data-ng-show="archive.editingTitle" data-ng-click="entitleArchive(archive)">
 					<input class="form-control" type="text" placeholder="name" data-ng-model="archive.newTitle" />
 					<button type="submit" class="btn btn-default" title="Update">

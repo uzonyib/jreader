@@ -24,7 +24,7 @@
 		data-ng-click="viewService.selectGroup(group.id)">
 		<span class="glyphicon glyphicon-plus" data-ng-show="!group.expanded" data-ng-click="menu.expand(group.id, $event)"></span>
 		<span class="glyphicon glyphicon-minus" data-ng-show="group.expanded" data-ng-click="menu.collapse(group.id, $event)"></span>
-		<span class="title">{{group.title}}</span>
+		<span class="title">{{::group.title}}</span>
 		<span data-ng-show="group.unreadCount > 0" class="badge count">{{group.unreadCount}}</span>
 	</li>
 	<li data-ng-repeat="subscription in group.subscriptions"
@@ -32,7 +32,7 @@
 		data-ng-class="{selected: subscription.selected}"
 		data-ng-show="group.expanded"
 		data-ng-click="viewService.selectSubscription(group.id, subscription.id)">
-		<span class="title">{{subscription.title}}</span>
+		<span class="title">{{::subscription.title}}</span>
 		<span data-ng-show="subscription.unreadCount > 0" class="badge count">{{subscription.unreadCount}}</span>
 	</li>
 </ul>
@@ -50,6 +50,6 @@
 		class="menu-item feed-item"
 		data-ng-class="{selected: archive.selected}"
 		data-ng-click="viewService.selectArchive(archive.id)">
-		<span class="title">{{archive.title}}</span>
+		<span class="title">{{::archive.title}}</span>
 	</li>
 </ul>
