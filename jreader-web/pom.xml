@@ -12,36 +12,36 @@
     <artifactId>jreader-web</artifactId>
     
     <properties>
-    	<war.excludes>feeds/**</war.excludes>
-    	<app.version>${project.version}</app.version>
+        <war.excludes>feeds/**</war.excludes>
+        <app.version>${project.version}</app.version>
     </properties>
 
     <dependencies>
         <dependency>
-        	<groupId>jreader</groupId>
-        	<artifactId>jreader-services</artifactId>
+            <groupId>jreader</groupId>
+            <artifactId>jreader-services</artifactId>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-1.0-sdk</artifactId>
         </dependency>
         <dependency>
-        	<groupId>com.googlecode.objectify</groupId>
-        	<artifactId>objectify</artifactId>
+            <groupId>com.googlecode.objectify</groupId>
+            <artifactId>objectify</artifactId>
         </dependency>
         <dependency>
-        	<groupId>org.springframework</groupId>
-        	<artifactId>spring-webmvc</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
-		    <groupId>org.codehaus.jackson</groupId>
-		    <artifactId>jackson-mapper-asl</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-		    <version>2.7.4</version>
-		</dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.7.4</version>
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -54,41 +54,41 @@
             <version>1.2</version>
         </dependency>
         <dependency>
-		    <groupId>taglibs</groupId>
-		    <artifactId>standard</artifactId>
-		    <version>1.1.2</version>
-		</dependency>
-        <dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<scope>test</scope>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
         </dependency>
-		<dependency>
-			<groupId>org.concordion</groupId>
-			<artifactId>concordion</artifactId>
-			<version>1.5.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>jreader</groupId>
-			<artifactId>jreader-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.concordion</groupId>
+            <artifactId>concordion</artifactId>
+            <version>1.5.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jreader</groupId>
+            <artifactId>jreader-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
-	<profiles>
-		<profile>
-			<id>acceptance</id>
-			<properties>
-				<excludeFiles />
-			</properties>
-		</profile>
-	</profiles>
+    <profiles>
+        <profile>
+            <id>acceptance</id>
+            <properties>
+                <excludeFiles />
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <resources>
@@ -97,47 +97,47 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-		
+        
         <plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>lesscss-maven-plugin</artifactId>
-				<version>1.0-beta-3</version>
-				<configuration>
-					<sourceDirectory>${project.basedir}/src/main/webapp/css</sourceDirectory>
-					<outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<plugin>
-				<groupId>ro.isdc.wro4j</groupId>
-				<artifactId>wro4j-maven-plugin</artifactId>
-				<version>1.7.9</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<targetGroups>reader-all</targetGroups>
-					<minimize>${ui.minify}</minimize>
-					<cssDestinationFolder>${basedir}/src/main/webapp/css/</cssDestinationFolder>
-					<jsDestinationFolder>${basedir}/src/main/webapp/js/</jsDestinationFolder>
-					<contextFolder>${basedir}/src/main/webapp/</contextFolder>
-					<wroFile>${basedir}/src/main/webapp/WEB-INF/wro.xml</wroFile>
-					<ignoreMissingResources>false</ignoreMissingResources>
-				</configuration>
-			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>1.0-beta-3</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/webapp/css</sourceDirectory>
+                    <outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>ro.isdc.wro4j</groupId>
+                <artifactId>wro4j-maven-plugin</artifactId>
+                <version>1.7.9</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <targetGroups>reader-all</targetGroups>
+                    <minimize>${ui.minify}</minimize>
+                    <cssDestinationFolder>${basedir}/src/main/webapp/css/</cssDestinationFolder>
+                    <jsDestinationFolder>${basedir}/src/main/webapp/js/</jsDestinationFolder>
+                    <contextFolder>${basedir}/src/main/webapp/</contextFolder>
+                    <wroFile>${basedir}/src/main/webapp/WEB-INF/wro.xml</wroFile>
+                    <ignoreMissingResources>false</ignoreMissingResources>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -145,7 +145,7 @@
                 <version>2.6</version>
                 <configuration>
                     <archiveClasses>true</archiveClasses>
-                   	<warSourceExcludes>${war.excludes}</warSourceExcludes>
+                       <warSourceExcludes>${war.excludes}</warSourceExcludes>
                     <webResources>
                         <resource>
                             <directory>${basedir}/src/main/webapp/WEB-INF</directory>
@@ -160,69 +160,71 @@
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
                 <configuration>
-                	<jvmFlags>
-                		<jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/eclipse_workspace/jreader/appengine</jvmFlag>
-					    <jvmFlag>-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=10</jvmFlag>
-                	</jvmFlags>
+                    <address>0.0.0.0</address>
+                    <port>8080</port>
+                    <jvmFlags>
+                        <jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/eclipse_workspace/jreader/appengine</jvmFlag>
+                        <jvmFlag>-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=10</jvmFlag>
+                    </jvmFlags>
                 </configuration>
             </plugin>
 
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/*Fixture.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			
-			<plugin>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<includes>
-						<include>**/*Fixture.java</include>
-					</includes>
-					<systemProperties>
-						<property>
-							<name>concordion.output.dir</name>
-							<value>target/concordion</value>
-						</property>
-					</systemProperties>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*Fixture.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Fixture.java</include>
+                    </includes>
+                    <systemProperties>
+                        <property>
+                            <name>concordion.output.dir</name>
+                            <value>target/concordion</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/concordion</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/test/resources</directory>
-									<includes>
-										<include>concordion-tests.html</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/concordion</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/test/resources</directory>
+                                    <includes>
+                                        <include>concordion-tests.html</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
