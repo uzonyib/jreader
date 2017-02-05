@@ -14,7 +14,7 @@ docker run --name jreader-dev -v <JREADER_DIR>:/data/jreader -p 8080:8080 -it jr
 docker start -i jreader-dev
 ```
 
-# Build jReader
+# Build jReader from Docker container
 ```
 cd /data/jreader
 mvn clean install
@@ -24,5 +24,5 @@ mvn clean install
 ```
 mvn appengine:devserver -pl jreader-web
 ```
-jReader will be available on `http://localhost:8080/`
+jReader will be available on `http://localhost:8080/` on the host machine.
 
