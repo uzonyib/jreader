@@ -37,7 +37,7 @@ public class FeedStat {
         this.count = count;
     }
 
-    private FeedStat(final Builder builder) {
+    private FeedStat(final FeedStatBuilder builder) {
         this.setFeed(builder.feed);
         this.setRefreshDate(builder.refreshDate);
         this.setCount(builder.count);
@@ -51,23 +51,31 @@ public class FeedStat {
         this.setFeedRef(feed == null ? null : Ref.create(feed));
     }
 
-    public static class Builder {
+    public static FeedStatBuilder builder() {
+        return new FeedStatBuilder();
+    }
+
+    public static class FeedStatBuilder {
 
         private Feed feed;
         private Long refreshDate;
         private int count;
 
-        public Builder feed(final Feed feed) {
+        FeedStatBuilder() {
+
+        }
+
+        public FeedStatBuilder feed(final Feed feed) {
             this.feed = feed;
             return this;
         }
 
-        public Builder refreshDate(final Long refreshDate) {
+        public FeedStatBuilder refreshDate(final Long refreshDate) {
             this.refreshDate = refreshDate;
             return this;
         }
 
-        public Builder count(final int count) {
+        public FeedStatBuilder count(final int count) {
             this.count = count;
             return this;
         }

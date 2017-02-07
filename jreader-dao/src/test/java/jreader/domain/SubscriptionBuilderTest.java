@@ -7,7 +7,7 @@ import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.FeedDaoImpl;
 import jreader.dao.impl.GroupDaoImpl;
 import jreader.dao.impl.UserDaoImpl;
-import jreader.domain.Subscription.Builder;
+import jreader.domain.Subscription.SubscriptionBuilder;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -23,7 +23,7 @@ public class SubscriptionBuilderTest extends AbstractDaoTest {
     private User user;
     private Group group;
     private Feed feed;
-    private Builder builder;
+    private SubscriptionBuilder builder;
     
     @BeforeMethod
     public void init() {
@@ -40,7 +40,7 @@ public class SubscriptionBuilderTest extends AbstractDaoTest {
         feed.setUrl("url");
         feed = new FeedDaoImpl().save(feed);
         
-        this.builder = new Builder();
+        this.builder = new SubscriptionBuilder();
     }
     
     @Test

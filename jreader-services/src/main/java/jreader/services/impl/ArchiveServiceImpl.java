@@ -13,7 +13,6 @@ import jreader.dao.DaoFacade;
 import jreader.dao.PostDao;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedPost;
-import jreader.domain.BuilderFactory;
 import jreader.domain.Group;
 import jreader.domain.Post;
 import jreader.domain.Subscription;
@@ -32,16 +31,12 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
     private ConversionService conversionService;
 
-    private BuilderFactory builderFactory;
-
-    public ArchiveServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService,
-            final BuilderFactory builderFactory) {
+    public ArchiveServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService) {
         super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
         this.postDao = daoFacade.getPostDao();
         this.archiveDao = daoFacade.getArchiveDao();
         this.archivedPostDao = daoFacade.getArchivedPostDao();
         this.conversionService = conversionService;
-        this.builderFactory = builderFactory;
     }
 
     private Archive getArchive(final User user, final Long id) {
@@ -61,7 +56,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
         if (archiveDao.find(user, title) != null) {
             throw new ServiceException("Archive already exists.", HttpStatus.CONFLICT);
         }
-        final Archive archive = archiveDao.save(builderFactory.createArchiveBuilder().user(user).title(title).order(archiveDao.getMaxOrder(user) + 1).build());
+        final Archive archive = archiveDao.save(new Archive.Builder().user(user).title(title).order(archiveDao.getMaxOrder(user) + 1).build());
         return conversionService.convert(archive, ArchiveDto.class);
     }
 

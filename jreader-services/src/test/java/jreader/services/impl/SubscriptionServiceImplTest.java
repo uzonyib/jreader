@@ -1,17 +1,18 @@
 package jreader.services.impl;
 
-import static org.mockito.Matchers.anyInt;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
@@ -19,16 +20,18 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.googlecode.objectify.Ref;
+
 import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
 import jreader.dao.GroupDao;
 import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.UserDao;
-import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.Group;
 import jreader.domain.Post;
+import jreader.domain.Role;
 import jreader.domain.Subscription;
 import jreader.domain.User;
 import jreader.dto.RssFetchResult;
@@ -36,235 +39,202 @@ import jreader.dto.SubscriptionDto;
 import jreader.services.RssService;
 import jreader.services.ServiceException;
 
-public class SubscriptionServiceImplTest {
-	
-	private static final String USERNAME = "user";
-	private static final String FEED_TITLE = "feed_title";
-	private static final String URL = "url";
-	private static final int SUBSCRIPTION_ORDER = 10;
-	private static final long GROUP_ID = 123;
-	private static final long SUBSCRIPTION_ID = 456;
-	private static final String SUBSCRIPTION_TITLE = "subscription_title";
-	
-	private SubscriptionServiceImpl service;
+public class SubscriptionServiceImplTest extends ServiceTest {
 
-	@Mock
-	private UserDao userDao;
-	@Mock
-	private GroupDao groupDao;
-	@Mock
-	private SubscriptionDao subscriptionDao;
-	@Mock
-	private FeedDao feedDao;
-	@Mock
-	private PostDao postDao;
-	@Mock
-	private RssService rssService;
-	@Mock
-	private ConversionService conversionService;
-	@Mock
-	private BuilderFactory builderFactory;
-	@Mock
-    private Subscription.Builder subscriptionBuilder;
-	
-	@Mock
-	private User user;
-	@Mock
-	private Group group;
-	@Mock
-	private Subscription subscription;
-	@Mock
-	private Subscription subscription1;
-	@Mock
-	private Subscription subscription2;
-	@Mock
-	private Feed feed;
-	private RssFetchResult fetchResult;
-	@Mock
-	private Post post1;
-	@Mock
-	private Post post2;
-	
-	private SubscriptionDto subscriptionDto;
-	
-	@BeforeMethod
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-        
-		fetchResult = new RssFetchResult(feed, Arrays.asList(post1, post2));
-		subscriptionDto = new SubscriptionDto("0", "subscription", null, 1000L, 1);
-		
-		DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao)
+    private SubscriptionServiceImpl sut;
+
+    @Mock
+    private UserDao userDao;
+    @Mock
+    private GroupDao groupDao;
+    @Mock
+    private SubscriptionDao subscriptionDao;
+    @Mock
+    private FeedDao feedDao;
+    @Mock
+    private PostDao postDao;
+    @Mock
+    private RssService rssService;
+    @Mock
+    private ConversionService conversionService;
+
+    @Mock
+    private Ref<Group> groupRef;
+    @Mock
+    private Ref<Feed> feedRef;
+    @Mock
+    private Post post1;
+    @Mock
+    private Post post2;
+
+    private User user;
+    private Feed feed;
+    private Group group;
+    private Subscription subscription;
+    private Subscription subscription1;
+    private Subscription subscription2;
+
+    private RssFetchResult fetchResult;
+
+    private SubscriptionDto subscriptionDto;
+    
+    @Captor
+    private ArgumentCaptor<Subscription> subscriptionCaptor;
+    @Captor
+    private ArgumentCaptor<List<Subscription>> subscriptionListCaptor;
+
+    @BeforeMethod
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+
+        user = new User("user", Role.USER, 1L);
+        group = Group.builder().user(user).id(0L).title("group").order(1).build();
+
+        feed = Feed.builder().title("feed_title").url("url").build();
+        subscription = Subscription.builder().group(group).feed(feed).id(0L).title("subscription 0").order(1).build();
+        subscription1 = Subscription.builder().group(group).id(1L).title("subscription 1").order(2).build();
+        subscription2 = Subscription.builder().group(group).id(2L).title("subscription 2").order(3).build();
+
+        fetchResult = new RssFetchResult(feed, Arrays.asList(post1, post2));
+        subscriptionDto = new SubscriptionDto("0", "subscription", null, 1000L, 1);
+
+        final DaoFacade daoFacade = DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao)
                 .build();
-        service = new SubscriptionServiceImpl(daoFacade, rssService, conversionService, builderFactory);
-	}
-	
-	@Test
-	public void subscribeToNewFeed() {
-		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(post1.getPublishDate()).thenReturn(1000L);
-		when(post1.getPublishDate()).thenReturn(2000L);
-		
-		when(userDao.find(USERNAME)).thenReturn(user);
-		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
-		when(rssService.fetch(URL)).thenReturn(fetchResult);
-		when(feedDao.find(URL)).thenReturn(null);
-		when(feedDao.save(feed)).thenReturn(feed);
-		when(subscriptionDao.find(user, feed)).thenReturn(null);
-		when(subscriptionDao.getMaxOrder(group)).thenReturn(SUBSCRIPTION_ORDER - 1);
-		when(builderFactory.createSubscriptionBuilder()).thenReturn(subscriptionBuilder);
-		when(subscriptionBuilder.group(group)).thenReturn(subscriptionBuilder);
-		when(subscriptionBuilder.feed(feed)).thenReturn(subscriptionBuilder);
-		when(subscriptionBuilder.title(FEED_TITLE)).thenReturn(subscriptionBuilder);
-		when(subscriptionBuilder.order(SUBSCRIPTION_ORDER)).thenReturn(subscriptionBuilder);
-		when(subscriptionBuilder.lastUpdateDate(2000L)).thenReturn(subscriptionBuilder);
-		when(subscriptionBuilder.build()).thenReturn(subscription);
-		when(subscriptionDao.save(subscription)).thenReturn(subscription);
-		when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
-		
-		SubscriptionDto result = service.subscribe(USERNAME, GROUP_ID, URL);
-		assertSame(result, subscriptionDto);
-		
-		verify(userDao).find(USERNAME);
-		verify(groupDao).find(user, GROUP_ID);
-		verify(rssService).fetch(URL);
-		verify(feedDao).find(URL);
-		verify(feedDao).save(feed);
-		verify(subscriptionDao).find(user, feed);
-		verify(subscriptionDao).save(subscription);
-		verifyZeroInteractions(postDao);
-	}
-	
-	@Test
-	public void subscribeToExistingFeed() {
-		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(post1.getPublishDate()).thenReturn(1000L);
-		when(post1.getPublishDate()).thenReturn(2000L);
-		
-		when(userDao.find(USERNAME)).thenReturn(user);
-		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
-		when(rssService.fetch(URL)).thenReturn(fetchResult);
-		when(feedDao.find(URL)).thenReturn(feed);
-		when(subscriptionDao.find(user, feed)).thenReturn(null);
-		when(subscriptionDao.getMaxOrder(group)).thenReturn(SUBSCRIPTION_ORDER - 1);
-		when(builderFactory.createSubscriptionBuilder()).thenReturn(subscriptionBuilder);
-        when(subscriptionBuilder.group(group)).thenReturn(subscriptionBuilder);
-        when(subscriptionBuilder.feed(feed)).thenReturn(subscriptionBuilder);
-        when(subscriptionBuilder.title(FEED_TITLE)).thenReturn(subscriptionBuilder);
-        when(subscriptionBuilder.order(SUBSCRIPTION_ORDER)).thenReturn(subscriptionBuilder);
-        when(subscriptionBuilder.lastUpdateDate(2000L)).thenReturn(subscriptionBuilder);
-        when(subscriptionBuilder.build()).thenReturn(subscription);
+        sut = new SubscriptionServiceImpl(daoFacade, rssService, conversionService);
+
+        when(Ref.create(group)).thenReturn(groupRef);
+        when(groupRef.get()).thenReturn(group);
+        when(Ref.create(feed)).thenReturn(feedRef);
+        when(feedRef.get()).thenReturn(feed);
+
+        when(rssService.fetch(feed.getUrl())).thenReturn(fetchResult);
+
+        when(userDao.find(user.getUsername())).thenReturn(user);
+        when(groupDao.find(user, group.getId())).thenReturn(group);
+        when(subscriptionDao.getMaxOrder(group)).thenReturn(subscription2.getOrder());
+    }
+
+    @Test
+    public void subscribe_ShouldCreateNewSubscriptionWithoutPosts_IfFeedIsNew() {
+        when(feedDao.find(feed.getUrl())).thenReturn(null);
+        when(feedDao.save(feed)).thenReturn(feed);
+        when(subscriptionDao.find(user, feed)).thenReturn(null);
+        when(subscriptionDao.save(any(Subscription.class))).thenReturn(subscription);
+        when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
+
+        final SubscriptionDto actual = sut.subscribe(user.getUsername(), group.getId(), feed.getUrl());
+
+        assertThat(actual).isEqualTo(subscriptionDto);
+
+        verify(userDao).find(user.getUsername());
+        verify(groupDao).find(user, group.getId());
+        verify(rssService).fetch(feed.getUrl());
+        verify(feedDao).find(feed.getUrl());
+        verify(feedDao).save(feed);
+        verify(subscriptionDao).find(user, feed);
+        verify(subscriptionDao).save(subscriptionCaptor.capture());
+        verifyZeroInteractions(postDao);
+        
+        assertThat(subscriptionCaptor.getValue().getGroup()).isEqualTo(group);
+        assertThat(subscriptionCaptor.getValue().getFeed()).isEqualTo(feed);
+        assertThat(subscriptionCaptor.getValue().getTitle()).isEqualTo(fetchResult.getFeed().getTitle());
+        assertThat(subscriptionCaptor.getValue().getOrder()).isEqualTo(subscription2.getOrder() + 1);
+        assertThat(subscriptionCaptor.getValue().getLastUpdateDate()).isNull();
+    }
+
+    @Test
+    public void subscribe_ShouldCreateNewSubscriptionWithoutPosts_IfFeedIsExists() {
+        when(feedDao.find(feed.getUrl())).thenReturn(feed);
+        when(subscriptionDao.find(user, feed)).thenReturn(null);
         when(subscriptionDao.save(subscription)).thenReturn(subscription);
-		
-		service.subscribe(USERNAME, GROUP_ID, URL);
-		
-		verify(userDao).find(USERNAME);
-		verify(groupDao).find(user, GROUP_ID);
-		verifyZeroInteractions(rssService);
-		verify(feedDao).find(URL);
-		verify(feedDao, never()).save(feed);
-		verify(subscriptionDao).find(user, feed);
-		verify(subscriptionDao).save(subscription);
-		verifyZeroInteractions(postDao);
-	}
-	
-	@Test
-	public void subscribeExisting() {
-		when(feed.getTitle()).thenReturn(FEED_TITLE);
-		when(post1.getPublishDate()).thenReturn(1000L);
-		when(post1.getPublishDate()).thenReturn(2000L);
-		
-		when(userDao.find(USERNAME)).thenReturn(user);
-		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
-		when(rssService.fetch(URL)).thenReturn(fetchResult);
-		when(feedDao.find(URL)).thenReturn(feed);
-		when(subscriptionDao.find(user, feed)).thenReturn(subscription);
-		
-		try {
-			service.subscribe(USERNAME, GROUP_ID, URL);
-			fail();
-		} catch(ServiceException e) {
-			assertEquals(e.getStatus(), HttpStatus.CONFLICT);
-		}
-		
-		verify(userDao).find(USERNAME);
-		verifyZeroInteractions(groupDao);
-		verifyZeroInteractions(rssService);
-		verify(feedDao).find(URL);
-		verify(feedDao, never()).save(feed);
-		verify(subscriptionDao).find(user, feed);
-		verify(subscriptionDao, never()).save(subscription);
-		verifyZeroInteractions(postDao);
-	}
-	
-	@Test
-	public void unsubscribe() {
-		when(userDao.find(USERNAME)).thenReturn(user);
-		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
-		when(subscriptionDao.find(group, SUBSCRIPTION_ID)).thenReturn(subscription);
-		List<Post> posts = Arrays.asList(post1, post2);
-		when(postDao.list(subscription)).thenReturn(posts);
-		
-		service.unsubscribe(USERNAME, GROUP_ID, SUBSCRIPTION_ID);
-		
-		verify(postDao).deleteAll(posts);
-		verify(subscriptionDao).delete(subscription);
-	}
-	
-	@Test
-	public void entitleSubscription() {
-		when(userDao.find(USERNAME)).thenReturn(user);
-		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
-		when(subscriptionDao.find(group, SUBSCRIPTION_ID)).thenReturn(subscription);
-		
-		service.entitle(USERNAME, GROUP_ID, SUBSCRIPTION_ID, SUBSCRIPTION_TITLE);
-		
-		verify(subscription).setTitle(SUBSCRIPTION_TITLE);
-		verify(subscriptionDao).save(subscription);
-	}
-	
-	@Test
-	public void moveSubscriptionUp() {
-		when(userDao.find(USERNAME)).thenReturn(user);
-		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
-		when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
-		final long id = 100L;
-		when(subscription.getId()).thenReturn(SUBSCRIPTION_ID);
-		when(subscription1.getId()).thenReturn(id);
-		when(subscription2.getId()).thenReturn(200L);
-		
-		when(subscription.getOrder()).thenReturn(1);
-		when(subscription1.getOrder()).thenReturn(2);
-		when(subscription2.getOrder()).thenReturn(3);
-		
-		service.moveUp(USERNAME, GROUP_ID, id);
-		
-		verify(subscription).setOrder(2);
-		verify(subscription1).setOrder(1);
-		verify(subscriptionDao).saveAll(Arrays.asList(subscription, subscription1));
-		verify(subscription2, never()).setOrder(anyInt());
-	}
-	
-	@Test
-	public void moveSubscriptionDown() {
-		when(userDao.find(USERNAME)).thenReturn(user);
-		when(groupDao.find(user, GROUP_ID)).thenReturn(group);
-		when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
-		final long id = 100L;
-		when(subscription.getId()).thenReturn(SUBSCRIPTION_ID);
-		when(subscription1.getId()).thenReturn(id);
-		when(subscription2.getId()).thenReturn(200L);
-		
-		when(subscription.getOrder()).thenReturn(1);
-		when(subscription1.getOrder()).thenReturn(2);
-		when(subscription2.getOrder()).thenReturn(3);
-		
-		service.moveDown(USERNAME, GROUP_ID, id);
-		
-		verify(subscription1).setOrder(3);
-		verify(subscription2).setOrder(2);
-		verify(subscriptionDao).saveAll(Arrays.asList(subscription1, subscription2));
-		verify(subscription, never()).setOrder(anyInt());
-	}
+
+        sut.subscribe(user.getUsername(), group.getId(), feed.getUrl());
+
+        verify(userDao).find(user.getUsername());
+        verify(groupDao).find(user, group.getId());
+        verifyZeroInteractions(rssService);
+        verify(feedDao).find(feed.getUrl());
+        verify(feedDao, never()).save(feed);
+        verify(subscriptionDao).find(user, feed);
+        verify(subscriptionDao).save(subscriptionCaptor.capture());
+        verifyZeroInteractions(postDao);
+        
+        assertThat(subscriptionCaptor.getValue().getGroup()).isEqualTo(group);
+        assertThat(subscriptionCaptor.getValue().getFeed()).isEqualTo(feed);
+        assertThat(subscriptionCaptor.getValue().getTitle()).isEqualTo(fetchResult.getFeed().getTitle());
+        assertThat(subscriptionCaptor.getValue().getOrder()).isEqualTo(subscription2.getOrder() + 1);
+        assertThat(subscriptionCaptor.getValue().getLastUpdateDate()).isNull();
+    }
+
+    @Test
+    public void subscribe_ShouldThrowException_IfSubscriptionAlreadyExists() {
+        when(feedDao.find(feed.getUrl())).thenReturn(feed);
+        when(subscriptionDao.find(user, feed)).thenReturn(subscription);
+
+        try {
+            sut.subscribe(user.getUsername(), group.getId(), feed.getUrl());
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getStatus()).isEqualTo(HttpStatus.CONFLICT);
+        }
+
+        verify(userDao).find(user.getUsername());
+        verifyZeroInteractions(groupDao);
+        verifyZeroInteractions(rssService);
+        verify(feedDao).find(feed.getUrl());
+        verify(feedDao, never()).save(feed);
+        verify(subscriptionDao).find(user, feed);
+        verify(subscriptionDao, never()).save(subscription);
+        verifyZeroInteractions(postDao);
+    }
+
+    @Test
+    public void unsubscribe_ShouldDeleteSubscriptionWithPosts() {
+        when(subscriptionDao.find(group, subscription.getId())).thenReturn(subscription);
+        final List<Post> posts = Arrays.asList(post1, post2);
+        when(postDao.list(subscription)).thenReturn(posts);
+
+        sut.unsubscribe(user.getUsername(), group.getId(), subscription.getId());
+
+        verify(postDao).deleteAll(posts);
+        verify(subscriptionDao).delete(subscription);
+    }
+
+    @Test
+    public void entitle_ShouldUpdateSubscriptionTitle() {
+        when(subscriptionDao.find(group, subscription.getId())).thenReturn(subscription);
+        final String newTitle = "new title";
+
+        sut.entitle(user.getUsername(), group.getId(), subscription.getId(), newTitle);
+
+        verify(subscriptionDao).save(subscriptionCaptor.capture());
+        assertThat(subscriptionCaptor.getValue().getTitle()).isEqualTo(newTitle);
+    }
+
+    @Test
+    public void moveUp_ShouldUpdateSubscriptionOrders() {
+        when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
+
+        sut.moveUp(user.getUsername(), group.getId(), subscription1.getId());
+
+        verify(subscriptionDao).saveAll(subscriptionListCaptor.capture());
+        assertThat(subscriptionListCaptor.getValue().get(0).getId()).isEqualTo(subscription.getId());
+        assertThat(subscriptionListCaptor.getValue().get(0).getOrder()).isEqualTo(2);
+        assertThat(subscriptionListCaptor.getValue().get(1).getId()).isEqualTo(subscription1.getId());
+        assertThat(subscriptionListCaptor.getValue().get(1).getOrder()).isEqualTo(1);
+    }
+
+    @Test
+    public void moveDown_ShouldUpdateSubscriptionOrders() {
+        when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
+
+        sut.moveDown(user.getUsername(), group.getId(), subscription1.getId());
+
+        verify(subscriptionDao).saveAll(subscriptionListCaptor.capture());
+        assertThat(subscriptionListCaptor.getValue().get(0).getId()).isEqualTo(subscription1.getId());
+        assertThat(subscriptionListCaptor.getValue().get(0).getOrder()).isEqualTo(3);
+        assertThat(subscriptionListCaptor.getValue().get(1).getId()).isEqualTo(subscription2.getId());
+        assertThat(subscriptionListCaptor.getValue().get(1).getOrder()).isEqualTo(2);
+    }
 
 }

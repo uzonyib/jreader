@@ -1,62 +1,72 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
-	<modelVersion>4.0.0</modelVersion>
-	
-	<parent>
-		<artifactId>jreader</artifactId>
-		<groupId>jreader</groupId>
-		<version>1.1.4-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
-	<artifactId>jreader-services</artifactId>
-	
-	<dependencies>
-		<dependency>
-			<groupId>jreader</groupId>
-			<artifactId>jreader-dao</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
+    
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <artifactId>jreader</artifactId>
+        <groupId>jreader</groupId>
+        <version>1.1.4-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>jreader-services</artifactId>
+    
+    <dependencies>
+        <dependency>
+            <groupId>jreader</groupId>
+            <artifactId>jreader-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
-		<dependency>
-		    <groupId>com.rometools</groupId>
-		    <artifactId>rome-fetcher</artifactId>
-		    <version>1.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>xerces</groupId>
-			<artifactId>xercesImpl</artifactId>
-			<version>2.11.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>jreader</groupId>
-			<artifactId>jreader-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	
+        <dependency>
+            <groupId>com.rometools</groupId>
+            <artifactId>rome-fetcher</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jreader</groupId>
+            <artifactId>jreader-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+        </dependency>
+    </dependencies>
+    
 </project>

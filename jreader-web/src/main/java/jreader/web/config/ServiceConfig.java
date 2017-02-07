@@ -27,54 +27,53 @@ import jreader.services.impl.UserServiceImpl;
 @Configuration
 @Import({ DaoConfig.class, UtilConfig.class })
 public class ServiceConfig {
-    
+
     @Autowired
     private DaoConfig daoConfig;
-    
+
     @Autowired
     private UtilConfig utilConfig;
-    
+
     @Bean
     public com.google.appengine.api.users.UserService googleUserService() {
         return UserServiceFactory.getUserService();
     }
-    
+
     @Bean
     public UserService userService() {
         return new UserServiceImpl(daoConfig.userDao(), utilConfig.dateHelper());
     }
-    
+
     @Bean
     public GroupService groupService() {
-        return new GroupServiceImpl(daoConfig.daoFacade(), utilConfig.conversionService(), utilConfig.builderFactory());
+        return new GroupServiceImpl(daoConfig.daoFacade(), utilConfig.conversionService());
     }
-    
+
     @Bean
     public SubscriptionService subscriptionService() {
-        return new SubscriptionServiceImpl(daoConfig.daoFacade(), utilConfig.rssService(), utilConfig.conversionService(), utilConfig.builderFactory());
+        return new SubscriptionServiceImpl(daoConfig.daoFacade(), utilConfig.rssService(), utilConfig.conversionService());
     }
-    
+
     @Bean
     public PostService postService() {
         return new PostServiceImpl(daoConfig.daoFacade(), utilConfig.conversionService());
     }
-    
+
     @Bean
     public StatService statService() {
         return new StatServiceImpl(daoConfig.daoFacade(), utilConfig.conversionService(), utilConfig.dateHelper());
     }
-    
+
     @Bean
     public ArchiveService archiveService() {
-        return new ArchiveServiceImpl(daoConfig.daoFacade(), utilConfig.conversionService(), utilConfig.builderFactory());
+        return new ArchiveServiceImpl(daoConfig.daoFacade(), utilConfig.conversionService());
     }
-    
+
     @Bean
     public CronService cronService() {
-        return new CronServiceImpl(daoConfig.daoFacade(), utilConfig.rssService(), utilConfig.conversionService(), utilConfig.builderFactory(),
-                utilConfig.dateHelper());
+        return new CronServiceImpl(daoConfig.daoFacade(), utilConfig.rssService(), utilConfig.conversionService(), utilConfig.dateHelper());
     }
-    
+
     @Bean
     public UserAdminService userAdminService() {
         return new UserAdminServiceImpl(daoConfig.userDao(), utilConfig.conversionService());

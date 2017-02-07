@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
 import jreader.dao.PostDao;
-import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.Group;
 import jreader.domain.Post;
@@ -30,16 +29,12 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     private ConversionService conversionService;
 
-    private BuilderFactory builderFactory;
-
-    public SubscriptionServiceImpl(final DaoFacade daoFacade, final RssService rssService, final ConversionService conversionService,
-            final BuilderFactory builderFactory) {
+    public SubscriptionServiceImpl(final DaoFacade daoFacade, final RssService rssService, final ConversionService conversionService) {
         super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
         this.feedDao = daoFacade.getFeedDao();
         this.postDao = daoFacade.getPostDao();
         this.rssService = rssService;
         this.conversionService = conversionService;
-        this.builderFactory = builderFactory;
     }
 
     @Override
@@ -60,7 +55,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
         }
 
         final Group group = this.getGroup(user, groupId);
-        subscription = builderFactory.createSubscriptionBuilder().group(group).feed(feed).title(feed.getTitle()).order(subscriptionDao.getMaxOrder(group) + 1)
+        subscription = Subscription.builder().group(group).feed(feed).title(feed.getTitle()).order(subscriptionDao.getMaxOrder(group) + 1)
                 .build();
         subscription = subscriptionDao.save(subscription);
 

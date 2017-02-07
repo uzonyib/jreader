@@ -38,7 +38,7 @@ public class Subscription {
     private int order;
     private Long lastUpdateDate;
 
-    private Subscription(final Builder builder) {
+    private Subscription(final SubscriptionBuilder builder) {
         this.setId(builder.id);
         this.setGroup(builder.group);
         this.setFeed(builder.feed);
@@ -63,7 +63,11 @@ public class Subscription {
         this.setFeedRef(feed == null ? null : Ref.create(feed));
     }
 
-    public static class Builder {
+    public static SubscriptionBuilder builder() {
+        return new SubscriptionBuilder();
+    }
+
+    public static class SubscriptionBuilder {
 
         private Long id;
         private Group group;
@@ -72,32 +76,36 @@ public class Subscription {
         private int order;
         private Long lastUpdateDate;
 
-        public Builder id(final Long id) {
+        SubscriptionBuilder() {
+
+        }
+
+        public SubscriptionBuilder id(final Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder group(final Group group) {
+        public SubscriptionBuilder group(final Group group) {
             this.group = group;
             return this;
         }
 
-        public Builder feed(final Feed feed) {
+        public SubscriptionBuilder feed(final Feed feed) {
             this.feed = feed;
             return this;
         }
 
-        public Builder title(final String title) {
+        public SubscriptionBuilder title(final String title) {
             this.title = title;
             return this;
         }
 
-        public Builder order(final int order) {
+        public SubscriptionBuilder order(final int order) {
             this.order = order;
             return this;
         }
 
-        public Builder lastUpdateDate(final Long lastUpdateDate) {
+        public SubscriptionBuilder lastUpdateDate(final Long lastUpdateDate) {
             this.lastUpdateDate = lastUpdateDate;
             return this;
         }

@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.FeedDaoImpl;
-import jreader.domain.FeedStat.Builder;
+import jreader.domain.FeedStat.FeedStatBuilder;
 
 public class FeedStatBuilderTest extends AbstractDaoTest {
     
@@ -18,7 +18,7 @@ public class FeedStatBuilderTest extends AbstractDaoTest {
     private static final int COUNT = 6;
     
     private Feed feed;
-    private Builder builder;
+    private FeedStatBuilder builder;
     
     @BeforeMethod
     public void init() {
@@ -26,7 +26,7 @@ public class FeedStatBuilderTest extends AbstractDaoTest {
         feed.setUrl(URL);
         feed = new FeedDaoImpl().save(feed);
         
-        this.builder = new Builder();
+        this.builder = new FeedStatBuilder();
     }
     
     @Test

@@ -1,8 +1,8 @@
 package jreader.services.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,48 +21,51 @@ import jreader.domain.Feed;
 import jreader.dto.RssFetchResult;
 
 public class RssServiceImplTest {
-	
-	private static final String RSS_URL = "http://domain.com/rss";
 
-	@Mock
-	private FeedFetcher feedFetcher;
-	@Mock
-	private ConversionService conversionService;
-	
-	@InjectMocks
-	private RssServiceImpl service;
-	
-	@Mock
-	private Feed feed;
-	@Mock
-	private SyndFeed syndFeed;
-	
-	@BeforeMethod
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-	}
-	
-	@Test
-	public void fetchSuccessfully() throws Exception {
-	    RssFetchResult rssFetchResult = new RssFetchResult(feed, null);
-		URL url = new URL(RSS_URL);
-		when(feedFetcher.retrieveFeed(url)).thenReturn(syndFeed);
-		when(conversionService.convert(syndFeed, RssFetchResult.class)).thenReturn(rssFetchResult);
-		
-		service.fetch(RSS_URL);
-		verify(feedFetcher).retrieveFeed(url);
-		verify(conversionService).convert(syndFeed, RssFetchResult.class);
-		verify(feed).setUrl(RSS_URL);
-	}
+    private static final String RSS_URL = "http://domain.com/rss";
 
-	@Test
-	public void fetchWithError() throws Exception {
-		URL url = new URL(RSS_URL);
-		when(feedFetcher.retrieveFeed(url)).thenThrow(new IOException());
-		
-		RssFetchResult result = service.fetch(RSS_URL);
-		verify(feedFetcher).retrieveFeed(url);
-		assertNull(result);
-	}
-	
+    @InjectMocks
+    private RssServiceImpl sut;
+
+    @Mock
+    private FeedFetcher feedFetcher;
+    @Mock
+    private ConversionService conversionService;
+
+    @Mock
+    private Feed feed;
+    @Mock
+    private SyndFeed syndFeed;
+
+    @BeforeMethod
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void fetch_ShouldBeSuccessful_IfUrlIsValid() throws Exception {
+        final RssFetchResult rssFetchResult = new RssFetchResult(feed, null);
+        final URL url = new URL(RSS_URL);
+        when(feedFetcher.retrieveFeed(url)).thenReturn(syndFeed);
+        when(conversionService.convert(syndFeed, RssFetchResult.class)).thenReturn(rssFetchResult);
+
+        final RssFetchResult actual = sut.fetch(RSS_URL);
+
+        verify(feedFetcher).retrieveFeed(url);
+        verify(conversionService).convert(syndFeed, RssFetchResult.class);
+        verify(feed).setUrl(RSS_URL);
+        assertThat(actual).isNotNull();
+    }
+
+    @Test
+    public void fetch_ShouldReturnNull_IfUrlIsInvalid() throws Exception {
+        final URL url = new URL(RSS_URL);
+        when(feedFetcher.retrieveFeed(url)).thenThrow(new IOException());
+
+        final RssFetchResult actual = sut.fetch(RSS_URL);
+
+        verify(feedFetcher).retrieveFeed(url);
+        assertThat(actual).isNull();
+    }
+
 }

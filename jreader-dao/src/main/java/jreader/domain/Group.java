@@ -31,14 +31,14 @@ public class Group {
     private String title;
     @Index
     private int order;
-    
+
     public Group(final User user, final String title, final int order) {
         this.setUser(user);
         this.title = title;
         this.order = order;
     }
-    
-    public Group(Builder builder) {
+
+    public Group(GroupBuilder builder) {
         this.id = builder.id;
         this.setUser(builder.user);
         this.title = builder.title;
@@ -48,34 +48,42 @@ public class Group {
     public User getUser() {
         return getUserRef() == null ? null : getUserRef().get();
     }
-    
+
     public void setUser(final User user) {
         this.setUserRef(user == null ? null : Ref.create(user));
     }
 
-    public static class Builder {
+    public static GroupBuilder builder() {
+        return new GroupBuilder();
+    }
+
+    public static class GroupBuilder {
 
         private Long id;
         private User user;
         private String title;
         private int order;
 
-        public Builder id(final Long id) {
+        GroupBuilder() {
+
+        }
+
+        public GroupBuilder id(final Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder user(final User user) {
+        public GroupBuilder user(final User user) {
             this.user = user;
             return this;
         }
 
-        public Builder title(final String title) {
+        public GroupBuilder title(final String title) {
             this.title = title;
             return this;
         }
 
-        public Builder order(final int order) {
+        public GroupBuilder order(final int order) {
             this.order = order;
             return this;
         }

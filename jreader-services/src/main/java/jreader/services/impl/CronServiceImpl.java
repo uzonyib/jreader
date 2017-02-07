@@ -15,7 +15,6 @@ import jreader.dao.FeedDao;
 import jreader.dao.FeedStatDao;
 import jreader.dao.PostDao;
 import jreader.dao.SubscriptionDao;
-import jreader.domain.BuilderFactory;
 import jreader.domain.Feed;
 import jreader.domain.FeedStat;
 import jreader.domain.Post;
@@ -40,19 +39,15 @@ public class CronServiceImpl implements CronService {
     private RssService rssService;
     private ConversionService conversionService;
     
-    private BuilderFactory builderFactory;
-    
     private DateHelper dateHelper;
 
-    public CronServiceImpl(final DaoFacade daoFacade, final RssService rssService, final ConversionService conversionService,
-            final BuilderFactory builderFactory, final DateHelper dateHelper) {
+    public CronServiceImpl(final DaoFacade daoFacade, final RssService rssService, final ConversionService conversionService, final DateHelper dateHelper) {
         this.subscriptionDao = daoFacade.getSubscriptionDao();
         this.feedDao = daoFacade.getFeedDao();
         this.postDao = daoFacade.getPostDao();
         this.feedStatDao = daoFacade.getFeedStatDao();
         this.rssService = rssService;
         this.conversionService = conversionService;
-        this.builderFactory = builderFactory;
         this.dateHelper = dateHelper;
     }
 
@@ -104,7 +99,7 @@ public class CronServiceImpl implements CronService {
             if (!stats.containsKey(refreshDay)) {
                 FeedStat stat = feedStatDao.find(feed, refreshDay);
                 if (stat == null) {
-                    stat = builderFactory.createFeedStatBuilder().feed(feed).refreshDate(refreshDay).count(1).build();
+                    stat = FeedStat.builder().feed(feed).refreshDate(refreshDay).count(1).build();
                 } else {
                     stat.setCount(stat.getCount() + 1);
                 }

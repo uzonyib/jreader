@@ -22,7 +22,6 @@ import jreader.converter.PostDtoConverter;
 import jreader.converter.RssFetchResultConverter;
 import jreader.converter.SubscriptionDtoConverter;
 import jreader.converter.UserDtoConverter;
-import jreader.domain.BuilderFactory;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
 import jreader.services.impl.DateHelperImpl;
@@ -31,7 +30,7 @@ import jreader.services.impl.RssServiceImpl;
 @Configuration
 @Import(DaoConfig.class)
 public class UtilConfig {
-    
+
     @Bean
     public ConversionFactory conversionFactory() {
         final Set<Converter<?, ?>> converters = new LinkedHashSet<>();
@@ -47,22 +46,17 @@ public class UtilConfig {
         converters.add(new ArchivedPostDtoConverter());
         return new ConversionFactory(converters);
     }
-    
+
     @Bean
     public ConversionService conversionService() {
         return conversionFactory().getObject();
     }
-    
-    @Bean
-    public BuilderFactory builderFactory() {
-        return new BuilderFactory();
-    }
-    
+
     @Bean
     public RssService rssService() {
         return new RssServiceImpl(new HttpURLFeedFetcher(), conversionService());
     }
-    
+
     @Bean
     public DateHelper dateHelper() {
         return new DateHelperImpl();

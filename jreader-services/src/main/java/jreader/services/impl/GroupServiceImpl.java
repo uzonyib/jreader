@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 
 import jreader.dao.DaoFacade;
 import jreader.dao.PostDao;
-import jreader.domain.BuilderFactory;
 import jreader.domain.Group;
 import jreader.domain.Subscription;
 import jreader.domain.User;
@@ -24,13 +23,10 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
 
     private ConversionService conversionService;
 
-    private BuilderFactory builderFactory;
-
-    public GroupServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService, final BuilderFactory builderFactory) {
+    public GroupServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService) {
         super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
         this.postDao = daoFacade.getPostDao();
         this.conversionService = conversionService;
-        this.builderFactory = builderFactory;
     }
     
     @Override
@@ -70,7 +66,7 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
         if (groupDao.find(user, title) != null) {
             throw new ServiceException("Group already exists.", HttpStatus.CONFLICT);
         }
-        final Group group = groupDao.save(builderFactory.createGroupBuilder().user(user).title(title)
+        final Group group = groupDao.save(Group.builder().user(user).title(title)
                 .order(groupDao.getMaxOrder(user) + 1).build());
         return conversionService.convert(group, GroupDto.class);
     }
@@ -145,7 +141,7 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
 
         groupDao.saveAll(updatedGroups);
     }
-    
+
     @Override
     public void delete(final String username, final Long groupId) {
         final User user = this.getUser(username);

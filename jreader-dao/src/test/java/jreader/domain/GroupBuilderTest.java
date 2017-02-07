@@ -5,7 +5,7 @@ import static org.testng.Assert.assertNotNull;
 import jreader.dao.UserDao;
 import jreader.dao.impl.AbstractDaoTest;
 import jreader.dao.impl.UserDaoImpl;
-import jreader.domain.Group.Builder;
+import jreader.domain.Group.GroupBuilder;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -18,7 +18,7 @@ public class GroupBuilderTest extends AbstractDaoTest {
     private static final int ORDER = 123;
     
     private User savedUser;
-    private Builder builder;
+    private GroupBuilder builder;
     
     @BeforeMethod
     public void init() {
@@ -27,7 +27,7 @@ public class GroupBuilderTest extends AbstractDaoTest {
         UserDao userDao = new UserDaoImpl();
         savedUser = userDao.save(user);
         
-        this.builder = new Builder();
+        this.builder = new GroupBuilder();
     }
     
     @Test
