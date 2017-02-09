@@ -40,7 +40,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.7.4</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -61,23 +60,18 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.concordion</groupId>
             <artifactId>concordion</artifactId>
-            <version>1.5.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jreader</groupId>
             <artifactId>jreader-test</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -163,7 +157,7 @@
                     <address>0.0.0.0</address>
                     <port>8080</port>
                     <jvmFlags>
-                        <jvmFlag>-Dappengine.generated.dir=/home/uzonyib/data/work/eclipse_workspace/jreader/appengine</jvmFlag>
+                        <jvmFlag>-Dappengine.generated.dir=/data/jreader/appengine</jvmFlag>
                         <jvmFlag>-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=10</jvmFlag>
                     </jvmFlags>
                 </configuration>

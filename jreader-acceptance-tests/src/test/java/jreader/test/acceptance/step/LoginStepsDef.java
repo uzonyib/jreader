@@ -2,6 +2,7 @@ package jreader.test.acceptance.step;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.openqa.selenium.WebDriver;
@@ -54,7 +55,7 @@ public class LoginStepsDef {
     }
     
     @When("^the user opens the main page$")
-    public void openMainPage() {
+    public void openMainPage() throws IOException {
         browser.get(Constants.MAIN_PAGE_URL);
     }
     

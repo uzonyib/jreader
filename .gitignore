@@ -18,3 +18,5 @@ jreader-web/src/main/webapp/js/reader-all.js
 test-output
 .checkstyle
 .factorypath
+appengine
+

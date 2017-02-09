@@ -6,7 +6,7 @@ docker build -t jreader-jenkins .
 
 # Run Jenkins container
 ```
-docker run --name jreader-jenkins -v /home/uzonyib/code/jreader-jenkins-home:/var/jenkins_home -p 8181:8080 -u <USER> -dt jreader-jenkins
+docker run --name jreader-jenkins -v /home/uzonyib/code/jreader-jenkins-home:/var/jenkins_home -p 8090:8080 -u <USER> -dt jreader-jenkins
 ```
 
 # Start Jenkins container
