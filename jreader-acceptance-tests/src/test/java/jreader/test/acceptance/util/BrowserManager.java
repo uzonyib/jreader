@@ -1,19 +1,21 @@
-package jreader.test.acceptance;
+package jreader.test.acceptance.util;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.stereotype.Component;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 
+@Component
 public final class BrowserManager {
 
-    private static WebDriver browser;
+    private WebDriver browser;
 
-    private BrowserManager() {
-
+    public BrowserManager() {
+        init();
     }
 
-    public static void init() {
+    public void init() {
         if (browser != null) {
             throw new IllegalStateException("Browser should be closed before creating a new one.");
         }
@@ -22,7 +24,7 @@ public final class BrowserManager {
         browser = new ChromeDriver();
     }
 
-    public static void close() {
+    public void close() {
         if (browser == null) {
             throw new IllegalStateException("Browser not initialized yet.");
         }
@@ -30,7 +32,7 @@ public final class BrowserManager {
         browser = null;
     }
 
-    public static WebDriver getBrowser() {
+    public WebDriver getBrowser() {
         return browser;
     }
 

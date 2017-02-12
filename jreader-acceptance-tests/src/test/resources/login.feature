@@ -1,7 +1,8 @@
-Feature: Administrators can log in, log out and use the menu for navigation
+Feature: Log in, log out
 
 	Scenario: Users cannot reach the main page without authentication
-		When the user opens the main page
+		Given a new user
+		When he opens the main page
 		Then the login page is displayed
 
 	Scenario: Non-administrator users cannot access the application by default

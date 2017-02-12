@@ -4,35 +4,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import jreader.test.acceptance.BrowserManager;
-import jreader.test.acceptance.page.HomePage;
-import jreader.test.acceptance.page.element.GroupForm;
-import jreader.test.acceptance.page.element.Menu;
-import jreader.test.acceptance.page.element.SubscriptionSettingsForm;
-import jreader.test.acceptance.page.element.SubscriptionForm;
-
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import jreader.test.acceptance.page.HomePage;
+import jreader.test.acceptance.page.element.GroupForm;
+import jreader.test.acceptance.page.element.Menu;
+import jreader.test.acceptance.page.element.SubscriptionForm;
+import jreader.test.acceptance.page.element.SubscriptionSettingsForm;
 
 public class SubscribeStepsDef {
-    
-private WebDriver browser = BrowserManager.getBrowser();
-    
-    private Menu menu = new Menu(browser);
-    private HomePage homePage = new HomePage(browser);
-    private GroupForm groupForm = new GroupForm(browser);
-    private SubscriptionForm subscriptionForm = new SubscriptionForm(browser);
-    private SubscriptionSettingsForm editForm = new SubscriptionSettingsForm(browser);
-    
+
+    @Autowired
+    private Menu menu;
+    @Autowired
+    private HomePage homePage;
+    @Autowired
+    private GroupForm groupForm;
+    @Autowired
+    private SubscriptionForm subscriptionForm;
+    @Autowired
+    private SubscriptionSettingsForm editForm;
+
     @Given("^I have groups \"(.*?)\"$")
     public void i_have_groups(List<String> titles) {
         menu.openSettingsPage();
     }
-    
+
     @Then("^I should see a form for subscribing to a feed$")
     public void i_should_see_a_form_for_subscribing_to_a_feed() {
         assertThat(subscriptionForm.getGroupDropdown().isDisplayed()).isTrue();
@@ -52,7 +53,7 @@ private WebDriver browser = BrowserManager.getBrowser();
     public void by_default_is_selected(String groupTitle) {
         assertThat(subscriptionForm.getSelectedGroupTitle()).isEqualTo(groupTitle);
     }
-    
+
     @When("^I select \"(.*?)\" for group$")
     public void i_select_for_group(String groupTitle) {
         subscriptionForm.selectGroupTitle(groupTitle);
@@ -83,7 +84,7 @@ private WebDriver browser = BrowserManager.getBrowser();
 
     @Then("^I should see the new subscription entitled \"(.*?)\" on the home page under \"(.*?)\"$")
     public void i_should_see_the_new_subscription_entitled_on_the_home_page(String title, String groupTitle) {
-        
+
     }
 
 }

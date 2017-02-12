@@ -1,18 +1,22 @@
 package jreader.test.acceptance;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import javax.annotation.PreDestroy;
 
-public class AbstractTest {
-    
-    @BeforeClass
-    public static void beforeScenario() {
-        BrowserManager.init();
-    }
-    
-    @AfterClass
-    public static void afterScenario() {
-        BrowserManager.close();
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import cucumber.api.junit.Cucumber;
+import jreader.test.acceptance.util.BrowserManager;
+
+@RunWith(Cucumber.class)
+abstract class AbstractTest {
+
+    @Autowired
+    private BrowserManager browserManager;
+
+    @PreDestroy
+    public void afterScenario() {
+        browserManager.close();
     }
 
 }

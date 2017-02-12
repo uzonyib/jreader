@@ -1,7 +1,8 @@
-Feature: Administrators can log in, log out and use the menu for navigation
+Feature: User authorization
 
 	Scenario: Users cannot reach the user administration page without authentication
-		When the user opens the user administration page
+		Given a new user
+		When he opens the user administration page
 		Then the forbidden page is displayed
 
 	Scenario: Unauthorized users cannot access the user administration page
@@ -37,7 +38,7 @@ Feature: Administrators can log in, log out and use the menu for navigation
 		And the settings menu item is displayed
 		And the all items menu item is displayed
 		
-	Scenario: Non-administrator users cannot the user administration page
+	Scenario: Non-administrator users cannot access the user administration page
 		Given "nonadmin@jreader.com" is not an administrator
 		And he is logged in
 		When he opens the user administration page

@@ -26,3 +26,8 @@ mvn appengine:devserver -pl jreader-web
 ```
 jReader will be available on `http://localhost:8080/` on the host machine.
 
+# Run acceptance tests locally
+Make sure that jReader is running locally, then
+```
+mvn clean install -pl jreader-acceptance-tests -Pacceptance
+```
