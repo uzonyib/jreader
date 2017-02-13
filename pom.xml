@@ -10,6 +10,7 @@
     
     <modules>
         <module>jreader-test</module>
+        <module>jreader-feed-server</module>
         <module>jreader-dao</module>
         <module>jreader-services</module>
         <module>jreader-web</module>
@@ -21,6 +22,7 @@
         <ui.minify>false</ui.minify>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <appengine.sdk.version>1.9.36</appengine.sdk.version>
+        <spring.boot.version>1.3.3.RELEASE</spring.boot.version>
         <spring.version>4.2.5.RELEASE</spring.version>
         <objectify.version>5.1.12</objectify.version>
         <jackson.mapper.version>1.9.13</jackson.mapper.version>
@@ -32,6 +34,7 @@
         <mockito.version>1.10.19</mockito.version>
         <powermock.version>1.6.6</powermock.version>
         <assertj.version>2.4.1</assertj.version>
+        <jsonpath.version>0.8.1</jsonpath.version>
         <concordion.version>1.5.1</concordion.version>
         <cucumber.version>1.2.4</cucumber.version>
         <selenium.version>2.53.1</selenium.version>
@@ -79,6 +82,11 @@
                 <version>${objectify.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
                 <version>${spring.version}</version>
@@ -124,6 +132,12 @@
                 <version>${xerces.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
@@ -159,7 +173,19 @@
                 <version>${assertj.version}</version>
                 <scope>test</scope>
             </dependency>
-             <dependency>
+            <dependency>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path</artifactId>
+                <version>${jsonpath.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path-assert</artifactId>
+                <version>${jsonpath.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.concordion</groupId>
                 <artifactId>concordion</artifactId>
                 <version>${concordion.version}</version>
@@ -231,6 +257,11 @@
                     <groupId>com.google.appengine</groupId>
                     <artifactId>appengine-maven-plugin</artifactId>
                     <version>${appengine.sdk.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

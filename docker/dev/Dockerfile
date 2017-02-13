@@ -17,7 +17,7 @@ ENV M2 $M2_HOME/bin
 
 ENV PATH ${M2}:${PATH}
 
-EXPOSE 8080
+EXPOSE 8080 8081
 
 RUN useradd -ms /bin/bash jreader-dev
 USER jreader-dev
