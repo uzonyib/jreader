@@ -8,5 +8,6 @@ import lombok.Data;
 public class Feed {
 
     private String title;
+    private String description;
 
 }

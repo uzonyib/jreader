@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -42,42 +43,66 @@ public class FeedControllerTest {
     }
 
     @Test
-    public void listFeeds() throws Exception {
+    public void listFeedsShouldReturnEmptyResultByDefault() throws Exception {
         mockMvc.perform(get("/feeds")).andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(0)));
     }
 
     @Test
-    public void testFeedCreation() throws Exception {
-        mockMvc.perform(put("/feeds").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(new Feed("Movies")))).andExpect(status().isOk());
-        mockMvc.perform(put("/feeds").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(new Feed("Books")))).andExpect(status().isOk());
-        
+    public void addFeedShouldCreateFeed() throws Exception {
+        final Feed feed1 = new Feed("Movies", "News about films, starts, etc.");
+        final Feed feed2 = new Feed("Books", "Best book reviews");
+
+        mockMvc.perform(put("/feeds").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(feed1))).andExpect(status().isOk());
+        mockMvc.perform(put("/feeds").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(feed2))).andExpect(status().isOk());
+
         mockMvc.perform(get("/feeds")).andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(2)))
-                .andExpect(jsonPath("$[0].title", Matchers.equalTo("Movies")))
-                .andExpect(jsonPath("$[1].title", Matchers.equalTo("Books")));
+                .andExpect(jsonPath("$[0].title", Matchers.equalTo(feed1.getTitle())))
+                .andExpect(jsonPath("$[0].description", Matchers.equalTo(feed1.getDescription())))
+                .andExpect(jsonPath("$[1].title", Matchers.equalTo(feed2.getTitle())))
+                .andExpect(jsonPath("$[1].description", Matchers.equalTo(feed2.getDescription())));
+
+        mockMvc.perform(get("/feeds/" + feed1.getTitle() + "/rss")).andExpect(status().isOk())
+                .andExpect(xpath("/rss/channel/title").string(Matchers.equalTo(feed1.getTitle())))
+                .andExpect(xpath("/rss/channel/description").string(Matchers.equalTo(feed1.getDescription())))
+                .andExpect(xpath("/rss/channel/link").string(Matchers.notNullValue()));
     }
 
     @Test
-    public void testPostCreation() throws Exception {
-        mockMvc.perform(put("/feeds").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(new Feed("Cars")))).andExpect(status().isOk());
-        mockMvc.perform(get("/feeds")).andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].title", Matchers.equalTo("Cars")));
+    public void addPostShouldCreatePostInFeed() throws Exception {
+        final Feed feed = new Feed("Cars", "Awesome cars");
+        final Post post1 = new Post("Le Mans results", "The La Mans results are...", "f1lover", "le-mans-results.html", null);
+        final Post post2 = new Post("F1 - Fastest laps", "Fastest lap times by driver", "f1fanatic", "fastest-laps.html", null);
 
-        final Post post1 = new Post("Le Mans results", "The La Mans results are...", "f1lover", "le-mans-results.html");
-        final Post post2 = new Post("F1 - Fastest laps", "Fastest lap times by driver", "f1fanatic", "fastest-laps.html");
-        mockMvc.perform(put("/feeds/Cars").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(post1))).andExpect(status().isOk());
-        mockMvc.perform(put("/feeds/Cars").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(post2))).andExpect(status().isOk());
+        mockMvc.perform(put("/feeds").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(feed))).andExpect(status().isOk());
+        mockMvc.perform(put("/feeds/" + feed.getTitle()).contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(post1)))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/feeds/" + feed.getTitle()).contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(post2)))
+                .andExpect(status().isOk());
 
-        mockMvc.perform(get("/feeds/Cars")).andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(2)))
+        mockMvc.perform(get("/feeds/" + feed.getTitle())).andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$[0].title", Matchers.equalTo(post1.getTitle())))
                 .andExpect(jsonPath("$[0].description", Matchers.equalTo(post1.getDescription())))
                 .andExpect(jsonPath("$[0].author", Matchers.equalTo(post1.getAuthor())))
                 .andExpect(jsonPath("$[0].url", Matchers.equalTo(post1.getUrl())))
+                .andExpect(jsonPath("$[0].publishDate", Matchers.notNullValue()))
                 .andExpect(jsonPath("$[1].title", Matchers.equalTo(post2.getTitle())))
                 .andExpect(jsonPath("$[1].description", Matchers.equalTo(post2.getDescription())))
                 .andExpect(jsonPath("$[1].author", Matchers.equalTo(post2.getAuthor())))
-                .andExpect(jsonPath("$[1].url", Matchers.equalTo(post2.getUrl())));
+                .andExpect(jsonPath("$[1].url", Matchers.equalTo(post2.getUrl())))
+                .andExpect(jsonPath("$[1].publishDate", Matchers.notNullValue()));
+
+        mockMvc.perform(get("/feeds/" + feed.getTitle() + "/rss")).andExpect(status().isOk())
+                .andExpect(xpath("/rss/channel/item[1]/title").string(Matchers.equalTo(post1.getTitle())))
+                .andExpect(xpath("/rss/channel/item[1]/description").string(Matchers.equalTo(post1.getDescription())))
+                .andExpect(xpath("/rss/channel/item[1]/creator").string(Matchers.equalTo(post1.getAuthor())))
+                .andExpect(xpath("/rss/channel/item[1]/guid").string(Matchers.notNullValue()))
+                .andExpect(xpath("/rss/channel/item[1]/pubDate").string(Matchers.notNullValue()))
+                .andExpect(xpath("/rss/channel/item[2]/title").string(Matchers.equalTo(post2.getTitle())))
+                .andExpect(xpath("/rss/channel/item[2]/description").string(Matchers.equalTo(post2.getDescription())))
+                .andExpect(xpath("/rss/channel/item[2]/creator").string(Matchers.equalTo(post2.getAuthor())))
+                .andExpect(xpath("/rss/channel/item[2]/guid").string(Matchers.notNullValue()))
+                .andExpect(xpath("/rss/channel/item[2]/pubDate").string(Matchers.notNullValue()));
     }
 
 }

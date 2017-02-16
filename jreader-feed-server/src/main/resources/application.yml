@@ -1,2 +1,5 @@
 server:
   port: 8081
+
+feed-server:
+  base-url: http://localhost:8081

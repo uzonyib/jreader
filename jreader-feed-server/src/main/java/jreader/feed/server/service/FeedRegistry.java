@@ -28,11 +28,23 @@ public class FeedRegistry {
     }
 
     public void add(final String feedTitle, final Post post) {
-        feeds.get(new Feed(feedTitle)).add(post);
+        if (post.getPublishDate() == null) {
+            post.setPublishDate(System.currentTimeMillis());
+        }
+        feeds.get(getFeed(feedTitle)).add(post);
     }
 
     public List<Post> listPosts(final String feed) {
-        return feeds.get(new Feed(feed));
+        return feeds.get(getFeed(feed));
+    }
+
+    public Feed getFeed(final String title) {
+        for (final Feed feed : feeds.keySet()) {
+            if (feed.getTitle().equals(title)) {
+                return feed;
+            }
+        }
+        return null;
     }
 
 }

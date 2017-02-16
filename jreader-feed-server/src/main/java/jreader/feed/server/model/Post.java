@@ -11,5 +11,6 @@ public class Post {
     private String description;
     private String author;
     private String url;
+    private Long publishDate;
 
 }
