@@ -41,7 +41,7 @@ public class ArchiveStepsDef extends StepDefs {
     }
 
     @When("^he clicks the create archive button$")
-    public void clickCreateGroupBbutton() {
+    public void clickCreateArchiveBbutton() {
         settingsPage.getArchiveForm().clickCreateButton();
         settingsPage.getArchiveSettingsForm().waitForArchiveToBeCreated(this.archiveTitle);
         archiveTitles.add(this.archiveTitle);
@@ -82,8 +82,8 @@ public class ArchiveStepsDef extends StepDefs {
     }
 
     @Then("^the following archives are displayed in the archive settings:$")
-    public void checkArchivesAreDisplayedInTheArchiveSettings(Map<Integer, String> groups) {
-        for (Entry<Integer, String> entry : groups.entrySet()) {
+    public void checkArchivesAreDisplayedInTheArchiveSettings(Map<Integer, String> archives) {
+        for (Entry<Integer, String> entry : archives.entrySet()) {
             assertThat(settingsPage.getArchiveSettingsForm().getArchiveItems().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
         }
     }
