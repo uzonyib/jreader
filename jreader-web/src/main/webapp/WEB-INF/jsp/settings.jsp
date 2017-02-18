@@ -102,7 +102,7 @@
 	</tbody>
 </table>
 
-<form class="form-inline" data-ng-submit="createArchive()">
+<form id="archive-form" class="form-inline" data-ng-submit="createArchive()">
 	<div class="form-group">
 		<label for="new-archive-title">Create archive entitled</label>
 		<input class="form-control" type="text" id="new-archive-title" name="title" placeholder="title" data-ng-model="newArchiveTitle" />
@@ -112,11 +112,11 @@
 	</button>
 </form>
 
-<table class="table">
+<table id="archive-settings" class="table">
 	<tbody class="settings-group" data-ng-repeat="archive in archives">
 		<tr class="settings-item">
 			<td class="title">
-				<span data-ng-show="!archive.editingTitle" data-ng-click="editTitle(archive)">{{::archive.title}}</span>
+				<span class="title" data-ng-show="!archive.editingTitle" data-ng-click="editTitle(archive)">{{::archive.title}}</span>
 				<form class="form-inline set-group-title" data-ng-show="archive.editingTitle" data-ng-click="entitleArchive(archive)">
 					<input class="form-control" type="text" placeholder="name" data-ng-model="archive.newTitle" />
 					<button type="submit" class="btn btn-default" title="Update">

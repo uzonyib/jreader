@@ -32,6 +32,10 @@ public class SubscriptionSettingsForm {
         return By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'group-title')]//span[contains(@class, 'title') and .='" + title + "']");
     }
 
+    public void waitForGroupToBeCreated(String title) {
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getGroupTitleLocator(title)));
+    }
+
     public void editGroupTitle(String title) {
         browser.findElement(getGroupTitleLocator(title)).click();
     }

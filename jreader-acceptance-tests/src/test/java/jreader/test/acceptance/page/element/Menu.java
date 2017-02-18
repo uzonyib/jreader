@@ -42,6 +42,12 @@ public class Menu {
     @FindBy(css = "#menu .group-item .title")
     private List<WebElement> groupMenuItems;
 
+    @FindBy(xpath = "//*[@id='archives-menu-item']/span[1]")
+    private WebElement archivesMenuItemExpander;
+
+    @FindBy(css = "#menu .archive-item .title")
+    private List<WebElement> archiveMenuItems;
+
     @Autowired
     public Menu(WebDriver browser) {
         this.browser = browser;
@@ -91,6 +97,14 @@ public class Menu {
     public WebElement getGroupUnreadCount(String title) {
         return browser.findElement(By.xpath("//*[@id='menu']" + "//*[contains(@class, 'group-item') and //span[contains(@class, 'title') and .='" + title
                 + "']]" + "//*[contains(@class, 'unread-count')]"));
+    }
+
+    public List<WebElement> getArchiveMenuItems() {
+        return archiveMenuItems;
+    }
+
+    public void expandArchives() {
+        archivesMenuItemExpander.click();
     }
 
 }

@@ -13,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import jreader.test.acceptance.page.HomePage;
-import jreader.test.acceptance.page.element.GroupForm;
+import jreader.test.acceptance.page.SettingsPage;
 import jreader.test.acceptance.page.element.Menu;
-import jreader.test.acceptance.page.element.SubscriptionForm;
-import jreader.test.acceptance.page.element.SubscriptionSettingsForm;
 
 public class GroupStepsDef extends StepDefs {
 
@@ -25,11 +23,7 @@ public class GroupStepsDef extends StepDefs {
     @Autowired
     private HomePage homePage;
     @Autowired
-    private GroupForm groupForm;
-    @Autowired
-    private SubscriptionForm subscriptionForm;
-    @Autowired
-    private SubscriptionSettingsForm subscriptionSettingsForm;
+    private SettingsPage settingsPage;
 
     private String groupTitle;
     private List<String> groupTitles = new ArrayList<String>();
@@ -37,24 +31,24 @@ public class GroupStepsDef extends StepDefs {
     @When("^the user enters \"([^\"]*)\" as the group title$")
     public void enterGroupTitle(String title) {
         this.groupTitle = title;
-        groupForm.enterTitle(groupTitle);
+        settingsPage.getGroupForm().enterTitle(groupTitle);
     }
 
     @When("^he clicks the create group button$")
     public void clickCreateGroupBbutton() {
-        groupForm.clickCreateButton();
-        groupForm.waitForGroupToBeCreated(this.groupTitle);
+        settingsPage.getGroupForm().clickCreateButton();
+        settingsPage.getSubscriptionSettingsForm().waitForGroupToBeCreated(this.groupTitle);
         groupTitles.add(this.groupTitle);
     }
 
     @Then("^the group title field is displayed$")
     public void checkGroupTitleFieldIsDisplayed() {
-        assertThat(groupForm.getTitleField().isDisplayed()).isTrue();
+        assertThat(settingsPage.getGroupForm().getTitleField().isDisplayed()).isTrue();
     }
 
     @Then("^the create group button is displayed$")
     public void checkCreateGroupButtonIsDisplayed() {
-        assertThat(groupForm.getCreateButton().isDisplayed()).isTrue();
+        assertThat(settingsPage.getGroupForm().getCreateButton().isDisplayed()).isTrue();
     }
 
     @Then("^the new group is displayed in the menu$")
@@ -65,16 +59,16 @@ public class GroupStepsDef extends StepDefs {
     }
 
     @Then("^the new group is displayed in the subscription settings$")
-    public void checkGroupIsDisplayedInTheMenuSubscriptionSettings() {
-        int groupItemCount = subscriptionSettingsForm.getGroupItems().size();
+    public void checkGroupIsDisplayedInTheSubscriptionSettings() {
+        int groupItemCount = settingsPage.getSubscriptionSettingsForm().getGroupItems().size();
         assertThat(groupItemCount).isGreaterThanOrEqualTo(1);
-        assertThat(subscriptionSettingsForm.getGroupItems().get(groupItemCount - 1).getText()).isEqualTo(this.groupTitle);
+        assertThat(settingsPage.getSubscriptionSettingsForm().getGroupItems().get(groupItemCount - 1).getText()).isEqualTo(this.groupTitle);
     }
 
     @Then("^the new group is displayed in the group field of the new subscription form$")
-    public void checkGroupIsDisplayedInTheMenuSubscriptionSettingsGroupFieldOfTheNewSubscriptionForm() {
-        subscriptionForm.openGroupDropdown();
-        List<WebElement> options = subscriptionForm.getGroupOptions();
+    public void checkGroupIsDisplayedInTheSubscriptionSettingsGroupFieldOfTheNewSubscriptionForm() {
+        settingsPage.getSubscriptionForm().openGroupDropdown();
+        List<WebElement> options = settingsPage.getSubscriptionForm().getGroupOptions();
         assertThat(options.size()).isGreaterThanOrEqualTo(1);
         assertThat(options.get(options.size() - 1).getText()).isEqualTo(this.groupTitle);
     }
@@ -97,13 +91,13 @@ public class GroupStepsDef extends StepDefs {
     public void createGroups(List<String> titles) {
         for (String title : titles) {
             groupTitles.add(title);
-            groupForm.createGroup(title);
+            settingsPage.createGroup(title);
         }
     }
 
     @When("^the user opens the group dropdown$")
     public void openGroupDropdown() {
-        subscriptionForm.openGroupDropdown();
+        settingsPage.getSubscriptionForm().openGroupDropdown();
     }
 
     @Then("^the following groups are displayed in the menu:$")
@@ -116,14 +110,14 @@ public class GroupStepsDef extends StepDefs {
     @Then("^the following groups are displayed in the subscription settings:$")
     public void checkGroupsAreDisplayedInTheSubscriptionSettings(Map<Integer, String> groups) {
         for (Entry<Integer, String> entry : groups.entrySet()) {
-            assertThat(subscriptionSettingsForm.getGroupItems().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
+            assertThat(settingsPage.getSubscriptionSettingsForm().getGroupItems().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
         }
     }
 
     @Then("^the following groups are displayed in the group field of the new subscription form:$")
     public void checkGroupsAreDisplayedInTheGroupFieldOfTheNewSubscriptionForm(Map<Integer, String> groups) {
         for (Entry<Integer, String> entry : groups.entrySet()) {
-            assertThat(subscriptionForm.getGroupOptions().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
+            assertThat(settingsPage.getSubscriptionForm().getGroupOptions().get(entry.getKey() - 1).getText()).isEqualTo(entry.getValue());
         }
     }
 
@@ -136,22 +130,22 @@ public class GroupStepsDef extends StepDefs {
 
     @When("^he moves group \"([^\"]*)\" down:$")
     public void moveDown(String title) {
-        subscriptionSettingsForm.moveGroupDown(title);
+        settingsPage.getSubscriptionSettingsForm().moveGroupDown(title);
     }
 
     @When("^the user moves group \"([^\"]*)\" up:$")
     public void moveUp(String title) {
-        subscriptionSettingsForm.moveGroupUp(title);
+        settingsPage.getSubscriptionSettingsForm().moveGroupUp(title);
     }
 
     @When("^the user renames group \"([^\"]*)\" to \"([^\"]*)\":$")
     public void rename(String from, String to) {
-        subscriptionSettingsForm.renameGroup(from, to);
+        settingsPage.getSubscriptionSettingsForm().renameGroup(from, to);
     }
 
     @When("^the user deletes group \"([^\"]*)\":$")
     public void delete(String title) {
-        subscriptionSettingsForm.deleteGroup(title);
+        settingsPage.getSubscriptionSettingsForm().deleteGroup(title);
     }
 
 }

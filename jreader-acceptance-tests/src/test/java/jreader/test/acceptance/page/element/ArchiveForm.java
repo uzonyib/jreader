@@ -8,16 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GroupForm {
+public class ArchiveForm {
 
-    @FindBy(css = "#group-form input[name='title']")
+    @FindBy(css = "#archive-form input[name='title']")
     private WebElement titleField;
 
-    @FindBy(css = "#group-form button[type='submit']")
+    @FindBy(css = "#archive-form button[type='submit']")
     private WebElement createButton;
 
     @Autowired
-    public GroupForm(WebDriver browser) {
+    public ArchiveForm(WebDriver browser) {
         PageFactory.initElements(browser, this);
     }
 

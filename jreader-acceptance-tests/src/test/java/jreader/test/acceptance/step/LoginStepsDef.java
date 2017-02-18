@@ -62,7 +62,7 @@ public class LoginStepsDef extends StepDefs {
 
     @Given("^he is logged in$")
     public void ensureLoggedIn() {
-        loginPage.login(username, true);
+        loginPage.login(username, isAdmin);
     }
 
     @When("^he opens the main page$")

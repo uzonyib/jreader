@@ -37,7 +37,7 @@
 	</li>
 </ul>
 <ul class="nav nav-pills nav-stacked">
-	<li class="menu-item"
+	<li id="archives-menu-item" class="menu-item"
 		data-ng-class="{selected: menu.archivedItemsSelected}"
 		data-ng-show="archives.length > 0"
 		data-ng-click="viewService.selectArchivedItems()">
@@ -47,7 +47,7 @@
 	</li>
 	<li data-ng-show="menu.archivedItemsExpanded"
 		data-ng-repeat="archive in archives"
-		class="menu-item feed-item"
+		class="menu-item feed-item archive-item"
 		data-ng-class="{selected: archive.selected}"
 		data-ng-click="viewService.selectArchive(archive.id)">
 		<span class="title">{{::archive.title}}</span>
