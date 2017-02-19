@@ -53,29 +53,29 @@ public class SubscriptionSettingsForm {
 
     private WebElement getMoveDownButtonOfGroup(String title) {
         return browser.findElement(By.xpath(
-                "//*[@id='subscription-settings']//*[contains(@class, 'group-title') and .//span[.='" + title + "']]" + "//form//button[@title='Move down']"));
+                "//*[@id='subscription-settings']//*[contains(@class, 'group-title') and .//span[.='" + title + "']]//form//button[@title='Move down']"));
     }
 
     private WebElement getMoveUpButtonOfGroup(String title) {
-        return browser.findElement(By.xpath(
-                "//*[@id='subscription-settings']//*[contains(@class, 'group-title') and .//span[.='" + title + "']]" + "//form//button[@title='Move up']"));
+        return browser.findElement(By
+                .xpath("//*[@id='subscription-settings']//*[contains(@class, 'group-title') and .//span[.='" + title + "']]//form//button[@title='Move up']"));
     }
 
     private WebElement getRenameButtonOfGroup(String title) {
-        return browser.findElement(By.xpath(
-                "//*[@id='subscription-settings']//*[contains(@class, 'group-title') and .//span[.='" + title + "']]" + "//form//button[@title='Update']"));
+        return browser.findElement(
+                By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'group-title') and .//span[.='" + title + "']]//form//button[@title='Update']"));
     }
 
     private WebElement getDeleteButtonOfGroup(String title) {
-        return browser.findElement(By.xpath(
-                "//*[@id='subscription-settings']//*[contains(@class, 'group-title') and .//span[.='" + title + "']]" + "//form//button[@title='Delete']"));
+        return browser.findElement(
+                By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'group-title') and .//span[.='" + title + "']]//form//button[@title='Delete']"));
     }
 
     private By getGroupWithTitleAt(String title, int expectedIndex) {
-        return By.xpath("(//*[@id='subscription-settings']//*[contains(@class, 'group-title')])[" + (expectedIndex + 1) + "]" + "//span[.='" + title + "']");
+        return By.xpath("(//*[@id='subscription-settings']//*[contains(@class, 'group-title')])[" + (expectedIndex + 1) + "]//span[.='" + title + "']");
     }
 
-    private int indexOf(String title) {
+    private int groupIndexOf(String title) {
         for (int i = 0; i < groupItems.size(); ++i) {
             if (title.equals(groupItems.get(i).getText())) {
                 return i;
@@ -89,19 +89,19 @@ public class SubscriptionSettingsForm {
     }
 
     public void moveGroupDown(String title) {
-        int expectedIndex = indexOf(title) + 1;
+        int expectedIndex = groupIndexOf(title) + 1;
         getMoveDownButtonOfGroup(title).click();
         new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getGroupWithTitleAt(title, expectedIndex)));
     }
 
     public void moveGroupUp(String title) {
-        int expectedIndex = indexOf(title) - 1;
+        int expectedIndex = groupIndexOf(title) - 1;
         getMoveUpButtonOfGroup(title).click();
         new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getGroupWithTitleAt(title, expectedIndex)));
     }
 
     public void renameGroup(String from, String to) {
-        int expectedIndex = indexOf(from);
+        int expectedIndex = groupIndexOf(from);
         editGroupTitle(from);
         WebElement titleField = getGroupTitleFieldForEditing(from);
         titleField.clear();
@@ -115,6 +115,88 @@ public class SubscriptionSettingsForm {
         getDeleteButtonOfGroup(title).click();
         new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(
                 ExpectedConditions.numberOfElementsToBe(By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'group-title')]"), expectedCount));
+    }
+
+    private List<WebElement> getSubscriptionItems(String groupTitle) {
+        return browser
+                .findElements(By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'settings-group') and .//span[contains(@class, 'title') and .='"
+                        + groupTitle + "']]//*[contains(@class, 'settings-item')]/*[contains(@class, 'title')]/span"));
+    }
+
+    private int subscriptionIndexOf(String groupTitle, String title) {
+        final List<WebElement> subscriptionItems = getSubscriptionItems(groupTitle);
+        for (int i = 0; i < subscriptionItems.size(); ++i) {
+            if (title.equals(subscriptionItems.get(i).getText())) {
+                return i;
+            }
+        }
+        throw new RuntimeException("Subscription \"" + title + "\" not found");
+    }
+
+    private By getSubscriptionWithTitleAt(String title, int expectedIndex) {
+        return By.xpath("(//*[@id='subscription-settings']//*[contains(@class, 'settings-item')])[" + (expectedIndex + 1) + "]//span[.='" + title + "']");
+    }
+
+    private WebElement getMoveDownButtonOfSubscription(String title) {
+        return browser.findElement(By.xpath(
+                "//*[@id='subscription-settings']//*[contains(@class, 'settings-item') and .//span[.='" + title + "']]//form//button[@title='Move down']"));
+    }
+
+    private WebElement getMoveUpButtonOfSubscription(String title) {
+        return browser.findElement(By.xpath(
+                "//*[@id='subscription-settings']//*[contains(@class, 'settings-item') and .//span[.='" + title + "']]//form//button[@title='Move up']"));
+    }
+
+    public void moveSubscriptionDown(String groupTitle, String title) {
+        int expectedIndex = subscriptionIndexOf(groupTitle, title) + 1;
+        getMoveDownButtonOfSubscription(title).click();
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(title, expectedIndex)));
+    }
+
+    public void moveSubscriptionUp(String groupTitle, String title) {
+        int expectedIndex = subscriptionIndexOf(groupTitle, title) - 1;
+        getMoveUpButtonOfSubscription(title).click();
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(title, expectedIndex)));
+    }
+
+    private static By getSubscriptionTitleLocator(String title) {
+        return By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'settings-item')]//span[.='" + title + "']");
+    }
+
+    public void editSubscriptionTitle(String title) {
+        browser.findElement(getSubscriptionTitleLocator(title)).click();
+    }
+
+    public WebElement getSubscriptionTitleFieldForEditing(String title) {
+        return browser.findElement(
+                By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'settings-item') and .//span[.='" + title + "']]//form//input[@type='text']"));
+    }
+
+    private WebElement getRenameButtonOfSubscription(String title) {
+        return browser.findElement(By
+                .xpath("//*[@id='subscription-settings']//*[contains(@class, 'settings-item') and .//span[.='" + title + "']]//form//button[@title='Update']"));
+    }
+
+    public void renameSubscription(String groupTitle, String from, String to) {
+        int expectedIndex = subscriptionIndexOf(groupTitle, from);
+        editSubscriptionTitle(from);
+        WebElement titleField = getSubscriptionTitleFieldForEditing(from);
+        titleField.clear();
+        titleField.sendKeys(to);
+        getRenameButtonOfSubscription(from).click();
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(to, expectedIndex)));
+    }
+
+    private WebElement getDeleteButtonOfSubscription(String title) {
+        return browser.findElement(By.xpath(
+                "//*[@id='subscription-settings']//*[contains(@class, 'settings-item') and .//span[.='" + title + "']]//form//button[@title='Unsubscribe']"));
+    }
+
+    public void deleteSubscription(String groupTitle, String title) {
+        int expectedCount = getSubscriptionItems(groupTitle).size() - 1;
+        getDeleteButtonOfSubscription(title).click();
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(
+                ExpectedConditions.numberOfElementsToBe(By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'settings-item')]"), expectedCount));
     }
 
 }

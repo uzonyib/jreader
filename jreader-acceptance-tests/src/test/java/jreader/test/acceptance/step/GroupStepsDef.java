@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import jreader.test.acceptance.page.HomePage;
@@ -89,6 +90,14 @@ public class GroupStepsDef extends StepDefs {
 
     @When("^he creates the following groups:$")
     public void createGroups(List<String> titles) {
+        for (String title : titles) {
+            groupTitles.add(title);
+            settingsPage.createGroup(title);
+        }
+    }
+
+    @Given("^he has the following groups:$")
+    public void he_has_the_following_groups(List<String> titles) {
         for (String title : titles) {
             groupTitles.add(title);
             settingsPage.createGroup(title);

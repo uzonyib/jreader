@@ -95,8 +95,17 @@ public class Menu {
     }
 
     public WebElement getGroupUnreadCount(String title) {
-        return browser.findElement(By.xpath("//*[@id='menu']" + "//*[contains(@class, 'group-item') and //span[contains(@class, 'title') and .='" + title
-                + "']]" + "//*[contains(@class, 'unread-count')]"));
+        return browser.findElement(By.xpath("//*[@id='menu']//*[contains(@class, 'group-item') and //span[contains(@class, 'title') and .='" + title
+                + "']]//*[contains(@class, 'unread-count')]"));
+    }
+
+    public void expandGroup(String title) {
+        browser.findElement(By.xpath("//*[@id='menu']//*[contains(@class, 'group-item') and .//span[contains(@class, 'title') and .='" + title + "']]/span[1]"))
+                .click();
+    }
+
+    public WebElement getSubscriptionMenuItem(String title) {
+        return browser.findElement(By.xpath("//*[@id='menu']//*[contains(@class, 'feed-item') and .//span[contains(@class, 'title') and .='" + title + "']]"));
     }
 
     public List<WebElement> getArchiveMenuItems() {

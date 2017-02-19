@@ -2,6 +2,7 @@ package jreader.test.acceptance.page;
 
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -36,6 +37,11 @@ public class HomePage {
 
     public boolean isDisplayed() {
         return mainContent != null && mainContent.isDisplayed();
+    }
+
+    public boolean isSubscriptionDisplayed(String title) {
+        return browser.findElement(By.xpath("(//*[contains(@class, 'subscription-stat')]/span[contains(@class, 'title') and .='" + title + "'])"))
+                .isDisplayed();
     }
 
 }

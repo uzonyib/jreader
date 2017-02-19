@@ -12,6 +12,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>jreader</groupId>
+            <artifactId>jreader-test</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

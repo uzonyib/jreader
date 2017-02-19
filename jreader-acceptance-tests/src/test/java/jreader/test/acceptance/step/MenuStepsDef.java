@@ -2,6 +2,8 @@ package jreader.test.acceptance.step;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cucumber.api.java.en.Then;
@@ -96,6 +98,23 @@ public class MenuStepsDef extends StepDefs {
     @Then("^the all items menu item is displayed$")
     public void checkAllItemsMenuItemIsDisplayed() {
         assertThat(menu.getAllItemsMenuItem().isDisplayed()).isTrue();
+    }
+
+    @When("^the user expands the \"([^\"]*)\" group menu item$")
+    public void expandGroupMenuItem(String title) {
+        menu.expandGroup(title);
+    }
+
+    @Then("^the subscription \"([^\"]*)\" is displayed in the menu$")
+    public void checkSubscriptionMenuItemIsDisplayed(String title) {
+        assertThat(menu.getSubscriptionMenuItem(title).isDisplayed()).isTrue();
+    }
+
+    @Then("^the following subscriptions are displayed in the menu:$")
+    public void checkSubscriptionMenuItemsAreDisplayed(List<String> subscriptionTitles) {
+        for (String title : subscriptionTitles) {
+            checkSubscriptionMenuItemIsDisplayed(title);
+        }
     }
 
 }
