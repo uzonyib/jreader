@@ -6,8 +6,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import jreader.test.acceptance.page.ArchivesPage;
 import jreader.test.acceptance.page.HomePage;
 import jreader.test.acceptance.page.ItemsPage;
 import jreader.test.acceptance.page.SettingsPage;
@@ -23,6 +25,8 @@ public class MenuStepsDef extends StepDefs {
     private SettingsPage settingsPage;
     @Autowired
     private ItemsPage itemsPage;
+    @Autowired
+    private ArchivesPage archivesPage;
 
     @When("^he selects the settings menu item$")
     public void selectSettingsMenuItem() {
@@ -115,6 +119,47 @@ public class MenuStepsDef extends StepDefs {
         for (String title : subscriptionTitles) {
             checkSubscriptionMenuItemIsDisplayed(title);
         }
+    }
+
+    @When("^he navigates to the all items page$")
+    public void navigateToAllItemsPage() {
+        menu.openAllItemsPage();
+        itemsPage.waitForPostsToLoad();
+    }
+
+    @When("^the user clicks group \"([^\"]*)\" in the menu$")
+    public void selectGroup(String title) {
+        menu.openGroup(title);
+        itemsPage.waitForPostsToLoad();
+    }
+
+    @When("^he clicks subscription \"([^\"]*)\" in the menu$")
+    public void selectSubscription(String title) {
+        menu.openSubscription(title);
+        itemsPage.waitForPostsToLoad();
+    }
+
+    @Given("^the user is viewing all unread posts$")
+    public void navigateToAllItems() {
+        menu.getAllItemsMenuItem().click();
+        itemsPage.waitForPostsToLoad();
+    }
+
+    @When("^he opens the archives view$")
+    @Given("^the user is viewing all archived posts$")
+    public void openArchives() {
+        menu.openArchives();
+    }
+
+    @Given("^the user expanded the archives menu item$")
+    public void expandArchives() {
+        menu.expandArchives();
+    }
+
+    @When("^he clicks archive \"([^\"]*)\" in the menu$")
+    public void selectArchiveInMenu(String title) {
+        menu.openArchive(title);
+        archivesPage.waitForPostsToLoad();
     }
 
 }

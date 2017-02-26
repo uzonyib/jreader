@@ -12,7 +12,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import jreader.test.acceptance.page.ArchivesPage;
 import jreader.test.acceptance.page.HomePage;
+import jreader.test.acceptance.page.ItemsPage;
 import jreader.test.acceptance.page.SettingsPage;
 import jreader.test.acceptance.util.Constants;
 
@@ -21,8 +23,14 @@ public class Menu {
 
     private WebDriver browser;
 
+    @Autowired
     private HomePage homePage;
+    @Autowired
     private SettingsPage settingsPage;
+    @Autowired
+    private ItemsPage itemsPage;
+    @Autowired
+    private ArchivesPage archivesPage;
 
     @FindBy(id = "menu")
     private WebElement mainContent;
@@ -42,11 +50,17 @@ public class Menu {
     @FindBy(css = "#menu .group-item .title")
     private List<WebElement> groupMenuItems;
 
+    @FindBy(id = "archives-menu-item")
+    private WebElement archivesMenuItem;
+
     @FindBy(xpath = "//*[@id='archives-menu-item']/span[1]")
     private WebElement archivesMenuItemExpander;
 
     @FindBy(css = "#menu .archive-item .title")
     private List<WebElement> archiveMenuItems;
+
+    @FindBy(css = "#all-items-menu-item .badge")
+    private WebElement allItemsUnreadCount;
 
     @Autowired
     public Menu(WebDriver browser) {
@@ -74,6 +88,16 @@ public class Menu {
         new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.visibilityOf(settingsPage.getMainContent()));
     }
 
+    public void openAllItemsPage() {
+        allItemsMenuItem.click();
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.visibilityOf(itemsPage.getMainContent()));
+    }
+
+    public void openArchives() {
+        archivesMenuItem.click();
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.visibilityOf(archivesPage.getMainContent()));
+    }
+
     public WebElement getLogoutButton() {
         return logoutButton;
     }
@@ -94,14 +118,32 @@ public class Menu {
         return groupMenuItems;
     }
 
-    public WebElement getGroupUnreadCount(String title) {
-        return browser.findElement(By.xpath("//*[@id='menu']//*[contains(@class, 'group-item') and //span[contains(@class, 'title') and .='" + title
-                + "']]//*[contains(@class, 'unread-count')]"));
+    public String getAllItemsUnreadCount() {
+        return allItemsUnreadCount.getText();
+    }
+
+    public String getGroupUnreadCount(String title) {
+        return browser.findElement(By.xpath("//*[@id='menu']//*[contains(@class, 'group-item') and .//span[contains(@class, 'title') and .='" + title
+                + "']]//*[contains(@class, 'count')]")).getText();
+    }
+
+    public String getSubscriptionUnreadCount(String title) {
+        return browser.findElement(By.xpath(
+                "//*[@id='menu']//*[contains(@class, 'feed-item') and .//span[contains(@class, 'title') and .='" + title + "']]//*[contains(@class, 'count')]"))
+                .getText();
     }
 
     public void expandGroup(String title) {
         browser.findElement(By.xpath("//*[@id='menu']//*[contains(@class, 'group-item') and .//span[contains(@class, 'title') and .='" + title + "']]/span[1]"))
                 .click();
+    }
+
+    public void openGroup(String title) {
+        browser.findElement(By.xpath("//*[@id='menu']//*[contains(@class, 'group-item')]//span[contains(@class, 'title') and .='" + title + "']")).click();
+    }
+
+    public void openSubscription(String title) {
+        getSubscriptionMenuItem(title).click();
     }
 
     public WebElement getSubscriptionMenuItem(String title) {
@@ -114,6 +156,10 @@ public class Menu {
 
     public void expandArchives() {
         archivesMenuItemExpander.click();
+    }
+
+    public void openArchive(String title) {
+        browser.findElement(By.xpath("//*[@id='menu']//*[contains(@class, 'archive-item')]//span[contains(@class, 'title') and .='" + title + "']")).click();
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -97,6 +98,18 @@ public class SubscriptionStepsDef {
     @When("^the user unsubscribes from \"([^\"]*)\" of group \"([^\"]*)\":$")
     public void unsubscribe(String title, String groupTitle) {
         settingsPage.getSubscriptionSettingsForm().deleteSubscription(groupTitle, title);
+    }
+
+    @Given("^he subscribed to the following feeds:$")
+    public void subscribe(DataTable table) {
+        for (List<String> row : table.raw()) {
+            enterFeedUrl(row.get(3));
+            selectGroup(row.get(0));
+            clickSubscribeButton();
+            if (!row.get(1).equals(row.get(2))) {
+                renameSubscription(row.get(1), row.get(0), row.get(2));
+            }
+        }
     }
 
 }

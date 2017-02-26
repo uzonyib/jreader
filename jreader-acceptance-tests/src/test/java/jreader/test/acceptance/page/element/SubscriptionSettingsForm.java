@@ -133,8 +133,9 @@ public class SubscriptionSettingsForm {
         throw new RuntimeException("Subscription \"" + title + "\" not found");
     }
 
-    private By getSubscriptionWithTitleAt(String title, int expectedIndex) {
-        return By.xpath("(//*[@id='subscription-settings']//*[contains(@class, 'settings-item')])[" + (expectedIndex + 1) + "]//span[.='" + title + "']");
+    private By getSubscriptionWithTitleAt(String groupTitle, String title, int expectedIndex) {
+        return By.xpath("(//*[@id='subscription-settings']//*[contains(@class, 'settings-group') and .//span[contains(@class, 'title') and .='" + groupTitle
+                + "']]//*[contains(@class, 'settings-item')])[" + (expectedIndex + 1) + "]//span[.='" + title + "']");
     }
 
     private WebElement getMoveDownButtonOfSubscription(String title) {
@@ -150,13 +151,15 @@ public class SubscriptionSettingsForm {
     public void moveSubscriptionDown(String groupTitle, String title) {
         int expectedIndex = subscriptionIndexOf(groupTitle, title) + 1;
         getMoveDownButtonOfSubscription(title).click();
-        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(title, expectedIndex)));
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT)
+                .until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(groupTitle, title, expectedIndex)));
     }
 
     public void moveSubscriptionUp(String groupTitle, String title) {
         int expectedIndex = subscriptionIndexOf(groupTitle, title) - 1;
         getMoveUpButtonOfSubscription(title).click();
-        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(title, expectedIndex)));
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT)
+                .until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(groupTitle, title, expectedIndex)));
     }
 
     private static By getSubscriptionTitleLocator(String title) {
@@ -184,7 +187,8 @@ public class SubscriptionSettingsForm {
         titleField.clear();
         titleField.sendKeys(to);
         getRenameButtonOfSubscription(from).click();
-        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(to, expectedIndex)));
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT)
+                .until(ExpectedConditions.presenceOfElementLocated(getSubscriptionWithTitleAt(groupTitle, to, expectedIndex)));
     }
 
     private WebElement getDeleteButtonOfSubscription(String title) {

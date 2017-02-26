@@ -98,6 +98,7 @@ public class GroupStepsDef extends StepDefs {
 
     @Given("^he has the following groups:$")
     public void he_has_the_following_groups(List<String> titles) {
+        menu.openSettingsPage();
         for (String title : titles) {
             groupTitles.add(title);
             settingsPage.createGroup(title);

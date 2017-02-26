@@ -91,6 +91,7 @@ public class LoginStepsDef extends StepDefs {
 
     private void generateUsername() {
         this.username = UUID.randomUUID().toString() + "@jreader.com";
+        System.out.println("user: " + username);
     }
 
 }
