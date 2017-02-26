@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import jreader.test.acceptance.page.LoginPage;
 import jreader.test.acceptance.util.Constants;
 
 public class LoginStepsDef extends StepDefs {
+
+    private static final Logger LOG = Logger.getLogger(LoginStepsDef.class.getName());
 
     @Autowired
     private WebDriver browser;
@@ -91,7 +94,7 @@ public class LoginStepsDef extends StepDefs {
 
     private void generateUsername() {
         this.username = UUID.randomUUID().toString() + "@jreader.com";
-        System.out.println("user: " + username);
+        LOG.info("Current user: " + username);
     }
 
 }

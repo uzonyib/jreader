@@ -29,7 +29,7 @@ Feature: Post management
         | SFR   | Best books of 2016             |
         | F1    | Williams unveils new F1 car    |
         | JZone | JVM performance monitoring     |
-        And the unread count of all groups in 5
+        And the unread count of all groups is 5
         And the unread counts of groups are:
         | Books  | 1 |
         | Java   | 3 |

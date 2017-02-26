@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import jreader.test.acceptance.page.element.ArchiveForm;
 import jreader.test.acceptance.page.element.ArchiveSettingsForm;
+import jreader.test.acceptance.page.element.BackupForm;
 import jreader.test.acceptance.page.element.GroupForm;
 import jreader.test.acceptance.page.element.SubscriptionForm;
 import jreader.test.acceptance.page.element.SubscriptionSettingsForm;
@@ -30,6 +31,9 @@ public class SettingsPage {
     private ArchiveForm archiveForm;
     @Autowired
     private ArchiveSettingsForm archiveSettingsForm;
+
+    @Autowired
+    private BackupForm backupForm;
 
     @Autowired
     public SettingsPage(WebDriver browser) {
@@ -58,6 +62,10 @@ public class SettingsPage {
 
     public ArchiveSettingsForm getArchiveSettingsForm() {
         return archiveSettingsForm;
+    }
+
+    public BackupForm getBackupForm() {
+        return backupForm;
     }
 
     public boolean isDisplayed() {

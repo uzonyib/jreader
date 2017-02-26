@@ -203,4 +203,8 @@ public class SubscriptionSettingsForm {
                 ExpectedConditions.numberOfElementsToBe(By.xpath("//*[@id='subscription-settings']//*[contains(@class, 'settings-item')]"), expectedCount));
     }
 
+    public void waitForSubscriptionToBeCreated(String title) {
+        new WebDriverWait(browser, Constants.WAIT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(getSubscriptionTitleLocator(title)));
+    }
+
 }

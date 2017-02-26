@@ -36,7 +36,7 @@ public class PostStepsDef extends StepDefs {
         }
     }
 
-    @Then("^the unread count of all groups in (\\d+)$")
+    @Then("^the unread count of all groups is (\\d+)$")
     public void checkAllItemsUnreadCount(String count) {
         assertThat(menu.getAllItemsUnreadCount()).isEqualTo(count);
     }
