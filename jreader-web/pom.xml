@@ -11,11 +11,6 @@
     <packaging>war</packaging>
     <artifactId>jreader-web</artifactId>
     
-    <properties>
-        <war.excludes>feeds/**</war.excludes>
-        <app.version>${project.version}</app.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>jreader</groupId>
@@ -30,16 +25,26 @@
             <artifactId>objectify</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-legacy</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -58,20 +63,24 @@
             <version>1.1.2</version>
         </dependency>
         <dependency>
+            <groupId>jreader</groupId>
+            <artifactId>jreader-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.concordion</groupId>
             <artifactId>concordion</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jreader</groupId>
-            <artifactId>jreader-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

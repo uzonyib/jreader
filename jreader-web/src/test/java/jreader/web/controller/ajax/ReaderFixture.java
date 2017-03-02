@@ -23,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
 
 import jreader.dao.PostFilter.PostType;
@@ -37,6 +36,7 @@ import jreader.dto.PostDto;
 import jreader.dto.SubscriptionDto;
 import jreader.services.CronService;
 import jreader.services.DateHelper;
+import jreader.services.FeedFetcher;
 import jreader.services.RssService;
 import jreader.services.ServiceException;
 import jreader.services.StatService;

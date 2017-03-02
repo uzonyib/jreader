@@ -4,13 +4,13 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jreader.dto.RssFetchResult;
-import jreader.services.RssService;
-
 import org.springframework.core.convert.ConversionService;
 
-import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
+
+import jreader.dto.RssFetchResult;
+import jreader.services.FeedFetcher;
+import jreader.services.RssService;
 
 public class RssServiceImpl implements RssService {
 

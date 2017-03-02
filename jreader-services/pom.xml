@@ -6,7 +6,6 @@
         <artifactId>jreader</artifactId>
         <groupId>jreader</groupId>
         <version>1.1.5-SNAPSHOT</version>
-        <relativePath>..</relativePath>
     </parent>
     <artifactId>jreader-services</artifactId>
     
@@ -29,11 +28,7 @@
         </dependency>
         <dependency>
             <groupId>com.rometools</groupId>
-            <artifactId>rome-fetcher</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
+            <artifactId>rome</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -48,22 +43,27 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-testng</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     

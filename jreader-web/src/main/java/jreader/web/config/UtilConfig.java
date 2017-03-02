@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 
-import com.rometools.fetcher.impl.HttpURLFeedFetcher;
-
 import jreader.converter.ArchiveDtoConverter;
 import jreader.converter.ArchivedPostConverter;
 import jreader.converter.ArchivedPostDtoConverter;
@@ -25,6 +23,7 @@ import jreader.converter.UserDtoConverter;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
 import jreader.services.impl.DateHelperImpl;
+import jreader.services.impl.FeedFetcherImpl;
 import jreader.services.impl.RssServiceImpl;
 
 @Configuration
@@ -54,7 +53,7 @@ public class UtilConfig {
 
     @Bean
     public RssService rssService() {
-        return new RssServiceImpl(new HttpURLFeedFetcher(), conversionService());
+        return new RssServiceImpl(new FeedFetcherImpl(), conversionService());
     }
 
     @Bean

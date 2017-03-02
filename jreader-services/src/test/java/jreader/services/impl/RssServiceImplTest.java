@@ -14,11 +14,11 @@ import org.springframework.core.convert.ConversionService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.rometools.fetcher.FeedFetcher;
 import com.rometools.rome.feed.synd.SyndFeed;
 
 import jreader.domain.Feed;
 import jreader.dto.RssFetchResult;
+import jreader.services.FeedFetcher;
 
 public class RssServiceImplTest {
 
