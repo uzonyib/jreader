@@ -5,7 +5,7 @@
     
     <groupId>jreader</groupId>
     <artifactId>jreader</artifactId>
-    <version>1.1.5</version>
+    <version>1.1.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <modules>
@@ -35,7 +35,7 @@
     
     <scm>
         <developerConnection>scm:git:https://github.com/uzonyib/jreader.git</developerConnection>
-        <tag>jreader-1.1.5</tag>
+        <tag>jreader-1.0.7</tag>
     </scm>
     
     <dependencyManagement>
