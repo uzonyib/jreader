@@ -11,6 +11,10 @@
     <packaging>war</packaging>
     <artifactId>jreader-web</artifactId>
     
+    <properties>
+        <app.version>${project.version}</app.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>jreader</groupId>
