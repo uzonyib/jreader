@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>jreader</groupId>
-            <artifactId>jreader-test</artifactId>
+            <artifactId>jreader-feed-client</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

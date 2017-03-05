@@ -7,6 +7,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import jreader.feed.client.FeedApiClient;
+import jreader.feed.client.FeedApiClientImpl;
+
 @Configuration
 @ComponentScan("jreader.test.acceptance")
 public class CucumberTestConfiguration {
@@ -20,8 +23,8 @@ public class CucumberTestConfiguration {
     }
 
     @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    public FeedApiClient feedApiClient() {
+        return new FeedApiClientImpl("http://localhost:8081", new RestTemplate());
     }
 
 }

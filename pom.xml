@@ -10,7 +10,9 @@
     
     <modules>
         <module>jreader-test</module>
-        <module>jreader-feed-server</module>
+        <module>jreader-feed-model</module>
+        <module>jreader-feed-api</module>
+        <module>jreader-feed-client</module>
         <module>jreader-dao</module>
         <module>jreader-services</module>
         <module>jreader-web</module>
@@ -42,6 +44,21 @@
         <dependencies>
             <dependency>
                 <groupId>jreader</groupId>
+                <artifactId>jreader-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jreader</groupId>
+                <artifactId>jreader-feed-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jreader</groupId>
+                <artifactId>jreader-feed-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jreader</groupId>
                 <artifactId>jreader-dao</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -55,11 +72,6 @@
                 <artifactId>jreader-web</artifactId>
                 <version>${project.version}</version>
                 <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>jreader</groupId>
-                <artifactId>jreader-test</artifactId>
-                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.appengine</groupId>
