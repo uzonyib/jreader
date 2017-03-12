@@ -1,4 +1,4 @@
-package jreader.feed.api.service;
+package jreader.feed.api.service.impl;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;

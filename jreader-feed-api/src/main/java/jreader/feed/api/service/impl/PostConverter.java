@@ -1,4 +1,4 @@
-package jreader.feed.api.service;
+package jreader.feed.api.service.impl;
 
 import java.util.Calendar;
 
