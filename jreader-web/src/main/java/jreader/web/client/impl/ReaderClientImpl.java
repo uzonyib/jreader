@@ -32,7 +32,22 @@ public class ReaderClientImpl implements ReaderClient {
 
     @Override
     public void renameGroup(final Long groupId, final String title) {
-        final URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("reader", "groups", String.valueOf(groupId), "title").queryParam("value", title).build().toUri();
+        final URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("reader", "groups", String.valueOf(groupId), "title").queryParam("value", title)
+                .build().toUri();
+        restTemplate.put(uri, null);
+    }
+
+    @Override
+    public void moveGroupUp(final Long groupId) {
+        final URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("reader", "groups", String.valueOf(groupId), "order").queryParam("up", true)
+                .build().toUri();
+        restTemplate.put(uri, null);
+    }
+
+    @Override
+    public void moveGroupDown(final Long groupId) {
+        final URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("reader", "groups", String.valueOf(groupId), "order").queryParam("up", false)
+                .build().toUri();
         restTemplate.put(uri, null);
     }
 
