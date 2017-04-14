@@ -84,13 +84,16 @@ public class GroupServiceImplTest extends ServiceTest {
 
         user = new User("user", Role.USER, 1L);
 
+        when(Ref.create(user)).thenReturn(userRef);
+        when(userRef.get()).thenReturn(user);
+
         group = Group.builder().user(user).id(0L).title("group 0").order(1).build();
         group1 = Group.builder().user(user).id(1L).title("group 1").order(2).build();
         group2 = Group.builder().user(user).id(2L).title("group 2").order(3).build();
 
-        groupDto = new GroupDto("0", "group", 1);
-        groupDto1 = new GroupDto("1", "group1", 2);
-        groupDto2 = new GroupDto("2", "group2", 3);
+        groupDto = GroupDto.builder().id(0L).title("group").order(1).build();
+        groupDto1 = GroupDto.builder().id(1L).title("group1").order(2).build();
+        groupDto2 = GroupDto.builder().id(2L).title("group2").order(3).build();
 
         subscriptionDto = new SubscriptionDto("0", "subscription", null, 1000L, 1);
         subscriptionDto1 = new SubscriptionDto("1", "subscription1", null, 2000L, 2);
@@ -98,9 +101,6 @@ public class GroupServiceImplTest extends ServiceTest {
 
         sut = new GroupServiceImpl(DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).build(),
                 conversionService);
-
-        when(Ref.create(user)).thenReturn(userRef);
-        when(userRef.get()).thenReturn(user);
 
         when(userDao.find(user.getUsername())).thenReturn(user);
     }
@@ -141,6 +141,45 @@ public class GroupServiceImplTest extends ServiceTest {
 
         verify(userDao).find(user.getUsername());
         verify(groupDao).find(user, group.getTitle());
+        verifyNoMoreInteractions(groupDao);
+    }
+
+    @Test
+    public void update_ShouldUpdateTitle_IfGroupExist() {
+        final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title("new group title").order(20).build();
+        when(groupDao.find(user, groupToUpdate.getTitle())).thenReturn(null);
+        when(groupDao.find(user, groupToUpdate.getId())).thenReturn(group);
+        when(groupDao.save(any(Group.class))).thenReturn(group);
+        when(conversionService.convert(group, GroupDto.class)).thenReturn(groupDto);
+
+        final GroupDto actual = sut.update(user.getUsername(), groupToUpdate);
+
+        assertThat(actual).isEqualTo(groupDto);
+
+        verify(userDao).find(user.getUsername());
+        verify(groupDao).find(user, groupToUpdate.getTitle());
+        verify(groupDao).find(user, groupToUpdate.getId());
+        verify(groupDao).save(groupCaptor.capture());
+
+        assertThat(groupCaptor.getValue().getUser()).isEqualTo(user);
+        assertThat(groupCaptor.getValue().getTitle()).isEqualTo(groupToUpdate.getTitle());
+        assertThat(groupCaptor.getValue().getOrder()).isEqualTo(group.getOrder());
+    }
+
+    @Test
+    public void update_ShouldThrowException_IfTitleAlreadyExists() {
+        final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title(group1.getTitle()).order(group.getOrder()).build();
+        when(groupDao.find(user, groupToUpdate.getTitle())).thenReturn(group1);
+
+        try {
+            sut.update(user.getUsername(), groupToUpdate);
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getStatus()).isEqualTo(HttpStatus.CONFLICT);
+        }
+
+        verify(userDao).find(user.getUsername());
+        verify(groupDao).find(user, groupToUpdate.getTitle());
         verifyNoMoreInteractions(groupDao);
     }
 

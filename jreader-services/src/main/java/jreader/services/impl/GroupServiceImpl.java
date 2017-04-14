@@ -1,6 +1,7 @@
 package jreader.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.core.convert.ConversionService;
@@ -60,15 +61,36 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
     @Override
     public GroupDto create(final String username, final String title) {
         if (title == null || "".equals(title)) {
-            throw new ServiceException("Group title invalid.", HttpStatus.BAD_REQUEST);
+            throw new ServiceException("Invalid group title.", HttpStatus.BAD_REQUEST);
         }
         final User user = this.getUser(username);
         if (groupDao.find(user, title) != null) {
             throw new ServiceException("Group already exists.", HttpStatus.CONFLICT);
         }
-        final Group group = groupDao.save(Group.builder().user(user).title(title)
-                .order(groupDao.getMaxOrder(user) + 1).build());
-        return conversionService.convert(group, GroupDto.class);
+
+        final Group entity = groupDao.save(Group.builder().user(user).title(title).order(groupDao.getMaxOrder(user) + 1).build());
+
+        final GroupDto result = conversionService.convert(entity, GroupDto.class);
+        result.setSubscriptions(Collections.<SubscriptionDto>emptyList());
+        return result;
+    }
+
+    @Override
+    public GroupDto update(final String username, final GroupDto group) {
+        if (group.getTitle() == null || "".equals(group.getTitle())) {
+            throw new ServiceException("Invalid group title.", HttpStatus.BAD_REQUEST);
+        }
+        final User user = this.getUser(username);
+        if (groupDao.find(user, group.getTitle()) != null) {
+            throw new ServiceException("Group with this title already exists.", HttpStatus.CONFLICT);
+        }
+
+        final Group entity = this.getGroup(user, group.getId());
+        entity.setTitle(group.getTitle());
+
+        final GroupDto result = conversionService.convert(groupDao.save(entity), GroupDto.class);
+        result.setSubscriptions(Collections.<SubscriptionDto>emptyList());
+        return result;
     }
 
     @Override

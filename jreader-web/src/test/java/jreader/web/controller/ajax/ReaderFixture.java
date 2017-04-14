@@ -99,6 +99,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     private FeedRegistry feedRegistry = new FeedRegistry();
     
+    private int groupOrder = 0;
+    
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -152,24 +154,27 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         return (List<GroupDto>) groupController.listAll(principal).getPayload();
     }
     
-    public Long createGroup(String title) {
+    public Long createGroup(String title, int order) {
         try {
-            List<GroupDto> groups = (List<GroupDto>) groupController.create(principal, "empty string".equals(title) ? "" : title)
-                    .getPayload();
-            return Long.valueOf(groups.get(groups.size() - 1).getId());
-        } catch (ServiceException e) {
+            GroupDto result = groupController.create(principal, GroupDto.builder().title("empty string".equals(title) ? "" : title).order(order).build());
+            return result.getId();
+        } catch (Exception e) {
             return null;
         }
     }
-    
+
+    public Long createGroup(String title) {
+        return createGroup(title, groupOrder++);
+    }
+
     public void deleteGroup(Long id) {
         groupController.delete(principal, id);
     }
     
     public void entitleGroup(Long id, String title) {
         try {
-            groupController.entitle(principal, id, "empty string".equals(title) ? "" : title);
-        } catch (ServiceException e) {
+            groupController.update(principal, id, GroupDto.builder().title("empty string".equals(title) ? "" : title).build());
+        } catch (Exception e) {
             
         }
     }

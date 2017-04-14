@@ -53,14 +53,14 @@
 				</form>
 			</td>
 			<td>
-				<form class="form" data-ng-if="!$first" data-ng-submit="moveGroupUp(group.id)">
+				<form class="form" data-ng-if="!$first" data-ng-submit="swapGroups($index - 1, $index);moveGroupUp(group.id);">
 					<button type="submit" class="btn btn-default" title="Move up">
 						<span class="glyphicon glyphicon-arrow-up"></span>
 					</button>
 				</form>
 			</td>
 			<td>
-				<form class="form" data-ng-if="!$last" data-ng-submit="moveGroupDown(group.id)">
+				<form class="form" data-ng-if="!$last" data-ng-submit="swapGroups($index, $index + 1);moveGroupDown(group.id);">
 					<button type="submit" class="btn btn-default" title="Move down">
 						<span class="glyphicon glyphicon-arrow-down"></span>
 					</button>

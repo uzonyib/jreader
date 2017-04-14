@@ -34,7 +34,7 @@
 		
 		<p>
 			Given <span concordion:execute="initUser(#TEXT)">subscription_user</span> is a new user<br/>
-			when he creates a new group with title <span concordion:execute="#groupId1 = createGroup(#TEXT)">group1</span><br/>
+			when he creates a new group with title <span concordion:execute="#groupId1 = createGroup(#TEXT)">group1</span> <br/>
 			then the subscription size of group #<span concordion:echo="#groupId1"></span> is <span concordion:assertEquals="getSubscriptionCount(#groupId1)">0</span>.
 		</p>
 		
@@ -45,46 +45,38 @@
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
 			<tr>
-	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
 	       		<th concordion:echo="#subscription.groupId">Group ID</th>
-	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
+	       		<th concordion:assertEquals="#subscription.groupTitle">Group title</th>
 	       		<th concordion:echo="#subscription.id">Subscription ID</th>
+	       		<th concordion:assertEquals="#subscription.title">Subscription title</th>
 	       	</tr>
 	       	<tr>
+	       		<td></td>
 	       		<td>group1</td>
 	       		<td></td>
 	       		<td>feed1</td>
-	       		<td></td>
 	       	</tr>
 	   	</table>
 	   	
 	   	<p>
-			Given the user subscribed the following feeds:
+			Given the user subscribed to the following feeds:
 		</p>
 		<table>
 	       	<tr>
 	       		<th>Group title</th>
-	       		<th>Group ID</th>
 	       		<th>Subscription title</th>
-	       		<th>Subscription ID</th>
 	       	</tr>
 	       	<tr>
 	       		<td>group1</td>
-	       		<td concordion:echo="#groupId1"></td>
 	       		<td concordion:execute="#subscriptionId2 = subscribe(#TEXT, #groupId1)">feed2</td>
-	       		<td concordion:echo="#subscriptionId2"></td>
 	       	</tr>
 	       	<tr>
 	       		<td concordion:execute="#groupId2 = createGroup(#TEXT)">group2</td>
-	       		<td concordion:echo="#groupId2"></td>
 	       		<td concordion:execute="#subscriptionId3 = subscribe(#TEXT, #groupId2)">feed3</td>
-	       		<td concordion:echo="#subscriptionId3"></td>
 	       	</tr>
 	       	<tr>
 	       		<td concordion:execute="#groupId3 = createGroup(#TEXT)">group3</td>
-	       		<td concordion:echo="#groupId3"></td>
 	       		<td concordion:execute="#subscriptionId4 = subscribe(#TEXT, #groupId3)">feed4</td>
-	       		<td concordion:echo="#subscriptionId4"></td>
 	       	</tr>
 	   	</table>
 		<p>

@@ -15,6 +15,40 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		$scope.groups.setItems(response.payload);
 	};
 	
+	$scope.groups.add = function(response) {
+		$scope.groups.items.push(response);
+	};
+	
+	$scope.groups.update = function(response) {
+		var index = $scope.groups.indexOf(response.id);
+		$scope.groups.items[index] = response;
+		console.log($scope.groups.items);
+	};
+	
+	$scope.groups.remove = function(id) {
+		$scope.groups.items.splice($scope.groups.indexOf(id), 1);
+	};
+	
+	$scope.groups.indexOf = function(id) {
+		var index = null;
+		angular.forEach($scope.groups.items, function(item, idx) {
+			if (angular.equals(id, item.id)) {
+				index = idx;
+			}
+		});
+		return index;
+	};
+	
+	$scope.groups.size = function() {
+		return $scope.groups.items.length;
+	};
+	
+	$scope.groups.swap = function(index1, index2) {
+		var group = $scope.groups.items[index1];
+		$scope.groups.items[index1] = $scope.groups.items[index2];
+		$scope.groups.items[index2] = group;
+	};
+	
 	$scope.groups.setItems = function(items) {
 		$scope.groups.items = items;
 		var count = 0;

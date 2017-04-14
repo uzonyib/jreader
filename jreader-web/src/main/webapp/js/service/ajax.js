@@ -49,11 +49,14 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
         });
     };
     
-    this.createGroup = function(title) {
+    this.createGroup = function(title, order) {
     	return $http({
 			method: "POST",
 			url: "/reader/groups",
-            params: { "title": title }
+            data: {
+            	"title": title,
+            	"order": order
+            }
         });
 	};
 	
@@ -67,8 +70,8 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
 	this.entitleGroup = function(groupId, title) {
 		return $http({
 			method: "PUT",
-			url: "/reader/groups/" + groupId + "/title",
-            params: { "value": title }
+			url: "/reader/groups/" + groupId,
+            data: { "title": title }
         });
 	};
 	

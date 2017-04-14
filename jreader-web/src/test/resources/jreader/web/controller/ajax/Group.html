@@ -12,7 +12,7 @@
 		</p>
 		
 		<p>
-			When the user creates a new group with title <span concordion:execute="#groupId1 = createGroup(#TEXT)">group1</span><br/>
+			When the user creates a new group with title <span concordion:set="#title">group1</span> and order <span concordion:execute="#groupId1 = createGroup(#title, #TEXT)">0</span><br/>
 			then the group count is <span concordion:assertEquals="getGroupCount()">1</span><br/>
 			and the group list contains:
 		</p>
@@ -20,15 +20,17 @@
 			<tr>
 				<th concordion:echo="#group.id">ID</th>
 				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
 				<td></td>
 				<td>group1</td>
+				<td>0</td>
 			</tr>
 		</table>
 		
 		<p>
-			When the user tries to create a new group with <span concordion:execute="createGroup(#TEXT)">empty string</span> as title<br/>
+			When the user tries to create a new group with <span concordion:set="#title">empty string</span> as title and order <span concordion:execute="createGroup(#title, #TEXT)">1</span><br/>
 			then the group count is still <span concordion:assertEquals="getGroupCount()">1</span><br/>
 			and the group list contains:
 		</p>
@@ -36,15 +38,17 @@
 			<tr>
 				<th concordion:echo="#group.id">ID</th>
 				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
 				<td></td>
 				<td>group1</td>
+				<td>0</td>
 			</tr>
 		</table>
 	   	
 	   	<p>
-			When the user tries to create a new group with title <span concordion:execute="createGroup(#TEXT)">group1</span><br/>
+			When the user tries to create a new group with title <span concordion:set="#title">group1</span> and order <span concordion:execute="createGroup(#title, #TEXT)">1</span><br/>
 			then the group count is still <span concordion:assertEquals="getGroupCount()">1</span><br/>
 			and the group list contains:
 		</p>
@@ -52,10 +56,12 @@
 			<tr>
 				<th concordion:echo="#group.id">ID</th>
 				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
 				<td></td>
 				<td>group1</td>
+				<td>0</td>
 			</tr>
 		</table>
 	   	
@@ -65,19 +71,19 @@
 		<table>
 			<tr>
 				<th>Title</th>
-				<th>ID</th>
+				<th>Order</th>
 			</tr>
 			<tr>
-				<td concordion:execute="#groupId2 = createGroup(#TEXT)">group2</td>
-				<td concordion:echo="#groupId2"></td>
+				<td concordion:set="#title">group2</td>
+				<td concordion:execute="#groupId2 = createGroup(#title, #TEXT)">1</td>
 			</tr>
 			<tr>
-				<td concordion:execute="#groupId3 = createGroup(#TEXT)">group3</td>
-				<td concordion:echo="#groupId4"></td>
+				<td concordion:set="#title">group3</td>
+				<td concordion:execute="#groupId3 = createGroup(#title, #TEXT)">2</td>
 			</tr>
 			<tr>
-				<td concordion:execute="#groupId4 = createGroup(#TEXT)">group4</td>
-				<td concordion:echo="#groupId4"></td>
+				<td concordion:set="#title">group4</td>
+				<td concordion:execute="#groupId4 = createGroup(#title, #TEXT)">3</td>
 			</tr>
 		</table>
 		<p>
@@ -86,24 +92,29 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 			<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group2</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group3</td>
-				<td></td>
+				<td>2</td>
 			</tr>
 			<tr>
-				<td>group4</td>
 				<td></td>
+				<td>group4</td>
+				<td>3</td>
 			</tr>
 		</table>
 	   	
@@ -114,20 +125,24 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 			<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group2</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
-				<td>group3</td>
 				<td></td>
+				<td>group3</td>
+				<td>2</td>
 			</tr>
 		</table>
 	   	
@@ -138,20 +153,24 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 			<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>test</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
-				<td>group3</td>
 				<td></td>
+				<td>group3</td>
+				<td>2</td>
 			</tr>
 		</table>
 		
@@ -162,20 +181,24 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 			<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>test</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
-				<td>group3</td>
 				<td></td>
+				<td>group3</td>
+				<td>2</td>
 			</tr>
 		</table>
 		
@@ -186,20 +209,24 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 			<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>test</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
-				<td>group3</td>
 				<td></td>
+				<td>group3</td>
+				<td>2</td>
 			</tr>
 		</table>
 	   	
@@ -210,20 +237,24 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 			<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group3</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
-				<td>test</td>
 				<td></td>
+				<td>test</td>
+				<td>2</td>
 			</tr>
 		</table>
 	   	
@@ -234,20 +265,24 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 			<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group3</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
-				<td>test</td>
 				<td></td>
+				<td>test</td>
+				<td>2</td>
 			</tr>
 		</table>
 	   	
@@ -258,20 +293,24 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 	       	<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group3</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
-				<td>test</td>
 				<td></td>
+				<td>test</td>
+				<td>2</td>
 			</tr>
 	   	</table>
 	   	
@@ -282,20 +321,24 @@
 		</p>
 		<table concordion:verifyRows="#group : getGroups()">
 	       	<tr>
-				<th concordion:assertEquals="#group.title">Title</th>
 				<th concordion:echo="#group.id">ID</th>
+				<th concordion:assertEquals="#group.title">Title</th>
+				<th concordion:assertEquals="#group.order">Order</th>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group3</td>
-				<td></td>
+				<td>0</td>
 			</tr>
 			<tr>
+				<td></td>
 				<td>group1</td>
-				<td></td>
+				<td>1</td>
 			</tr>
 			<tr>
-				<td>test</td>
 				<td></td>
+				<td>test</td>
+				<td>2</td>
 			</tr>
 	   	</table>
 	   	
