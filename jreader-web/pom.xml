@@ -47,24 +47,14 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-legacy</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>jreader</groupId>
@@ -170,7 +160,7 @@
                     <address>0.0.0.0</address>
                     <port>8080</port>
                     <jvmFlags>
-                        <jvmFlag>-Dappengine.generated.dir=/data/jreader/appengine</jvmFlag>
+                        <jvmFlag>-Dappengine.generated.dir=/home/uzonyib/code/jreader/appengine</jvmFlag>
                         <jvmFlag>-Ddatastore.default_high_rep_job_policy_unapplied_job_pct=10</jvmFlag>
                     </jvmFlags>
                 </configuration>
