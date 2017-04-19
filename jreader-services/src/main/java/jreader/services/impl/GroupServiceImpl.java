@@ -2,7 +2,9 @@ package jreader.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
@@ -91,6 +93,40 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
         final GroupDto result = conversionService.convert(groupDao.save(entity), GroupDto.class);
         result.setSubscriptions(Collections.<SubscriptionDto>emptyList());
         return result;
+    }
+
+    @Override
+    public void reorder(final String username, final List<GroupDto> groups) {
+        final User user = this.getUser(username);
+
+        final List<Group> entities = groupDao.list(user);
+        if (groups.size() != entities.size()) {
+            throw new ServiceException("Group count does not match.", HttpStatus.BAD_REQUEST);
+        }
+
+        final Map<Long, GroupDto> groupsById = new HashMap<>();
+        for (int i = 0; i < groups.size(); ++i) {
+            final GroupDto group = groups.get(i);
+            group.setOrder(i);
+            groupsById.put(group.getId(), group);
+        }
+
+        final List<Group> entitiesToSave = new ArrayList<>();
+        for (final Group group : entities) {
+            final GroupDto groupById = groupsById.get(group.getId());
+            if (groupById == null) {
+                throw new ServiceException("Group " + group.getId() + " (" + group.getTitle() + ") not found.", HttpStatus.BAD_REQUEST);
+            }
+            final int order = groupById.getOrder();
+            if (group.getOrder() != order) {
+                group.setOrder(order);
+                entitiesToSave.add(group);
+            }
+        }
+
+        if (!entitiesToSave.isEmpty()) {
+            groupDao.saveAll(entitiesToSave);
+        }
     }
 
     @Override

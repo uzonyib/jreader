@@ -15,6 +15,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,7 @@ import jreader.dto.GroupDto;
 import jreader.dto.SubscriptionDto;
 import jreader.services.ServiceException;
 
+@PowerMockIgnore("org.springframework.http.*")
 public class GroupServiceImplTest extends ServiceTest {
 
     private GroupServiceImpl sut;
@@ -87,17 +89,17 @@ public class GroupServiceImplTest extends ServiceTest {
         when(Ref.create(user)).thenReturn(userRef);
         when(userRef.get()).thenReturn(user);
 
-        group = Group.builder().user(user).id(0L).title("group 0").order(1).build();
-        group1 = Group.builder().user(user).id(1L).title("group 1").order(2).build();
-        group2 = Group.builder().user(user).id(2L).title("group 2").order(3).build();
+        group = Group.builder().user(user).id(0L).title("group 0").order(0).build();
+        group1 = Group.builder().user(user).id(1L).title("group 1").order(1).build();
+        group2 = Group.builder().user(user).id(2L).title("group 2").order(2).build();
 
-        groupDto = GroupDto.builder().id(0L).title("group").order(1).build();
-        groupDto1 = GroupDto.builder().id(1L).title("group1").order(2).build();
-        groupDto2 = GroupDto.builder().id(2L).title("group2").order(3).build();
+        groupDto = GroupDto.builder().id(0L).title("group 0").order(0).build();
+        groupDto1 = GroupDto.builder().id(1L).title("group 1").order(1).build();
+        groupDto2 = GroupDto.builder().id(2L).title("group 2").order(2).build();
 
-        subscriptionDto = new SubscriptionDto("0", "subscription", null, 1000L, 1);
-        subscriptionDto1 = new SubscriptionDto("1", "subscription1", null, 2000L, 2);
-        subscriptionDto2 = new SubscriptionDto("2", "subscription2", null, 3000L, 3);
+        subscriptionDto = new SubscriptionDto("0", "subscription", null, 1000L, 0);
+        subscriptionDto1 = new SubscriptionDto("1", "subscription1", null, 2000L, 1);
+        subscriptionDto2 = new SubscriptionDto("2", "subscription2", null, 3000L, 2);
 
         sut = new GroupServiceImpl(DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).build(),
                 conversionService);
@@ -205,6 +207,62 @@ public class GroupServiceImplTest extends ServiceTest {
         assertThat(groupCaptor.getValue().getTitle()).isEqualTo(newTitle);
     }
 
+    @Test(expectedExceptions = ServiceException.class)
+    public void reorder_ShouldThrowException_IfGroupCountDoesNotMatch() {
+        when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
+
+        sut.reorder(user.getUsername(), Arrays.asList(groupDto, groupDto1));
+    }
+
+    @Test(expectedExceptions = ServiceException.class)
+    public void reorder_ShouldThrowException_IfTitlesDoNotMatch() {
+        when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
+        groupDto2.setId(100L);
+
+        sut.reorder(user.getUsername(), Arrays.asList(groupDto, groupDto1, groupDto2));
+    }
+
+    @Test
+    public void reorder_ShouldSwapGroups() {
+        when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
+
+        sut.reorder(user.getUsername(), Arrays.asList(groupDto, groupDto2, groupDto1));
+
+        verify(groupDao).saveAll(groupListCaptor.capture());
+        assertThat(groupListCaptor.getValue().get(0).getId()).isEqualTo(group1.getId());
+        assertThat(groupListCaptor.getValue().get(0).getOrder()).isEqualTo(2);
+        assertThat(groupListCaptor.getValue().get(1).getId()).isEqualTo(group2.getId());
+        assertThat(groupListCaptor.getValue().get(1).getOrder()).isEqualTo(1);
+    }
+
+    @Test
+    public void reorder_ShouldReinitializeGroupOrders() {
+        group.setOrder(1);
+        group1.setOrder(2);
+        group2.setOrder(3);
+        when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
+
+        sut.reorder(user.getUsername(), Arrays.asList(groupDto, groupDto1, groupDto2));
+
+        verify(groupDao).saveAll(groupListCaptor.capture());
+        assertThat(groupListCaptor.getValue().get(0).getId()).isEqualTo(group.getId());
+        assertThat(groupListCaptor.getValue().get(0).getOrder()).isEqualTo(0);
+        assertThat(groupListCaptor.getValue().get(1).getId()).isEqualTo(group1.getId());
+        assertThat(groupListCaptor.getValue().get(1).getOrder()).isEqualTo(1);
+        assertThat(groupListCaptor.getValue().get(2).getId()).isEqualTo(group2.getId());
+        assertThat(groupListCaptor.getValue().get(2).getOrder()).isEqualTo(2);
+    }
+
+    @Test
+    public void reorder_ShouldDoNothing_IfOrdersAreNotChanged() {
+        when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
+
+        sut.reorder(user.getUsername(), Arrays.asList(groupDto, groupDto1, groupDto2));
+
+        verify(groupDao).list(user);
+        verifyNoMoreInteractions(groupDao);
+    }
+
     @Test
     public void moveUp_ShouldUpdateGroupOrders() {
         when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
@@ -213,9 +271,9 @@ public class GroupServiceImplTest extends ServiceTest {
 
         verify(groupDao).saveAll(groupListCaptor.capture());
         assertThat(groupListCaptor.getValue().get(0).getId()).isEqualTo(group.getId());
-        assertThat(groupListCaptor.getValue().get(0).getOrder()).isEqualTo(2);
+        assertThat(groupListCaptor.getValue().get(0).getOrder()).isEqualTo(1);
         assertThat(groupListCaptor.getValue().get(1).getId()).isEqualTo(group1.getId());
-        assertThat(groupListCaptor.getValue().get(1).getOrder()).isEqualTo(1);
+        assertThat(groupListCaptor.getValue().get(1).getOrder()).isEqualTo(0);
     }
 
     @Test
@@ -226,9 +284,9 @@ public class GroupServiceImplTest extends ServiceTest {
 
         verify(groupDao).saveAll(groupListCaptor.capture());
         assertThat(groupListCaptor.getValue().get(0).getId()).isEqualTo(group1.getId());
-        assertThat(groupListCaptor.getValue().get(0).getOrder()).isEqualTo(3);
+        assertThat(groupListCaptor.getValue().get(0).getOrder()).isEqualTo(2);
         assertThat(groupListCaptor.getValue().get(1).getId()).isEqualTo(group2.getId());
-        assertThat(groupListCaptor.getValue().get(1).getOrder()).isEqualTo(2);
+        assertThat(groupListCaptor.getValue().get(1).getOrder()).isEqualTo(1);
     }
 
     @Test

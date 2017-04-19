@@ -12,6 +12,8 @@ public interface GroupService {
 
     GroupDto update(String username, GroupDto group);
 
+    void reorder(String username, List<GroupDto> groups);
+
     void entitle(String username, Long groupId, String title);
 
     void moveUp(String username, Long groupId);
