@@ -16,10 +16,6 @@ public interface GroupService {
 
     void entitle(String username, Long groupId, String title);
 
-    void moveUp(String username, Long groupId);
-
-    void moveDown(String username, Long groupId);
-
     void delete(String username, Long groupId);
 
 }

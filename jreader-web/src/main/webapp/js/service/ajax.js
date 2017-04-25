@@ -75,20 +75,12 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
         });
 	};
 	
-	this.moveGroup = function(id, up) {
+	this.reorderGroups = function(groups) {
 		return $http({
 			method: "PUT",
-			url: "/reader/groups/" + id + "/order",
-            params: { "up": up }
+			url: "/reader/groups",
+            data: groups
         });
-	};
-	
-	this.moveGroupUp = function(id) {
-		return service.moveGroup(id, true);
-	};
-	
-	this.moveGroupDown = function(id) {
-		return service.moveGroup(id, false);
 	};
 	
 	this.subscribe = function(groupId, url) {

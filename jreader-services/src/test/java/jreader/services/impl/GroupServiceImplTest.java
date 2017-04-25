@@ -264,32 +264,6 @@ public class GroupServiceImplTest extends ServiceTest {
     }
 
     @Test
-    public void moveUp_ShouldUpdateGroupOrders() {
-        when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
-
-        sut.moveUp(user.getUsername(), group1.getId());
-
-        verify(groupDao).saveAll(groupListCaptor.capture());
-        assertThat(groupListCaptor.getValue().get(0).getId()).isEqualTo(group.getId());
-        assertThat(groupListCaptor.getValue().get(0).getOrder()).isEqualTo(1);
-        assertThat(groupListCaptor.getValue().get(1).getId()).isEqualTo(group1.getId());
-        assertThat(groupListCaptor.getValue().get(1).getOrder()).isEqualTo(0);
-    }
-
-    @Test
-    public void moveDown_ShouldUpdateGroupOrders() {
-        when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
-
-        sut.moveDown(user.getUsername(), group1.getId());
-
-        verify(groupDao).saveAll(groupListCaptor.capture());
-        assertThat(groupListCaptor.getValue().get(0).getId()).isEqualTo(group1.getId());
-        assertThat(groupListCaptor.getValue().get(0).getOrder()).isEqualTo(2);
-        assertThat(groupListCaptor.getValue().get(1).getId()).isEqualTo(group2.getId());
-        assertThat(groupListCaptor.getValue().get(1).getOrder()).isEqualTo(1);
-    }
-
-    @Test
     public void list_ShouldReturnGroupListWithUnreadCounts() {
         final List<Group> groups = Arrays.asList(group, group1, group2);
         when(groupDao.list(user)).thenReturn(groups);

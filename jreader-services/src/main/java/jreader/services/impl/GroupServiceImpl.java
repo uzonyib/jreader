@@ -145,62 +145,6 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
     }
 
     @Override
-    public void moveUp(final String username, final Long groupId) {
-        final User user = this.getUser(username);
-
-        final List<Group> groups = groupDao.list(user);
-        Integer groupIndex = null;
-        for (int i = 0; i < groups.size(); ++i) {
-            if (groups.get(i).getId().equals(groupId)) {
-                groupIndex = i;
-            }
-        }
-
-        if (groupIndex == null) {
-            throw new ServiceException("Group not found, ID: " + groupId, HttpStatus.NOT_FOUND);
-        }
-        if (groupIndex == 0) {
-            throw new ServiceException("Cannot move first group up.", HttpStatus.BAD_REQUEST);
-        }
-
-        swap(groups.get(groupIndex - 1), groups.get(groupIndex));
-    }
-
-    @Override
-    public void moveDown(final String username, final Long groupId) {
-        final User user = this.getUser(username);
-
-        final List<Group> groups = groupDao.list(user);
-        Integer groupIndex = null;
-        for (int i = 0; i < groups.size(); ++i) {
-            if (groups.get(i).getId().equals(groupId)) {
-                groupIndex = i;
-            }
-        }
-
-        if (groupIndex == null) {
-            throw new ServiceException("Group not found, ID: " + groupId, HttpStatus.NOT_FOUND);
-        }
-        if (groupIndex == groups.size() - 1) {
-            throw new ServiceException("Cannot move last group down.", HttpStatus.BAD_REQUEST);
-        }
-
-        swap(groups.get(groupIndex), groups.get(groupIndex + 1));
-    }
-
-    private void swap(final Group group1, final Group group2) {
-        final int order = group1.getOrder();
-        group1.setOrder(group2.getOrder());
-        group2.setOrder(order);
-
-        final List<Group> updatedGroups = new ArrayList<Group>();
-        updatedGroups.add(group1);
-        updatedGroups.add(group2);
-
-        groupDao.saveAll(updatedGroups);
-    }
-
-    @Override
     public void delete(final String username, final Long groupId) {
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);

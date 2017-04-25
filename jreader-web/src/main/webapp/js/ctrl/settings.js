@@ -37,16 +37,19 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
 	};
 	
 	$scope.swapGroups = function(index1, index2) {
-		$scope.groups.swap(index1, index2);
+		var reorderedGroups = [];
+		angular.forEach($scope.groups.items, function(group) {
+			var groupCopy = {};
+			groupCopy.id = group.id;
+			reorderedGroups.push(groupCopy);
+		});
+		
+		var group = reorderedGroups[index1];
+		reorderedGroups[index1] = reorderedGroups[index2];
+		reorderedGroups[index2] = group;
+		
+		$scope.ajaxService.reorderGroups(reorderedGroups).success($scope.groups.setItems);
 	}
-	
-	$scope.moveGroupUp = function(groupId) {
-		$scope.ajaxService.moveGroupUp(groupId);
-	};
-	
-	$scope.moveGroupDown = function(groupId) {
-		$scope.ajaxService.moveGroupDown(groupId);
-	};
 	
 	$scope.moveSubscriptionUp = function(groupId, subscriptionId) {
 		$scope.ajaxService.moveSubscriptionUp(groupId, subscriptionId).success($scope.groups.setItemsFromPayLoad);
@@ -177,7 +180,7 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
     				$scope.importLog += "Creating group \"" + job.title + "\"...";
     				$scope.ajaxService.createGroup(job.title).success(function(response) {
     					$scope.importLog += " OK.\n";
-    					$scope.groups.setItemsFromPayLoad(response);
+    					$scope.groups.add(response);
     					addSubscribeJobs(job, findGroup(job.title).id, jobQueue);
         				process(jobQueue.pop());
     				}).error(function(response) {

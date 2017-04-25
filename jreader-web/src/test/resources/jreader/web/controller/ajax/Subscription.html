@@ -361,7 +361,7 @@
 	   	</table>
 	   	
 		<p>
-			When the user moves group #<span concordion:echo="#groupId2"></span> <span concordion:execute="moveGroup(#groupId2, #TEXT)">up</span><br/>
+			When the user arranges the groups into the following order: <span concordion:execute="reorderGroups(#TEXT)">group2, group1, group3, group4</span><br/>
 			then the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">
@@ -398,7 +398,7 @@
 	   	</table>
 	   	
 		<p>
-			When the user moves group #<span concordion:echo="#groupId2"></span> <span concordion:execute="moveGroup(#groupId2, #TEXT)">down</span><br/>
+			When the user arranges the groups into the following order: <span concordion:execute="reorderGroups(#TEXT)">group1, group2, group3, group4</span><br/>
 			then the subscription list contains:
 		</p>
 		<table concordion:verifyRows="#subscription : getSubscriptions()">

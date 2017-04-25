@@ -43,12 +43,6 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		return $scope.groups.items.length;
 	};
 	
-	$scope.groups.swap = function(index1, index2) {
-		var group = $scope.groups.items[index1];
-		$scope.groups.items[index1] = $scope.groups.items[index2];
-		$scope.groups.items[index2] = group;
-	};
-	
 	$scope.groups.setItems = function(items) {
 		$scope.groups.items = items;
 		var count = 0;

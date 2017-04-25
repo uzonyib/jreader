@@ -1,6 +1,7 @@
 package jreader.web.controller.ajax;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jreader.dto.GroupDto;
@@ -36,6 +36,12 @@ public class GroupController {
         return groupService.create(principal.getName(), group.getTitle());
     }
 
+    @PutMapping
+    public List<GroupDto> update(final Principal principal, @RequestBody final List<GroupDto> groups) {
+        groupService.reorder(principal.getName(), groups);
+        return groupService.list(principal.getName());
+    }
+
     @DeleteMapping("/{id}")
     public void delete(final Principal principal, @PathVariable final Long id) {
         groupService.delete(principal.getName(), id);
@@ -45,17 +51,6 @@ public class GroupController {
     public GroupDto update(final Principal principal, @PathVariable final Long id, @RequestBody final GroupDto group) {
         group.setId(id);
         return groupService.update(principal.getName(), group);
-    }
-
-    @PutMapping("/{id}/order")
-    public ResponseEntity move(final Principal principal, @PathVariable final Long id, @RequestParam final boolean up) {
-        if (up) {
-            groupService.moveUp(principal.getName(), id);
-        } else {
-            groupService.moveDown(principal.getName(), id);
-        }
-
-        return new ResponseEntity(groupService.list(principal.getName()));
     }
 
 }

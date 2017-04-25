@@ -99,8 +99,6 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     private FeedRegistry feedRegistry = new FeedRegistry();
     
-    private int groupOrder = 0;
-    
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -154,17 +152,13 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         return (List<GroupDto>) groupController.listAll(principal).getPayload();
     }
     
-    public Long createGroup(String title, int order) {
+    public Long createGroup(String title) {
         try {
-            GroupDto result = groupController.create(principal, GroupDto.builder().title("empty string".equals(title) ? "" : title).order(order).build());
-            return result.getId();
+            GroupDto group = GroupDto.builder().title("empty string".equals(title) ? "" : title).build();
+            return groupController.create(principal, group).getId();
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public Long createGroup(String title) {
-        return createGroup(title, groupOrder++);
     }
 
     public void deleteGroup(Long id) {
@@ -179,15 +173,21 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         }
     }
     
-    public void moveGroup(Long id, String direction) {
-        try {
-            groupController.move(principal, id, "up".equals(direction));
-        } catch (ServiceException e) {
-            
+    public void reorderGroups(String titles) {
+        List<GroupDto> groups = (List<GroupDto>) groupController.listAll(principal).getPayload();
+        List<GroupDto> input = new ArrayList<>();
+        for (String title : titles.split(", ")) {
+            for (GroupDto group : groups) {
+                if (group.getTitle().equals(title)) {
+                    input.add(GroupDto.builder().id(group.getId()).build());
+                    break;
+                }
+            }
         }
+        groupController.update(principal, input);
     }
-    
-    public int getSubscriptionCount(Long groupId) throws Exception {
+
+    public int getSubscriptionCount(Long groupId) {
         return getSubscriptions(groupId).size();
     }
     
@@ -215,7 +215,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         return subscriptions;
     }
     
-    public Long subscribe(String feed, Long groupId) throws Exception {
+    public Long subscribe(String feed, Long groupId) {
         subscriptionController.create(principal, groupId, feedRegistry.getUrl(feed));
         refreshFeed(feed);
         List<SubscriptionDto> subscriptions = getSubscriptions(groupId);
