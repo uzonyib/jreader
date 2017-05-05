@@ -7,15 +7,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import jreader.web.controller.AdminController;
 import jreader.web.controller.PageController;
 import jreader.web.controller.ajax.ArchiveController;
 import jreader.web.controller.ajax.ArchivedPostController;
-import jreader.web.controller.ajax.PostController;
 import jreader.web.controller.ajax.GlobalExceptionHandler;
 import jreader.web.controller.ajax.GroupController;
+import jreader.web.controller.ajax.PostController;
 import jreader.web.controller.ajax.StatController;
 import jreader.web.controller.ajax.SubscriptionController;
 import jreader.web.controller.appengine.CronJobController;
@@ -26,7 +25,7 @@ import jreader.web.service.impl.AppengineQueueService;
 @Configuration
 @Import(ServiceConfig.class)
 @PropertySource({ "classpath:cron.properties", "classpath:application.properties" })
-public class ControllerConfig extends WebMvcConfigurerAdapter {
+public class ControllerConfig {
     
     @Autowired
     private ServiceConfig serviceConfig;

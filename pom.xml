@@ -27,24 +27,28 @@
             <url>https://oss.sonatype.org/service/local/repositories/google-releases/content</url>
         </repository>
         <repository>
-            <id>gae-staging1</id>
+            <id>gae-staging1952</id>
             <url>https://oss.sonatype.org/content/repositories/comgoogleappengine-1365/</url>
+        </repository>
+        <repository>
+            <id>gae-staging1953</id>
+            <url>https://oss.sonatype.org/content/repositories/comgoogleappengine-1367/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>gae-staging2</id>
-            <url>https://oss.sonatype.org/content/repositories/comgoogleappengine-1366/</url>
+            <id>gae-staging1953</id>
+            <url>https://oss.sonatype.org/content/repositories/comgoogleappengine-1368/</url>
         </pluginRepository>
     </pluginRepositories>
-    
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <ui.minify>false</ui.minify>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>1.4.3.RELEASE</spring.boot.version>
-        <appengine.sdk.version>1.9.52</appengine.sdk.version>
+        <spring.boot.version>1.5.3.RELEASE</spring.boot.version>
+        <appengine.sdk.version>1.9.53</appengine.sdk.version>
         <objectify.version>5.1.15</objectify.version>
         <rome.version>1.7.1</rome.version>
         <testng.version>6.10</testng.version>

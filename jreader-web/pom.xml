@@ -142,7 +142,7 @@
                 <version>2.6</version>
                 <configuration>
                     <archiveClasses>true</archiveClasses>
-                       <warSourceExcludes>${war.excludes}</warSourceExcludes>
+                    <warSourceExcludes>${war.excludes}</warSourceExcludes>
                     <webResources>
                         <resource>
                             <directory>${basedir}/src/main/webapp/WEB-INF</directory>
