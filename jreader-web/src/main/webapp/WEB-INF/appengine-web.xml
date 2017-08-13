@@ -21,5 +21,6 @@
     </system-properties>
     
     <sessions-enabled>true</sessions-enabled>
+    <url-stream-handler>urlfetch</url-stream-handler>
     
 </appengine-web-app>
