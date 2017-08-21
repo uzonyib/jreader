@@ -1,5 +1,7 @@
 package jreader.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,10 +15,11 @@ import jreader.services.UserAdminService;
 public class AdminController {
 
     private final UserAdminService userAdminService;
-    
+
     private final int pageSize;
 
-    public AdminController(final UserAdminService userAdminService, final int pageSize) {
+    @Autowired
+    public AdminController(final UserAdminService userAdminService, @Value("${admin.users.pageSize}") final int pageSize) {
         this.userAdminService = userAdminService;
         this.pageSize = pageSize;
     }
@@ -29,11 +32,11 @@ public class AdminController {
         modelAndView.addObject("users", userAdminService.list(offset, pageSize));
         return modelAndView;
     }
-    
+
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public String updateRole(@RequestParam final String username, @RequestParam final String role) {
         userAdminService.updateRole(username, role);
         return "redirect:/admin/users";
     }
-    
+
 }

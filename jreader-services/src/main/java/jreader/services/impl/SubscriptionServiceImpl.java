@@ -3,8 +3,10 @@ package jreader.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
@@ -20,6 +22,7 @@ import jreader.services.RssService;
 import jreader.services.ServiceException;
 import jreader.services.SubscriptionService;
 
+@Service
 public class SubscriptionServiceImpl extends AbstractService implements SubscriptionService {
 
     private FeedDao feedDao;
@@ -29,6 +32,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     private ConversionService conversionService;
 
+    @Autowired
     public SubscriptionServiceImpl(final DaoFacade daoFacade, final RssService rssService, final ConversionService conversionService) {
         super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
         this.feedDao = daoFacade.getFeedDao();

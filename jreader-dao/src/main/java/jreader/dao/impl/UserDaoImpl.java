@@ -2,9 +2,12 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import jreader.dao.UserDao;
 import jreader.domain.User;
 
+@Repository
 public class UserDaoImpl extends AbstractOfyDao<User> implements UserDao {
 
     @Override

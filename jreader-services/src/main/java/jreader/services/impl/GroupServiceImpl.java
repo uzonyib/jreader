@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import jreader.dao.DaoFacade;
 import jreader.dao.PostDao;
@@ -20,12 +22,14 @@ import jreader.dto.SubscriptionDto;
 import jreader.services.GroupService;
 import jreader.services.ServiceException;
 
+@Service
 public class GroupServiceImpl extends AbstractService implements GroupService {
 
     private PostDao postDao;
 
     private ConversionService conversionService;
 
+    @Autowired
     public GroupServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService) {
         super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
         this.postDao = daoFacade.getPostDao();

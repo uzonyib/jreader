@@ -3,8 +3,10 @@ package jreader.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.stereotype.Service;
 
 import jreader.dao.DaoFacade;
 import jreader.dao.FeedStatDao;
@@ -18,6 +20,7 @@ import jreader.dto.FeedStatsDto;
 import jreader.services.DateHelper;
 import jreader.services.StatService;
 
+@Service
 public class StatServiceImpl extends AbstractService implements StatService {
 
     private FeedStatDao feedStatDao;
@@ -26,6 +29,7 @@ public class StatServiceImpl extends AbstractService implements StatService {
     
     private DateHelper dateHelper;
 
+    @Autowired
     public StatServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService, final DateHelper dateHelper) {
         super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
         this.feedStatDao = daoFacade.getFeedStatDao();

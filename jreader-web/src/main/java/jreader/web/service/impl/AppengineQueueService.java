@@ -1,10 +1,13 @@
 package jreader.web.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 
 import jreader.web.service.QueueService;
 
+@Service
 public class AppengineQueueService implements QueueService {
     
     @Override

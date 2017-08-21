@@ -2,10 +2,13 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import jreader.dao.FeedStatDao;
 import jreader.domain.Feed;
 import jreader.domain.FeedStat;
 
+@Repository
 public class FeedStatDaoImpl extends AbstractOfyDao<FeedStat> implements FeedStatDao {
     
     @Override

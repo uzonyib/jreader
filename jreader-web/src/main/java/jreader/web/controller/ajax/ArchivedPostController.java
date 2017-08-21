@@ -2,6 +2,7 @@ package jreader.web.controller.ajax;
 
 import java.security.Principal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +19,7 @@ public class ArchivedPostController {
 
     private final ArchiveService archiveService;
 
+    @Autowired
     public ArchivedPostController(final ArchiveService archiveService) {
         this.archiveService = archiveService;
     }

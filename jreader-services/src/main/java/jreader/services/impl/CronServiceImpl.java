@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.stereotype.Service;
 
 import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
@@ -25,6 +27,7 @@ import jreader.services.CronService;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
 
+@Service
 public class CronServiceImpl implements CronService {
 
     private static final Logger LOG = Logger.getLogger(CronServiceImpl.class.getName());
@@ -41,6 +44,7 @@ public class CronServiceImpl implements CronService {
     
     private DateHelper dateHelper;
 
+    @Autowired
     public CronServiceImpl(final DaoFacade daoFacade, final RssService rssService, final ConversionService conversionService, final DateHelper dateHelper) {
         this.subscriptionDao = daoFacade.getSubscriptionDao();
         this.feedDao = daoFacade.getFeedDao();

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import jreader.domain.Role;
+import jreader.services.UserService;
 import jreader.web.interceptor.AuthorizationInterceptor;
 
 @Configuration
@@ -22,7 +23,9 @@ import jreader.web.interceptor.AuthorizationInterceptor;
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
-    private ServiceConfig serviceConfig;
+    private UserService userService;
+    @Autowired
+    private com.google.appengine.api.users.UserService googleUserService;
 
     @Bean
     public ViewResolver viewResolver() {
@@ -36,10 +39,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(
-                new AuthorizationInterceptor(serviceConfig.userService(), serviceConfig.googleUserService(), Arrays.asList(Role.USER, Role.ADMIN)))
+                new AuthorizationInterceptor(userService, googleUserService, Arrays.asList(Role.USER, Role.ADMIN)))
                 .addPathPatterns("/reader", "/reader/*");
         registry.addInterceptor(
-                new AuthorizationInterceptor(serviceConfig.userService(), serviceConfig.googleUserService(), Arrays.asList(Role.ADMIN)))
+                new AuthorizationInterceptor(userService, googleUserService, Arrays.asList(Role.ADMIN)))
                 .addPathPatterns("/admin/*");
     }
 

@@ -2,6 +2,7 @@ package jreader.web.controller.ajax;
 
 import java.security.Principal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,13 +18,14 @@ import jreader.web.service.QueueService;
 @RestController
 @RequestMapping(value = "/reader/groups/{groupId}/subscriptions")
 public class SubscriptionController {
-    
+
     private final GroupService groupService;
 
     private final SubscriptionService subscriptionService;
-    
+
     private QueueService queueService;
 
+    @Autowired
     public SubscriptionController(final GroupService groupService, final SubscriptionService subscriptionService,
             final QueueService queueService) {
         this.groupService = groupService;

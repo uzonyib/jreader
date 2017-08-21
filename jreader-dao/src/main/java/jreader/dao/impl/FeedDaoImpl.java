@@ -2,9 +2,12 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import jreader.dao.FeedDao;
 import jreader.domain.Feed;
 
+@Repository
 public class FeedDaoImpl extends AbstractOfyDao<Feed> implements FeedDao {
 
     @Override

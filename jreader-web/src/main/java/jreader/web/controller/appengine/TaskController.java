@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,15 +27,17 @@ public class TaskController extends AppengineController {
     private static final Logger LOG = Logger.getLogger(TaskController.class.getName());
 
     private CronService cronService;
-    
+
     private QueueService queueService;
-    
+
     private final int daysToKeepPosts;
     private final int postsToKeep;
     private final int statsToKeep;
 
-    public TaskController(final CronService cronService, final QueueService queueService, final UserService userService, final int daysToKeepPosts,
-            final int postsToKeep, final int statsToKeep) {
+    @Autowired
+    public TaskController(final CronService cronService, final QueueService queueService, final UserService userService,
+            @Value("${daysToKeepPosts}") final int daysToKeepPosts, @Value("${postsToKeep}") final int postsToKeep,
+            @Value("${daysToKeepStats}") final int statsToKeep) {
         super(userService);
         this.cronService = cronService;
         this.queueService = queueService;

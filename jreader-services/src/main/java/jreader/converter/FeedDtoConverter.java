@@ -4,7 +4,9 @@ import jreader.domain.Feed;
 import jreader.dto.FeedDto;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FeedDtoConverter implements Converter<Feed, FeedDto> {
 
     @Override

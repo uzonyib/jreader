@@ -1,6 +1,8 @@
 package jreader.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import jreader.dao.UserDao;
 import jreader.domain.Role;
@@ -9,17 +11,19 @@ import jreader.services.DateHelper;
 import jreader.services.ServiceException;
 import jreader.services.UserService;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
-    
+
     private DateHelper dateHelper;
-    
+
+    @Autowired
     public UserServiceImpl(final UserDao userDao, final DateHelper dateHelper) {
         this.userDao = userDao;
         this.dateHelper = dateHelper;
     }
-    
+
     @Override
     public boolean isRegistered(final String username) {
         return userDao.find(username) != null;
@@ -36,7 +40,7 @@ public class UserServiceImpl implements UserService {
         user.setRegistrationDate(dateHelper.getCurrentDate());
         userDao.save(user);
     }
-    
+
     @Override
     public Role getRole(final String username) {
         final User user = userDao.find(username);

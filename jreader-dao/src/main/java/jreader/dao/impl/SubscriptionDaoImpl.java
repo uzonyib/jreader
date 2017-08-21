@@ -2,12 +2,15 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import jreader.dao.SubscriptionDao;
 import jreader.domain.Feed;
 import jreader.domain.Subscription;
 import jreader.domain.Group;
 import jreader.domain.User;
 
+@Repository
 public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements SubscriptionDao {
 
     @Override

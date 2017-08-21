@@ -3,8 +3,11 @@ package jreader.services.impl;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import org.springframework.stereotype.Service;
+
 import jreader.services.DateHelper;
 
+@Service
 public class DateHelperImpl implements DateHelper {
     
     private static final long MILLISECS_PER_DAY = 1000L * 60L * 60L * 24L;

@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +19,8 @@ public class PageController {
     private final UserService googleUserService;
     private final String appVersion;
 
-    public PageController(final UserService googleUserService, final String appVersion) {
+    @Autowired
+    public PageController(final UserService googleUserService, @Value("${version}") final String appVersion) {
         this.googleUserService = googleUserService;
         this.appVersion = appVersion;
     }

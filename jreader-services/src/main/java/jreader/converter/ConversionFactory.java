@@ -1,32 +1,32 @@
 package jreader.converter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.ConversionServiceFactory;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.stereotype.Component;
 
+@Component("conversionService")
 public class ConversionFactory implements FactoryBean<ConversionService>, InitializingBean {
 
-    private Set<?> converters;
+    private Set<Converter<?, ?>> converters;
 
     private GenericConversionService conversionService;
-    
-    ConversionFactory() {
-        this(new HashSet<>());
-    }
 
-    public ConversionFactory(final Set<?> converters) {
+    @Autowired
+    public ConversionFactory(final Set<Converter<?, ?>> converters) {
         this.converters = converters;
     }
 
     @Override
     public void afterPropertiesSet() {
-        conversionService = createConversionService();
+        conversionService = new DefaultConversionService();
         ConversionServiceFactory.registerConverters(converters, conversionService);
         for (Object converter : converters) {
             if (converter instanceof ConversionServiceAware) {
@@ -36,10 +36,6 @@ public class ConversionFactory implements FactoryBean<ConversionService>, Initia
         }
     }
 
-    protected GenericConversionService createConversionService() {
-        return new DefaultConversionService();
-    }
-
     @Override
     public ConversionService getObject() {
         return conversionService;
@@ -47,7 +43,7 @@ public class ConversionFactory implements FactoryBean<ConversionService>, Initia
 
     @Override
     public Class<? extends ConversionService> getObjectType() {
-        return GenericConversionService.class;
+        return ConversionService.class;
     }
 
     @Override

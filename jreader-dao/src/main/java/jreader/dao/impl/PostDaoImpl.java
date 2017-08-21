@@ -2,6 +2,8 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import jreader.dao.PostDao;
 import jreader.dao.PostFilter;
 import jreader.domain.Post;
@@ -11,6 +13,7 @@ import jreader.domain.User;
 
 import com.googlecode.objectify.cmd.Query;
 
+@Repository
 public class PostDaoImpl extends AbstractOfyDao<Post> implements PostDao {
 
     @Override

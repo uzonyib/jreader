@@ -4,7 +4,9 @@ import jreader.domain.Archive;
 import jreader.dto.ArchiveDto;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ArchiveDtoConverter implements Converter<Archive, ArchiveDto> {
 
     @Override

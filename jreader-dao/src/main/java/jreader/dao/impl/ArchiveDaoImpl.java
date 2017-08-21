@@ -2,10 +2,13 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import jreader.dao.ArchiveDao;
 import jreader.domain.Archive;
 import jreader.domain.User;
 
+@Repository
 public class ArchiveDaoImpl extends AbstractOfyDao<Archive> implements ArchiveDao {
 
     @Override

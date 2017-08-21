@@ -4,7 +4,9 @@ import jreader.domain.Post;
 import jreader.dto.PostDto;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PostDtoConverter implements Converter<Post, PostDto> {
 
     @Override

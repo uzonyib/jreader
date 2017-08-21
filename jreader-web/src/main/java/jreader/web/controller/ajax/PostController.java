@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,8 @@ public class PostController {
 
     private final GroupService groupService;
     private final PostService postService;
-    
+
+    @Autowired
     public PostController(final GroupService groupService, final PostService postService) {
         this.groupService = groupService;
         this.postService = postService;

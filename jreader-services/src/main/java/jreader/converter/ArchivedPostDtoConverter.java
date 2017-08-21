@@ -4,7 +4,9 @@ import jreader.domain.ArchivedPost;
 import jreader.dto.ArchivedPostDto;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ArchivedPostDtoConverter implements Converter<ArchivedPost, ArchivedPostDto> {
 
     @Override

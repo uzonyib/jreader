@@ -2,10 +2,13 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import jreader.dao.GroupDao;
 import jreader.domain.Group;
 import jreader.domain.User;
 
+@Repository
 public class GroupDaoImpl extends AbstractOfyDao<Group> implements GroupDao {
 
     @Override

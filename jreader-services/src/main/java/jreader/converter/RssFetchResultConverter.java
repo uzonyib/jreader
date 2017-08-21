@@ -8,10 +8,12 @@ import jreader.domain.Post;
 import jreader.dto.RssFetchResult;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 
+@Component
 public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResult> {
 
     @Override

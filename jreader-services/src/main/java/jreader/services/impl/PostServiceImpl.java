@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.stereotype.Service;
 
 import jreader.dao.DaoFacade;
 import jreader.dao.PostDao;
@@ -18,12 +20,14 @@ import jreader.dto.PostDto;
 import jreader.services.PostFilter;
 import jreader.services.PostService;
 
+@Service
 public class PostServiceImpl extends AbstractService implements PostService {
 
     private PostDao postDao;
 
     private ConversionService conversionService;
 
+    @Autowired
     public PostServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService) {
         super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
         this.postDao = daoFacade.getPostDao();

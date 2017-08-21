@@ -2,12 +2,15 @@ package jreader.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import jreader.dao.ArchivedPostDao;
 import jreader.dao.ArchivedPostFilter;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedPost;
 import jreader.domain.User;
 
+@Repository
 public class ArchivedPostDaoImpl extends AbstractOfyDao<ArchivedPost> implements ArchivedPostDao {
 
     @Override

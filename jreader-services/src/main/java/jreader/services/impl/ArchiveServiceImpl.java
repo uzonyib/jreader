@@ -3,9 +3,11 @@ package jreader.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedPostDao;
@@ -23,6 +25,7 @@ import jreader.services.ArchiveService;
 import jreader.services.ArchivedPostFilter;
 import jreader.services.ServiceException;
 
+@Service
 public class ArchiveServiceImpl extends AbstractService implements ArchiveService {
 
     private PostDao postDao;
@@ -31,6 +34,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
     private ConversionService conversionService;
 
+    @Autowired
     public ArchiveServiceImpl(final DaoFacade daoFacade, final ConversionService conversionService) {
         super(daoFacade.getUserDao(), daoFacade.getGroupDao(), daoFacade.getSubscriptionDao());
         this.postDao = daoFacade.getPostDao();
