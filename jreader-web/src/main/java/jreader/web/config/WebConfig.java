@@ -16,6 +16,8 @@ import org.springframework.web.servlet.view.JstlView;
 import jreader.domain.Role;
 import jreader.services.UserService;
 import jreader.web.interceptor.AuthorizationInterceptor;
+import jreader.web.interceptor.CronJobInterceptor;
+import jreader.web.interceptor.TaskInterceptor;
 
 @Configuration
 @EnableWebMvc
@@ -44,6 +46,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(
                 new AuthorizationInterceptor(userService, googleUserService, Arrays.asList(Role.ADMIN)))
                 .addPathPatterns("/admin/*");
+        registry.addInterceptor(
+                new CronJobInterceptor(googleUserService))
+                .addPathPatterns("/cron/*");
+        registry.addInterceptor(
+                new TaskInterceptor(googleUserService))
+                .addPathPatterns("/tasks/*");
     }
 
 }

@@ -1,7 +1,6 @@
 package jreader.web.controller.ajax;
 
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.net.URL;
@@ -14,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
 import org.mockito.InjectMocks;
@@ -363,15 +360,11 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public void refreshFeed(String title) {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("X-AppEngine-TaskName")).thenReturn("default");
-        taskController.refreshFeed(request, feedRegistry.getUrl(title));
+        taskController.refreshFeed(feedRegistry.getUrl(title));
     }
     
     public void cleanupFeed(String title) {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("X-AppEngine-TaskName")).thenReturn("default");
-        taskController.cleanup(request, feedRegistry.getUrl(title));
+        taskController.cleanup(feedRegistry.getUrl(title));
     }
     
     public void setCurrentDate(String dateString) throws ParseException {
