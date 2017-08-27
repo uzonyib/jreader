@@ -4,15 +4,15 @@ import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import jreader.services.StatService;
 import jreader.web.controller.ResponseEntity;
 
 @RestController
-@RequestMapping(value = "/reader/stats")
+@RequestMapping("/reader/stats")
 public class StatController {
 
     private final StatService statService;
@@ -25,7 +25,7 @@ public class StatController {
         this.daysToDisplayStats = daysToDisplayStats;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity list(final Principal principal) {
         return new ResponseEntity(statService.list(principal.getName(), daysToDisplayStats));
     }

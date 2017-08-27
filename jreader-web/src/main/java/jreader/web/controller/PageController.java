@@ -7,8 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.appengine.api.users.UserService;
@@ -17,6 +16,7 @@ import com.google.appengine.api.users.UserService;
 public class PageController {
 
     private final UserService googleUserService;
+
     private final String appVersion;
 
     @Autowired
@@ -25,20 +25,20 @@ public class PageController {
         this.appVersion = appVersion;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     public void getMainPage(final HttpServletResponse response) throws IOException {
         response.sendRedirect("/reader");
     }
 
-    @RequestMapping(value = "/reader", method = RequestMethod.GET)
+    @GetMapping("/reader")
     public ModelAndView getHomePage() {
         final ModelAndView modelAndView = new ModelAndView("reader");
         modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
         modelAndView.addObject("appVersion", appVersion);
         return modelAndView;
     }
-    
-    @RequestMapping(value = "/forbidden", method = RequestMethod.GET)
+
+    @GetMapping("/forbidden")
     public ModelAndView getForbiddenPage() {
         return new ModelAndView("forbidden");
     }

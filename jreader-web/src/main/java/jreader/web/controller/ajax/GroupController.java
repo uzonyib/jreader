@@ -18,7 +18,7 @@ import jreader.services.GroupService;
 import jreader.web.controller.ResponseEntity;
 
 @RestController
-@RequestMapping(value = "/reader/groups")
+@RequestMapping("/reader/groups")
 public class GroupController {
 
     private final GroupService groupService;

@@ -26,6 +26,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
     private UserService userService;
+
     @Autowired
     private com.google.appengine.api.users.UserService googleUserService;
 
