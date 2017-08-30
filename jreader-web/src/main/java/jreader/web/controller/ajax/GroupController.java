@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jreader.dto.GroupDto;
 import jreader.services.GroupService;
-import jreader.web.controller.ResponseEntity;
 
 @RestController
 @RequestMapping("/reader/groups")
@@ -29,8 +28,8 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity listAll(final Principal principal) {
-        return new ResponseEntity(groupService.list(principal.getName()));
+    public List<GroupDto> listAll(final Principal principal) {
+        return groupService.list(principal.getName());
     }
 
     @PostMapping

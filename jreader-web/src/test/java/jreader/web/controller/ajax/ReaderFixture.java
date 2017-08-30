@@ -131,7 +131,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public Integer getFeedStatus(String title) {
-        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal).getPayload()) {
+        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal)) {
             for (SubscriptionDto dto : group.getSubscriptions()) {
                 if (title.equals(dto.getFeed().getTitle())) {
                     return dto.getFeed().getStatus();
@@ -146,7 +146,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<GroupDto> getGroups() {
-        return (List<GroupDto>) groupController.listAll(principal).getPayload();
+        return (List<GroupDto>) groupController.listAll(principal);
     }
     
     public Long createGroup(String title) {
@@ -171,7 +171,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public void reorderGroups(String titles) {
-        List<GroupDto> groups = (List<GroupDto>) groupController.listAll(principal).getPayload();
+        List<GroupDto> groups = (List<GroupDto>) groupController.listAll(principal);
         List<GroupDto> input = new ArrayList<>();
         for (String title : titles.split(", ")) {
             for (GroupDto group : groups) {
@@ -189,7 +189,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<SubscriptionDto> getSubscriptions(Long groupId) {
-        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal).getPayload()) {
+        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal)) {
             if (groupId.equals(Long.valueOf(group.getId()))) {
                 return group.getSubscriptions();
             }
@@ -199,7 +199,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public List<Subscription> getSubscriptions() {
         List<Subscription> subscriptions = new ArrayList<Subscription>();
-        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal).getPayload()) {
+        for (GroupDto group : (List<GroupDto>) groupController.listAll(principal)) {
             for (SubscriptionDto dto : group.getSubscriptions()) {
                 Subscription subscription = new Subscription();
                 subscription.setId(Long.valueOf(dto.getId()));

@@ -68,8 +68,8 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	};
 	
 	$scope.groups.refresh = function() {
-		$scope.ajaxService.refreshSubscriptions().success(function(data) {
-        	$scope.groups.setItemsFromPayLoad(data);
+		$scope.ajaxService.refreshSubscriptions().success(function(response) {
+		    $scope.groups.setItems(response);
         });
     };
     
