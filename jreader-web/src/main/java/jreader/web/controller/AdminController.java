@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import jreader.services.UserAdminService;
 
@@ -26,7 +27,7 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ModelAndView getUsersPage(@RequestParam(required = false) final Integer page) {
+    public ModelAndView usersPage(@RequestParam(required = false) final Integer page) {
         final int pageIndex = page == null ? 0 : page.intValue();
         final int offset = pageIndex * pageSize;
         final ModelAndView modelAndView = new ModelAndView("admin/users");
@@ -35,9 +36,9 @@ public class AdminController {
     }
 
     @PostMapping("/users")
-    public String updateRole(@RequestParam final String username, @RequestParam final String role) {
+    public RedirectView updateRole(@RequestParam final String username, @RequestParam final String role) {
         userAdminService.updateRole(username, role);
-        return "redirect:/admin/users";
+        return new RedirectView("/admin/users");
     }
 
 }

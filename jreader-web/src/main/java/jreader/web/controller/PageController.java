@@ -1,14 +1,11 @@
 package jreader.web.controller;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.appengine.api.users.UserService;
 
@@ -26,12 +23,12 @@ public class PageController {
     }
 
     @GetMapping("/")
-    public void getMainPage(final HttpServletResponse response) throws IOException {
-        response.sendRedirect("/reader");
+    public RedirectView mainPage() {
+        return new RedirectView("/reader");
     }
 
     @GetMapping("/reader")
-    public ModelAndView getHomePage() {
+    public ModelAndView homePage() {
         final ModelAndView modelAndView = new ModelAndView("reader");
         modelAndView.addObject("logoutUrl", googleUserService.createLogoutURL("/"));
         modelAndView.addObject("appVersion", appVersion);
@@ -39,7 +36,7 @@ public class PageController {
     }
 
     @GetMapping("/forbidden")
-    public ModelAndView getForbiddenPage() {
+    public ModelAndView forbiddenPage() {
         return new ModelAndView("forbidden");
     }
 
