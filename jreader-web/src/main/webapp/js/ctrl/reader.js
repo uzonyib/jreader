@@ -286,8 +286,8 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
     	
     	$scope.ajaxService.loadArchivedPosts(filter).then(function(response) {
-    		$scope.archivedPosts.moreItemsAvailable = response.data.payload.length === filter.count;
-    		$scope.archivedPosts.append(response.data.payload);
+    		$scope.archivedPosts.moreItemsAvailable = response.data.length === filter.count;
+    		$scope.archivedPosts.append(response.data);
     		$scope.archivedPosts.loading = false;
         }, function() {
         	$scope.archivedPosts.loading = false;

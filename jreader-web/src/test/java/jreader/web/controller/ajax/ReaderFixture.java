@@ -325,12 +325,12 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public List<ArchivedPost> getArchivedPosts(int from, int to, String order) {
         return convertArchivedPosts(
-                (List<ArchivedPostDto>) archivedPostController.list(principal, from, to - from, "ascending".equals(order)).getPayload());
+                (List<ArchivedPostDto>) archivedPostController.list(principal, from, to - from, "ascending".equals(order)));
     }
     
     public List<ArchivedPost> getArchivedPosts(Long archiveId, int from, int to, String order) {
         return convertArchivedPosts(
-                (List<ArchivedPostDto>) archivedPostController.list(principal, archiveId, from, to - from, "ascending".equals(order)).getPayload());
+                (List<ArchivedPostDto>) archivedPostController.list(principal, archiveId, from, to - from, "ascending".equals(order)));
     }
     
     private static List<ArchivedPost> convertArchivedPosts(List<ArchivedPostDto> dtos) {
@@ -350,7 +350,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getArchivedPostId(String title) {
-        List<ArchivedPostDto> posts = (List<ArchivedPostDto>) archivedPostController.list(principal, 0, Integer.MAX_VALUE, true).getPayload();
+        List<ArchivedPostDto> posts = (List<ArchivedPostDto>) archivedPostController.list(principal, 0, Integer.MAX_VALUE, true);
         for (ArchivedPostDto post : posts) {
             if (title.equals(post.getTitle())) {
                 return post.getId();
