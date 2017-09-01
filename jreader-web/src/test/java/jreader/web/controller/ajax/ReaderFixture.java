@@ -291,12 +291,12 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<ArchiveDto> getArchives() {
-        return (List<ArchiveDto>) archiveController.listAll(principal).getPayload();
+        return (List<ArchiveDto>) archiveController.listAll(principal);
     }
     
     public Long createArchive(String title) {
         try {
-            List<ArchiveDto> archives = (List<ArchiveDto>) archiveController.create(principal, "empty string".equals(title) ? "" : title).getPayload();
+            List<ArchiveDto> archives = (List<ArchiveDto>) archiveController.create(principal, "empty string".equals(title) ? "" : title);
             return Long.valueOf(archives.get(archives.size() - 1).getId());
         } catch (ServiceException e) {
             return null;

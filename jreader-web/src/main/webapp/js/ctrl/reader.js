@@ -298,7 +298,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     $scope.archives = [];
     
 	$scope.setArchives = function(response) {
-		$scope.archives = response.payload;
+		$scope.archives = response;
     	angular.forEach($scope.archives, function(archive) {
 			archive.editingTitle = false;
 			archive.newTitle = archive.title;
