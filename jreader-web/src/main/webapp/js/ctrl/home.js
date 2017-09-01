@@ -43,7 +43,7 @@ angular.module("jReaderApp").controller("HomeCtrl", ["$scope", "$window", "ajaxS
 	$scope.refreshStats = function() {
 		if ($scope.chartsEnabled) {
 			$scope.ajaxService.loadStats().success(function(response) {
-				$scope.stats = response.payload;
+				$scope.stats = response;
 				$scope.populateStats();
 			});
 		}

@@ -379,7 +379,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<FeedStat> getStats(String feed) {
-        List<FeedStatsDto> stats = (List<FeedStatsDto>) statController.list(principal).getPayload();
+        List<FeedStatsDto> stats = (List<FeedStatsDto>) statController.list(principal);
         for (FeedStatsDto stat : stats) {
             if (stat.getFeed().getTitle().equals(feed)) {
                 return convertFeedStats(stat.getStats());
