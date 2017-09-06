@@ -198,7 +198,7 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
     				$scope.importLog += "Subscribing to " + job.url + "...";
     				$scope.ajaxService.subscribe(job.groupId, job.url).success(function(response) {
     					$scope.importLog += " OK.\n";
-    					$scope.groups.setItemsFromPayLoad(response);
+    					$scope.groups.setItems(response);
     					addEntitleJobs(job, jobQueue);
     					process(jobQueue.pop());
     				}).error(function(response) {
@@ -213,7 +213,7 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
             	if (!angular.equals(subscription.title, job.title)) {
 	            	$scope.ajaxService.entitleSubscription(job.groupId, subscription.id, job.title).success(function(response) {
 			        	$scope.importLog += " OK.\n";
-			        	$scope.groups.setItemsFromPayLoad(response);
+			        	$scope.groups.setItems(response);
 						process(jobQueue.pop());
 			        }).error(function(response) {
 						$scope.importLog += " ERROR.\n";

@@ -11,10 +11,6 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 	$scope.groups.items = [];
 	$scope.groups.unreadCount = 0;
 	
-	$scope.groups.setItemsFromPayLoad = function(response) {
-		$scope.groups.setItems(response.payload);
-	};
-	
 	$scope.groups.add = function(response) {
 		$scope.groups.items.push(response);
 	};
@@ -127,8 +123,8 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
     	
     	$scope.ajaxService.loadPosts(filter).then(function(response) {
-    		$scope.posts.moreItemsAvailable = response.data.payload.length === filter.count;
-    		$scope.posts.append(response.data.payload);
+    		$scope.posts.moreItemsAvailable = response.data.length === filter.count;
+    		$scope.posts.append(response.data);
     		$scope.posts.loading = false;
         }, function() {
         	$scope.posts.loading = false;
@@ -147,7 +143,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		if (!post.read) {
 			post.read = true;
 			$scope.ajaxService.markRead(post).then(function(response) {
-				$scope.groups.setItemsFromPayLoad(response.data);
+				$scope.groups.setItems(response.data);
 			}, function() {
 	        	$scope.posts.loading = false;
 	        	$scope.alertService.add("Error occured while marking post '" + post.title + "' read.");
@@ -167,7 +163,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 			$scope.posts.loading = true;
 			$scope.viewService.postFilter.resetPageIndex();
 			$scope.ajaxService.markAllRead(unreads, $scope.viewService.postFilter.get()).then(function(response) {
-				$scope.groups.setItemsFromPayLoad(response.data);
+				$scope.groups.setItems(response.data);
 				$scope.posts.loading = false;
 				$scope.posts.load();
 	        }, function() {

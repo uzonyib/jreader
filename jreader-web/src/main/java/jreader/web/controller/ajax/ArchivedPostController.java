@@ -4,12 +4,14 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jreader.dto.ArchivedPostDto;
@@ -28,6 +30,7 @@ public class ArchivedPostController {
     }
 
     @PostMapping("/{archiveId}/posts")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void archive(final Principal principal, @PathVariable final Long archiveId, @RequestParam final Long groupId,
             @RequestParam final Long subscriptionId, @RequestParam final Long postId) {
         archiveService.archive(principal.getName(), groupId, subscriptionId, postId, archiveId);
@@ -46,6 +49,7 @@ public class ArchivedPostController {
     }
 
     @DeleteMapping("/{archiveId}/posts/{postId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(final Principal principal, @PathVariable final Long archiveId, @PathVariable final Long postId) {
         archiveService.deletePost(principal.getName(), archiveId, postId);
     }

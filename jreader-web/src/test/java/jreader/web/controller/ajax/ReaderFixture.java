@@ -240,7 +240,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getPostId(String title) {
-        List<PostDto> posts = (List<PostDto>) postController.list(principal, PostType.ALL, 0, Integer.MAX_VALUE, true).getPayload();
+        List<PostDto> posts = (List<PostDto>) postController.list(principal, PostType.ALL, 0, Integer.MAX_VALUE, true);
         for (PostDto post : posts) {
             if (title.equals(post.getTitle())) {
                 return post.getId();
@@ -251,17 +251,17 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public List<Post> getPosts(String selection, int from, int to, String order) {
         return convertPosts((List<PostDto>) postController
-                .list(principal, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
+                .list(principal, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)));
     }
     
     public List<Post> getPosts(Long groupId, String selection, int from, int to, String order) {
         return convertPosts((List<PostDto>) postController
-                .list(principal, groupId, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
+                .list(principal, groupId, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)));
     }
     
     public List<Post> getPosts(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
         return convertPosts((List<PostDto>) postController.list(principal, groupId, subscriptionId,
-                PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)).getPayload());
+                PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)));
     }
     
     private static List<Post> convertPosts(List<PostDto> dtos) {

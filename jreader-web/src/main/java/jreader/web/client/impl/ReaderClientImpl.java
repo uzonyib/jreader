@@ -5,8 +5,8 @@ import java.net.URI;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import jreader.dto.GroupDto;
 import jreader.web.client.ReaderClient;
-import jreader.web.controller.ResponseEntity;
 
 public class ReaderClientImpl implements ReaderClient {
 
@@ -21,7 +21,7 @@ public class ReaderClientImpl implements ReaderClient {
     @Override
     public void createGroup(final String title) {
         final URI uri = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("reader", "groups").queryParam("title", title).build().toUri();
-        restTemplate.postForEntity(uri, null, ResponseEntity.class);
+        restTemplate.postForEntity(uri, null, GroupDto.class);
     }
 
     @Override
