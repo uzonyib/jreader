@@ -25,10 +25,10 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <ui.minify>false</ui.minify>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>1.5.6.RELEASE</spring.boot.version>
-        <appengine.sdk.version>1.9.55</appengine.sdk.version>
+        <spring.boot.version>1.5.8.RELEASE</spring.boot.version>
+        <appengine.sdk.version>1.9.59</appengine.sdk.version>
         <objectify.version>5.1.21</objectify.version>
-        <rome.version>1.7.4</rome.version>
+        <rome.version>1.8.0</rome.version>
         <testng.version>6.11</testng.version>
         <powermock.version>1.6.6</powermock.version>
         <concordion.version>1.5.1</concordion.version>
