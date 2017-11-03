@@ -38,7 +38,7 @@ public class Group {
         this.order = order;
     }
 
-    public Group(GroupBuilder builder) {
+    public Group(final GroupBuilder builder) {
         this.id = builder.id;
         this.setUser(builder.user);
         this.title = builder.title;
