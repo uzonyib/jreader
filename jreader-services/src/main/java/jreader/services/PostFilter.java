@@ -1,9 +1,9 @@
 package jreader.services;
 
 import jreader.dao.PostFilter.PostType;
-import lombok.Getter;
+import lombok.Value;
 
-@Getter
+@Value
 public final class PostFilter {
 
     public enum ParentType {

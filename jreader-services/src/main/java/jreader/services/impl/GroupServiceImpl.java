@@ -1,5 +1,7 @@
 package jreader.services.impl;
 
+import static java.util.Objects.nonNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,8 +11,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import jreader.dao.DaoFacade;
 import jreader.dao.PostDao;
@@ -20,7 +22,7 @@ import jreader.domain.User;
 import jreader.dto.GroupDto;
 import jreader.dto.SubscriptionDto;
 import jreader.services.GroupService;
-import jreader.services.ServiceException;
+import jreader.services.exception.ResourceAlreadyExistsException;
 
 @Service
 public class GroupServiceImpl extends AbstractService implements GroupService {
@@ -66,12 +68,10 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
 
     @Override
     public GroupDto create(final String username, final String title) {
-        if (title == null || "".equals(title)) {
-            throw new ServiceException("Invalid group title.", HttpStatus.BAD_REQUEST);
-        }
+        Assert.hasLength(title, "Invalid group title.");
         final User user = this.getUser(username);
-        if (groupDao.find(user, title) != null) {
-            throw new ServiceException("Group already exists.", HttpStatus.CONFLICT);
+        if (nonNull(groupDao.find(user, title))) {
+            throw new ResourceAlreadyExistsException("Group with title '" + title + "' already exists.");
         }
 
         final Group entity = groupDao.save(Group.builder().user(user).title(title).order(groupDao.getMaxOrder(user) + 1).build());
@@ -83,12 +83,10 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
 
     @Override
     public GroupDto update(final String username, final GroupDto group) {
-        if (group.getTitle() == null || "".equals(group.getTitle())) {
-            throw new ServiceException("Invalid group title.", HttpStatus.BAD_REQUEST);
-        }
+        Assert.hasLength(group.getTitle(), "Invalid group title.");
         final User user = this.getUser(username);
-        if (groupDao.find(user, group.getTitle()) != null) {
-            throw new ServiceException("Group with this title already exists.", HttpStatus.CONFLICT);
+        if (nonNull(groupDao.find(user, group.getTitle()))) {
+            throw new ResourceAlreadyExistsException("Group with title '" + group.getTitle() + "' already exists.");
         }
 
         final Group entity = this.getGroup(user, group.getId());
@@ -104,9 +102,7 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
         final User user = this.getUser(username);
 
         final List<Group> entities = groupDao.list(user);
-        if (groups.size() != entities.size()) {
-            throw new ServiceException("Group count does not match.", HttpStatus.BAD_REQUEST);
-        }
+        Assert.isTrue(groups.size() == entities.size(), "Group count does not match.");
 
         final Map<Long, GroupDto> groupsById = new HashMap<>();
         for (int i = 0; i < groups.size(); ++i) {
@@ -118,9 +114,7 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
         final List<Group> entitiesToSave = new ArrayList<>();
         for (final Group group : entities) {
             final GroupDto groupById = groupsById.get(group.getId());
-            if (groupById == null) {
-                throw new ServiceException("Group " + group.getId() + " (" + group.getTitle() + ") not found.", HttpStatus.BAD_REQUEST);
-            }
+            Assert.notNull(groupById, "Group " + group.getId() + " (" + group.getTitle() + ") not found.");
             final int order = groupById.getOrder();
             if (group.getOrder() != order) {
                 group.setOrder(order);
@@ -135,12 +129,10 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
 
     @Override
     public void entitle(final String username, final Long groupId, final String title) {
-        if (title == null || "".equals(title)) {
-            throw new ServiceException("Group title invalid.", HttpStatus.BAD_REQUEST);
-        }
+        Assert.hasLength(title, "Group title invalid.");
         final User user = this.getUser(username);
-        if (groupDao.find(user, title) != null) {
-            throw new ServiceException("Group with this title already exists.", HttpStatus.CONFLICT);
+        if (nonNull(groupDao.find(user, title))) {
+            throw new ResourceAlreadyExistsException("Group with title '" + title + "' already exists.");
         }
         final Group group = this.getGroup(user, groupId);
 

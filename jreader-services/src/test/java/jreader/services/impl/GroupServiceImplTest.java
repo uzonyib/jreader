@@ -5,7 +5,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,7 +17,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -35,7 +33,7 @@ import jreader.domain.Subscription;
 import jreader.domain.User;
 import jreader.dto.GroupDto;
 import jreader.dto.SubscriptionDto;
-import jreader.services.ServiceException;
+import jreader.services.exception.ResourceAlreadyExistsException;
 
 @PowerMockIgnore("org.springframework.http.*")
 public class GroupServiceImplTest extends ServiceTest {
@@ -130,20 +128,31 @@ public class GroupServiceImplTest extends ServiceTest {
         assertThat(groupCaptor.getValue().getOrder()).isEqualTo(maxOrder + 1);
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void create_ShouldNotAllowNullTitle() {
+        final String newTitle = null;
+
+        sut.create(user.getUsername(), newTitle);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void create_ShouldNotAllowEmptyTitle() {
+        final String newTitle = "";
+
+        sut.create(user.getUsername(), newTitle);
+    }
+
+    @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void create_ShouldThrowException_IfGroupAlreadyExists() {
         when(groupDao.find(user, group.getTitle())).thenReturn(group);
 
         try {
             sut.create(user.getUsername(), group.getTitle());
-            fail();
-        } catch (ServiceException e) {
-            assertThat(e.getStatus()).isEqualTo(HttpStatus.CONFLICT);
+        } finally {
+            verify(userDao).find(user.getUsername());
+            verify(groupDao).find(user, group.getTitle());
+            verifyNoMoreInteractions(groupDao);
         }
-
-        verify(userDao).find(user.getUsername());
-        verify(groupDao).find(user, group.getTitle());
-        verifyNoMoreInteractions(groupDao);
     }
 
     @Test
@@ -168,21 +177,32 @@ public class GroupServiceImplTest extends ServiceTest {
         assertThat(groupCaptor.getValue().getOrder()).isEqualTo(group.getOrder());
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void update_ShouldNotAllowNullTitle() {
+        final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title(null).order(group.getOrder()).build();
+
+        sut.update(user.getUsername(), groupToUpdate);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void update_ShouldNotAllowEmptyTitle() {
+        final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title("").order(group.getOrder()).build();
+
+        sut.update(user.getUsername(), groupToUpdate);
+    }
+
+    @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void update_ShouldThrowException_IfTitleAlreadyExists() {
         final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title(group1.getTitle()).order(group.getOrder()).build();
         when(groupDao.find(user, groupToUpdate.getTitle())).thenReturn(group1);
 
         try {
             sut.update(user.getUsername(), groupToUpdate);
-            fail();
-        } catch (ServiceException e) {
-            assertThat(e.getStatus()).isEqualTo(HttpStatus.CONFLICT);
+        } finally {
+            verify(userDao).find(user.getUsername());
+            verify(groupDao).find(user, groupToUpdate.getTitle());
+            verifyNoMoreInteractions(groupDao);
         }
-
-        verify(userDao).find(user.getUsername());
-        verify(groupDao).find(user, groupToUpdate.getTitle());
-        verifyNoMoreInteractions(groupDao);
     }
 
     @Test
@@ -207,14 +227,37 @@ public class GroupServiceImplTest extends ServiceTest {
         assertThat(groupCaptor.getValue().getTitle()).isEqualTo(newTitle);
     }
 
-    @Test(expectedExceptions = ServiceException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void entitle_ShouldNotAllowNullTitle() {
+        final String newTitle = null;
+
+        sut.entitle(user.getUsername(), group.getId(), newTitle);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void entitle_ShouldNotAllowEmptyTitle() {
+        final String newTitle = "";
+
+        sut.entitle(user.getUsername(), group.getId(), newTitle);
+    }
+
+    @Test(expectedExceptions = ResourceAlreadyExistsException.class)
+    public void entitle_ShouldThrowException_IfGroupTitleAlreadyExists() {
+        when(groupDao.find(user, group.getId())).thenReturn(group);
+        final String newTitle = "new title";
+        when(groupDao.find(user, newTitle)).thenReturn(group);
+
+        sut.entitle(user.getUsername(), group.getId(), newTitle);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void reorder_ShouldThrowException_IfGroupCountDoesNotMatch() {
         when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
 
         sut.reorder(user.getUsername(), Arrays.asList(groupDto, groupDto1));
     }
 
-    @Test(expectedExceptions = ServiceException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void reorder_ShouldThrowException_IfTitlesDoNotMatch() {
         when(groupDao.list(user)).thenReturn(Arrays.asList(group, group1, group2));
         groupDto2.setId(100L);
