@@ -113,7 +113,7 @@
 </form>
 
 <table id="archive-settings" class="table">
-	<tbody class="settings-group" data-ng-repeat="archive in archives">
+	<tbody class="settings-group" data-ng-repeat="archive in archives.items">
 		<tr class="settings-item">
 			<td class="title">
 				<span class="title" data-ng-show="!archive.editingTitle" data-ng-click="editTitle(archive)">{{::archive.title}}</span>

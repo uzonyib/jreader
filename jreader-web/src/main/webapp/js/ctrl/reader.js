@@ -290,22 +290,37 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
         	$scope.alertService.add("Error occured while loading archived posts.");
         });
     };
+
+    $scope.archives = {};
+    $scope.archives.items = [];
+
+    $scope.archives.remove = function(id) {
+        $scope.archives.items.splice($scope.archives.indexOf(id), 1);
+	};
+
+	$scope.archives.indexOf = function(id) {
+		var index = null;
+		angular.forEach($scope.archives.items, function(item, idx) {
+			if (angular.equals(id, item.id)) {
+				index = idx;
+			}
+		});
+		return index;
+	};
     
-    $scope.archives = [];
-    
-	$scope.setArchives = function(response) {
-		$scope.archives = response;
-    	angular.forEach($scope.archives, function(archive) {
+	$scope.archives.setItems = function(response) {
+		$scope.archives.items = response;
+		angular.forEach($scope.archives.items, function(archive) {
 			archive.editingTitle = false;
 			archive.newTitle = archive.title;
 		});
 	};
 	
-	$scope.refreshArchives = function() {
-		$scope.ajaxService.refreshArchives().success($scope.setArchives);
+	$scope.archives.refresh = function() {
+		$scope.ajaxService.refreshArchives().success($scope.archives.setItems);
     };
 	
-    $scope.refreshArchives();
+    $scope.archives.refresh();
     
     $scope.menu = {};
     $scope.menu.expandedItems = [];

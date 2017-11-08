@@ -39,14 +39,14 @@
 <ul class="nav nav-pills nav-stacked">
 	<li id="archives-menu-item" class="menu-item"
 		data-ng-class="{selected: menu.archivedItemsSelected}"
-		data-ng-show="archives.length > 0"
+		data-ng-show="archives.items.length > 0"
 		data-ng-click="viewService.selectArchivedItems()">
 		<span class="glyphicon glyphicon-plus" data-ng-show="!menu.archivedItemsExpanded" data-ng-click="menu.expandArchivedItems($event)"></span>
 		<span class="glyphicon glyphicon-minus" data-ng-show="menu.archivedItemsExpanded" data-ng-click="menu.collapseArchivedItems($event)"></span>
 		<span class="title">Archives</span>
 	</li>
 	<li data-ng-show="menu.archivedItemsExpanded"
-		data-ng-repeat="archive in archives"
+		data-ng-repeat="archive in archives.items"
 		class="menu-item feed-item archive-item"
 		data-ng-class="{selected: archive.selected}"
 		data-ng-click="viewService.selectArchive(archive.id)">

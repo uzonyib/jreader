@@ -80,24 +80,26 @@ angular.module("jReaderApp").controller("SettingsCtrl", ["$scope", "ajaxService"
 	};
 	
 	$scope.createArchive = function() {
-		$scope.ajaxService.createArchive($scope.newArchiveTitle).success($scope.setArchives);
+		$scope.ajaxService.createArchive($scope.newArchiveTitle).success($scope.archives.setItems);
 		$scope.newArchiveTitle = "";
 	};
 	
 	$scope.deleteArchive = function(archiveId) {
-		$scope.ajaxService.deleteArchive(archiveId).success($scope.setArchives);
+		$scope.ajaxService.deleteArchive(archiveId).success(function() {
+			$scope.archives.remove(archiveId);
+		});
 	};
 	
 	$scope.moveArchiveUp = function(archiveId) {
-		$scope.ajaxService.moveArchiveUp(archiveId).success($scope.setArchives);
+		$scope.ajaxService.moveArchiveUp(archiveId).success($scope.archives.setItems);
 	};
 	
 	$scope.moveArchiveDown = function(archiveId) {
-		$scope.ajaxService.moveArchiveDown(archiveId).success($scope.setArchives);
+		$scope.ajaxService.moveArchiveDown(archiveId).success($scope.archives.setItems);
 	};
 	
 	$scope.entitleArchive = function(archive) {
-		$scope.ajaxService.entitleArchive(archive.id, archive.newTitle).success($scope.setArchives);
+		$scope.ajaxService.entitleArchive(archive.id, archive.newTitle).success($scope.archives.setItems);
 	};
 	
 	$scope.exportSubscriptions = function() {
