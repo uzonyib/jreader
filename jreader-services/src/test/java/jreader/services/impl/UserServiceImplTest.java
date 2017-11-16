@@ -71,17 +71,8 @@ public class UserServiceImplTest extends ServiceTest {
         assertThat(userCaptor.getValue().getRegistrationDate()).isEqualTo(CURRENT_DATE);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void register_ShouldThrowException_IfUsernameIsNull() {
-        final String username = null;
-
-        sut.register(username, Role.UNAUTHORIZED);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void register_ShouldThrowException_IfUsernameIsEmpty() {
-        final String username = "";
-
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidUsernames")
+    public void register_ShouldThrowException_IfUsernameIsInvalid(String username) {
         sut.register(username, Role.UNAUTHORIZED);
     }
 
@@ -129,17 +120,8 @@ public class UserServiceImplTest extends ServiceTest {
         assertThat(actual).isEqualTo(Role.USER);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void getRole_ShouldThrowException_IfUsernameIsNull() {
-        final String username = null;
-
-        sut.getRole(username);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void getRole_ShouldThrowException_IfUsernameIsEmpty() {
-        final String username = "";
-
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidUsernames")
+    public void getRole_ShouldThrowException_IfUsernameIsInvalid(String username) {
         sut.getRole(username);
     }
 

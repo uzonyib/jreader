@@ -14,12 +14,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import jreader.dao.UserDao;
 import jreader.domain.Role;
 import jreader.domain.User;
 import jreader.dto.UserDto;
+import jreader.services.exception.ResourceNotFoundException;
 
 public class UserAdminServiceImplTest {
 
@@ -64,6 +66,20 @@ public class UserAdminServiceImplTest {
         assertThat(actual).isEqualTo(Arrays.asList(dto1, dto2));
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "invalidListParameters")
+    public void list_ShouldNotAllowNegativeOffset(int offset, int count) {
+        sut.list(offset, count);
+    }
+
+    @DataProvider(name = "invalidListParameters")
+    private Integer[][] getInvalidListParameters() {
+        return new Integer[][] {
+            { -1, 10 },
+            { 0, -1 },
+            { 0, 0 }
+            };
+    }
+
     @Test
     public void updateRole_ShouldUpdateRole() {
         when(userDao.find(USERNAME)).thenReturn(user1);
@@ -72,6 +88,23 @@ public class UserAdminServiceImplTest {
 
         verify(user1).setRole(Role.ADMIN);
         verify(userDao).save(user1);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidUsernames")
+    public void updateRole_NotAllowInvalidUsername(String username) {
+        sut.updateRole(username, "ADMIN");
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidRoles")
+    public void updateRole_NotAllowInvalidRole(String role) {
+        sut.updateRole(USERNAME, role);
+    }
+
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void updateRole_ShouldThrowException_IfUserNotFound() {
+        when(userDao.find(USERNAME)).thenReturn(null);
+
+        sut.updateRole(USERNAME, "ADMIN");
     }
 
 }

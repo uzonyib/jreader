@@ -128,18 +128,9 @@ public class GroupServiceImplTest extends ServiceTest {
         assertThat(groupCaptor.getValue().getOrder()).isEqualTo(maxOrder + 1);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void create_ShouldNotAllowNullTitle() {
-        final String newTitle = null;
-
-        sut.create(user.getUsername(), newTitle);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void create_ShouldNotAllowEmptyTitle() {
-        final String newTitle = "";
-
-        sut.create(user.getUsername(), newTitle);
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidGroupTitles")
+    public void create_ShouldNotAllowInvalidTitle(String title) {
+        sut.create(user.getUsername(), title);
     }
 
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
@@ -177,16 +168,9 @@ public class GroupServiceImplTest extends ServiceTest {
         assertThat(groupCaptor.getValue().getOrder()).isEqualTo(group.getOrder());
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void update_ShouldNotAllowNullTitle() {
-        final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title(null).order(group.getOrder()).build();
-
-        sut.update(user.getUsername(), groupToUpdate);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void update_ShouldNotAllowEmptyTitle() {
-        final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title("").order(group.getOrder()).build();
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidGroupTitles")
+    public void update_ShouldNotAllowInvalidTitle(String title) {
+        final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title(title).order(group.getOrder()).build();
 
         sut.update(user.getUsername(), groupToUpdate);
     }
@@ -227,18 +211,9 @@ public class GroupServiceImplTest extends ServiceTest {
         assertThat(groupCaptor.getValue().getTitle()).isEqualTo(newTitle);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void entitle_ShouldNotAllowNullTitle() {
-        final String newTitle = null;
-
-        sut.entitle(user.getUsername(), group.getId(), newTitle);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void entitle_ShouldNotAllowEmptyTitle() {
-        final String newTitle = "";
-
-        sut.entitle(user.getUsername(), group.getId(), newTitle);
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidGroupTitles")
+    public void entitle_ShouldNotAllowInvalidTitle(String title) {
+        sut.entitle(user.getUsername(), group.getId(), title);
     }
 
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
