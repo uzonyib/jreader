@@ -1,15 +1,15 @@
 package jreader.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import jreader.dao.UserDao;
 import jreader.domain.Role;
 import jreader.domain.User;
 import jreader.services.DateHelper;
-import jreader.services.ServiceException;
 import jreader.services.UserService;
+import jreader.services.exception.ResourceAlreadyExistsException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,9 +31,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(final String username, final Role role) {
+        Assert.hasLength(username, "Invalid username.");
+        Assert.notNull(role, "Invalid role.");
         if (userDao.find(username) != null) {
-            throw new ServiceException("User already exists.", HttpStatus.CONFLICT);
+            throw new ResourceAlreadyExistsException("User with username '" + username + "' already exists.");
         }
+
         final User user = new User();
         user.setUsername(username);
         user.setRole(role);
@@ -43,6 +46,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Role getRole(final String username) {
+        Assert.hasLength(username, "Invalid username.");
+
         final User user = userDao.find(username);
         if (user == null) {
             return null;

@@ -5,14 +5,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.fail;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -20,7 +18,7 @@ import jreader.dao.UserDao;
 import jreader.domain.Role;
 import jreader.domain.User;
 import jreader.services.DateHelper;
-import jreader.services.ServiceException;
+import jreader.services.exception.ResourceAlreadyExistsException;
 
 public class UserServiceImplTest extends ServiceTest {
 
@@ -73,16 +71,34 @@ public class UserServiceImplTest extends ServiceTest {
         assertThat(userCaptor.getValue().getRegistrationDate()).isEqualTo(CURRENT_DATE);
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void register_ShouldThrowException_IfUsernameIsNull() {
+        final String username = null;
+
+        sut.register(username, Role.UNAUTHORIZED);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void register_ShouldThrowException_IfUsernameIsEmpty() {
+        final String username = "";
+
+        sut.register(username, Role.UNAUTHORIZED);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void register_ShouldThrowException_IfRoleIsNull() {
+        final Role role = null;
+
+        sut.register(NEW_USER, role);
+    }
+
+    @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void register_ShouldThrowException_IfUserAlreadyExists() {
         try {
             sut.register(EXISTING_USER, Role.UNAUTHORIZED);
-            fail();
-        } catch (ServiceException e) {
-            assertThat(e.getStatus()).isEqualTo(HttpStatus.CONFLICT);
+        } finally {
+            verify(userDao, never()).save(any(User.class));
         }
-
-        verify(userDao, never()).save(any(User.class));
     }
 
     @Test
@@ -111,6 +127,20 @@ public class UserServiceImplTest extends ServiceTest {
         final Role actual = sut.getRole(EXISTING_USER);
 
         assertThat(actual).isEqualTo(Role.USER);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void getRole_ShouldThrowException_IfUsernameIsNull() {
+        final String username = null;
+
+        sut.getRole(username);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void getRole_ShouldThrowException_IfUsernameIsEmpty() {
+        final String username = "";
+
+        sut.getRole(username);
     }
 
 }
