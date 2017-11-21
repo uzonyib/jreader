@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -39,7 +38,8 @@ import jreader.domain.User;
 import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedPostDto;
 import jreader.services.ArchivedPostFilter;
-import jreader.services.ServiceException;
+import jreader.services.exception.ResourceAlreadyExistsException;
+import jreader.services.exception.ResourceNotFoundException;
 
 public class ArchiveServiceImplTest extends ServiceTest {
 
@@ -150,20 +150,28 @@ public class ArchiveServiceImplTest extends ServiceTest {
         assertThat(archiveCaptor.getValue().getUser()).isEqualTo(user);
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidArchiveTitles")
+    public void createArchive_ShouldThrowException_IfUsernameIsInvalid(String username) {
+        sut.createArchive(username, archive.getTitle());
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidArchiveTitles")
+    public void createArchive_ShouldThrowException_IfTitleIsInvalid(String title) {
+        sut.createArchive(user.getUsername(), title);
+    }
+
+    @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void createArchive_ShouldThrowException_IfArchiveAlreadyExists() {
         when(archiveDao.find(user, archive.getTitle())).thenReturn(archive);
 
         try {
             sut.createArchive(user.getUsername(), archive.getTitle());
             fail();
-        } catch (ServiceException e) {
-            assertThat(e.getStatus()).isEqualTo(HttpStatus.CONFLICT);
+        } finally {
+            verify(userDao).find(user.getUsername());
+            verify(archiveDao).find(user, archive.getTitle());
+            verifyNoMoreInteractions(archiveDao);
         }
-
-        verify(userDao).find(user.getUsername());
-        verify(archiveDao).find(user, archive.getTitle());
-        verifyNoMoreInteractions(archiveDao);
     }
 
     @Test
@@ -178,6 +186,13 @@ public class ArchiveServiceImplTest extends ServiceTest {
         verify(archiveDao).delete(archive);
     }
 
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void deleteArchive_ShouldThrowException_IfArchiveNotFound() {
+        when(archiveDao.find(user, archive.getId())).thenReturn(null);
+
+        sut.deleteArchive(user.getUsername(), archive.getId());
+    }
+
     @Test
     public void entitle_ShouldUpdateArchiveTitle_IfArchiveExists() {
         final String newTitle = "new title";
@@ -187,6 +202,19 @@ public class ArchiveServiceImplTest extends ServiceTest {
         verify(userDao).find(user.getUsername());
         verify(archiveDao).save(archiveCaptor.capture());
         assertThat(archiveCaptor.getValue().getTitle()).isEqualTo(newTitle);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidArchiveTitles")
+    public void entitle_ShouldThrowException_IfTitleIsInvalid(String title) {
+        sut.entitle(user.getUsername(), archive.getId(), title);
+    }
+
+    @Test(expectedExceptions = ResourceAlreadyExistsException.class)
+    public void entitle_ShouldThrowException_IfArchiveAlreadyExists() {
+        final String newTitle = "new title";
+        when(archiveDao.find(user, newTitle)).thenReturn(archive);
+
+        sut.entitle(user.getUsername(), archive.getId(), newTitle);
     }
 
     @Test
@@ -202,6 +230,20 @@ public class ArchiveServiceImplTest extends ServiceTest {
         assertThat(archiveListCaptor.getValue().get(1).getOrder()).isEqualTo(1);
     }
 
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void moveUp_ShouldThrowException_WhenArchiveNotFound() {
+        when(archiveDao.list(user)).thenReturn(Arrays.asList(archive, archive1, archive2));
+
+        sut.moveUp(user.getUsername(), archive2.getId() + 1);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void moveUp_ShouldThrowException_WhenMovingFirstArchive() {
+        when(archiveDao.list(user)).thenReturn(Arrays.asList(archive, archive1, archive2));
+
+        sut.moveUp(user.getUsername(), archive.getId());
+    }
+
     @Test
     public void moveDown_ShouldUpdateArchiveOrders() {
         when(archiveDao.list(user)).thenReturn(Arrays.asList(archive, archive1, archive2));
@@ -213,6 +255,20 @@ public class ArchiveServiceImplTest extends ServiceTest {
         assertThat(archiveListCaptor.getValue().get(0).getOrder()).isEqualTo(3);
         assertThat(archiveListCaptor.getValue().get(1).getId()).isEqualTo(archive2.getId());
         assertThat(archiveListCaptor.getValue().get(1).getOrder()).isEqualTo(2);
+    }
+
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void moveDown_ShouldThrowException_WhenArchiveNotFound() {
+        when(archiveDao.list(user)).thenReturn(Arrays.asList(archive, archive1, archive2));
+
+        sut.moveDown(user.getUsername(), archive2.getId() + 1);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void moveDown_ShouldThrowException_WhenMovingLastArchive() {
+        when(archiveDao.list(user)).thenReturn(Arrays.asList(archive, archive1, archive2));
+
+        sut.moveDown(user.getUsername(), archive2.getId());
     }
 
     @Test

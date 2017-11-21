@@ -35,7 +35,6 @@ import jreader.services.CronService;
 import jreader.services.DateHelper;
 import jreader.services.FeedFetcher;
 import jreader.services.RssService;
-import jreader.services.ServiceException;
 import jreader.services.StatService;
 import jreader.services.UserService;
 import jreader.services.impl.DateHelperImpl;
@@ -226,7 +225,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     public void entitleSubscription(Long groupId, Long subscriptionId, String title) {
         try {
             subscriptionController.entitle(principal, groupId, subscriptionId, "empty string".equals(title) ? "" : title);
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             
         }
     }
@@ -234,7 +233,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     public void moveSubscription(Long groupId, Long subscriptionId, String direction) {
         try {
             subscriptionController.move(principal, groupId, subscriptionId, "up".equals(direction));
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             
         }
     }
@@ -298,7 +297,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
         try {
             List<ArchiveDto> archives = (List<ArchiveDto>) archiveController.create(principal, "empty string".equals(title) ? "" : title);
             return Long.valueOf(archives.get(archives.size() - 1).getId());
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -310,7 +309,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     public void entitleArchive(Long id, String title) {
         try {
             archiveController.entitle(principal, id, "empty string".equals(title) ? "" : title);
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             
         }
     }
@@ -318,7 +317,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     public void moveArchive(Long id, String direction) {
         try {
             archiveController.move(principal, id, "up".equals(direction));
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             
         }
     }

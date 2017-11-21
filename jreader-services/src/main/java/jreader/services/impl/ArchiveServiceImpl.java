@@ -2,12 +2,13 @@ package jreader.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedPostDao;
@@ -23,7 +24,8 @@ import jreader.dto.ArchiveDto;
 import jreader.dto.ArchivedPostDto;
 import jreader.services.ArchiveService;
 import jreader.services.ArchivedPostFilter;
-import jreader.services.ServiceException;
+import jreader.services.exception.ResourceAlreadyExistsException;
+import jreader.services.exception.ResourceNotFoundException;
 
 @Service
 public class ArchiveServiceImpl extends AbstractService implements ArchiveService {
@@ -46,19 +48,17 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     private Archive getArchive(final User user, final Long id) {
         final Archive archive = archiveDao.find(user, id);
         if (archive == null) {
-            throw new ServiceException("Archive not found, ID " + id, HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Archive not found, ID " + id);
         }
         return archive;
     }
 
     @Override
     public ArchiveDto createArchive(final String username, final String title) {
-        if (title == null || "".equals(title)) {
-            throw new ServiceException("Archive title invalid.", HttpStatus.BAD_REQUEST);
-        }
+        Assert.hasLength(title, "Archive title invalid.");
         final User user = this.getUser(username);
         if (archiveDao.find(user, title) != null) {
-            throw new ServiceException("Archive already exists.", HttpStatus.CONFLICT);
+            throw new ResourceAlreadyExistsException("Archive with title '" + title + "' already exists.");
         }
         final Archive archive = archiveDao.save(new Archive.Builder().user(user).title(title).order(archiveDao.getMaxOrder(user) + 1).build());
         return conversionService.convert(archive, ArchiveDto.class);
@@ -76,21 +76,10 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     @Override
     public void moveUp(final String username, final Long archiveId) {
         final User user = this.getUser(username);
-
         final List<Archive> archives = archiveDao.list(user);
-        Integer index = null;
-        for (int i = 0; i < archives.size(); ++i) {
-            if (archives.get(i).getId().equals(archiveId)) {
-                index = i;
-            }
-        }
 
-        if (index == null) {
-            return;
-        }
-        if (index == 0) {
-            throw new ServiceException("Cannot move first archive up.", HttpStatus.BAD_REQUEST);
-        }
+        Integer index = findArchive(archiveId, archives);
+        Assert.isTrue(index > 0, "Cannot move first archive up.");
 
         swap(archives.get(index - 1), archives.get(index));
     }
@@ -98,8 +87,15 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     @Override
     public void moveDown(final String username, final Long archiveId) {
         final User user = this.getUser(username);
-
         final List<Archive> archives = archiveDao.list(user);
+
+        Integer index = findArchive(archiveId, archives);
+        Assert.isTrue(index < archives.size() - 1, "Cannot move last archive down.");
+
+        swap(archives.get(index), archives.get(index + 1));
+    }
+
+    private Integer findArchive(final Long archiveId, final List<Archive> archives) {
         Integer index = null;
         for (int i = 0; i < archives.size(); ++i) {
             if (archives.get(i).getId().equals(archiveId)) {
@@ -107,14 +103,11 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
             }
         }
 
-        if (index == null) {
-            return;
-        }
-        if (index == archives.size() - 1) {
-            throw new ServiceException("Cannot move last archive down.", HttpStatus.BAD_REQUEST);
+        if (Objects.isNull(index)) {
+            throw new ResourceNotFoundException("Archive not found, ID " + archiveId);
         }
 
-        swap(archives.get(index), archives.get(index + 1));
+        return index;
     }
 
     private void swap(final Archive archive1, final Archive archive2) {
@@ -140,15 +133,13 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
 
     @Override
     public void entitle(final String username, final Long archiveId, final String title) {
-        if (title == null || "".equals(title)) {
-            throw new ServiceException("Archive title invalid.", HttpStatus.BAD_REQUEST);
-        }
+        Assert.hasLength(title, "Archive title invalid.");
         final User user = this.getUser(username);
         if (archiveDao.find(user, title) != null) {
-            throw new ServiceException("Archive with this title already exists.", HttpStatus.CONFLICT);
+            throw new ResourceAlreadyExistsException("Archive with this title already exists.");
         }
-        final Archive archive = this.getArchive(user, archiveId);
 
+        final Archive archive = this.getArchive(user, archiveId);
         archive.setTitle(title);
         archiveDao.save(archive);
     }

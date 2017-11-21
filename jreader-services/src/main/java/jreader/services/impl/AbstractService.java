@@ -1,5 +1,7 @@
 package jreader.services.impl;
 
+import org.springframework.util.Assert;
+
 import jreader.dao.GroupDao;
 import jreader.dao.SubscriptionDao;
 import jreader.dao.UserDao;
@@ -21,6 +23,8 @@ abstract class AbstractService {
     }
 
     protected User getUser(final String username) {
+        Assert.hasLength(username, "Username invalid.");
+
         final User user = userDao.find(username);
         if (user == null) {
             throw new ResourceNotFoundException("User not found, username: " + username);
