@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.mockito.InjectMocks;
@@ -19,6 +19,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import jreader.domain.Feed;
 import jreader.dto.RssFetchResult;
 import jreader.services.FeedFetcher;
+import jreader.services.exception.FetchException;
 
 public class RssServiceImplTest {
 
@@ -32,20 +33,23 @@ public class RssServiceImplTest {
     @Mock
     private ConversionService conversionService;
 
+    private URL url;
+
     @Mock
     private Feed feed;
     @Mock
     private SyndFeed syndFeed;
 
     @BeforeMethod
-    public void setup() {
+    public void setup() throws MalformedURLException {
         MockitoAnnotations.initMocks(this);
+
+        url = new URL(RSS_URL);
     }
 
     @Test
     public void fetch_ShouldBeSuccessful_IfUrlIsValid() throws Exception {
         final RssFetchResult rssFetchResult = new RssFetchResult(feed, null);
-        final URL url = new URL(RSS_URL);
         when(feedFetcher.retrieveFeed(url)).thenReturn(syndFeed);
         when(conversionService.convert(syndFeed, RssFetchResult.class)).thenReturn(rssFetchResult);
 
@@ -57,15 +61,22 @@ public class RssServiceImplTest {
         assertThat(actual).isNotNull();
     }
 
-    @Test
-    public void fetch_ShouldReturnNull_IfUrlIsInvalid() throws Exception {
-        final URL url = new URL(RSS_URL);
-        when(feedFetcher.retrieveFeed(url)).thenThrow(new IOException());
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void fetch_ShouldThrowException_IfUrlIsInvalid() {
+        final String invalidUrl = "domain.com/rss";
 
-        final RssFetchResult actual = sut.fetch(RSS_URL);
+        sut.fetch(invalidUrl);
+    }
 
-        verify(feedFetcher).retrieveFeed(url);
-        assertThat(actual).isNull();
+    @Test(expectedExceptions = FetchException.class)
+    public void fetch_ShouldThrowException_IfFetchFails() throws Exception {
+        when(feedFetcher.retrieveFeed(url)).thenThrow(new FetchException());
+
+        try {
+            sut.fetch(RSS_URL);
+        } finally {
+            verify(feedFetcher).retrieveFeed(url);
+        }
     }
 
 }

@@ -1,8 +1,9 @@
 package jreader.services.impl;
 
+import static java.util.Objects.isNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -78,7 +79,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
         final User user = this.getUser(username);
         final List<Archive> archives = archiveDao.list(user);
 
-        Integer index = findArchive(archiveId, archives);
+        int index = findArchive(archiveId, archives);
         Assert.isTrue(index > 0, "Cannot move first archive up.");
 
         swap(archives.get(index - 1), archives.get(index));
@@ -89,13 +90,13 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
         final User user = this.getUser(username);
         final List<Archive> archives = archiveDao.list(user);
 
-        Integer index = findArchive(archiveId, archives);
+        int index = findArchive(archiveId, archives);
         Assert.isTrue(index < archives.size() - 1, "Cannot move last archive down.");
 
         swap(archives.get(index), archives.get(index + 1));
     }
 
-    private Integer findArchive(final Long archiveId, final List<Archive> archives) {
+    private int findArchive(final Long archiveId, final List<Archive> archives) {
         Integer index = null;
         for (int i = 0; i < archives.size(); ++i) {
             if (archives.get(i).getId().equals(archiveId)) {
@@ -103,7 +104,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
             }
         }
 
-        if (Objects.isNull(index)) {
+        if (isNull(index)) {
             throw new ResourceNotFoundException("Archive not found, ID " + archiveId);
         }
 

@@ -42,6 +42,7 @@ import jreader.dto.FeedDto;
 import jreader.dto.RssFetchResult;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
+import jreader.services.exception.FetchException;
 
 public class CronServiceImplTest extends ServiceTest {
 
@@ -243,7 +244,7 @@ public class CronServiceImplTest extends ServiceTest {
 
     @Test
     public void refreshFeeds_ShouldSetStatusToOne_IfStatusIsNotSetAndRefreshFails() {
-        when(rssService.fetch(feed1.getUrl())).thenReturn(null);
+        when(rssService.fetch(feed1.getUrl())).thenThrow(new FetchException());
 
         sut.refresh(feed1.getUrl());
 
@@ -255,7 +256,7 @@ public class CronServiceImplTest extends ServiceTest {
     @Test
     public void refreshFeeds_ShouldIncrementStatus_IfRefreshFails() {
         feed1.setStatus(3);
-        when(rssService.fetch(feed1.getUrl())).thenReturn(null);
+        when(rssService.fetch(feed1.getUrl())).thenThrow(new FetchException());
 
         sut.refresh(feed1.getUrl());
 
@@ -267,7 +268,7 @@ public class CronServiceImplTest extends ServiceTest {
     @Test
     public void refreshFeeds_ShouldKeepMaxStatus_IfStatusIsMaxAndRefreshFails() {
         feed1.setStatus(5);
-        when(rssService.fetch(feed1.getUrl())).thenReturn(null);
+        when(rssService.fetch(feed1.getUrl())).thenThrow(new FetchException());
 
         sut.refresh(feed1.getUrl());
 

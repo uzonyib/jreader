@@ -6,6 +6,6 @@ import com.rometools.rome.feed.synd.SyndFeed;
 
 public interface FeedFetcher {
 
-    SyndFeed retrieveFeed(URL feedSource) throws Exception;
+    SyndFeed retrieveFeed(URL feedSource);
 
 }

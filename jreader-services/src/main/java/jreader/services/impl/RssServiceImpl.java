@@ -1,8 +1,9 @@
 package jreader.services.impl;
 
+import static java.util.Objects.nonNull;
+
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -17,8 +18,6 @@ import jreader.services.RssService;
 @Service
 public class RssServiceImpl implements RssService {
 
-    private static final Logger LOG = Logger.getLogger(RssServiceImpl.class.getName());
-
     private FeedFetcher feedFetcher;
     private ConversionService conversionService;
 
@@ -30,18 +29,25 @@ public class RssServiceImpl implements RssService {
 
     @Override
     public RssFetchResult fetch(final String url) {
+        final URL feedSource = getSource(url);
+        final SyndFeed syndFeed = feedFetcher.retrieveFeed(feedSource);
+        return convertResult(url, syndFeed);
+    }
+
+    private URL getSource(final String url) {
         try {
-            final URL feedSource = new URL(url);
-            final SyndFeed syndFeed = feedFetcher.retrieveFeed(feedSource);
-            final RssFetchResult result = conversionService.convert(syndFeed, RssFetchResult.class);
-            if (result != null && result.getFeed() != null) {
-                result.getFeed().setUrl(url);
-            }
-            return result;
-        } catch (final Exception e) {
-            LOG.log(Level.WARNING, "Error while fetching feed: " + url, e);
-            return null;
+            return new URL(url);
+        } catch (final MalformedURLException e) {
+            throw new IllegalArgumentException("Invalid feed URL: " + url);
         }
+    }
+
+    private RssFetchResult convertResult(final String url, final SyndFeed syndFeed) {
+        final RssFetchResult result = conversionService.convert(syndFeed, RssFetchResult.class);
+        if (nonNull(result) && nonNull(result.getFeed())) {
+            result.getFeed().setUrl(url);
+        }
+        return result;
     }
 
 }

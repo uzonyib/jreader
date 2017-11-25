@@ -1,12 +1,15 @@
 package jreader.services.impl;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import jreader.dao.DaoFacade;
 import jreader.dao.FeedDao;
@@ -19,8 +22,10 @@ import jreader.domain.User;
 import jreader.dto.RssFetchResult;
 import jreader.dto.SubscriptionDto;
 import jreader.services.RssService;
-import jreader.services.ServiceException;
 import jreader.services.SubscriptionService;
+import jreader.services.exception.FetchException;
+import jreader.services.exception.ResourceAlreadyExistsException;
+import jreader.services.exception.ResourceNotFoundException;
 
 @Service
 public class SubscriptionServiceImpl extends AbstractService implements SubscriptionService {
@@ -45,17 +50,19 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     public SubscriptionDto subscribe(final String username, final Long groupId, final String url) {
         Feed feed = feedDao.find(url);
         if (feed == null) {
-            final RssFetchResult rssFetchResult = rssService.fetch(url);
-            if (rssFetchResult == null) {
-                throw new ServiceException("Cannot fetch feed: " + url, HttpStatus.INTERNAL_SERVER_ERROR);
+            final RssFetchResult rssFetchResult;
+            try {
+                rssFetchResult = rssService.fetch(url);
+            } catch (FetchException e) {
+                throw new IllegalArgumentException("Feed '" + url + "' cannot be fetched.", e);
             }
             feed = feedDao.save(rssFetchResult.getFeed());
         }
 
         final User user = this.getUser(username);
         Subscription subscription = subscriptionDao.find(user, feed);
-        if (subscription != null) {
-            throw new ServiceException("Subscription already exists.", HttpStatus.CONFLICT);
+        if (nonNull(subscription)) {
+            throw new ResourceAlreadyExistsException("User " + username + " is already subscribed to " + url + ".");
         }
 
         final Group group = this.getGroup(user, groupId);
@@ -79,13 +86,12 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     
     @Override
     public void entitle(final String username, final Long groupId, final Long subscriptionId, final String title) {
-        if (title == null || "".equals(title)) {
-            throw new ServiceException("Subscription title invalid.", HttpStatus.BAD_REQUEST);
-        }
+        Assert.hasLength(title, "Subscription title invalid.");
+
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);
-        if (subscriptionDao.find(group, title) != null) {
-            throw new ServiceException("Subscription with this title in the same group already exists.", HttpStatus.CONFLICT);
+        if (nonNull(subscriptionDao.find(group, title))) {
+            throw new ResourceAlreadyExistsException("Subscription with title '" + title + "' in the same group already exists.");
         }
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
@@ -97,31 +103,27 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
     public void moveUp(final String username, final Long groupId, final Long subscriptionId) {
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);
-
         final List<Subscription> subscriptions = subscriptionDao.list(group);
-        Integer subscriptionIndex = null;
-        for (int i = 0; i < subscriptions.size(); ++i) {
-            if (subscriptions.get(i).getId().equals(subscriptionId)) {
-                subscriptionIndex = i;
-            }
-        }
 
-        if (subscriptionIndex == null) {
-            throw new ServiceException("Subscription not found, ID: " + subscriptionId, HttpStatus.NOT_FOUND);
-        }
-        if (subscriptionIndex == 0) {
-            throw new ServiceException("Cannot move first subscription up.", HttpStatus.BAD_REQUEST);
-        }
+        int index = findSubscription(subscriptionId, subscriptions);
+        Assert.isTrue(index > 0, "Cannot move first subscription up.");
 
-        swap(subscriptions.get(subscriptionIndex - 1), subscriptions.get(subscriptionIndex));
+        swap(subscriptions.get(index - 1), subscriptions.get(index));
     }
 
     @Override
     public void moveDown(final String username, final Long groupId, final Long subscriptionId) {
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);
-
         final List<Subscription> subscriptions = subscriptionDao.list(group);
+
+        int index = findSubscription(subscriptionId, subscriptions);
+        Assert.isTrue(index < subscriptions.size() - 1, "Cannot move last subscription down.");
+
+        swap(subscriptions.get(index), subscriptions.get(index + 1));
+    }
+
+    private int findSubscription(final Long subscriptionId, final List<Subscription> subscriptions) {
         Integer subscriptionIndex = null;
         for (int i = 0; i < subscriptions.size(); ++i) {
             if (subscriptions.get(i).getId().equals(subscriptionId)) {
@@ -129,14 +131,11 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
             }
         }
 
-        if (subscriptionIndex == null) {
-            throw new ServiceException("Subscription not found, ID: " + subscriptionId, HttpStatus.NOT_FOUND);
-        }
-        if (subscriptionIndex == subscriptions.size() - 1) {
-            throw new ServiceException("Cannot move last subscription down.", HttpStatus.BAD_REQUEST);
+        if (isNull(subscriptionIndex)) {
+            throw new ResourceNotFoundException("Subscription not found, ID: " + subscriptionId);
         }
 
-        swap(subscriptions.get(subscriptionIndex), subscriptions.get(subscriptionIndex + 1));
+        return subscriptionIndex;
     }
 
     private void swap(final Subscription subscription1, final Subscription subscription2) {

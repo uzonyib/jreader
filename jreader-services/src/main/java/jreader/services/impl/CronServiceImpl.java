@@ -26,6 +26,7 @@ import jreader.dto.RssFetchResult;
 import jreader.services.CronService;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
+import jreader.services.exception.FetchException;
 
 @Service
 public class CronServiceImpl implements CronService {
@@ -67,13 +68,15 @@ public class CronServiceImpl implements CronService {
     public void refresh(final String url) {
         final Feed feed = feedDao.find(url);
         final long refreshDate = dateHelper.getCurrentDate();
-        final RssFetchResult rssFetchResult = rssService.fetch(feed.getUrl());
-        
-        if (rssFetchResult == null) {
+        final RssFetchResult rssFetchResult;
+
+        try {
+            rssFetchResult = rssService.fetch(feed.getUrl());
+        } catch (FetchException e) {
             handleFailure(feed);
             return;
         }
-        
+
         updateFeed(feed, refreshDate, rssFetchResult);
 
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
@@ -226,7 +229,7 @@ public class CronServiceImpl implements CronService {
         LOG.info("Deleted stats (" + feed.getUrl() + "): " + stats.size());
         
         feedDao.delete(feed);
-        LOG.info("Deleted feed with no subscription: " + feed.getUrl());
+        LOG.info("Deleted feed with no subscriptions: " + feed.getUrl());
     }
     
     private void cleanupStats(final Feed feed, final int statsToKeep) {

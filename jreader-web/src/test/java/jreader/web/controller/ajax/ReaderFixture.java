@@ -37,6 +37,7 @@ import jreader.services.FeedFetcher;
 import jreader.services.RssService;
 import jreader.services.StatService;
 import jreader.services.UserService;
+import jreader.services.exception.FetchException;
 import jreader.services.impl.DateHelperImpl;
 import jreader.web.controller.ajax.dto.ArchivedPost;
 import jreader.web.controller.ajax.dto.FeedStat;
@@ -47,7 +48,6 @@ import jreader.web.service.QueueService;
 import jreader.web.test.AbstractDataStoreTest;
 import jreader.web.test.FeedRegistry;
 
-@SuppressWarnings("unchecked")
 public abstract class ReaderFixture extends AbstractDataStoreTest {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
@@ -113,7 +113,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     
     public void setFeedUnavailable(String title) throws Exception {
         String url = feedRegistry.getUrl(title);
-        when(feedFetcher.retrieveFeed(new URL(url))).thenThrow(Exception.class);
+        when(feedFetcher.retrieveFeed(new URL(url))).thenThrow(new FetchException());
     }
     
     public void setFeedAvailable(String title) throws Exception {

@@ -16,7 +16,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -37,7 +36,9 @@ import jreader.domain.User;
 import jreader.dto.RssFetchResult;
 import jreader.dto.SubscriptionDto;
 import jreader.services.RssService;
-import jreader.services.ServiceException;
+import jreader.services.exception.FetchException;
+import jreader.services.exception.ResourceAlreadyExistsException;
+import jreader.services.exception.ResourceNotFoundException;
 
 public class SubscriptionServiceImplTest extends ServiceTest {
 
@@ -143,7 +144,7 @@ public class SubscriptionServiceImplTest extends ServiceTest {
     }
 
     @Test
-    public void subscribe_ShouldCreateNewSubscriptionWithoutPosts_IfFeedIsExists() {
+    public void subscribe_ShouldCreateNewSubscriptionWithoutPosts_IfFeedExists() {
         when(feedDao.find(feed.getUrl())).thenReturn(feed);
         when(subscriptionDao.find(user, feed)).thenReturn(null);
         when(subscriptionDao.save(subscription)).thenReturn(subscription);
@@ -166,7 +167,15 @@ public class SubscriptionServiceImplTest extends ServiceTest {
         assertThat(subscriptionCaptor.getValue().getLastUpdateDate()).isNull();
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void subscribe_ShouldThrowException_IfFeedCannotBeFetched() {
+        when(feedDao.find(feed.getUrl())).thenReturn(null);
+        when(rssService.fetch(feed.getUrl())).thenThrow(new FetchException());
+
+        sut.subscribe(user.getUsername(), group.getId(), feed.getUrl());
+    }
+
+    @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void subscribe_ShouldThrowException_IfSubscriptionAlreadyExists() {
         when(feedDao.find(feed.getUrl())).thenReturn(feed);
         when(subscriptionDao.find(user, feed)).thenReturn(subscription);
@@ -174,18 +183,16 @@ public class SubscriptionServiceImplTest extends ServiceTest {
         try {
             sut.subscribe(user.getUsername(), group.getId(), feed.getUrl());
             fail();
-        } catch (ServiceException e) {
-            assertThat(e.getStatus()).isEqualTo(HttpStatus.CONFLICT);
+        } finally {
+            verify(userDao).find(user.getUsername());
+            verifyZeroInteractions(groupDao);
+            verifyZeroInteractions(rssService);
+            verify(feedDao).find(feed.getUrl());
+            verify(feedDao, never()).save(feed);
+            verify(subscriptionDao).find(user, feed);
+            verify(subscriptionDao, never()).save(subscription);
+            verifyZeroInteractions(postDao);
         }
-
-        verify(userDao).find(user.getUsername());
-        verifyZeroInteractions(groupDao);
-        verifyZeroInteractions(rssService);
-        verify(feedDao).find(feed.getUrl());
-        verify(feedDao, never()).save(feed);
-        verify(subscriptionDao).find(user, feed);
-        verify(subscriptionDao, never()).save(subscription);
-        verifyZeroInteractions(postDao);
     }
 
     @Test
@@ -211,6 +218,19 @@ public class SubscriptionServiceImplTest extends ServiceTest {
         assertThat(subscriptionCaptor.getValue().getTitle()).isEqualTo(newTitle);
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class, dataProviderClass = ServiceDataProviders.class, dataProvider = "invalidSubscriptionTitles")
+    public void entitle_ShouldThrowExceptionForInvalidTitle(String title) {
+        sut.entitle(user.getUsername(), group.getId(), subscription.getId(), title);
+    }
+
+    @Test(expectedExceptions = ResourceAlreadyExistsException.class)
+    public void entitle_ShouldThrowException_IfSubscriptionAlreadyExists() {
+        final String newTitle = "new title";
+        when(subscriptionDao.find(group, newTitle)).thenReturn(subscription);
+
+        sut.entitle(user.getUsername(), group.getId(), subscription.getId(), newTitle);
+    }
+
     @Test
     public void moveUp_ShouldUpdateSubscriptionOrders() {
         when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
@@ -224,6 +244,20 @@ public class SubscriptionServiceImplTest extends ServiceTest {
         assertThat(subscriptionListCaptor.getValue().get(1).getOrder()).isEqualTo(1);
     }
 
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void moveUp_ShouldThrowException_WhenSubscriptionNotFound() {
+        when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
+
+        sut.moveUp(user.getUsername(), group.getId(), subscription2.getId() + 1);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void moveUp_ShouldThrowException_WhenMovingFirstSubscription() {
+        when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
+
+        sut.moveUp(user.getUsername(), group.getId(), subscription.getId());
+    }
+
     @Test
     public void moveDown_ShouldUpdateSubscriptionOrders() {
         when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
@@ -235,6 +269,20 @@ public class SubscriptionServiceImplTest extends ServiceTest {
         assertThat(subscriptionListCaptor.getValue().get(0).getOrder()).isEqualTo(3);
         assertThat(subscriptionListCaptor.getValue().get(1).getId()).isEqualTo(subscription2.getId());
         assertThat(subscriptionListCaptor.getValue().get(1).getOrder()).isEqualTo(2);
+    }
+
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void moveDown_ShouldThrowException_WhenSubscriptionNotFound() {
+        when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
+
+        sut.moveDown(user.getUsername(), group.getId(), subscription2.getId() + 1);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void moveDown_ShouldThrowException_WhenMovingLastSubscription() {
+        when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription, subscription1, subscription2));
+
+        sut.moveDown(user.getUsername(), group.getId(), subscription2.getId());
     }
 
 }

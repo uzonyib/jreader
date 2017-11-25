@@ -19,6 +19,11 @@ public class ServiceDataProviders {
         return new String[] { null, "" };
     }
 
+    @DataProvider(name = "invalidSubscriptionTitles")
+    private String[] getInvalidSubscriptionTitles() {
+        return new String[] { null, "" };
+    }
+
     @DataProvider(name = "invalidArchiveTitles")
     private String[] getInvalidArchiveTitles() {
         return new String[] { null, "" };
