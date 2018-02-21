@@ -20,9 +20,9 @@ angular.module("jReaderApp").service("ajaxService", ["$http", function ($http) {
     	url += "/posts";
     	
     	var params = {
-			"offset": filter.offset,
-			"count": filter.count,
-			"ascending": filter.ascendingOrder
+			"page": filter.pageIndex,
+			"size": filter.pageSize,
+			"sort": "publishDate," + (filter.ascendingOrder ? "asc" : "desc")
 		};
     	
     	return $http({

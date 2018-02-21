@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -21,6 +22,7 @@ import jreader.web.interceptor.TaskInterceptor;
 
 @Configuration
 @EnableWebMvc
+@EnableSpringDataWebSupport
 @Import(ControllerConfig.class)
 public class WebConfig extends WebMvcConfigurerAdapter {
 

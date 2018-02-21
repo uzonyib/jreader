@@ -89,30 +89,29 @@ public class PostServiceImpl extends AbstractService implements PostService {
     public List<PostDto> list(final PostFilter filter) {
         switch (filter.getParentType()) {
         case GROUP:
-            return listForGroup(filter.getUsername(), filter.getGroupId(), filter);
+            return listForGroup(filter);
         case SUBSCRIPTION:
-            return listForSubscription(filter.getUsername(), filter.getGroupId(), filter.getSubscriptionId(), filter);
+            return listForSubscription(filter);
         default:
-            return listAll(filter.getUsername(), filter);
+            return listAll(filter);
         }
     }
 
-    private List<PostDto> listAll(final String username, final PostFilter filter) {
-        final User user = this.getUser(username);
+    private List<PostDto> listAll(final PostFilter filter) {
+        final User user = this.getUser(filter.getUsername());
         return convert(postDao.list(user, filter.getEntityFilter()));
     }
 
-    private List<PostDto> listForGroup(final String username, final Long groupId, final PostFilter filter) {
-        final User user = this.getUser(username);
-        final Group group = getGroup(user, groupId);
+    private List<PostDto> listForGroup(final PostFilter filter) {
+        final User user = this.getUser(filter.getUsername());
+        final Group group = getGroup(user, filter.getGroupId());
         return convert(postDao.list(group, filter.getEntityFilter()));
     }
 
-    private List<PostDto> listForSubscription(final String username, final Long groupId, final Long subscriptionId,
-            final PostFilter filter) {
-        final User user = this.getUser(username);
-        final Group group = this.getGroup(user, groupId);
-        final Subscription subscription = this.getSubscription(group, subscriptionId);
+    private List<PostDto> listForSubscription(final PostFilter filter) {
+        final User user = this.getUser(filter.getUsername());
+        final Group group = this.getGroup(user, filter.getGroupId());
+        final Subscription subscription = this.getSubscription(group, filter.getSubscriptionId());
         return convert(postDao.list(subscription, filter.getEntityFilter()));
     }
 

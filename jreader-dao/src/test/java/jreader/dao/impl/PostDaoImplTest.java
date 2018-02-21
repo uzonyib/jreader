@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -25,20 +28,22 @@ import jreader.domain.Subscription;
 import jreader.domain.User;
 
 public class PostDaoImplTest extends AbstractDaoTest {
-    
+
+    private static final String SORT_PROPERTY = "publishDate";
+
     private UserDao userDao;
     private FeedDao feedDao;
     private GroupDao groupDao;
     private SubscriptionDao subscriptionDao;
 
     private PostDao sut;
-    
+
     private User user;
     private List<Feed> feeds;
     private List<Group> groups;
     private List<Subscription> subscriptions;
     private List<Post> posts;
-    
+
     @BeforeMethod
     public void init() {
         userDao = new UserDaoImpl();
@@ -46,9 +51,9 @@ public class PostDaoImplTest extends AbstractDaoTest {
         groupDao = new GroupDaoImpl();
         subscriptionDao = new SubscriptionDaoImpl();
         sut = new PostDaoImpl();
-        
+
         user = userDao.save(new User("test_user", Role.USER, 10L));
-        
+
         List<Feed> feedsToBeSaved = Arrays.asList(
                 Feed.builder().url("url_1").title("title_1").description("desc_1").feedType("feed_type_1").lastUpdateDate(100L).lastRefreshDate(200L)
                         .status(0).build(),
@@ -58,7 +63,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
         for (Feed feed : feedsToBeSaved) {
             feeds.add(feedDao.save(feed));
         }
-        
+
         List<Group> groupsToBeSaved = Arrays.asList(
                 new Group(user, "group_1", 10),
                 new Group(user, "group_2", 5));
@@ -66,7 +71,7 @@ public class PostDaoImplTest extends AbstractDaoTest {
         for (Group group : groupsToBeSaved) {
             groups.add(groupDao.save(group));
         }
-        
+
         subscriptions = new ArrayList<Subscription>();
         Subscription subscription1 = new Subscription();
         subscription1.setTitle("title_1");
@@ -82,11 +87,11 @@ public class PostDaoImplTest extends AbstractDaoTest {
         subscription2.setFeed(feeds.get(1));
         subscription2.setGroup(groups.get(0));
         subscriptions.add(subscriptionDao.save(subscription2));
-        
+
         long[] publishDates = { 103L, 102L, 101L, 104L };
         boolean[] readFlags = { true, true, false, false };
         boolean[] bookmarkedFlags = { false, true, true, false };
-        
+
         posts = new ArrayList<Post>();
         for (int i = 0; i < publishDates.length; ++ i) {
             Post post = new Post();
@@ -106,10 +111,10 @@ public class PostDaoImplTest extends AbstractDaoTest {
     @Test
     public void findById_IfPostNotExists_ShouldReturnNull() {
         Post actual = sut.find(subscriptions.get(1), 1L);
-        
+
         assertNull(actual);
     }
-    
+
     @Test
     public void save_IfSubscriptionIsNew_ShouldReturnSubscription() {
         Post post = new Post();
@@ -124,77 +129,97 @@ public class PostDaoImplTest extends AbstractDaoTest {
         post.setSubscription(subscriptions.get(1));
 
         Post actual = sut.save(post);
-        
+
         assertEquals(actual, post);
     }
-    
+
     @Test
     public void findByUri_IfPostNotExists_ShouldReturnNull() {
         Post actual = sut.find(subscriptions.get(1), "not_found", 1L);
-        
+
         assertNull(actual);
     }
-    
+
     @Test
     public void findByUri_IfPostExists_ShouldReturnPost() {
         Post actual = sut.find(subscriptions.get(0), posts.get(0).getUri(), posts.get(0).getPublishDate());
-        
+
         assertEquals(actual, posts.get(0));
     }
-    
+
     @Test
     public void findById_IfPostExists_ShouldReturnPost() {
         Post actual = sut.find(subscriptions.get(0), posts.get(0).getId());
-        
+
         assertEquals(actual, posts.get(0));
     }
-    
+
     @Test
     public void findByOrdinal_IfPostExists_ShouldReturnPost() {
         Post actual = sut.find(subscriptions.get(0), 2);
-        
+
         assertEquals(actual, posts.get(0));
     }
-    
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void listForUser_IfSortIsNull_ShouldThrowException() {
+        final PageRequest page = new PageRequest(0, 5, null);
+
+        sut.list(user, new PostFilter(PostType.ALL, page));
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void listForUser_IfSortPropertyInvalid_ShouldThrowException() {
+        final PageRequest page = new PageRequest(0, 5, new Sort(Direction.ASC, "title"));
+
+        sut.list(user, new PostFilter(PostType.ALL, page));
+    }
+
     @Test
     public void listForUser_IfPostsExist_ShouldReturnPosts() {
-        List<Post> actual = sut.list(user, new PostFilter(PostType.ALL, true, 1, 2));
-        
-        assertEquals(actual, Arrays.asList(posts.get(1), posts.get(0)));
+        final PageRequest page = new PageRequest(1, 2, new Sort(Direction.ASC, SORT_PROPERTY));
+
+        List<Post> actual = sut.list(user, new PostFilter(PostType.ALL, page));
+
+        assertEquals(actual, Arrays.asList(posts.get(0), posts.get(3)));
     }
-    
+
     @Test
     public void listForGroup_IfPostsExist_ShouldReturnPosts() {
-        List<Post> actual = sut.list(groups.get(0), new PostFilter(PostType.UNREAD, false, 0, 5));
-        
+        final PageRequest page = new PageRequest(0, 5, new Sort(Direction.DESC, SORT_PROPERTY));
+
+        List<Post> actual = sut.list(groups.get(0), new PostFilter(PostType.UNREAD, page));
+
         assertEquals(actual, Arrays.asList(posts.get(3), posts.get(2)));
     }
-    
+
     @Test
     public void listForSubscription_IfPostsExist_ShouldReturnPosts() {
-        List<Post> actual = sut.list(subscriptions.get(0), new PostFilter(PostType.BOOKMARKED, true, 0, 5));
-        
+        final PageRequest page = new PageRequest(0, 5, new Sort(Direction.ASC, SORT_PROPERTY));
+
+        List<Post> actual = sut.list(subscriptions.get(0), new PostFilter(PostType.BOOKMARKED, page));
+
         assertEquals(actual, Arrays.asList(posts.get(2), posts.get(1)));
     }
-    
+
     @Test
     public void listNotBookmarkedAndOlderThan_IfPostsExist_ShouldReturnPosts() {
         List<Post> actual = sut.listNotBookmarkedAndOlderThan(subscriptions.get(0), 104);
-        
+
         assertEquals(actual, Arrays.asList(posts.get(0)));
     }
-    
+
     @Test
     public void list_IfPostsExist_ShouldReturnPosts() {
         List<Post> actual = sut.list(subscriptions.get(0));
-        
+
         assertEquals(actual, Arrays.asList(posts.get(0), posts.get(1), posts.get(2), posts.get(3)));
     }
-    
+
     @Test
     public void countUnread_IfPostsExist_ShouldReturnCount() {
         int actual = sut.countUnread(subscriptions.get(0));
-        
+
         assertEquals(actual, 2);
     }
 

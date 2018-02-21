@@ -119,8 +119,8 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
     		$scope.posts.reset();
     	}
     	
-    	filter.offset = filter.pageIndex > 0 ? (filter.initialPagesToLoad - 1 + filter.pageIndex) * filter.pageSize : 0;
-    	filter.count = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
+    	filter.pageSize = filter.pageIndex > 0 ? filter.pageSize : filter.initialPagesToLoad * filter.pageSize;
+    	filter.pageIndex = filter.pageIndex > 0 ? filter.initialPagesToLoad - 1 + filter.pageIndex : 0;
     	
     	$scope.ajaxService.loadPosts(filter).then(function(response) {
     		$scope.posts.moreItemsAvailable = response.data.length === filter.count;

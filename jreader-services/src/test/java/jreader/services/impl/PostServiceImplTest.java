@@ -13,6 +13,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -31,6 +35,12 @@ import jreader.dto.PostDto;
 import jreader.services.PostFilter;
 
 public class PostServiceImplTest extends ServiceTest {
+
+    private static final int PAGE_NUMBER = 0;
+    private static final int PAGE_SIZE = 10;
+    private static final Direction DIRECTION = Direction.ASC;
+    private static final String SORT_PROPERTY = "publishDate";
+    private static final Pageable PAGE = new PageRequest(PAGE_NUMBER, PAGE_SIZE, new Sort(DIRECTION, SORT_PROPERTY));
 
     private static final Long POST_1_ID = 21L;
     private static final Long POST_2_ID = 22L;
@@ -140,7 +150,7 @@ public class PostServiceImplTest extends ServiceTest {
 
     @Test
     public void list_ShouldReturnPostsForUser() {
-        final PostFilter filter = new PostFilter(user.getUsername(), PostType.ALL, true, 0, 10);
+        final PostFilter filter = new PostFilter(user.getUsername(), PostType.ALL, PAGE);
         when(postDao.list(user, filter.getEntityFilter())).thenReturn(postEntities);
         when(conversionService.convert(postEntities,
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
@@ -154,7 +164,7 @@ public class PostServiceImplTest extends ServiceTest {
 
     @Test
     public void list_ShouldReturnPostsForGroup() {
-        final PostFilter filter = new PostFilter(user.getUsername(), group1.getId(), PostType.ALL, true, 0, 10);
+        final PostFilter filter = new PostFilter(user.getUsername(), group1.getId(), PostType.ALL, PAGE);
         when(postDao.list(group1, filter.getEntityFilter())).thenReturn(postEntities);
         when(conversionService.convert(postEntities,
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),
@@ -168,7 +178,7 @@ public class PostServiceImplTest extends ServiceTest {
 
     @Test
     public void list_ShouldReturnPostsForSubscription() {
-        final PostFilter filter = new PostFilter(user.getUsername(), group1.getId(), subscription1.getId(), PostType.ALL, true, 0, 10);
+        final PostFilter filter = new PostFilter(user.getUsername(), group1.getId(), subscription1.getId(), PostType.ALL, PAGE);
         when(postDao.list(subscription1, filter.getEntityFilter())).thenReturn(postEntities);
         when(conversionService.convert(postEntities,
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(Post.class)),

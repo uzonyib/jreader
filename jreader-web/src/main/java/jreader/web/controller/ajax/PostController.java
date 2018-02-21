@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,21 +46,20 @@ public class PostController {
     }
 
     @GetMapping("/posts/{selection}")
-    public List<PostDto> list(final Principal principal, @PathVariable final PostType selection, @RequestParam final int offset,
-            @RequestParam final int count, @RequestParam final boolean ascending) {
-        return postService.list(new PostFilter(principal.getName(), selection, ascending, offset, count));
+    public List<PostDto> list(final Principal principal, @PathVariable final PostType selection, final Pageable page) {
+        return postService.list(new PostFilter(principal.getName(), selection, page));
     }
 
     @GetMapping("/groups/{groupId}/posts/{selection}")
     public List<PostDto> list(final Principal principal, @PathVariable final Long groupId, @PathVariable final PostType selection,
-            @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
-        return postService.list(new PostFilter(principal.getName(), groupId, selection, ascending, offset, count));
+            final Pageable page) {
+        return postService.list(new PostFilter(principal.getName(), groupId, selection, page));
     }
 
     @GetMapping("/groups/{groupId}/subscriptions/{subscriptionId}/posts/{selection}")
     public List<PostDto> list(final Principal principal, @PathVariable final Long groupId, @PathVariable final Long subscriptionId,
-            @PathVariable final PostType selection, @RequestParam final int offset, @RequestParam final int count, @RequestParam final boolean ascending) {
-        return postService.list(new PostFilter(principal.getName(), groupId, subscriptionId, selection, ascending, offset, count));
+            @PathVariable final PostType selection, final Pageable page) {
+        return postService.list(new PostFilter(principal.getName(), groupId, subscriptionId, selection, page));
     }
 
     @PostMapping("/posts")

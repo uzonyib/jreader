@@ -19,6 +19,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.rometools.rome.feed.synd.SyndFeed;
 
@@ -51,7 +54,8 @@ import jreader.web.test.FeedRegistry;
 public abstract class ReaderFixture extends AbstractDataStoreTest {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
-    
+    private static final String SORT_PROPERTY = "publishDate";
+
     @Autowired
     private GroupController groupController;
     @Autowired
@@ -68,7 +72,7 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     private TaskController taskController;
     @Autowired
     private StatController statController;
-    
+
     @Autowired
     @InjectMocks
     private UserService userService;
@@ -239,7 +243,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getPostId(String title) {
-        List<PostDto> posts = (List<PostDto>) postController.list(principal, PostType.ALL, 0, Integer.MAX_VALUE, true);
+        final PageRequest page = new PageRequest(0, Integer.MAX_VALUE, new Sort(Direction.ASC, SORT_PROPERTY));
+        List<PostDto> posts = (List<PostDto>) postController.list(principal, PostType.ALL, page);
         for (PostDto post : posts) {
             if (title.equals(post.getTitle())) {
                 return post.getId();
@@ -249,18 +254,25 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<Post> getPosts(String selection, int from, int to, String order) {
-        return convertPosts((List<PostDto>) postController
-                .list(principal, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)));
+        final int pageSize = to - from;
+        final int pageNumber = to / pageSize - 1;
+        final PageRequest page = new PageRequest(pageNumber, pageSize, new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
+        return convertPosts((List<PostDto>) postController.list(principal, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), page));
     }
     
     public List<Post> getPosts(Long groupId, String selection, int from, int to, String order) {
-        return convertPosts((List<PostDto>) postController
-                .list(principal, groupId, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)));
+        final int pageSize = to - from;
+        final int pageNumber = to / pageSize - 1;
+        final PageRequest page = new PageRequest(pageNumber, pageSize, new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
+        return convertPosts((List<PostDto>) postController.list(principal, groupId, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), page));
     }
     
     public List<Post> getPosts(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
-        return convertPosts((List<PostDto>) postController.list(principal, groupId, subscriptionId,
-                PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), from, to - from, "ascending".equals(order)));
+        final int pageSize = to - from;
+        final int pageNumber = to / pageSize - 1;
+        final PageRequest page = new PageRequest(pageNumber, pageSize, new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
+        return convertPosts(
+                (List<PostDto>) postController.list(principal, groupId, subscriptionId, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), page));
     }
     
     private static List<Post> convertPosts(List<PostDto> dtos) {

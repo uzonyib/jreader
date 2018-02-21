@@ -1,5 +1,7 @@
 package jreader.dao;
 
+import org.springframework.data.domain.Pageable;
+
 import lombok.Value;
 
 @Value
@@ -10,8 +12,6 @@ public class PostFilter {
     }
 
     private PostType postType;
-    private boolean ascending;
-    private int offset;
-    private int count;
+    private Pageable page;
 
 }
