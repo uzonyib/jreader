@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,15 +38,13 @@ public class ArchivedPostController {
     }
 
     @GetMapping("/posts")
-    public List<ArchivedPostDto> list(final Principal principal, @RequestParam final int offset, @RequestParam final int count,
-            @RequestParam final boolean ascending) {
-        return archiveService.listPosts(new ArchivedPostFilter(principal.getName(), ascending, offset, count));
+    public List<ArchivedPostDto> list(final Principal principal, final Pageable page) {
+        return archiveService.listPosts(new ArchivedPostFilter(principal.getName(), page));
     }
 
     @GetMapping("/{archiveId}/posts")
-    public List<ArchivedPostDto> list(final Principal principal, @PathVariable final Long archiveId, @RequestParam final int offset,
-            @RequestParam final int count, @RequestParam final boolean ascending) {
-        return archiveService.listPosts(new ArchivedPostFilter(principal.getName(), archiveId, ascending, offset, count));
+    public List<ArchivedPostDto> list(final Principal principal, @PathVariable final Long archiveId, final Pageable page) {
+        return archiveService.listPosts(new ArchivedPostFilter(principal.getName(), archiveId, page));
     }
 
     @DeleteMapping("/{archiveId}/posts/{postId}")

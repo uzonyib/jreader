@@ -254,23 +254,20 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<Post> getPosts(String selection, int from, int to, String order) {
-        final int pageSize = to - from;
-        final int pageNumber = to / pageSize - 1;
-        final PageRequest page = new PageRequest(pageNumber, pageSize, new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
+        final PageRequest page = new PageRequest(getPageNumber(from, to), getPageSize(from, to),
+                new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
         return convertPosts((List<PostDto>) postController.list(principal, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), page));
     }
     
     public List<Post> getPosts(Long groupId, String selection, int from, int to, String order) {
-        final int pageSize = to - from;
-        final int pageNumber = to / pageSize - 1;
-        final PageRequest page = new PageRequest(pageNumber, pageSize, new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
+        final PageRequest page = new PageRequest(getPageNumber(from, to), getPageSize(from, to),
+                new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
         return convertPosts((List<PostDto>) postController.list(principal, groupId, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), page));
     }
     
     public List<Post> getPosts(Long groupId, Long subscriptionId, String selection, int from, int to, String order) {
-        final int pageSize = to - from;
-        final int pageNumber = to / pageSize - 1;
-        final PageRequest page = new PageRequest(pageNumber, pageSize, new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
+        final PageRequest page = new PageRequest(getPageNumber(from, to), getPageSize(from, to),
+                new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
         return convertPosts(
                 (List<PostDto>) postController.list(principal, groupId, subscriptionId, PostType.valueOf(selection.toUpperCase(Locale.ENGLISH)), page));
     }
@@ -335,13 +332,15 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public List<ArchivedPost> getArchivedPosts(int from, int to, String order) {
-        return convertArchivedPosts(
-                (List<ArchivedPostDto>) archivedPostController.list(principal, from, to - from, "ascending".equals(order)));
+        final PageRequest page = new PageRequest(getPageNumber(from, to), getPageSize(from, to),
+                new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
+        return convertArchivedPosts((List<ArchivedPostDto>) archivedPostController.list(principal, page));
     }
-    
+
     public List<ArchivedPost> getArchivedPosts(Long archiveId, int from, int to, String order) {
-        return convertArchivedPosts(
-                (List<ArchivedPostDto>) archivedPostController.list(principal, archiveId, from, to - from, "ascending".equals(order)));
+        final PageRequest page = new PageRequest(getPageNumber(from, to), getPageSize(from, to),
+                new Sort("ascending".equals(order) ? Direction.ASC : Direction.DESC, SORT_PROPERTY));
+        return convertArchivedPosts((List<ArchivedPostDto>) archivedPostController.list(principal, archiveId, page));
     }
     
     private static List<ArchivedPost> convertArchivedPosts(List<ArchivedPostDto> dtos) {
@@ -361,7 +360,8 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
     }
     
     public String getArchivedPostId(String title) {
-        List<ArchivedPostDto> posts = (List<ArchivedPostDto>) archivedPostController.list(principal, 0, Integer.MAX_VALUE, true);
+        final PageRequest page = new PageRequest(0, Integer.MAX_VALUE, new Sort(Direction.ASC, SORT_PROPERTY));
+        List<ArchivedPostDto> posts = (List<ArchivedPostDto>) archivedPostController.list(principal, page);
         for (ArchivedPostDto post : posts) {
             if (title.equals(post.getTitle())) {
                 return post.getId();
@@ -397,6 +397,14 @@ public abstract class ReaderFixture extends AbstractDataStoreTest {
             }
         }
         return null;
+    }
+
+    private static int getPageSize(int from, int to) {
+        return to - from;
+    }
+
+    private static int getPageNumber(int from, int to) {
+        return to / getPageSize(from, to) - 1;
     }
     
     private static List<FeedStat> convertFeedStats(List<FeedStatDto> dtos) {

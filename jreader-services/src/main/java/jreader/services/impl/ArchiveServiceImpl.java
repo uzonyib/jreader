@@ -165,10 +165,10 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
         final User user = this.getUser(filter.getUsername());
         final List<ArchivedPost> posts;
         if (filter.getArchiveId() == null) {
-            posts = archivedPostDao.list(user, filter.getEntityFilter());
+            posts = archivedPostDao.list(user, filter.getPage());
         } else {
             final Archive archive = this.getArchive(user, filter.getArchiveId());
-            posts = archivedPostDao.list(archive, filter.getEntityFilter());
+            posts = archivedPostDao.list(archive, filter.getPage());
         }
         
         return (List<ArchivedPostDto>) conversionService.convert(posts,

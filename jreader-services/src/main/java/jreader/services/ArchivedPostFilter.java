@@ -1,22 +1,24 @@
 package jreader.services;
 
+import org.springframework.data.domain.Pageable;
+
 import lombok.Getter;
 
 @Getter
 public final class ArchivedPostFilter {
 
-    private final jreader.dao.ArchivedPostFilter entityFilter;
     private final String username;
     private final Long archiveId;
-    
-    public ArchivedPostFilter(final String username, final Long archiveId, final boolean ascending, final int offset, final int count) {
-        this.entityFilter = new jreader.dao.ArchivedPostFilter(ascending, offset, count);
+    private final Pageable page;
+
+    public ArchivedPostFilter(final String username, final Long archiveId, final Pageable page) {
         this.username = username;
         this.archiveId = archiveId;
+        this.page = page;
     }
 
-    public ArchivedPostFilter(final String username, final boolean ascending, final int offset, final int count) {
-        this(username, null, ascending, offset, count);
+    public ArchivedPostFilter(final String username, final Pageable page) {
+        this(username, null, page);
     }
 
 }

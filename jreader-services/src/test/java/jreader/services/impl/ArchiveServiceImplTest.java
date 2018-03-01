@@ -16,6 +16,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -42,6 +46,12 @@ import jreader.services.exception.ResourceAlreadyExistsException;
 import jreader.services.exception.ResourceNotFoundException;
 
 public class ArchiveServiceImplTest extends ServiceTest {
+
+    private static final int PAGE_NUMBER = 0;
+    private static final int PAGE_SIZE = 10;
+    private static final Direction DIRECTION = Direction.ASC;
+    private static final String SORT_PROPERTY = "publishDate";
+    private static final Pageable PAGE = new PageRequest(PAGE_NUMBER, PAGE_SIZE, new Sort(DIRECTION, SORT_PROPERTY));
 
     private ArchiveServiceImpl sut;
 
@@ -304,9 +314,9 @@ public class ArchiveServiceImplTest extends ServiceTest {
 
     @Test
     public void listPosts_ShouldReturnPostsForUser() {
-        final ArchivedPostFilter filter = new ArchivedPostFilter(user.getUsername(), true, 0, 10);
+        final ArchivedPostFilter filter = new ArchivedPostFilter(user.getUsername(), PAGE);
         final List<ArchivedPost> entities = Arrays.asList(archivedPost1, archivedPost2);
-        when(archivedPostDao.list(user, filter.getEntityFilter())).thenReturn(entities);
+        when(archivedPostDao.list(user, filter.getPage())).thenReturn(entities);
 
         final List<ArchivedPostDto> expected = Arrays.asList(archivedPostDto1, archivedPostDto2);
         when(conversionService.convert(entities,
@@ -315,15 +325,15 @@ public class ArchiveServiceImplTest extends ServiceTest {
 
         final List<ArchivedPostDto> actual = sut.listPosts(filter);
 
-        verify(archivedPostDao).list(user, filter.getEntityFilter());
+        verify(archivedPostDao).list(user, filter.getPage());
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     public void listPosts_ShouldReturnPostsForArchive() {
-        final ArchivedPostFilter filter = new ArchivedPostFilter(user.getUsername(), archive.getId(), true, 0, 10);
+        final ArchivedPostFilter filter = new ArchivedPostFilter(user.getUsername(), archive.getId(), PAGE);
         final List<ArchivedPost> entities = Arrays.asList(archivedPost1, archivedPost2);
-        when(archivedPostDao.list(archive, filter.getEntityFilter())).thenReturn(entities);
+        when(archivedPostDao.list(archive, filter.getPage())).thenReturn(entities);
 
         final List<ArchivedPostDto> expected = Arrays.asList(archivedPostDto1, archivedPostDto2);
         when(conversionService.convert(entities,
@@ -332,7 +342,7 @@ public class ArchiveServiceImplTest extends ServiceTest {
 
         final List<ArchivedPostDto> actual = sut.listPosts(filter);
 
-        verify(archivedPostDao).list(archive, filter.getEntityFilter());
+        verify(archivedPostDao).list(archive, filter.getPage());
         assertThat(actual).isEqualTo(expected);
     }
 

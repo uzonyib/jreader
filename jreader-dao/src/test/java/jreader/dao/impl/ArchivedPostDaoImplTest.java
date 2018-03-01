@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import jreader.dao.ArchiveDao;
 import jreader.dao.ArchivedPostDao;
-import jreader.dao.ArchivedPostFilter;
 import jreader.dao.UserDao;
 import jreader.domain.Archive;
 import jreader.domain.ArchivedPost;
@@ -21,7 +23,9 @@ import jreader.domain.Role;
 import jreader.domain.User;
 
 public class ArchivedPostDaoImplTest extends AbstractDaoTest {
-    
+
+    private static final String SORT_PROPERTY = "publishDate";
+
     private UserDao userDao;
     private ArchiveDao archiveDao;
     
@@ -91,43 +95,55 @@ public class ArchivedPostDaoImplTest extends AbstractDaoTest {
     
     @Test
     public void listForUser_IfOrderIsAscending_ShouldReturnAscendingList() {
-        List<ArchivedPost> actual = sut.list(user, new ArchivedPostFilter(true, 0, 10));
-        
+        PageRequest page = new PageRequest(0, 10, new Sort(Direction.ASC, SORT_PROPERTY));
+
+        List<ArchivedPost> actual = sut.list(user, page);
+
         assertEquals(actual, posts);
     }
     
     @Test
     public void listForUser_IfOrderIsDescending_ShouldReturnDescendingList() {
-        List<ArchivedPost> actual = sut.list(user, new ArchivedPostFilter(false, 0, 10));
-        
+        PageRequest page = new PageRequest(0, 10, new Sort(Direction.DESC, SORT_PROPERTY));
+
+        List<ArchivedPost> actual = sut.list(user, page);
+
         assertEquals(actual, Arrays.asList(posts.get(1), posts.get(0)));
     }
     
     @Test
     public void listForArchiveAndFilter_IfPostsNotExist_ShouldReturnEmptyList() {
-        List<ArchivedPost> actual = sut.list(archives.get(1), new ArchivedPostFilter(true, 0, 10));
-        
+        PageRequest page = new PageRequest(0, 10, new Sort(Direction.ASC, SORT_PROPERTY));
+
+        List<ArchivedPost> actual = sut.list(archives.get(1), page);
+
         assertTrue(actual.isEmpty());
     }
     
     @Test
     public void listForArchiveAndFilter_IfOffsetIsNotZero_ShouldReturnSubList() {
-        List<ArchivedPost> actual = sut.list(archives.get(0), new ArchivedPostFilter(true, 1, 10));
-        
+        PageRequest page = new PageRequest(1, 1, new Sort(Direction.ASC, SORT_PROPERTY));
+
+        List<ArchivedPost> actual = sut.list(archives.get(0), page);
+
         assertEquals(actual, Arrays.asList(posts.get(1)));
     }
     
     @Test
     public void listForArchiveAndFilter_IfOffsetIsOverPostCount_ShouldReturnSubList() {
-        List<ArchivedPost> actual = sut.list(archives.get(0), new ArchivedPostFilter(true, 2, 10));
-        
+        PageRequest page = new PageRequest(1, 2, new Sort(Direction.ASC, SORT_PROPERTY));
+
+        List<ArchivedPost> actual = sut.list(archives.get(0), page);
+
         assertTrue(actual.isEmpty());
     }
     
     @Test
     public void listForArchiveAndFilter_IfLimitIsNotZero_ShouldReturnSubList() {
-        List<ArchivedPost> actual = sut.list(archives.get(0), new ArchivedPostFilter(true, 0, 1));
-        
+        PageRequest page = new PageRequest(0, 1, new Sort(Direction.ASC, SORT_PROPERTY));
+
+        List<ArchivedPost> actual = sut.list(archives.get(0), page);
+
         assertEquals(actual, Arrays.asList(posts.get(0)));
     }
     
