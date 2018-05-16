@@ -99,7 +99,7 @@ angular.module("jReaderApp").controller("ReaderCtrl", ["$scope", "$sce", "$inter
 		angular.forEach(copiedPosts, function(post) {
 			post.description = $sce.trustAsHtml(post.description);
 			post.archived = false;
-			post.archive = $scope.archives[0];
+			post.archive = $scope.archives.items[0];
 			$scope.posts.items.push(post);
 		});
 	};
