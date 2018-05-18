@@ -1,17 +1,16 @@
 package jreader.converter;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import jreader.domain.Feed;
-import jreader.domain.Post;
-import jreader.dto.RssFetchResult;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
+
+import jreader.domain.Feed;
+import jreader.domain.Post;
+import jreader.dto.RssFetchResult;
 
 @Component
 public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResult> {
@@ -24,9 +23,7 @@ public class RssFetchResultConverter implements Converter<SyndFeed, RssFetchResu
         result.getFeed().setDescription(syndFeed.getDescription());
         result.getFeed().setFeedType(syndFeed.getFeedType());
         if (syndFeed.getEntries() != null) {
-            for (SyndEntry entry : (List<SyndEntry>) syndFeed.getEntries()) {
-                result.getPosts().add(convert(entry));
-            }
+            syndFeed.getEntries().forEach(entry -> result.getPosts().add(convert(entry)));
         }
         return result;
     }

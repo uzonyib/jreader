@@ -9,24 +9,24 @@ import jreader.services.DateHelper;
 
 @Service
 public class DateHelperImpl implements DateHelper {
-    
+
     private static final long MILLISECS_PER_DAY = 1000L * 60L * 60L * 24L;
-    
+
     @Override
     public long getCurrentDate() {
         return System.currentTimeMillis();
     }
-    
+
     @Override
     public long addDaysToCurrentDate(final int days) {
         return getCurrentDate() + MILLISECS_PER_DAY * (long) days;
     }
-    
+
     @Override
     public long substractDaysFromCurrentDate(final int days) {
         return addDaysToCurrentDate(-days);
     }
-    
+
     @Override
     public long getFirstSecondOfDay(final long date) {
         final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));

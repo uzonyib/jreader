@@ -60,12 +60,7 @@ public class FeedController {
         syndFeed.setLink(baseUrl + "/feeds/" + feed + "/rss");
         syndFeed.setEntries(new ArrayList<SyndEntry>());
 
-        final List<Post> posts = registry.listPosts(feed);
-        for (final Post post : posts) {
-            final SyndEntry syndEntry = converter.convert(post, SyndEntry.class);
-            syndEntry.setLink(baseUrl + "/feeds/" + feed + "/rss/" + post.getUrl());
-            syndFeed.getEntries().add(syndEntry);
-        }
+        registry.listPosts(feed).forEach(post -> syndFeed.getEntries().add(toSyndEntry(feed, post)));
 
         return new SyndFeedOutput().outputString(syndFeed);
     }
@@ -73,6 +68,12 @@ public class FeedController {
     @RequestMapping(value = "/feeds/{feed}", method = RequestMethod.PUT)
     public void addPost(@PathVariable final String feed, @RequestBody final Post post) {
         registry.add(feed, post);
+    }
+
+    private SyndEntry toSyndEntry(final String feed, final Post post) {
+        final SyndEntry syndEntry = converter.convert(post, SyndEntry.class);
+        syndEntry.setLink(baseUrl + "/feeds/" + feed + "/rss/" + post.getUrl());
+        return syndEntry;
     }
 
 }

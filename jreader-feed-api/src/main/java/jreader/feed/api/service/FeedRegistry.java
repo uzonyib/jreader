@@ -6,7 +6,7 @@ import jreader.feed.model.Feed;
 import jreader.feed.model.Post;
 
 public interface FeedRegistry {
-    
+
     List<Feed> listFeeds();
 
     void add(Feed feed);
