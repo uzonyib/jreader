@@ -1,11 +1,12 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -35,10 +36,10 @@ public class FeedDaoImplTest extends AbstractDaoTest {
     }
 
     @Test
-    public void find_IfFeedNotExists_ShouldReturnNull() {
-        Feed actual = sut.find("url");
+    public void find_IfFeedNotExists_ShouldReturnEmpty() {
+        Optional<Feed> actual = sut.find("url");
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
@@ -53,9 +54,9 @@ public class FeedDaoImplTest extends AbstractDaoTest {
     
     @Test
     public void find_IfFeedExists_ShouldReturnFeed() {
-        Feed actual = sut.find(feeds.get(0).getUrl());
+        Optional<Feed> actual = sut.find(feeds.get(0).getUrl());
         
-        assertEquals(actual, feeds.get(0));
+        assertEquals(actual.get(), feeds.get(0));
     }
     
     @Test

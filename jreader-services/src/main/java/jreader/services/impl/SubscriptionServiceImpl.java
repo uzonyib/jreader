@@ -1,7 +1,6 @@
 package jreader.services.impl;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,26 +47,23 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
     @Override
     public SubscriptionDto subscribe(final String username, final Long groupId, final String url) {
-        Feed feed = feedDao.find(url);
-        if (feed == null) {
+        Feed feed = feedDao.find(url).orElseGet(() -> {
             final RssFetchResult rssFetchResult;
             try {
                 rssFetchResult = rssService.fetch(url);
             } catch (FetchException e) {
                 throw new IllegalArgumentException("Feed '" + url + "' cannot be fetched.", e);
             }
-            feed = feedDao.save(rssFetchResult.getFeed());
-        }
+            return feedDao.save(rssFetchResult.getFeed());
+        });
 
         final User user = this.getUser(username);
-        Subscription subscription = subscriptionDao.find(user, feed);
-        if (nonNull(subscription)) {
+        if (subscriptionDao.find(user, feed).isPresent()) {
             throw new ResourceAlreadyExistsException("User " + username + " is already subscribed to " + url + ".");
         }
 
         final Group group = this.getGroup(user, groupId);
-        subscription = Subscription.builder().group(group).feed(feed).title(feed.getTitle()).order(subscriptionDao.getMaxOrder(group) + 1)
-                .build();
+        Subscription subscription = Subscription.builder().group(group).feed(feed).title(feed.getTitle()).order(subscriptionDao.getMaxOrder(group) + 1).build();
         subscription = subscriptionDao.save(subscription);
 
         return conversionService.convert(subscription, SubscriptionDto.class);
@@ -90,7 +86,7 @@ public class SubscriptionServiceImpl extends AbstractService implements Subscrip
 
         final User user = this.getUser(username);
         final Group group = this.getGroup(user, groupId);
-        if (nonNull(subscriptionDao.find(group, title))) {
+        if (subscriptionDao.find(group, title).isPresent()) {
             throw new ResourceAlreadyExistsException("Subscription with title '" + title + "' in the same group already exists.");
         }
         final Subscription subscription = this.getSubscription(group, subscriptionId);

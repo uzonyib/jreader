@@ -1,12 +1,13 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -49,10 +50,10 @@ public class ArchiveDaoImplTest extends AbstractDaoTest {
     }
 
     @Test
-    public void find_IfArchiveNotExists_ShouldReturnNull() {
-        Archive actual = sut.find(users.get(0), archives.get(archives.size() - 1).getId() + 1);
+    public void find_IfArchiveNotExists_ShouldReturnEmpty() {
+        Optional<Archive> actual = sut.find(users.get(0), archives.get(archives.size() - 1).getId() + 1);
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
@@ -71,23 +72,23 @@ public class ArchiveDaoImplTest extends AbstractDaoTest {
     
     @Test
     public void find_IfArchiveExists_ShouldReturnArchive() {
-        Archive actual = sut.find(users.get(0), archives.get(0).getId());
+        Optional<Archive> actual = sut.find(users.get(0), archives.get(0).getId());
         
-        assertEquals(actual, archives.get(0));
+        assertEquals(actual.get(), archives.get(0));
     }
     
     @Test
-    public void findByTitle_IfArchiveNotExists_ShouldReturnNull() {
-        Archive actual = sut.find(users.get(0), "new_title");
+    public void findByTitle_IfArchiveNotExists_ShouldReturnEmpty() {
+        Optional<Archive> actual = sut.find(users.get(0), "new_title");
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
     public void findByTitle_IfArchiveExists_ShouldReturnArchive() {
-        Archive actual = sut.find(users.get(0), archives.get(0).getTitle());
+        Optional<Archive> actual = sut.find(users.get(0), archives.get(0).getTitle());
         
-        assertEquals(actual, archives.get(0));
+        assertEquals(actual.get(), archives.get(0));
     }
     
     @Test

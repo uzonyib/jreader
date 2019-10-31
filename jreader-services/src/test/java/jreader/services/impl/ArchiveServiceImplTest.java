@@ -9,6 +9,7 @@ import static org.testng.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -131,8 +132,8 @@ public class ArchiveServiceImplTest extends ServiceTest {
                 .archiveDao(archiveDao).archivedPostDao(archivedPostDao).build();
         sut = new ArchiveServiceImpl(daoFacade, conversionService);
 
-        when(userDao.find(user.getUsername())).thenReturn(user);
-        when(archiveDao.find(user, archive.getId())).thenReturn(archive);
+        when(userDao.find(user.getUsername())).thenReturn(Optional.of(user));
+        when(archiveDao.find(user, archive.getId())).thenReturn(Optional.of(archive));
     }
 
     @Test
@@ -141,7 +142,7 @@ public class ArchiveServiceImplTest extends ServiceTest {
         when(userRef.get()).thenReturn(user);
         final String archiveTitle = "new archive";
         final int maxOrder = 10;
-        when(archiveDao.find(user, archiveTitle)).thenReturn(null);
+        when(archiveDao.find(user, archiveTitle)).thenReturn(Optional.empty());
         when(archiveDao.getMaxOrder(user)).thenReturn(maxOrder);
         when(archiveDao.save(any(Archive.class))).thenReturn(archive);
         when(conversionService.convert(archive, ArchiveDto.class)).thenReturn(archiveDto);
@@ -172,7 +173,7 @@ public class ArchiveServiceImplTest extends ServiceTest {
 
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void createArchive_ShouldThrowException_IfArchiveAlreadyExists() {
-        when(archiveDao.find(user, archive.getTitle())).thenReturn(archive);
+        when(archiveDao.find(user, archive.getTitle())).thenReturn(Optional.of(archive));
 
         try {
             sut.createArchive(user.getUsername(), archive.getTitle());
@@ -198,7 +199,7 @@ public class ArchiveServiceImplTest extends ServiceTest {
 
     @Test(expectedExceptions = ResourceNotFoundException.class)
     public void deleteArchive_ShouldThrowException_IfArchiveNotFound() {
-        when(archiveDao.find(user, archive.getId())).thenReturn(null);
+        when(archiveDao.find(user, archive.getId())).thenReturn(Optional.empty());
 
         sut.deleteArchive(user.getUsername(), archive.getId());
     }
@@ -206,6 +207,7 @@ public class ArchiveServiceImplTest extends ServiceTest {
     @Test
     public void entitle_ShouldUpdateArchiveTitle_IfArchiveExists() {
         final String newTitle = "new title";
+        when(archiveDao.find(user, newTitle)).thenReturn(Optional.empty());
 
         sut.entitle(user.getUsername(), archive.getId(), newTitle);
 
@@ -222,7 +224,7 @@ public class ArchiveServiceImplTest extends ServiceTest {
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void entitle_ShouldThrowException_IfArchiveAlreadyExists() {
         final String newTitle = "new title";
-        when(archiveDao.find(user, newTitle)).thenReturn(archive);
+        when(archiveDao.find(user, newTitle)).thenReturn(Optional.of(archive));
 
         sut.entitle(user.getUsername(), archive.getId(), newTitle);
     }
@@ -300,9 +302,9 @@ public class ArchiveServiceImplTest extends ServiceTest {
     public void archive_ShouldSaveArchivedPost() {
         when(Ref.create(any(Archive.class))).thenReturn(archiveRef);
         when(archiveRef.get()).thenReturn(archive);
-        when(groupDao.find(user, group.getId())).thenReturn(group);
-        when(subscriptionDao.find(group, subscription.getId())).thenReturn(subscription);
-        when(postDao.find(subscription, post.getId())).thenReturn(post);
+        when(groupDao.find(user, group.getId())).thenReturn(Optional.of(group));
+        when(subscriptionDao.find(group, subscription.getId())).thenReturn(Optional.of(subscription));
+        when(postDao.find(subscription, post.getId())).thenReturn(Optional.of(post));
         when(conversionService.convert(post, ArchivedPost.class)).thenReturn(archivedPost);
 
         sut.archive(user.getUsername(), group.getId(), subscription.getId(), post.getId(), archive.getId());
@@ -310,6 +312,17 @@ public class ArchiveServiceImplTest extends ServiceTest {
         verify(conversionService).convert(post, ArchivedPost.class);
         verify(archivedPostDao).save(archivedPostCaptor.capture());
         assertThat(archivedPostCaptor.getValue().getArchive()).isEqualTo(archive);
+    }
+
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void archive_ShouldThrowException_WhenPostNotFound() {
+        when(Ref.create(any(Archive.class))).thenReturn(archiveRef);
+        when(archiveRef.get()).thenReturn(archive);
+        when(groupDao.find(user, group.getId())).thenReturn(Optional.of(group));
+        when(subscriptionDao.find(group, subscription.getId())).thenReturn(Optional.of(subscription));
+        when(postDao.find(subscription, post.getId())).thenReturn(Optional.empty());
+
+        sut.archive(user.getUsername(), group.getId(), subscription.getId(), post.getId(), archive.getId());
     }
 
     @Test
@@ -348,11 +361,18 @@ public class ArchiveServiceImplTest extends ServiceTest {
 
     @Test
     public void deletePost_ShouldDeletePosts() {
-        when(archivedPostDao.find(archive, archivedPost.getId())).thenReturn(archivedPost);
+        when(archivedPostDao.find(archive, archivedPost.getId())).thenReturn(Optional.of(archivedPost));
 
         sut.deletePost(user.getUsername(), archive.getId(), archivedPost.getId());
 
         verify(archivedPostDao).delete(archivedPost);
+    }
+
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void deletePost_ShouldThrowException_WhenArchivedPostNotFound() {
+        when(archivedPostDao.find(archive, archivedPost.getId())).thenReturn(Optional.empty());
+
+        sut.deletePost(user.getUsername(), archive.getId(), archivedPost.getId());
     }
 
 }

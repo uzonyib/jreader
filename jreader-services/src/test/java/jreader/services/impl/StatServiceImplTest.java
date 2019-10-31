@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import org.mockito.Mock;
@@ -86,7 +87,7 @@ public class StatServiceImplTest extends ServiceTest {
     @Test
     public void list_ShouldReturnStats() {
         final String username = "user";
-        when(userDao.find(username)).thenReturn(user);
+        when(userDao.find(username)).thenReturn(Optional.of(user));
         when(groupDao.list(user)).thenReturn(Arrays.asList(group));
         when(subscriptionDao.list(group)).thenReturn(Arrays.asList(subscription1, subscription2));
 

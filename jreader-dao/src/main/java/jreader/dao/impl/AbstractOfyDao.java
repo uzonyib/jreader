@@ -8,6 +8,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.cmd.LoadType;
 
 import jreader.dao.OfyDao;
 import jreader.domain.Archive;
@@ -36,6 +37,8 @@ abstract class AbstractOfyDao<EntityType> implements OfyDao<EntityType> {
     protected static Objectify getOfy() {
         return factory().begin();
     }
+
+    protected abstract LoadType<EntityType> getLoadType();
 
     @Override
     public EntityType save(final EntityType entity) {

@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import org.mockito.ArgumentCaptor;
@@ -43,6 +44,7 @@ import jreader.dto.RssFetchResult;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
 import jreader.services.exception.FetchException;
+import jreader.services.exception.ResourceNotFoundException;
 
 public class CronServiceImplTest extends ServiceTest {
 
@@ -129,8 +131,8 @@ public class CronServiceImplTest extends ServiceTest {
         final DaoFacade daoFacade = DaoFacade.builder().subscriptionDao(subscriptionDao).feedDao(feedDao).postDao(postDao).feedStatDao(feedStatDao).build();
         sut = new CronServiceImpl(daoFacade, rssService, conversionService, dateHelper);
 
-        when(feedDao.find(feed1.getUrl())).thenReturn(feed1);
-        when(feedDao.find(feed2.getUrl())).thenReturn(feed2);
+        when(feedDao.find(feed1.getUrl())).thenReturn(Optional.of(feed1));
+        when(feedDao.find(feed2.getUrl())).thenReturn(Optional.of(feed2));
     }
 
     @Test
@@ -149,6 +151,13 @@ public class CronServiceImplTest extends ServiceTest {
                 TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(FeedDto.class)));
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void refresh_ShouldThrowException_IfFeedNotExist() {
+        when(feedDao.find(feed1.getUrl())).thenReturn(Optional.empty());
+
+        sut.refresh(feed1.getUrl());
     }
 
     @Test
@@ -176,11 +185,20 @@ public class CronServiceImplTest extends ServiceTest {
 
         final long pubDate2 = date - 1000 * 60 * 10;
         when(post12.getPublishDate()).thenReturn(pubDate2);
-        when(post12.getUri()).thenReturn("uri2");
-        when(dateHelper.getFirstSecondOfDay(pubDate2)).thenReturn(dh.getFirstSecondOfDay(pubDate2));
+        final String uri2 = "uri2";
+        when(post12.getUri()).thenReturn(uri2);
+        final long firstSecondOfDay2 = dh.getFirstSecondOfDay(pubDate2);
+        when(dateHelper.getFirstSecondOfDay(pubDate2)).thenReturn(firstSecondOfDay2);
+        when(feedStatDao.find(feed1, firstSecondOfDay2)).thenReturn(Optional.empty());
 
         when(post13.getPublishDate()).thenReturn(pubDate2);
-        when(post13.getUri()).thenReturn("uri3");
+        final String uri3 = "uri3";
+        when(post13.getUri()).thenReturn(uri3);
+
+        when(postDao.find(subscription1, uri2, pubDate2)).thenReturn(Optional.empty());
+        when(postDao.find(subscription1, uri3, pubDate2)).thenReturn(Optional.empty());
+        when(postDao.find(subscription2, uri2, pubDate2)).thenReturn(Optional.empty());
+        when(postDao.find(subscription2, uri3, pubDate2)).thenReturn(Optional.empty());
 
         when(subscription1.getGroup()).thenReturn(group);
         when(subscription2.getGroup()).thenReturn(group);
@@ -395,7 +413,7 @@ public class CronServiceImplTest extends ServiceTest {
         when(post11.getPublishDate()).thenReturn(1000L);
         when(post11.getUri()).thenReturn("uri");
         when(subscription1.getLastUpdateDate()).thenReturn(1000L);
-        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(null);
+        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(Optional.empty());
 
         final boolean isNew = sut.isNew(post11, subscription1, 1100L);
 
@@ -407,7 +425,7 @@ public class CronServiceImplTest extends ServiceTest {
         when(post11.getPublishDate()).thenReturn(1000L);
         when(post11.getUri()).thenReturn("uri");
         when(subscription1.getLastUpdateDate()).thenReturn(900L);
-        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(post11);
+        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(Optional.of(post11));
 
         final boolean isNew = sut.isNew(post11, subscription1, 1100L);
 
@@ -419,7 +437,7 @@ public class CronServiceImplTest extends ServiceTest {
         when(post11.getPublishDate()).thenReturn(1000L);
         when(post11.getUri()).thenReturn("uri");
         when(subscription1.getLastUpdateDate()).thenReturn(900L);
-        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(null);
+        when(postDao.find(subscription1, "uri", 1000L)).thenReturn(Optional.empty());
 
         final boolean isNew = sut.isNew(post11, subscription1, 1100L);
 
@@ -446,6 +464,8 @@ public class CronServiceImplTest extends ServiceTest {
         when(post13.getPublishDate()).thenReturn(pubDate3);
         when(post13.getUri()).thenReturn("uri3");
         when(dateHelper.getFirstSecondOfDay(pubDate3)).thenReturn(day);
+
+        when(feedStatDao.find(feed1, day)).thenReturn(Optional.empty());
 
         sut.updateFeed(feed1, currentDate, fetchResult);
 
@@ -477,9 +497,10 @@ public class CronServiceImplTest extends ServiceTest {
         when(post13.getUri()).thenReturn("uri3");
         final long day3 = 900L;
         when(dateHelper.getFirstSecondOfDay(pubDate3)).thenReturn(day3);
+        when(feedStatDao.find(feed1, day3)).thenReturn(Optional.empty());
 
         final FeedStat stat = FeedStat.builder().feed(feed1).refreshDate(day2).count(5).build();
-        when(feedStatDao.find(feed1, day2)).thenReturn(stat);
+        when(feedStatDao.find(feed1, day2)).thenReturn(Optional.of(stat));
 
         sut.updateFeed(feed1, currentDate, fetchResult);
 
@@ -492,12 +513,19 @@ public class CronServiceImplTest extends ServiceTest {
                 FeedStat.builder().feed(feed1).refreshDate(day3).count(1).build()));
     }
 
+    @Test(expectedExceptions = ResourceNotFoundException.class)
+    public void cleanup_ShouldThrowException_IfFeedNotExist() {
+        when(feedDao.find(feed1.getUrl())).thenReturn(Optional.empty());
+
+        sut.cleanup(feed1.getUrl(), 30, 1, 20);
+    }
+
     @Test
     public void cleanup_ShouldDeleteOnlyPostsAndStats_IfSubscriptionExistsToFeed() {
         when(subscriptionDao.listSubscriptions(feed1)).thenReturn(Arrays.asList(subscription1, subscription2));
 
-        when(postDao.find(subscription1, 1)).thenReturn(post12);
-        when(postDao.find(subscription2, 1)).thenReturn(post22);
+        when(postDao.find(subscription1, 1)).thenReturn(Optional.of(post12));
+        when(postDao.find(subscription2, 1)).thenReturn(Optional.of(post22));
 
         final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.set(2015, 6, 6, 0, 25, 0);

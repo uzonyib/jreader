@@ -44,11 +44,7 @@ public class UserAdminServiceImpl implements UserAdminService {
         Assert.hasLength(username, "Invalid username.");
         Assert.notNull(role, "Invalid role.");
 
-        final User user = userDao.find(username);
-        if (user == null) {
-            throw new ResourceNotFoundException("User not found, username: " + username);
-        }
-
+        final User user = userDao.find(username).orElseThrow(() -> new ResourceNotFoundException("User not found, username: " + username));
         user.setRole(Role.valueOf(role));
         userDao.save(user);
     }

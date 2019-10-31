@@ -19,6 +19,7 @@ import jreader.domain.User;
 import jreader.dto.PostDto;
 import jreader.services.PostFilter;
 import jreader.services.PostService;
+import jreader.services.exception.ResourceNotFoundException;
 
 @Service
 public class PostServiceImpl extends AbstractService implements PostService {
@@ -48,8 +49,8 @@ public class PostServiceImpl extends AbstractService implements PostService {
             for (final Entry<Long, List<Long>> subscriptionEntry : groupEntry.getValue().entrySet()) {
                 final Subscription subscription = this.getSubscription(group, subscriptionEntry.getKey());
                 for (final Long postId : subscriptionEntry.getValue()) {
-                    final Post post = postDao.find(subscription, postId);
-                    if (post != null && !post.isRead()) {
+                    final Post post = postDao.find(subscription, postId).orElseThrow(() -> new ResourceNotFoundException("Post not found, ID " + postId));
+                    if (!post.isRead()) {
                         post.setRead(true);
                         postsToSave.add(post);
                     }
@@ -65,8 +66,8 @@ public class PostServiceImpl extends AbstractService implements PostService {
         final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
-        final Post post = postDao.find(subscription, postId);
-        if (post != null && !post.isBookmarked()) {
+        final Post post = postDao.find(subscription, postId).orElseThrow(() -> new ResourceNotFoundException("Post not found, ID " + postId));
+        if (!post.isBookmarked()) {
             post.setBookmarked(true);
             postDao.save(post);
         }
@@ -78,8 +79,8 @@ public class PostServiceImpl extends AbstractService implements PostService {
         final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
-        final Post post = postDao.find(subscription, postId);
-        if (post != null && post.isBookmarked()) {
+        final Post post = postDao.find(subscription, postId).orElseThrow(() -> new ResourceNotFoundException("Post not found, ID " + postId));
+        if (post.isBookmarked()) {
             post.setBookmarked(false);
             postDao.save(post);
         }

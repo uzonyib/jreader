@@ -1,12 +1,13 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -87,10 +88,10 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
     }
 
     @Test
-    public void findForUserAndFeed_IfSubscriptionNotExists_ShouldReturnNull() {
-        Subscription actual = sut.find(users.get(1), feeds.get(0));
+    public void findForUserAndFeed_IfSubscriptionNotExists_ShouldReturnEmpty() {
+        Optional<Subscription> actual = sut.find(users.get(1), feeds.get(0));
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
@@ -109,37 +110,37 @@ public class SubscriptionDaoImplTest extends AbstractDaoTest {
     
     @Test
     public void findForUserAndFeed_IfSubscriptionExists_ShouldReturnSubscription() {
-        Subscription actual = sut.find(users.get(0), feeds.get(0));
+        Optional<Subscription> actual = sut.find(users.get(0), feeds.get(0));
         
-        assertEquals(actual, subscriptions.get(0));
+        assertEquals(actual.get(), subscriptions.get(0));
     }
     
     @Test
-    public void findForGroup_IfSubscriptionNotExists_ShouldReturnNull() {
-        Subscription actual = sut.find(groups.get(2), 1L);
+    public void findForGroup_IfSubscriptionNotExists_ShouldReturnEmpty() {
+        Optional<Subscription> actual = sut.find(groups.get(2), 1L);
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
     public void findForGroup_IfSubscriptionExists_ShouldReturnSubscription() {
-        Subscription subscription = sut.find(groups.get(0), subscriptions.get(0).getId());
+        Optional<Subscription> subscription = sut.find(groups.get(0), subscriptions.get(0).getId());
         
-        assertEquals(subscription, subscriptions.get(0));
+        assertEquals(subscription.get(), subscriptions.get(0));
     }
     
     @Test
-    public void findForGroupAndTitle_IfSubscriptionNotExists_ShouldReturnNull() {
-        Subscription actual = sut.find(groups.get(2), "title_not_found");
+    public void findForGroupAndTitle_IfSubscriptionNotExists_ShouldReturnEmpty() {
+        Optional<Subscription> actual = sut.find(groups.get(2), "title_not_found");
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
     public void findForGroupAndTitle_IfSubscriptionExists_ShouldReturnSubscription() {
-        Subscription actual = sut.find(groups.get(0), subscriptions.get(0).getTitle());
+        Optional<Subscription> actual = sut.find(groups.get(0), subscriptions.get(0).getTitle());
         
-        assertEquals(actual, subscriptions.get(0));
+        assertEquals(actual.get(), subscriptions.get(0));
     }
     
     @Test

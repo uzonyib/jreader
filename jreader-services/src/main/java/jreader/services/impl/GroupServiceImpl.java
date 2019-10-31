@@ -1,7 +1,5 @@
 package jreader.services.impl;
 
-import static java.util.Objects.nonNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -70,7 +68,7 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
     public GroupDto create(final String username, final String title) {
         Assert.hasLength(title, "Invalid group title.");
         final User user = this.getUser(username);
-        if (nonNull(groupDao.find(user, title))) {
+        if (groupDao.find(user, title).isPresent()) {
             throw new ResourceAlreadyExistsException("Group with title '" + title + "' already exists.");
         }
 
@@ -85,7 +83,7 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
     public GroupDto update(final String username, final GroupDto group) {
         Assert.hasLength(group.getTitle(), "Invalid group title.");
         final User user = this.getUser(username);
-        if (nonNull(groupDao.find(user, group.getTitle()))) {
+        if (groupDao.find(user, group.getTitle()).isPresent()) {
             throw new ResourceAlreadyExistsException("Group with title '" + group.getTitle() + "' already exists.");
         }
 
@@ -131,7 +129,7 @@ public class GroupServiceImpl extends AbstractService implements GroupService {
     public void entitle(final String username, final Long groupId, final String title) {
         Assert.hasLength(title, "Group title invalid.");
         final User user = this.getUser(username);
-        if (nonNull(groupDao.find(user, title))) {
+        if (groupDao.find(user, title).isPresent()) {
             throw new ResourceAlreadyExistsException("Group with title '" + title + "' already exists.");
         }
         final Group group = this.getGroup(user, groupId);

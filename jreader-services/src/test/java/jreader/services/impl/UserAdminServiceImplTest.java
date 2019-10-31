@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -77,12 +78,12 @@ public class UserAdminServiceImplTest {
             { -1, 10 },
             { 0, -1 },
             { 0, 0 }
-            };
+        };
     }
 
     @Test
     public void updateRole_ShouldUpdateRole() {
-        when(userDao.find(USERNAME)).thenReturn(user1);
+        when(userDao.find(USERNAME)).thenReturn(Optional.of(user1));
 
         sut.updateRole(USERNAME, "ADMIN");
 
@@ -102,7 +103,7 @@ public class UserAdminServiceImplTest {
 
     @Test(expectedExceptions = ResourceNotFoundException.class)
     public void updateRole_ShouldThrowException_IfUserNotFound() {
-        when(userDao.find(USERNAME)).thenReturn(null);
+        when(userDao.find(USERNAME)).thenReturn(Optional.empty());
 
         sut.updateRole(USERNAME, "ADMIN");
     }

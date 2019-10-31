@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -102,14 +103,14 @@ public class GroupServiceImplTest extends ServiceTest {
         sut = new GroupServiceImpl(DaoFacade.builder().userDao(userDao).groupDao(groupDao).subscriptionDao(subscriptionDao).postDao(postDao).build(),
                 conversionService);
 
-        when(userDao.find(user.getUsername())).thenReturn(user);
+        when(userDao.find(user.getUsername())).thenReturn(Optional.of(user));
     }
 
     @Test
     public void create_ShouldCreateGroup_IfGroupDoesNotExist() {
         final String groupTitle = "new group";
         final int maxOrder = 10;
-        when(groupDao.find(user, groupTitle)).thenReturn(null);
+        when(groupDao.find(user, groupTitle)).thenReturn(Optional.empty());
         when(groupDao.getMaxOrder(user)).thenReturn(maxOrder);
         when(groupDao.save(any(Group.class))).thenReturn(group);
         when(conversionService.convert(group, GroupDto.class)).thenReturn(groupDto);
@@ -135,7 +136,7 @@ public class GroupServiceImplTest extends ServiceTest {
 
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void create_ShouldThrowException_IfGroupAlreadyExists() {
-        when(groupDao.find(user, group.getTitle())).thenReturn(group);
+        when(groupDao.find(user, group.getTitle())).thenReturn(Optional.of(group));
 
         try {
             sut.create(user.getUsername(), group.getTitle());
@@ -149,8 +150,8 @@ public class GroupServiceImplTest extends ServiceTest {
     @Test
     public void update_ShouldUpdateTitle_IfGroupExist() {
         final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title("new group title").order(20).build();
-        when(groupDao.find(user, groupToUpdate.getTitle())).thenReturn(null);
-        when(groupDao.find(user, groupToUpdate.getId())).thenReturn(group);
+        when(groupDao.find(user, groupToUpdate.getTitle())).thenReturn(Optional.empty());
+        when(groupDao.find(user, groupToUpdate.getId())).thenReturn(Optional.of(group));
         when(groupDao.save(any(Group.class))).thenReturn(group);
         when(conversionService.convert(group, GroupDto.class)).thenReturn(groupDto);
 
@@ -178,7 +179,7 @@ public class GroupServiceImplTest extends ServiceTest {
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void update_ShouldThrowException_IfTitleAlreadyExists() {
         final GroupDto groupToUpdate = GroupDto.builder().id(group.getId()).title(group1.getTitle()).order(group.getOrder()).build();
-        when(groupDao.find(user, groupToUpdate.getTitle())).thenReturn(group1);
+        when(groupDao.find(user, groupToUpdate.getTitle())).thenReturn(Optional.of(group1));
 
         try {
             sut.update(user.getUsername(), groupToUpdate);
@@ -191,7 +192,7 @@ public class GroupServiceImplTest extends ServiceTest {
 
     @Test
     public void delete_ShouldDeleteGroup_IfGroupExists() {
-        when(groupDao.find(user, group.getId())).thenReturn(group);
+        when(groupDao.find(user, group.getId())).thenReturn(Optional.of(group));
 
         sut.delete(user.getUsername(), group.getId());
 
@@ -201,8 +202,9 @@ public class GroupServiceImplTest extends ServiceTest {
 
     @Test
     public void entitle_ShouldUpdateGroupTitle_IfGroupExists() {
-        when(groupDao.find(user, group.getId())).thenReturn(group);
+        when(groupDao.find(user, group.getId())).thenReturn(Optional.of(group));
         final String newTitle = "new title";
+        when(groupDao.find(user, newTitle)).thenReturn(Optional.empty());
 
         sut.entitle(user.getUsername(), group.getId(), newTitle);
 
@@ -218,9 +220,9 @@ public class GroupServiceImplTest extends ServiceTest {
 
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void entitle_ShouldThrowException_IfGroupTitleAlreadyExists() {
-        when(groupDao.find(user, group.getId())).thenReturn(group);
+        when(groupDao.find(user, group.getId())).thenReturn(Optional.of(group));
         final String newTitle = "new title";
-        when(groupDao.find(user, newTitle)).thenReturn(group);
+        when(groupDao.find(user, newTitle)).thenReturn(Optional.of(group));
 
         sut.entitle(user.getUsername(), group.getId(), newTitle);
     }

@@ -1,6 +1,7 @@
 package jreader.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import jreader.domain.Post;
 import jreader.domain.Subscription;
@@ -9,11 +10,11 @@ import jreader.domain.User;
 
 public interface PostDao extends OfyDao<Post> {
 
-    Post find(Subscription subscription, Long id);
+    Optional<Post> find(Subscription subscription, Long id);
     
-    Post find(Subscription subscription, String uri, long publishDate);
+    Optional<Post> find(Subscription subscription, String uri, long publishDate);
 
-    Post find(Subscription subscription, int ordinal);
+    Optional<Post> find(Subscription subscription, int ordinal);
 
     List<Post> list(User user, PostFilter filter);
 

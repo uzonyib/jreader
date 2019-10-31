@@ -1,12 +1,13 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -65,10 +66,10 @@ public class ArchivedPostDaoImplTest extends AbstractDaoTest {
     }
 
     @Test
-    public void find_IfPostNotExists_ShouldReturnNull() {
-        ArchivedPost actual = sut.find(archives.get(1), 1L);
+    public void find_IfPostNotExists_ShouldReturnEmpty() {
+        Optional<ArchivedPost> actual = sut.find(archives.get(1), 1L);
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
@@ -88,9 +89,9 @@ public class ArchivedPostDaoImplTest extends AbstractDaoTest {
     
     @Test
     public void find_IfPostExists_ShouldReturnPost() {
-        ArchivedPost actual = sut.find(archives.get(0), posts.get(0).getId());
+        Optional<ArchivedPost> actual = sut.find(archives.get(0), posts.get(0).getId());
         
-        assertEquals(actual, posts.get(0));
+        assertEquals(actual.get(), posts.get(0));
     }
     
     @Test

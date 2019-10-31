@@ -1,8 +1,11 @@
 package jreader.dao.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
+
+import com.googlecode.objectify.cmd.LoadType;
 
 import jreader.dao.SubscriptionDao;
 import jreader.domain.Feed;
@@ -14,39 +17,43 @@ import jreader.domain.User;
 public class SubscriptionDaoImpl extends AbstractOfyDao<Subscription> implements SubscriptionDao {
 
     @Override
-    public Subscription find(final User user, final Feed feed) {
-        return getOfy().load().type(Subscription.class).ancestor(user).filter("feedRef =", feed).first().now();
+    protected LoadType<Subscription> getLoadType() {
+        return getOfy().load().type(Subscription.class);
     }
 
     @Override
-    public Subscription find(final Group group, final Long id) {
-        return getOfy().load().type(Subscription.class).parent(group).id(id).now();
+    public Optional<Subscription> find(final User user, final Feed feed) {
+        return Optional.ofNullable(getLoadType().ancestor(user).filter("feedRef =", feed).first().now());
     }
-    
+
     @Override
-    public Subscription find(final Group group, final String title) {
-        return getOfy().load().type(Subscription.class).ancestor(group).filter("title =", title).first().now();
+    public Optional<Subscription> find(final Group group, final Long id) {
+        return Optional.ofNullable(getLoadType().parent(group).id(id).now());
+    }
+
+    @Override
+    public Optional<Subscription> find(final Group group, final String title) {
+        return Optional.ofNullable(getLoadType().ancestor(group).filter("title =", title).first().now());
     }
 
     @Override
     public List<Subscription> listSubscriptions(final Feed feed) {
-        return getOfy().load().type(Subscription.class).filter("feedRef =", feed).list();
+        return getLoadType().filter("feedRef =", feed).list();
     }
 
     @Override
     public List<Subscription> list(final Group group) {
-        return getOfy().load().type(Subscription.class).ancestor(group).order("order").list();
+        return getLoadType().ancestor(group).order("order").list();
     }
 
     @Override
     public int countSubscribers(final Feed feed) {
-        return getOfy().load().type(Subscription.class).filter("feedRef =", feed).count();
+        return getLoadType().filter("feedRef =", feed).count();
     }
 
     @Override
     public int getMaxOrder(final Group group) {
-        final Subscription subscription = getOfy().load().type(Subscription.class)
-                .ancestor(group).order("-order").first().now();
+        final Subscription subscription = getLoadType().ancestor(group).order("-order").first().now();
         return subscription == null ? -1 : subscription.getOrder();
     }
 

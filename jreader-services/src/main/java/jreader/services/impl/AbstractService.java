@@ -24,28 +24,15 @@ abstract class AbstractService {
 
     protected User getUser(final String username) {
         Assert.hasLength(username, "Username invalid.");
-
-        final User user = userDao.find(username);
-        if (user == null) {
-            throw new ResourceNotFoundException("User not found, username: " + username);
-        }
-        return user;
+        return userDao.find(username).orElseThrow(() -> new ResourceNotFoundException("User not found, username: " + username));
     }
 
     protected Group getGroup(final User user, final Long groupId) {
-        final Group group = groupDao.find(user, groupId);
-        if (group == null) {
-            throw new ResourceNotFoundException("Group not found, ID: " + groupId);
-        }
-        return group;
+        return groupDao.find(user, groupId).orElseThrow(() -> new ResourceNotFoundException("Group not found, ID: " + groupId));
     }
 
     protected Subscription getSubscription(final Group group, final Long subscriptionId) {
-        final Subscription subscription = subscriptionDao.find(group, subscriptionId);
-        if (subscription == null) {
-            throw new ResourceNotFoundException("Subscription not found, ID: " + subscriptionId);
-        }
-        return subscription;
+        return subscriptionDao.find(group, subscriptionId).orElseThrow(() -> new ResourceNotFoundException("Subscription not found, ID: " + subscriptionId));
     }
 
 }

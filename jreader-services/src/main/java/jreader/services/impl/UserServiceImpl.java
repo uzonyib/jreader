@@ -26,14 +26,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isRegistered(final String username) {
-        return userDao.find(username) != null;
+        return userDao.find(username).isPresent();
     }
 
     @Override
     public void register(final String username, final Role role) {
         Assert.hasLength(username, "Invalid username.");
         Assert.notNull(role, "Invalid role.");
-        if (userDao.find(username) != null) {
+        if (userDao.find(username).isPresent()) {
             throw new ResourceAlreadyExistsException("User with username '" + username + "' already exists.");
         }
 
@@ -48,11 +48,7 @@ public class UserServiceImpl implements UserService {
     public Role getRole(final String username) {
         Assert.hasLength(username, "Invalid username.");
 
-        final User user = userDao.find(username);
-        if (user == null) {
-            return null;
-        }
-        return user.getRole();
+        return userDao.find(username).map(User::getRole).orElse(null);
     }
 
 }

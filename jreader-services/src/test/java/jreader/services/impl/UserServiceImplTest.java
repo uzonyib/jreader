@@ -6,6 +6,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -46,8 +48,8 @@ public class UserServiceImplTest extends ServiceTest {
         MockitoAnnotations.initMocks(this);
 
         when(user.getRole()).thenReturn(Role.USER);
-        when(userDao.find(NEW_USER)).thenReturn(null);
-        when(userDao.find(EXISTING_USER)).thenReturn(user);
+        when(userDao.find(NEW_USER)).thenReturn(Optional.empty());
+        when(userDao.find(EXISTING_USER)).thenReturn(Optional.of(user));
         when(dateHelper.getCurrentDate()).thenReturn(CURRENT_DATE);
     }
 

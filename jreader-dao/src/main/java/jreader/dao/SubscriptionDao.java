@@ -1,6 +1,7 @@
 package jreader.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import jreader.domain.Feed;
 import jreader.domain.Subscription;
@@ -9,11 +10,11 @@ import jreader.domain.User;
 
 public interface SubscriptionDao extends OfyDao<Subscription> {
 
-    Subscription find(User user, Feed feed);
+    Optional<Subscription> find(User user, Feed feed);
 
-    Subscription find(Group group, Long id);
+    Optional<Subscription> find(Group group, Long id);
     
-    Subscription find(Group group, String title);
+    Optional<Subscription> find(Group group, String title);
 
     List<Subscription> listSubscriptions(Feed feed);
 

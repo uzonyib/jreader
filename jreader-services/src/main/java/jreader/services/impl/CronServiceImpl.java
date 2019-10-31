@@ -1,10 +1,14 @@
 package jreader.services.impl;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ import jreader.services.CronService;
 import jreader.services.DateHelper;
 import jreader.services.RssService;
 import jreader.services.exception.FetchException;
+import jreader.services.exception.ResourceNotFoundException;
 
 @Service
 public class CronServiceImpl implements CronService {
@@ -66,7 +71,7 @@ public class CronServiceImpl implements CronService {
 
     @Override
     public void refresh(final String url) {
-        final Feed feed = feedDao.find(url);
+        final Feed feed = feedDao.find(url).orElseThrow(() -> new ResourceNotFoundException("Feed not found, URL: " + url));
         final long refreshDate = dateHelper.getCurrentDate();
         final RssFetchResult rssFetchResult;
 
@@ -104,12 +109,8 @@ public class CronServiceImpl implements CronService {
             
             final long refreshDay = dateHelper.getFirstSecondOfDay(post.getPublishDate());
             if (!stats.containsKey(refreshDay)) {
-                FeedStat stat = feedStatDao.find(feed, refreshDay);
-                if (stat == null) {
-                    stat = FeedStat.builder().feed(feed).refreshDate(refreshDay).count(1).build();
-                } else {
-                    stat.setCount(stat.getCount() + 1);
-                }
+                FeedStat stat = feedStatDao.find(feed, refreshDay).orElse(FeedStat.builder().feed(feed).refreshDate(refreshDay).count(0).build());
+                stat.setCount(stat.getCount() + 1);
                 stats.put(refreshDay, stat);
             } else {
                 final FeedStat stat = stats.get(refreshDay);
@@ -180,16 +181,16 @@ public class CronServiceImpl implements CronService {
     }
     
     boolean isNew(final Post post, final Subscription subscription, final long refreshDate) {
-        if (post.getPublishDate() == null || post.getUri() == null) {
+        if (isNull(post.getPublishDate()) || isNull(post.getUri())) {
             return false;
         }
         if (post.getPublishDate() > refreshDate) {
             return false;
         }
-        if (subscription.getLastUpdateDate() != null && post.getPublishDate() < subscription.getLastUpdateDate()) {
+        if (nonNull(subscription.getLastUpdateDate()) && post.getPublishDate() < subscription.getLastUpdateDate()) {
             return false;
         }
-        if (postDao.find(subscription, post.getUri(), post.getPublishDate()) != null) {
+        if (postDao.find(subscription, post.getUri(), post.getPublishDate()).isPresent()) {
             return false;
         }
         return true;
@@ -198,7 +199,7 @@ public class CronServiceImpl implements CronService {
     @Override
     public void cleanup(final String url, final int olderThanDays, final int keptCount, final int statsToKeep) {
         final long date = dateHelper.substractDaysFromCurrentDate(olderThanDays);
-        final Feed feed = feedDao.find(url);
+        final Feed feed = feedDao.find(url).orElseThrow(() -> new ResourceNotFoundException("Feed not found, URL: " + url));
         final List<Subscription> subscriptions = subscriptionDao.listSubscriptions(feed);
         
         if (subscriptions.isEmpty()) {
@@ -208,9 +209,9 @@ public class CronServiceImpl implements CronService {
             
             for (final Subscription subscription : subscriptions) {
                 int count = 0;
-                final Post e = postDao.find(subscription, keptCount);
-                if (e != null) {
-                    final long threshold = Math.min(date, e.getPublishDate());
+                final Optional<Long> minPublishDate = postDao.find(subscription, keptCount).map(Post::getPublishDate);
+                if (minPublishDate.isPresent()) {
+                    final long threshold = Math.min(date, minPublishDate.get());
                     final List<Post> posts = postDao.listNotBookmarkedAndOlderThan(subscription, threshold);
                     for (final Post post : posts) {
                         postDao.delete(post);

@@ -47,18 +47,14 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     }
 
     private Archive getArchive(final User user, final Long id) {
-        final Archive archive = archiveDao.find(user, id);
-        if (archive == null) {
-            throw new ResourceNotFoundException("Archive not found, ID " + id);
-        }
-        return archive;
+        return archiveDao.find(user, id).orElseThrow(()-> new ResourceNotFoundException("Archive not found, ID " + id));
     }
 
     @Override
     public ArchiveDto createArchive(final String username, final String title) {
         Assert.hasLength(title, "Archive title invalid.");
         final User user = this.getUser(username);
-        if (archiveDao.find(user, title) != null) {
+        if (archiveDao.find(user, title).isPresent()) {
             throw new ResourceAlreadyExistsException("Archive with title '" + title + "' already exists.");
         }
         final Archive archive = archiveDao.save(new Archive.Builder().user(user).title(title).order(archiveDao.getMaxOrder(user) + 1).build());
@@ -136,7 +132,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     public void entitle(final String username, final Long archiveId, final String title) {
         Assert.hasLength(title, "Archive title invalid.");
         final User user = this.getUser(username);
-        if (archiveDao.find(user, title) != null) {
+        if (archiveDao.find(user, title).isPresent()) {
             throw new ResourceAlreadyExistsException("Archive with this title already exists.");
         }
 
@@ -151,7 +147,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
         final Group group = this.getGroup(user, groupId);
         final Subscription subscription = this.getSubscription(group, subscriptionId);
 
-        final Post post = postDao.find(subscription, postId);
+        final Post post = postDao.find(subscription, postId).orElseThrow(() -> new ResourceNotFoundException("Post not found, ID " + postId));
         final Archive archive = this.getArchive(user, archiveId);
 
         final ArchivedPost entity = conversionService.convert(post, ArchivedPost.class);
@@ -164,7 +160,7 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     public List<ArchivedPostDto> listPosts(final ArchivedPostFilter filter) {
         final User user = this.getUser(filter.getUsername());
         final List<ArchivedPost> posts;
-        if (filter.getArchiveId() == null) {
+        if (isNull(filter.getArchiveId())) {
             posts = archivedPostDao.list(user, filter.getPage());
         } else {
             final Archive archive = this.getArchive(user, filter.getArchiveId());
@@ -180,7 +176,8 @@ public class ArchiveServiceImpl extends AbstractService implements ArchiveServic
     public void deletePost(final String username, final Long archiveId, final Long postId) {
         final User user = this.getUser(username);
         final Archive archive = this.getArchive(user, archiveId);
-        final ArchivedPost post = archivedPostDao.find(archive, postId);
+        final ArchivedPost post = archivedPostDao.find(archive, postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Archived post not found, ID " + postId));
         archivedPostDao.delete(post);
     }
 

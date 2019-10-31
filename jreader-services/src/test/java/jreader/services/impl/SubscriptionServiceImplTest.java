@@ -10,6 +10,7 @@ import static org.testng.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -110,16 +111,16 @@ public class SubscriptionServiceImplTest extends ServiceTest {
 
         when(rssService.fetch(feed.getUrl())).thenReturn(fetchResult);
 
-        when(userDao.find(user.getUsername())).thenReturn(user);
-        when(groupDao.find(user, group.getId())).thenReturn(group);
+        when(userDao.find(user.getUsername())).thenReturn(Optional.of(user));
+        when(groupDao.find(user, group.getId())).thenReturn(Optional.of(group));
         when(subscriptionDao.getMaxOrder(group)).thenReturn(subscription2.getOrder());
     }
 
     @Test
     public void subscribe_ShouldCreateNewSubscriptionWithoutPosts_IfFeedIsNew() {
-        when(feedDao.find(feed.getUrl())).thenReturn(null);
+        when(feedDao.find(feed.getUrl())).thenReturn(Optional.empty());
         when(feedDao.save(feed)).thenReturn(feed);
-        when(subscriptionDao.find(user, feed)).thenReturn(null);
+        when(subscriptionDao.find(user, feed)).thenReturn(Optional.empty());
         when(subscriptionDao.save(any(Subscription.class))).thenReturn(subscription);
         when(conversionService.convert(subscription, SubscriptionDto.class)).thenReturn(subscriptionDto);
 
@@ -145,8 +146,8 @@ public class SubscriptionServiceImplTest extends ServiceTest {
 
     @Test
     public void subscribe_ShouldCreateNewSubscriptionWithoutPosts_IfFeedExists() {
-        when(feedDao.find(feed.getUrl())).thenReturn(feed);
-        when(subscriptionDao.find(user, feed)).thenReturn(null);
+        when(feedDao.find(feed.getUrl())).thenReturn(Optional.of(feed));
+        when(subscriptionDao.find(user, feed)).thenReturn(Optional.empty());
         when(subscriptionDao.save(subscription)).thenReturn(subscription);
 
         sut.subscribe(user.getUsername(), group.getId(), feed.getUrl());
@@ -169,7 +170,7 @@ public class SubscriptionServiceImplTest extends ServiceTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void subscribe_ShouldThrowException_IfFeedCannotBeFetched() {
-        when(feedDao.find(feed.getUrl())).thenReturn(null);
+        when(feedDao.find(feed.getUrl())).thenReturn(Optional.empty());
         when(rssService.fetch(feed.getUrl())).thenThrow(new FetchException());
 
         sut.subscribe(user.getUsername(), group.getId(), feed.getUrl());
@@ -177,8 +178,8 @@ public class SubscriptionServiceImplTest extends ServiceTest {
 
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void subscribe_ShouldThrowException_IfSubscriptionAlreadyExists() {
-        when(feedDao.find(feed.getUrl())).thenReturn(feed);
-        when(subscriptionDao.find(user, feed)).thenReturn(subscription);
+        when(feedDao.find(feed.getUrl())).thenReturn(Optional.of(feed));
+        when(subscriptionDao.find(user, feed)).thenReturn(Optional.of(subscription));
 
         try {
             sut.subscribe(user.getUsername(), group.getId(), feed.getUrl());
@@ -197,7 +198,7 @@ public class SubscriptionServiceImplTest extends ServiceTest {
 
     @Test
     public void unsubscribe_ShouldDeleteSubscriptionWithPosts() {
-        when(subscriptionDao.find(group, subscription.getId())).thenReturn(subscription);
+        when(subscriptionDao.find(group, subscription.getId())).thenReturn(Optional.of(subscription));
         final List<Post> posts = Arrays.asList(post1, post2);
         when(postDao.list(subscription)).thenReturn(posts);
 
@@ -209,8 +210,9 @@ public class SubscriptionServiceImplTest extends ServiceTest {
 
     @Test
     public void entitle_ShouldUpdateSubscriptionTitle() {
-        when(subscriptionDao.find(group, subscription.getId())).thenReturn(subscription);
+        when(subscriptionDao.find(group, subscription.getId())).thenReturn(Optional.of(subscription));
         final String newTitle = "new title";
+        when(subscriptionDao.find(group, newTitle)).thenReturn(Optional.empty());
 
         sut.entitle(user.getUsername(), group.getId(), subscription.getId(), newTitle);
 
@@ -226,7 +228,7 @@ public class SubscriptionServiceImplTest extends ServiceTest {
     @Test(expectedExceptions = ResourceAlreadyExistsException.class)
     public void entitle_ShouldThrowException_IfSubscriptionAlreadyExists() {
         final String newTitle = "new title";
-        when(subscriptionDao.find(group, newTitle)).thenReturn(subscription);
+        when(subscriptionDao.find(group, newTitle)).thenReturn(Optional.of(subscription));
 
         sut.entitle(user.getUsername(), group.getId(), subscription.getId(), newTitle);
     }

@@ -1,12 +1,13 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import jreader.dao.GroupDao;
 import jreader.dao.UserDao;
@@ -49,10 +50,10 @@ public class GroupDaoImplTest extends AbstractDaoTest {
     }
 
     @Test
-    public void find_IfGroupNotExists_ShouldReturnNull() {
-        Group actual = sut.find(users.get(0), groups.get(groups.size() - 1).getId() + 1);
+    public void find_IfGroupNotExists_ShouldReturnEmpty() {
+        Optional<Group> actual = sut.find(users.get(0), groups.get(groups.size() - 1).getId() + 1);
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
@@ -75,23 +76,23 @@ public class GroupDaoImplTest extends AbstractDaoTest {
     public void find_IfGroupExists_ShouldReturnGroup() {
         User user = users.get(0);
         
-        Group actual = sut.find(user, groups.get(0).getId());
+        Optional<Group> actual = sut.find(user, groups.get(0).getId());
         
-        assertEquals(actual, groups.get(0));
+        assertEquals(actual.get(), groups.get(0));
     }
     
     @Test
-    public void findByTitle_IfGroupNotExists_ShouldReturnNull() {
-        Group actual = sut.find(users.get(0), "new_title");
+    public void findByTitle_IfGroupNotExists_ShouldReturnEmpty() {
+        Optional<Group> actual = sut.find(users.get(0), "new_title");
         
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
     
     @Test
     public void findByTitle_IfGroupExists_ShouldReturnGroup() {
-        Group actual = sut.find(users.get(0), groups.get(0).getTitle());
+        Optional<Group> actual = sut.find(users.get(0), groups.get(0).getTitle());
         
-        assertEquals(actual, groups.get(0));
+        assertEquals(actual.get(), groups.get(0));
     }
     
     @Test

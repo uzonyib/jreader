@@ -1,11 +1,12 @@
 package jreader.dao.impl;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -109,10 +110,10 @@ public class PostDaoImplTest extends AbstractDaoTest {
     }
 
     @Test
-    public void findById_IfPostNotExists_ShouldReturnNull() {
-        Post actual = sut.find(subscriptions.get(1), 1L);
+    public void findById_IfPostNotExists_ShouldReturnEmpty() {
+        Optional<Post> actual = sut.find(subscriptions.get(1), 1L);
 
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
 
     @Test
@@ -134,31 +135,38 @@ public class PostDaoImplTest extends AbstractDaoTest {
     }
 
     @Test
-    public void findByUri_IfPostNotExists_ShouldReturnNull() {
-        Post actual = sut.find(subscriptions.get(1), "not_found", 1L);
+    public void findByUri_IfPostNotExists_ShouldReturnEmpty() {
+        Optional<Post> actual = sut.find(subscriptions.get(1), "not_found", 1L);
 
-        assertNull(actual);
+        assertFalse(actual.isPresent());
     }
 
     @Test
     public void findByUri_IfPostExists_ShouldReturnPost() {
-        Post actual = sut.find(subscriptions.get(0), posts.get(0).getUri(), posts.get(0).getPublishDate());
+        Optional<Post> actual = sut.find(subscriptions.get(0), posts.get(0).getUri(), posts.get(0).getPublishDate());
 
-        assertEquals(actual, posts.get(0));
+        assertEquals(actual.get(), posts.get(0));
     }
 
     @Test
     public void findById_IfPostExists_ShouldReturnPost() {
-        Post actual = sut.find(subscriptions.get(0), posts.get(0).getId());
+        Optional<Post> actual = sut.find(subscriptions.get(0), posts.get(0).getId());
 
-        assertEquals(actual, posts.get(0));
+        assertEquals(actual.get(), posts.get(0));
     }
 
     @Test
     public void findByOrdinal_IfPostExists_ShouldReturnPost() {
-        Post actual = sut.find(subscriptions.get(0), 2);
+        Optional<Post> actual = sut.find(subscriptions.get(0), 2);
 
-        assertEquals(actual, posts.get(0));
+        assertEquals(actual.get(), posts.get(0));
+    }
+
+    @Test
+    public void findByOrdinal_IfPostNotExist_ShouldReturnEmpty() {
+        Optional<Post> actual = sut.find(subscriptions.get(1), 1);
+
+        assertFalse(actual.isPresent());
     }
 
     @Test(expectedExceptions = UnsupportedOperationException.class)

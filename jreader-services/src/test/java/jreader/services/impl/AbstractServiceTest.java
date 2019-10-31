@@ -3,6 +3,8 @@ package jreader.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -47,7 +49,7 @@ public class AbstractServiceTest extends ServiceTest {
 
     @Test
     public void getUserShouldReturnUserIfUserExists() {
-        when(userDao.find(user.getUsername())).thenReturn(user);
+        when(userDao.find(user.getUsername())).thenReturn(Optional.of(user));
 
         final User actual = sut.getUser(user.getUsername());
 
@@ -56,14 +58,14 @@ public class AbstractServiceTest extends ServiceTest {
 
     @Test(expectedExceptions = ResourceNotFoundException.class)
     public void getUserShouldThrowExceptionIfUserNotExists() {
-        when(userDao.find(user.getUsername())).thenReturn(null);
+        when(userDao.find(user.getUsername())).thenReturn(Optional.empty());
 
         sut.getUser(user.getUsername());
     }
 
     @Test
     public void getGroupShouldReturnGroupIfGroupExists() {
-        when(groupDao.find(user, group.getId())).thenReturn(group);
+        when(groupDao.find(user, group.getId())).thenReturn(Optional.of(group));
 
         final Group actual = sut.getGroup(user, group.getId());
 
@@ -72,14 +74,14 @@ public class AbstractServiceTest extends ServiceTest {
 
     @Test(expectedExceptions = ResourceNotFoundException.class)
     public void getGroupShouldThrowExceptionIfGroupNotExists() {
-        when(groupDao.find(user, group.getId())).thenReturn(null);
+        when(groupDao.find(user, group.getId())).thenReturn(Optional.empty());
 
         sut.getGroup(user, group.getId());
     }
 
     @Test
     public void getSubscriptionShouldReturnSubscriptionIfSubscriptionExists() {
-        when(subscriptionDao.find(group, subscription.getId())).thenReturn(subscription);
+        when(subscriptionDao.find(group, subscription.getId())).thenReturn(Optional.of(subscription));
 
         final Subscription actual = sut.getSubscription(group, subscription.getId());
 
@@ -88,7 +90,7 @@ public class AbstractServiceTest extends ServiceTest {
 
     @Test(expectedExceptions = ResourceNotFoundException.class)
     public void getSubscriptionShouldThrowExceptionIfSubscriptionNotExists() {
-        when(subscriptionDao.find(group, subscription.getId())).thenReturn(null);
+        when(subscriptionDao.find(group, subscription.getId())).thenReturn(Optional.empty());
 
         sut.getSubscription(group, subscription.getId());
     }
